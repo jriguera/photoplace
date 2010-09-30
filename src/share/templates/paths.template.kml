@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+  <Document>
+
+    <Style id="lineStyle">
+      <PolyStyle>
+        <color>3feeee17</color>
+      </PolyStyle>
+      <LineStyle>
+        <color>99eeee17</color>
+        <width>5</width>
+      </LineStyle>
+    </Style>
+
+    <!-- Declare the type "PathTypePhoto" -->
+    <Schema name="PathTypePhoto" id="PathTypePhotoId">
+        <SimpleField type="string" name="NAME">
+            <displayName><![CDATA[<b>name</b>]]></displayName>
+        </SimpleField>
+        <SimpleField type="string" name="DESC">
+            <displayName><![CDATA[<i>description</i>]]></displayName>
+        </SimpleField>
+        <SimpleField type="string" name="TINI">
+            <displayName><![CDATA[<i>start</i>]]></displayName>
+        </SimpleField>
+        <SimpleField type="string" name="TEND">
+            <displayName><![CDATA[<i>finish</i>]]></displayName>
+        </SimpleField>
+        <SimpleField type="string" name="DRTN">
+            <displayName><![CDATA[<i>time</i>]]></displayName>
+        </SimpleField>
+        <SimpleField type="string" name="LEN">
+            <displayName><![CDATA[<i>length</i>]]></displayName>
+        </SimpleField>
+        <SimpleField type="string" name="SPEEDMIN">
+            <displayName><![CDATA[min speed]]></displayName>
+        </SimpleField>
+        <SimpleField type="string" name="SPEEDMAX">
+            <displayName><![CDATA[max speed]]></displayName>
+        </SimpleField>
+        <SimpleField type="string" name="SPEEDAVG">
+            <displayName><![CDATA[avg speed]]></displayName>
+        </SimpleField>
+        <SimpleField type="int" name="NPOINTS">
+            <displayName><![CDATA[number of waypoints]]></displayName>
+        </SimpleField>
+    </Schema>
+
+
+        <Placemark>
+            <name>%(PhotoPlace.PathNAME|-)s</name>
+            <ExtendedData>
+                    <SchemaData schemaUrl="#PathTypePhotoId">
+                        <SimpleData name="NAME">%(PhotoPlace.PathNAME|-)s</SimpleData>
+                        <SimpleData name="DESC">%(PhotoPlace.PathDESC|-)s</SimpleData>
+                        <SimpleData name="TINI">%(PhotoPlace.PathTINI|-)s</SimpleData>
+                        <SimpleData name="TEND">%(PhotoPlace.PathTEND|-)s</SimpleData>
+                        <SimpleData name="DRTN">%(PhotoPlace.PathDRTN|-)s</SimpleData>
+                        <SimpleData name="LEN">%(PhotoPlace.PathLEN|0)s</SimpleData>
+                        <SimpleData name="SPEEDMIN">%(PhotoPlace.PathSPMIN|0)s</SimpleData>
+                        <SimpleData name="SPEEDMAX">%(PhotoPlace.PathSPMAX|0)s</SimpleData>
+                        <SimpleData name="SPEEDAVG">%(PhotoPlace.PathSPAVG|0)s</SimpleData>
+                        <SimpleData name="NPOINTS">%(PhotoPlace.PathNWPT|0)s</SimpleData>
+                    </SchemaData>
+            </ExtendedData>
+            <Snippet maxLines="1">%(PhotoPlace.PathDESC|)s</Snippet>
+            <description></description>
+            <styleUrl>#lineStyle</styleUrl>
+            <LineString>
+                    <tessellate>1</tessellate>
+                    <coordinates>%(PhotoPlace.PathWPTCOORDS)s</coordinates>
+            </LineString>
+        </Placemark>
+
+    
+  </Document>
+</kml>
+

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+  <Document>
+    <!-- http://code.google.com/apis/kml/documentation/kmlreference.html -->
+    <name>%(name|Test)s</name>
+    <visibility>1</visibility>
+    <Snippet maxLines="0"></Snippet> 
+    <open>1</open>
+    <description><![CDATA[
+        <table cellspacing="2" cellpadding="2" border="0">
+        <tr><td>%(shortdescripcion| )s</td></tr>
+        </table>
+    ]]></description>
+    <atom:author>
+      <atom:name>%(author|Unknown)s</atom:name>
+    </atom:author>
+    <Folder>
+        <name>About</name>
+        <Snippet maxLines="2">Acerca de %(name|Test)s. </Snippet> 
+        <description></description>
+    </Folder>
+
+    <Style id="highlightPlacemark">
+      <IconStyle>
+        <Icon>
+          <scale>0.7</scale>
+          <href>http://maps.google.com/mapfiles/kml/pal4/icon38.png</href>
+        </Icon>
+      </IconStyle>
+      <BalloonStyle>
+        <bgColor>aa99ffff</bgColor>
+        <textColor>ff000000</textColor>
+      </BalloonStyle>
+    </Style>
+    
+    <Style id="normalPlacemark">
+      <IconStyle>
+        <scale>0.6</scale>
+        <Icon>
+            <href>http://maps.google.com/mapfiles/kml/pal4/icon38.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+         <scale>0.6</scale>
+      </LabelStyle>
+    </Style>
+    
+
+    <StyleMap id="photoStyle">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#normalPlacemark</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#highlightPlacemark</styleUrl>
+      </Pair>
+    </StyleMap>
+
+    <!-- Declare the type "PlaceTypePhoto" -->
+    <Schema name="PlaceTypePhoto" id="PlaceTypePhotoId">
+        <SimpleField type="int" name="ID">
+            <displayName><![CDATA[key, photo name]]></displayName>
+        </SimpleField>
+        <SimpleField type="string" name="DATE">
+            <displayName><![CDATA[<i>date</i>]]></displayName>
+        </SimpleField>
+        <SimpleField type="string" name="LAT">
+            <displayName><![CDATA[Latitude]]></displayName>
+        </SimpleField>
+        <SimpleField type="string" name="LON">
+            <displayName><![CDATA[Longitude]]></displayName>
+        </SimpleField>
+        <SimpleField type="string" name="ELE">
+            <displayName><![CDATA[elevation]]></displayName>
+        </SimpleField>
+    </Schema>
+
+    <Folder>
+    <name>%(photofolder|Photos)s</name>
+        <Placemark id="%(PhotoPlace.PhotoNAME|-)s">
+        <TimeStamp>
+            <when>2007-01-14T21:05:02Z</when>
+        </TimeStamp>
+        <name>%(PhotoPlace.PhotoNAME)s</name>
+        <Snippet maxLines="1">%(TITLE|-)s</Snippet> 
+        <styleUrl>#photoStyle</styleUrl>
+        <Point>
+                <coordinates>%(PhotoPlace.PhotoLON|0)f,%(PhotoPlace.PhotoLAT|0)f,%(PhotoPlace.PhotoELE|0)f</coordinates>
+        </Point>
+        <ExtendedData>
+                <SchemaData schemaUrl="#PlaceTypePhotoId">
+                    <SimpleData name="ID">%(PhotoPlace.PhotoNAME|-)s</SimpleData>
+                    <SimpleData name="DATE">%(PhotoPlace.PhotoDATE|-)s</SimpleData>
+                    <SimpleData name="LAT">%(PhotoPlace.PhotoLAT|0)f</SimpleData>
+                    <SimpleData name="LON">%(PhotoPlace.PhotoLON|0)f</SimpleData>
+                    <SimpleData name="ELE">%(PhotoPlace.PhotoELE|0)f</SimpleData>
+                </SchemaData>
+        </ExtendedData>
+        <description></description>
+        </Placemark>
+    </Folder>
+
+  </Document>
+</kml>
+

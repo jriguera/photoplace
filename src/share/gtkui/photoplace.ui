@@ -1,0 +1,1540 @@
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkListStore" id="liststore-exifmodes">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name mode -->
+      <column type="gint"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="treestore-photoinfo">
+    <columns>
+      <!-- column-name deletable -->
+      <column type="gboolean"/>
+      <!-- column-name editable -->
+      <column type="gboolean"/>
+      <!-- column-name key -->
+      <column type="gchararray"/>
+      <!-- column-name value -->
+      <column type="gchararray"/>
+      <!-- column-name fgcolor -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="liststore-geophotos">
+    <columns>
+      <!-- column-name status -->
+      <column type="gint"/>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name path -->
+      <column type="gchararray"/>
+      <!-- column-name date -->
+      <column type="gchararray"/>
+      <!-- column-name active -->
+      <column type="gboolean"/>
+      <!-- column-name pixbuf -->
+      <column type="GdkPixbuf"/>
+      <!-- column-name gettext_main_info -->
+      <column type="gchararray"/>
+      <!-- column-name gettext_geo_info -->
+      <column type="gchararray"/>
+      <!-- column-name gettext_ext_info -->
+      <column type="gchararray"/>
+      <!-- column-name bgcolor -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkWindow" id="window">
+    <property name="width_request">800</property>
+    <property name="height_request">550</property>
+    <property name="title">PhotoPlace</property>
+    <signal name="destroy" handler="on_window_destroy"/>
+    <child>
+      <object class="GtkVBox" id="vbox">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkMenuBar" id="menubar">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkMenuItem" id="menuitem-file">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes" context="PhotoPlaceGUI">_File</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu-file">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-opendir">
+                        <property name="label">Open _Directory</property>
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Directory with photos to geolocate. All photos will be geolocated if geolocate mode is selected.</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image3</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-opendir_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-opengpx">
+                        <property name="label" translatable="yes">Open _GPX</property>
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Open an eXchange Format (GPX) in order to match the date of each photo with the position.</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image2</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="on_imagemenuitem-opengpx_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-save">
+                        <property name="label">_Save as</property>
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Output file to save the KML data.</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image4</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-save_activate" object="imagemenuitem-save"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem-sep1">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-new">
+                        <property name="label" translatable="yes" context="PhotoPlaceGUI">_Clear</property>
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Remove all loaded files/directories to start again.</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image1</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-new_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem-sep2">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-exit">
+                        <property name="label">gtk-quit</property>
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Exit the program. I hope see you soon :-)</property>
+                        <property name="right_justified">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-exit_activate"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="menuitem-prefs">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Preferences</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu-prefs">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-saveconf">
+                        <property name="label">gtk-save</property>
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Save the current preferences.</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <property name="always_show_image">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem-sep3">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="imagemenuitem-plugins">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes" context="PhotoPlaceGUI">_Plugins</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="menuitem-help">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Help</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu-help">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-about">
+                        <property name="label">gtk-about</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-about_activate" object="aboutdialog"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolbar" id="toolbar">
+            <property name="visible">True</property>
+            <property name="icon_size_set">True</property>
+            <child>
+              <object class="GtkToolItem" id="toolbutton-openphotos">
+                <property name="visible">True</property>
+                <property name="is_important">True</property>
+                <child>
+                  <object class="GtkButton" id="button-openphotos">
+                    <property name="label" translatable="yes" context="PhotoPlaceGUI">Select input photo directory</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Select a directory with photos to geolocate. All photos will be geolocated if geolocate mode is selected.</property>
+                    <property name="image">image-photodir</property>
+                    <signal name="clicked" handler="on_button-openphotos_clicked" object="button-openphotos"/>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolItem" id="toolbutton-opengpx">
+                <property name="visible">True</property>
+                <property name="is_important">True</property>
+                <child>
+                  <object class="GtkButton" id="button-opengpx">
+                    <property name="label" translatable="yes" context="PhotoPlaceGUI">Input GPX file</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Select an eXchange Format (GPX) in order to match the date of each photo with the position.</property>
+                    <property name="image">image-gpx</property>
+                    <signal name="clicked" handler="on_button-opengpx_clicked" object="button-opengpx"/>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="toolbutton-sep1">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToggleToolButton" id="toggletoolbutton-plugins">
+                <property name="visible">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">If is selected, all the plugins will be activated.</property>
+                <property name="label" translatable="yes" context="PhotoPlaceGUI">Plugins</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-convert</property>
+                <property name="active">True</property>
+                <signal name="toggled" handler="on_toggletoolbutton-plugins_toggled"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="toolbutton-sep2">
+                <property name="visible">True</property>
+                <property name="visible_vertical">False</property>
+                <property name="draw">False</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton-exit">
+                <property name="visible">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Exit the program. I hope see you soon :-)</property>
+                <property name="label" translatable="yes" context="PhotoPlaceGUI">Exit</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-quit</property>
+                <signal name="clicked" handler="on_toolbutton-exit_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="padding">5</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkVPaned" id="vpaned">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <child>
+              <object class="GtkVBox" id="vbox1-vpaned">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkNotebook" id="notebook">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="scrollable">True</property>
+                    <property name="tab_border">6</property>
+                    <property name="tab_hborder">20</property>
+                    <property name="tab_vborder">6</property>
+                    <property name="homogeneous">True</property>
+                    <child>
+                      <object class="GtkFrame" id="frame-options">
+                        <property name="visible">True</property>
+                        <property name="label_xalign">0</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkVBox" id="vbox-options">
+                            <property name="visible">True</property>
+                            <property name="border_width">10</property>
+                            <property name="spacing">8</property>
+                            <child>
+                              <object class="GtkHBox" id="hbox-out">
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkCheckButton" id="checkbutton-outgeo">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="image">image-geo</property>
+                                    <property name="focus_on_click">False</property>
+                                    <property name="xalign">1</property>
+                                    <property name="active">True</property>
+                                    <property name="draw_indicator">False</property>
+                                    <signal name="toggled" handler="on_checkbutton-outgeo_toggled" object="checkbutton-outgeo"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBox" id="combobox-exif">
+                                    <property name="visible">True</property>
+                                    <property name="model">liststore-exifmodes</property>
+                                    <property name="active">0</property>
+                                    <child>
+                                      <object class="GtkCellRendererText" id="cellrenderertext-exif_name"/>
+                                      <attributes>
+                                        <attribute name="text">0</attribute>
+                                      </attributes>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="label-and">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="label separator between buttons in first page of notebook">and</property>
+                                    <property name="use_markup">True</property>
+                                    <property name="justify">center</property>
+                                    <property name="single_line_mode">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="padding">10</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkToggleButton" id="togglebutton-outfile">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="image">image-outfile</property>
+                                    <property name="xalign">0</property>
+                                    <signal name="toggled" handler="on_togglebutton-outfile_toggled" object="togglebutton-outfile"/>
+                                  </object>
+                                  <packing>
+                                    <property name="position">3</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="padding">10</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkHBox" id="hbox-time">
+                                <property name="visible">True</property>
+                                <property name="spacing">5</property>
+                                <property name="homogeneous">True</property>
+                                <child>
+                                  <object class="GtkHBox" id="hbox-utc">
+                                    <property name="visible">True</property>
+                                    <property name="spacing">10</property>
+                                    <child>
+                                      <object class="GtkLabel" id="label-utc">
+                                        <property name="visible">True</property>
+                                        <property name="has_tooltip">True</property>
+                                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="label">The time zone of the photos. It depends on the settings of time/date of the camera and the GPS (UTC time), it is the difference in hours between both.</property>
+                                        <property name="xalign">1</property>
+                                        <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="label">Time zone of photos:</property>
+                                        <property name="use_markup">True</property>
+                                        <property name="single_line_mode">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkSpinButton" id="spinbutton-utc">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="has_tooltip">True</property>
+                                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="entry">The time zone of the photos. It depends on the settings of time/date of the camera and the GPS (UTC time), it is the difference in hours between both.</property>
+                                        <property name="max_length">6</property>
+                                        <property name="invisible_char">&#x25CF;</property>
+                                        <property name="width_chars">8</property>
+                                        <property name="secondary_icon_stock">gtk-home</property>
+                                        <property name="adjustment">adjustment-utc</property>
+                                        <property name="digits">2</property>
+                                        <property name="numeric">True</property>
+                                        <property name="update_policy">if-valid</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="fill">False</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkHBox" id="hbox-tdelta">
+                                    <property name="visible">True</property>
+                                    <property name="spacing">10</property>
+                                    <child>
+                                      <object class="GtkLabel" id="label-tdelta">
+                                        <property name="visible">True</property>
+                                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="label">The maximum difference in seconds allowed between the time of a photo and the nearest point of GPX.</property>
+                                        <property name="xalign">1</property>
+                                        <property name="label" translatable="yes" context="PhotoPlaceGUI">Maximum geolocation delta seconds :</property>
+                                        <property name="use_markup">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkSpinButton" id="spinbutton-tdelta">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="has_tooltip">True</property>
+                                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="entry">The maximum time difference allowed between the time of a photo and the nearest point of GPX.</property>
+                                        <property name="max_length">6</property>
+                                        <property name="invisible_char">&#x25CF;</property>
+                                        <property name="width_chars">10</property>
+                                        <property name="caps_lock_warning">False</property>
+                                        <property name="secondary_icon_stock">gtk-justify-fill</property>
+                                        <property name="adjustment">adjustment-tdelta</property>
+                                        <property name="snap_to_ticks">True</property>
+                                        <property name="numeric">True</property>
+                                        <property name="update_policy">if-valid</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkExpander" id="expander-advanced">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="use_markup">True</property>
+                                <child>
+                                  <object class="GtkVBox" id="vbox-advanced">
+                                    <property name="visible">True</property>
+                                    <property name="spacing">10</property>
+                                    <property name="homogeneous">True</property>
+                                    <child>
+                                      <object class="GtkHBox" id="hbox-photouri">
+                                        <property name="visible">True</property>
+                                        <property name="spacing">5</property>
+                                        <property name="homogeneous">True</property>
+                                        <child>
+                                          <object class="GtkLabel" id="label-photouri">
+                                            <property name="visible">True</property>
+                                            <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="URI label">This entry defines the Uniform Resource Identifier for each geolocated photo. It is useful to generate a independent KML file where the photos will be linked into it.</property>
+                                            <property name="xalign">1</property>
+                                            <property name="label" translatable="yes">URI for geolocated photos:</property>
+                                            <property name="selectable">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkEntry" id="entry-photouri">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="entry URI">This entry defines the Uniform Resource Identifier for each geolocated photo. It is useful to generate a independent KML file where the photos will be linked into it.</property>
+                                            <property name="max_length">256</property>
+                                            <property name="invisible_char">&#x25CF;</property>
+                                          </object>
+                                          <packing>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkHBox" id="hbox-jpg">
+                                        <property name="visible">True</property>
+                                        <property name="spacing">5</property>
+                                        <property name="homogeneous">True</property>
+                                        <child>
+                                          <object class="GtkHBox" id="hbox-quality">
+                                            <property name="visible">True</property>
+                                            <property name="border_width">5</property>
+                                            <child>
+                                              <object class="GtkLabel" id="label-morequality">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes" context="PhotoPlaceGUI">Quality</property>
+                                                <property name="use_markup">True</property>
+                                                <property name="justify">right</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">False</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkHScale" id="hscale-quality">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">JPEG/ZIP Quality vs. Compression. The best quality will make big KMZ files with best JPEG quality and poor compression. This settings are also applicable to zip KMZ compression ratio.</property>
+                                                <property name="update_policy">delayed</property>
+                                                <property name="adjustment">adjustment-quality</property>
+                                                <property name="inverted">True</property>
+                                                <property name="show_fill_level">True</property>
+                                                <property name="fill_level">3</property>
+                                                <property name="digits">0</property>
+                                                <property name="draw_value">False</property>
+                                              </object>
+                                              <packing>
+                                                <property name="padding">5</property>
+                                                <property name="position">1</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="label-morecompress">
+                                                <property name="visible">True</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes" context="PhotoPlaceGUI">Compression</property>
+                                                <property name="use_markup">True</property>
+                                                <property name="single_line_mode">True</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">False</property>
+                                                <property name="position">2</property>
+                                              </packing>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkHBox" id="hbox-zoom">
+                                            <property name="visible">True</property>
+                                            <property name="border_width">5</property>
+                                            <property name="spacing">10</property>
+                                            <child>
+                                              <object class="GtkLabel" id="label-zoom">
+                                                <property name="visible">True</property>
+                                                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Output photo zoom percentage. 1.00 means original size, 0.50 means half size and so on ...</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">Photo size :</property>
+                                                <property name="justify">right</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkHScale" id="hscale-zoom">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Zoom percentaje. 1 means original size, 0.5 means half size and so on ...</property>
+                                                <property name="update_policy">delayed</property>
+                                                <property name="adjustment">adjustment-jpgzoom</property>
+                                                <property name="inverted">True</property>
+                                                <property name="show_fill_level">True</property>
+                                                <property name="fill_level">1</property>
+                                                <property name="digits">2</property>
+                                                <property name="value_pos">left</property>
+                                              </object>
+                                              <packing>
+                                                <property name="position">1</property>
+                                              </packing>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child type="label">
+                                  <object class="GtkLabel" id="label-expander-advanced">
+                                    <property name="visible">True</property>
+                                    <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="expander advanced">Advanced options. Default settings are safe and good for most of the users.</property>
+                                    <property name="label" translatable="yes" context="PhotoPlaceGUI" comments=".">&lt;b&gt;Advanced&lt;/b&gt;</property>
+                                    <property name="use_markup">True</property>
+                                    <property name="single_line_mode">True</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="padding">10</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="label-options">
+                            <property name="visible">True</property>
+                            <property name="xpad">2</property>
+                            <property name="ypad">8</property>
+                            <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="options label inside first notebook">&lt;b&gt;Options&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                            <property name="single_line_mode">True</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">False</property>
+                        <property name="reorderable">True</property>
+                        <property name="detachable">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="notebook-label-main">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="main label of notebook">Main</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">False</property>
+                        <property name="reorderable">True</property>
+                        <property name="detachable">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkFrame" id="frame-photos">
+                        <property name="visible">True</property>
+                        <property name="label_xalign">0</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkAlignment" id="alignment1">
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkVBox" id="vbox4">
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkScrolledWindow" id="scrolledwindow-photos">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="hscrollbar_policy">automatic</property>
+                                    <property name="vscrollbar_policy">automatic</property>
+                                    <child>
+                                      <object class="GtkTreeView" id="treeview-geophotos">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="model">liststore-geophotos</property>
+                                        <property name="reorderable">True</property>
+                                        <property name="rules_hint">True</property>
+                                        <property name="search_column">1</property>
+                                        <property name="enable_grid_lines">horizontal</property>
+                                        <property name="tooltip_column">8</property>
+                                        <signal name="row_activated" handler="on_treeview-geophotos_row_activated"/>
+                                        <child>
+                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-active">
+                                            <child>
+                                              <object class="GtkCellRendererToggle" id="cellrenderertoggle-geophotos-active">
+                                                <property name="radio">True</property>
+                                                <signal name="toggled" handler="on_cellgeophotos_toggled"/>
+                                              </object>
+                                              <attributes>
+                                                <attribute name="active">4</attribute>
+                                              </attributes>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-picture">
+                                            <property name="title">Picture</property>
+                                            <property name="reorderable">True</property>
+                                            <property name="sort_indicator">True</property>
+                                            <property name="sort_column_id">1</property>
+                                            <child>
+                                              <object class="GtkCellRendererPixbuf" id="cellrendererpixbuf-geophotos-picture"/>
+                                              <attributes>
+                                                <attribute name="sensitive">4</attribute>
+                                                <attribute name="pixbuf">5</attribute>
+                                              </attributes>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-info">
+                                            <property name="resizable">True</property>
+                                            <property name="title">Information</property>
+                                            <property name="expand">True</property>
+                                            <property name="clickable">True</property>
+                                            <property name="reorderable">True</property>
+                                            <property name="sort_indicator">True</property>
+                                            <property name="sort_column_id">2</property>
+                                            <child>
+                                              <object class="GtkCellRendererText" id="cellrenderertext-geophotos-info"/>
+                                              <attributes>
+                                                <attribute name="sensitive">4</attribute>
+                                                <attribute name="markup">6</attribute>
+                                              </attributes>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-geodata">
+                                            <property name="resizable">True</property>
+                                            <property name="title">GeoData</property>
+                                            <property name="expand">True</property>
+                                            <child>
+                                              <object class="GtkCellRendererText" id="cellrenderertext-geophotos-geodata"/>
+                                              <attributes>
+                                                <attribute name="sensitive">4</attribute>
+                                                <attribute name="background">9</attribute>
+                                                <attribute name="markup">7</attribute>
+                                              </attributes>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkHBox" id="hbox-photos">
+                                    <property name="visible">True</property>
+                                    <child>
+                                      <object class="GtkCheckButton" id="checkbutton-gentrack">
+                                        <property name="label" translatable="yes" context="PhotoPlaceGUI">Generate track from geolocated photos with name:</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">False</property>
+                                        <property name="draw_indicator">True</property>
+                                        <signal name="toggled" handler="on_checkbutton-gentrack_toggled"/>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkEntry" id="entry-gentrack">
+                                        <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="max_length">666</property>
+                                        <property name="invisible_char">&#x25CF;</property>
+                                      </object>
+                                      <packing>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="button-geolocate">
+                                        <property name="label" translatable="yes">Simulate Geolocation</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">True</property>
+                                        <property name="image">image-simulategeolocate</property>
+                                        <signal name="clicked" handler="on_button-geolocate_clicked"/>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="padding">20</property>
+                                        <property name="position">2</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="padding">5</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="label-loadedphotos">
+                            <property name="visible">True</property>
+                            <property name="xpad">2</property>
+                            <property name="ypad">8</property>
+                            <property name="label" translatable="yes" context="PhotoPlaceGUI">&lt;b&gt;Loaded photos&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="notebook-label-photos">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="picture label of notebook">Photos</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                        <property name="tab_fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkNotebook" id="notebook-plugins">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tab_pos">right</property>
+                        <property name="scrollable">True</property>
+                        <property name="tab_border">4</property>
+                        <property name="tab_hborder">20</property>
+                        <property name="tab_vborder">4</property>
+                        <property name="homogeneous">True</property>
+                      </object>
+                      <packing>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="notebook-label-plugins">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes" context="PhotoPlaceGUI">Plugins</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                      <packing>
+                        <property name="position">2</property>
+                        <property name="tab_fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="padding">5</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button-go">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="clicked" handler="on_button-go_clicked" object="button-go"/>
+                    <child>
+                      <object class="GtkProgressBar" id="progressbar-go">
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Press this to start! The show must go on!</property>
+                        <property name="show_text">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="padding">5</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVBox" id="vbox2-vpaned">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkExpander" id="expander-output">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkScrolledWindow" id="scrolledwindow-output">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">automatic</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkTextView" id="textview-output">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="pixels_above_lines">2</property>
+                            <property name="pixels_below_lines">2</property>
+                            <property name="editable">False</property>
+                            <property name="accepts_tab">False</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="label-output">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="label of expansor for textview">&lt;b&gt;Output&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                        <property name="single_line_mode">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">False</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkStatusbar" id="statusbar">
+            <property name="visible">True</property>
+            <property name="sensitive">False</property>
+            <property name="spacing">5</property>
+            <property name="homogeneous">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="padding">2</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkAdjustment" id="adjustment-jpgzoom">
+    <property name="value">0.5</property>
+    <property name="lower">0.0099999997764825821</property>
+    <property name="upper">1</property>
+    <property name="step_increment">0.050000000000000003</property>
+    <property name="page_increment">0.10000000000000001</property>
+    <signal name="value_changed" handler="on_adjustment-jpgzoom_value_changed"/>
+  </object>
+  <object class="GtkAdjustment" id="adjustment-tdelta">
+    <property name="value">5</property>
+    <property name="lower">0.01</property>
+    <property name="upper">1440</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">5</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment-utc">
+    <property name="lower">-12</property>
+    <property name="upper">12</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">2</property>
+    <signal name="value_changed" handler="on_adjustment-utc_value_changed"/>
+  </object>
+  <object class="GtkAboutDialog" id="aboutdialog">
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">About ...</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="default_width">600</property>
+    <property name="default_height">400</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="type_hint">dialog</property>
+    <property name="program_name">PhotoPlace</property>
+    <property name="version">0.5.0</property>
+    <property name="copyright" translatable="yes">Copyright &#xA9; 2010  Jos&#xE9; Riguera </property>
+    <property name="comments" translatable="yes">A program to geolocate photos and generate a Google Earth layer</property>
+    <property name="website">http://code.google.com/p/photoplace/</property>
+    <property name="license" translatable="yes" context="PhotoPlaceGUI" comments="GPL License">		    GNU GENERAL PUBLIC LICENSE
+		       Version 2, June 1991
+
+Copyright (C) 1989, 1991 Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA. Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
+
+			    Preamble
+
+The licenses for most software are designed to take away your freedom to share and change it.  By contrast, the GNU General Public License is intended to guarantee your freedom to share and change free software--to make sure the software is free for all its users.  This General Public License applies to most of the Free Software Foundation's software and to any other program whose authors commit to using it.  (Some other Free Software Foundation software is covered by the GNU Lesser General Public License instead.)  You can apply it to your programs, too.
+
+When we speak of free software, we are referring to freedom, not price.  Our General Public Licenses are designed to make sure that you have the freedom to distribute copies of free software (and charge for this service if you wish), that you receive source code or can get it if you want it, that you can change the software or use pieces of it in new free programs; and that you know you can do these things.
+
+To protect your rights, we need to make restrictions that forbid anyone to deny you these rights or to ask you to surrender the rights. These restrictions translate to certain responsibilities for you if you distribute copies of the software, or if you modify it.
+
+For example, if you distribute copies of such a program, whether gratis or for a fee, you must give the recipients all the rights that you have.  You must make sure that they, too, receive or can get the source code.  And you must show them these terms so they know their rights.
+
+We protect your rights with two steps: (1) copyright the software, and (2) offer you this license which gives you legal permission to copy, distribute and/or modify the software.
+
+Also, for each author's protection and ours, we want to make certain that everyone understands that there is no warranty for this free software.  If the software is modified by someone else and passed on, we want its recipients to know that what they have is not the original, so that any problems introduced by others will not reflect on the original authors' reputations.
+
+Finally, any free program is threatened constantly by software patents.  We wish to avoid the danger that redistributors of a free program will individually obtain patent licenses, in effect making the program proprietary.  To prevent this, we have made it clear that any patent must be licensed for everyone's free use or not licensed at all.
+
+The precise terms and conditions for copying, distribution and modification follow.
+
+		    GNU GENERAL PUBLIC LICENSE
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+  0. This License applies to any program or other work which contains a notice placed by the copyright holder saying it may be distributed under the terms of this General Public License.  The "Program", below, refers to any such program or work, and a "work based on the Program" means either the Program or any derivative work under copyright law: that is to say, a work containing the Program or a portion of it, either verbatim or with modifications and/or translated into another language.  (Hereinafter, translation is included without limitation in the term "modification".)  Each licensee is addressed as "you".
+
+Activities other than copying, distribution and modification are not covered by this License; they are outside its scope.  The act of running the Program is not restricted, and the output from the Program is covered only if its contents constitute a work based on the Program (independent of having been made by running the Program). Whether that is true depends on what the Program does.
+
+  1. You may copy and distribute verbatim copies of the Program's source code as you receive it, in any medium, provided that you conspicuously and appropriately publish on each copy an appropriate copyright notice and disclaimer of warranty; keep intact all the notices that refer to this License and to the absence of any warranty; and give any other recipients of the Program a copy of this License along with the Program.
+
+You may charge a fee for the physical act of transferring a copy, and you may at your option offer warranty protection in exchange for a fee.
+
+  2. You may modify your copy or copies of the Program or any portion of it, thus forming a work based on the Program, and copy and distribute such modifications or work under the terms of Section 1 above, provided that you also meet all of these conditions:
+
+    a) You must cause the modified files to carry prominent notices stating that you changed the files and the date of any change.
+
+    b) You must cause any work that you distribute or publish, that in whole or in part contains or is derived from the Program or any part thereof, to be licensed as a whole at no charge to all third parties under the terms of this License.
+
+    c) If the modified program normally reads commands interactively when run, you must cause it, when started running for such interactive use in the most ordinary way, to print or display an announcement including an appropriate copyright notice and a notice that there is no warranty (or else, saying that you provide a warranty) and that users may redistribute the program under these conditions, and telling the user how to view a copy of this License.  (Exception: if the Program itself is interactive but does not normally print such an announcement, your work based on the Program is not required to print an announcement.)
+
+These requirements apply to the modified work as a whole.  If identifiable sections of that work are not derived from the Program, and can be reasonably considered independent and separate works in themselves, then this License, and its terms, do not apply to those sections when you distribute them as separate works.  But when you distribute the same sections as part of a whole which is a work based on the Program, the distribution of the whole must be on the terms of this License, whose permissions for other licensees extend to the entire whole, and thus to each and every part regardless of who wrote it.
+
+Thus, it is not the intent of this section to claim rights or contest your rights to work written entirely by you; rather, the intent is to exercise the right to control the distribution of derivative or collective works based on the Program.
+
+In addition, mere aggregation of another work not based on the Program with the Program (or with a work based on the Program) on a volume of a storage or distribution medium does not bring the other work under the scope of this License.
+
+  3. You may copy and distribute the Program (or a work based on it, under Section 2) in object code or executable form under the terms of Sections 1 and 2 above provided that you also do one of the following:
+
+    a) Accompany it with the complete corresponding machine-readable source code, which must be distributed under the terms of Sections 1 and 2 above on a medium customarily used for software interchange; or,
+
+    b) Accompany it with a written offer, valid for at least three years, to give any third party, for a charge no more than your cost of physically performing source distribution, a complete machine-readable copy of the corresponding source code, to be distributed under the terms of Sections 1 and 2 above on a medium customarily used for software interchange; or,
+
+    c) Accompany it with the information you received as to the offer to distribute corresponding source code.  (This alternative is allowed only for noncommercial distribution and only if you received the program in object code or executable form with such an offer, in accord with Subsection b above.)
+
+The source code for a work means the preferred form of the work for making modifications to it.  For an executable work, complete source code means all the source code for all modules it contains, plus any associated interface definition files, plus the scripts used to control compilation and installation of the executable.  However, as a special exception, the source code distributed need not include anything that is normally distributed (in either source or binary form) with the major components (compiler, kernel, and so on) of the operating system on which the executable runs, unless that component itself accompanies the executable.
+
+If distribution of executable or object code is made by offering access to copy from a designated place, then offering equivalent access to copy the source code from the same place counts as distribution of the source code, even though third parties are not compelled to copy the source along with the object code.
+
+  4. You may not copy, modify, sublicense, or distribute the Program except as expressly provided under this License.  Any attempt otherwise to copy, modify, sublicense or distribute the Program is void, and will automatically terminate your rights under this License. However, parties who have received copies, or rights, from you under this License will not have their licenses terminated so long as such parties remain in full compliance.
+
+  5. You are not required to accept this License, since you have not signed it.  However, nothing else grants you permission to modify or distribute the Program or its derivative works.  These actions are prohibited by law if you do not accept this License.  Therefore, by modifying or distributing the Program (or any work based on the Program), you indicate your acceptance of this License to do so, and all its terms and conditions for copying, distributing or modifying the Program or works based on it.
+
+  6. Each time you redistribute the Program (or any work based on the Program), the recipient automatically receives a license from the original licensor to copy, distribute or modify the Program subject to these terms and conditions.  You may not impose any further restrictions on the recipients' exercise of the rights granted herein. You are not responsible for enforcing compliance by third parties to this License.
+
+  7. If, as a consequence of a court judgment or allegation of patent infringement or for any other reason (not limited to patent issues), conditions are imposed on you (whether by court order, agreement or otherwise) that contradict the conditions of this License, they do not excuse you from the conditions of this License.  If you cannot distribute so as to satisfy simultaneously your obligations under this License and any other pertinent obligations, then as a consequence you may not distribute the Program at all.  For example, if a patent license would not permit royalty-free redistribution of the Program by all those who receive copies directly or indirectly through you, then the only way you could satisfy both it and this License would be to refrain entirely from distribution of the Program.
+
+If any portion of this section is held invalid or unenforceable under any particular circumstance, the balance of the section is intended to apply and the section as a whole is intended to apply in other circumstances.
+
+It is not the purpose of this section to induce you to infringe any patents or other property right claims or to contest validity of any such claims; this section has the sole purpose of protecting the integrity of the free software distribution system, which is implemented by public license practices.  Many people have made generous contributions to the wide range of software distributed through that system in reliance on consistent application of that system; it is up to the author/donor to decide if he or she is willing to distribute software through any other system and a licensee cannot impose that choice.
+
+This section is intended to make thoroughly clear what is believed to be a consequence of the rest of this License.
+
+  8. If the distribution and/or use of the Program is restricted in certain countries either by patents or by copyrighted interfaces, the original copyright holder who places the Program under this License  may add an explicit geographical distribution limitation excluding those countries, so that distribution is permitted only in or among countries not thus excluded.  In such case, this License incorporates the limitation as if written in the body of this License.
+
+  9. The Free Software Foundation may publish revised and/or new versions of the General Public License from time to time.  Such new versions will be similar in spirit to the present version, but may differ in detail to address new problems or concerns.
+
+Each version is given a distinguishing version number.  If the Program specifies a version number of this License which applies to it and "any later version", you have the option of following the terms and conditions either of that version or of any later version published by the Free Software Foundation.  If the Program does not specify a version number of this License, you may choose any version ever published by the Free Software Foundation.
+
+  10. If you wish to incorporate parts of the Program into other free programs whose distribution conditions are different, write to the author to ask for permission.  For software which is copyrighted by the Free Software Foundation, write to the Free Software Foundation; we sometimes make exceptions for this.  Our decision will be guided by the two goals of preserving the free status of all derivatives of our free software and of promoting the sharing and reuse of software generally.
+
+			    NO WARRANTY
+
+  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+		     END OF TERMS AND CONDITIONS
+
+This General Public License does not permit incorporating your program into proprietary programs.  If your program is a subroutine library, you may consider it more useful to permit linking proprietary applications with the library.  If this is what you want to do, use the GNU Lesser General Public License instead of this License.
+</property>
+    <property name="authors">Jos&#xE9; Riguera L&#xF3;pez &lt;jriguera@gmail.com&gt;</property>
+    <property name="wrap_license">True</property>
+    <signal name="close" handler="on_aboutdialog_close" object="aboutdialog"/>
+    <signal name="response" handler="on_aboutdialog_response" object="aboutdialog"/>
+    <signal name="delete_event" handler="on_aboutdialog_delete_event" object="aboutdialog"/>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="aboutdialog-vbox">
+        <property name="visible">True</property>
+        <property name="spacing">2</property>
+        <child>
+          <object class="GtkVBox" id="vbox-donate">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel" id="label-donate">
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">I have a dream ... well I have a lot of dreams, but this is one of them ...</property>
+                <property name="xpad">10</property>
+                <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="I have a dream ... well I have a lot of dreams, but this is one of them ...">The authors and developers hope you like this program. We would really appreciate it if you would consider making a small donation. We would like to visit Japan and these coins can help us to achieve this dream. Mas cosas?</property>
+                <property name="use_markup">True</property>
+                <property name="justify">fill</property>
+                <property name="wrap">True</property>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLinkButton" id="linkbutton-donate">
+                <property name="label" translatable="yes" context="PhotoPlaceGUI">Donate via PayPal</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">I have a dream ... well I have a lot of dreams, but this is one of them ...</property>
+                <property name="relief">none</property>
+                <property name="focus_on_click">False</property>
+                <property name="uri">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=N6XRW9DLPFSRN</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVBox" id="vbox1-suggestion">
+                <property name="visible">True</property>
+                <property name="border_width">10</property>
+                <child>
+                  <object class="GtkLabel" id="label-suggestion">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes" context="photoplace"> As well, you can write suggestions or impressions to :</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLinkButton" id="linkbutton-suggestion">
+                    <property name="label" translatable="yes">photoplace-project@googlegroups.com</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="relief">none</property>
+                    <property name="uri">mailto:photoplace-project@googlegroups.com</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="padding">20</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="aboutdialog-actionarea">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkImage" id="image-geo">
+    <property name="visible">True</property>
+    <property name="xalign">0</property>
+    <property name="xpad">10</property>
+    <property name="stock">gtk-find-and-replace</property>
+  </object>
+  <object class="GtkImage" id="image-outfile">
+    <property name="visible">True</property>
+    <property name="xalign">0</property>
+    <property name="xpad">10</property>
+    <property name="stock">gtk-save-as</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment-quality">
+    <property name="value">1</property>
+    <property name="upper">3</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">1</property>
+    <signal name="value_changed" handler="on_adjustment-quality_value_changed"/>
+  </object>
+  <object class="GtkImage" id="image-photodir">
+    <property name="visible">True</property>
+    <property name="xpad">5</property>
+    <property name="stock">gtk-directory</property>
+    <property name="icon-size">5</property>
+  </object>
+  <object class="GtkImage" id="image-gpx">
+    <property name="visible">True</property>
+    <property name="xpad">5</property>
+    <property name="stock">gtk-sort-ascending</property>
+    <property name="icon-size">5</property>
+  </object>
+  <object class="GtkWindow" id="window-photoinfo">
+    <property name="modal">True</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="skip_taskbar_hint">True</property>
+    <property name="transient_for">window</property>
+    <signal name="delete_event" handler="on_window-photoinfo_delete_event" object="window-photoinfo"/>
+    <child>
+      <object class="GtkVBox" id="vbox-photoinfo">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkHBox" id="hbox-photoinfo-path">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkLabel" id="label-photoinfo-path">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Picture path :</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="padding">10</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label-photoinfo-geophotopath">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">label</property>
+                <attributes>
+                  <attribute name="foreground" value="#00000000ffff"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="padding">5</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHBox" id="hbox-photoinfo-photo">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkAspectFrame" id="aspectframe-photoinfo">
+                <property name="visible">True</property>
+                <property name="label_xalign">0</property>
+                <property name="shadow_type">out</property>
+                <property name="yalign">0</property>
+                <child>
+                  <object class="GtkImage" id="image-photoinfo">
+                    <property name="visible">True</property>
+                    <property name="stock">gtk-missing-image</property>
+                    <property name="icon-size">6</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="padding">1</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="scrolledwindow-photoinfo">
+                <property name="width_request">400</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hscrollbar_policy">automatic</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <child>
+                  <object class="GtkTreeView" id="treeview-photoinfo">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="model">treestore-photoinfo</property>
+                    <property name="headers_clickable">False</property>
+                    <property name="reorderable">True</property>
+                    <property name="search_column">2</property>
+                    <property name="enable_grid_lines">horizontal</property>
+                    <property name="enable_tree_lines">True</property>
+                    <signal name="row_activated" handler="on_treeview-photoinfo_row_activated"/>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="treeviewcolumn-photoinfo-key">
+                        <property name="resizable">True</property>
+                        <property name="title">key</property>
+                        <property name="reorderable">True</property>
+                        <property name="sort_indicator">True</property>
+                        <property name="sort_column_id">2</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="cellrenderertext-photoinfo-key"/>
+                          <attributes>
+                            <attribute name="foreground">4</attribute>
+                            <attribute name="text">2</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="treeviewcolumn-photoinfo-value">
+                        <property name="resizable">True</property>
+                        <property name="title">Value</property>
+                        <property name="expand">True</property>
+                        <property name="clickable">True</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="cellrenderertext-photoinfo-value"/>
+                          <attributes>
+                            <attribute name="editable">1</attribute>
+                            <attribute name="foreground">4</attribute>
+                            <attribute name="text">3</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="padding">10</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHBox" id="hbox-photoinfo-buttons">
+            <property name="visible">True</property>
+            <property name="spacing">3</property>
+            <child>
+              <object class="GtkLabel" id="label-photoinfo">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes" context="PhotoPlaceGUI" comments=".">Add, delete or modify key/value:</property>
+                <property name="use_markup">True</property>
+                <property name="single_line_mode">True</property>
+              </object>
+              <packing>
+                <property name="padding">5</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="entry-photoinfo-key">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="max_length">100</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="entry-photoinfo-value">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="max_length">1000</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="button-photoinfo-add">
+                <property name="label">gtk-add</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_button-photoinfo-add_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="padding">10</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="button-photoinfo-del">
+                <property name="label">gtk-remove</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_button-photoinfo-del_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="padding">10</property>
+                <property name="position">4</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="padding">5</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHSeparator" id="hseparator-photoinfo">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="padding">5</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHButtonBox" id="hbuttonbox-photoinfo">
+            <property name="visible">True</property>
+            <property name="border_width">10</property>
+            <property name="spacing">10</property>
+            <property name="homogeneous">True</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="button-photoinfo-close">
+                <property name="label">gtk-close</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_button-photoinfo-close_clicked" object="window-photoinfo"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkImage" id="image-simulategeolocate">
+    <property name="visible">True</property>
+    <property name="xpad">2</property>
+    <property name="ypad">2</property>
+    <property name="stock">gtk-execute</property>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="stock">gtk-new</property>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="stock">gtk-sort-ascending</property>
+  </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="stock">gtk-open</property>
+  </object>
+  <object class="GtkImage" id="image4">
+    <property name="visible">True</property>
+    <property name="stock">gtk-save-as</property>
+  </object>
+</interface>
