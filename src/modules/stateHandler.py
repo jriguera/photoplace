@@ -430,28 +430,35 @@ class State(object):
                     photouri = os.path.split(self._photoinputdir)[1]
                     if not photouri:
                         photouri = os.path.split(os.path.split(self._photoinputdir)[0])[1]
+                    photouri = photouri + '/'
                 else:
                     try:
                         photouri = os.path.split(self.options['photoinputdir'])[1]
                         if not photouri:
                             photouri = os.path.split(self.options['photoinputdir'])[0]
                             photouri = os.path.split(photouri)[1]
+                        photouri = photouri + '/'
                     except:
                         photouri = PhotoPlace_Cfg_main_photouri
             else:
                 photouri = self.options['photouri']
         self._photouri = photouri
         if self._outputfile:
-            photouri = urlparse.urlsplit(self._photouri)
             outputfile = os.path.basename(self._outputfile)
-            (outputfilebase, outpufileext) = os.path.splitext(outputfile)
-            if photouri.path == '':
-                self._photouri = outputfilebase
-                self.outputdir = os.path.join(self.outputdir, outputfilebase)
-            elif photouri.scheme == '':
-                self.outputdir = os.path.join(self.outputdir, os.path.normcase(photouri.path))
+            if self.tmpdir:
+                outputdir = self.tmpdir
             else:
-                self.outputdir = os.path.join(self.outputdir, outputfilebase)
+                outputdir = os.path.dirname(self._outputfile)
+            (outputfilebase, outpufileext) = os.path.splitext(outputfile)
+            photouri = urlparse.urlsplit(self._photouri)
+            scheme = photouri.scheme 
+            if os.path.splitdrive(self._photouri)[0]:
+                 scheme = ''
+            if scheme or scheme != 'file':
+                # URL
+                self.outputdir = os.path.join(outputdir, outputfilebase)
+            else:
+                self.outputdir = os.path.join(outputdir, outputfilebase)
 
 
     @DSynchronized()

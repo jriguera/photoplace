@@ -642,8 +642,7 @@ class PhotoPlaceGUI(InterfaceUI):
             else:
                 if not self['togglebutton-outfile'].get_active():
                     self._choose_outfile()
-                else:
-                    self._set_photouri(label)
+                self._set_photouri()
 
     def _clicked_gpx(self, widget=None, data=None):
         if self.show_dialog_choose_gpx(self.userfacade.state['gpxinputfile']):
@@ -704,12 +703,16 @@ class PhotoPlaceGUI(InterfaceUI):
             self.userfacade.state["exifmode"] = -1
 
     def _set_photouri(self, name=None):
-        photouri = self["entry-photouri"].get_text().strip()
         if name:
             self.userfacade.state['photouri'] = name
             self["entry-photouri"].set_text(name)
         else:
+            photouri = self["entry-photouri"].get_text().strip()
             if not photouri:
+                photouri = self.userfacade.state['photouri']
+                self["entry-photouri"].set_text(photouri)
+            else:
+                self.userfacade.state['photouri'] = photouri
                 photouri = self.userfacade.state['photouri']
                 self["entry-photouri"].set_text(photouri)
 
@@ -906,6 +909,7 @@ class PhotoPlaceGUI(InterfaceUI):
             self["togglebutton-outfile"].set_active(False)
             self.geophoto_photoinfo = None
             self.treeview_model.clear()
+            self.userfacade.DoTemplates().run()
 
     def action_loadphotos(self, directory=None):
         try:
@@ -966,6 +970,7 @@ class PhotoPlaceGUI(InterfaceUI):
         return True
 
     def action_process(self, widget, data=None):
+        self._set_photouri()
         iter_mode = self['combobox-exif'].get_active_iter()
         mode = self.combobox_exif_model.get_value(iter_mode, 1)
         self.userfacade.state["exifmode"] = mode

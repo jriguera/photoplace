@@ -47,6 +47,7 @@ PhotoPlace_date = "Sep 2010"
 # Variables on templates
 PhotoPlace_PhotoNAME = 'PhotoPlace.PhotoNAME'
 PhotoPlace_PhotoDATE = 'PhotoPlace.PhotoDATE'
+PhotoPlace_PhotoTZDATE = 'PhotoPlace.PhotoTZDATE'
 PhotoPlace_PhotoURI = 'PhotoPlace.PhotoURI'
 PhotoPlace_PhotoLAT = 'PhotoPlace.PhotoLAT'
 PhotoPlace_PhotoLON = 'PhotoPlace.PhotoLON'
@@ -54,6 +55,7 @@ PhotoPlace_PhotoELE = 'PhotoPlace.PhotoELE'
 PhotoPlace_PhotoWIDTH = 'PhotoPlace.PhotoWIDTH'
 PhotoPlace_PhotoHEIGHT = 'PhotoPlace.PhotoHEIGHT'
 PhotoPlace_PhotoZOOM = 'PhotoPlace_PhotoZOOM'
+PhotoPlace_URI = 'PhotoPlace.URI'
 
 # Default values
 PhotoPlace_Cfg_main_exifmode = 0

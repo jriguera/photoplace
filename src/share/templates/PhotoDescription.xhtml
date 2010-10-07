@@ -2,17 +2,17 @@
     <table border="0">
         <tr>
             <td align="center">
-                <a href="%(PhotoPlace.PhotoURI)s/%(PhotoPlace.PhotoNAME|-)s">
-                    <img src="%(PhotoPlace.PhotoURI)s/$[PlaceTypePhoto/ID]" width="250" border="1" />
+                <a href="%(PhotoPlace.PhotoURI)s">
+                    <img src="%(PhotoPlace.PhotoURI)s" width="600" border="1" />
                 </a>
             </td>
         </tr>
         <tr>
             <td colspan="4" align="left">
                 <ul>
-                    <li><b>Autor</b> %(HOLA|-)s</li>
-                    <li><b>Fecha</b> %(ADIOS|)s</li>
-                    <li><b>Descripcion</b> %(DDS|-)s</li>
+                    <li>%(title|)s</li>
+                    <li>%(date|)s</li>
+                    <li>%(desc|)s</li>
                 </ul>
             </td>
         </tr>

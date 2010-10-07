@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:gx="http://www.google.com/kml/ext/2.2">
   <Document>
     <!-- http://code.google.com/apis/kml/documentation/kmlreference.html -->
     <name>%(name|Test)s</name>
     <visibility>1</visibility>
-    <Snippet maxLines="0"></Snippet> 
+    <Snippet maxLines="0"></Snippet>
     <open>1</open>
     <description><![CDATA[
         <table cellspacing="2" cellpadding="2" border="0">
@@ -16,7 +16,7 @@
     </atom:author>
     <Folder>
         <name>About</name>
-        <Snippet maxLines="2">Acerca de %(name|Test)s. </Snippet> 
+        <Snippet maxLines="2">Acerca de %(name|Test)s. </Snippet>
         <description></description>
     </Folder>
 
@@ -32,7 +32,7 @@
         <textColor>ff000000</textColor>
       </BalloonStyle>
     </Style>
-    
+
     <Style id="normalPlacemark">
       <IconStyle>
         <scale>0.6</scale>
@@ -44,7 +44,7 @@
          <scale>0.6</scale>
       </LabelStyle>
     </Style>
-    
+
 
     <StyleMap id="photoStyle">
       <Pair>
@@ -80,10 +80,10 @@
     <name>%(photofolder|Photos)s</name>
         <Placemark id="%(PhotoPlace.PhotoNAME|-)s">
         <TimeStamp>
-            <when>2007-01-14T21:05:02Z</when>
+            <when>%(PhotoPlace.PhotoTZDATE|)s</when>
         </TimeStamp>
         <name>%(PhotoPlace.PhotoNAME)s</name>
-        <Snippet maxLines="1">%(TITLE|-)s</Snippet> 
+        <Snippet maxLines="1">%(TITLE|-)s</Snippet>
         <styleUrl>#photoStyle</styleUrl>
         <Point>
                 <coordinates>%(PhotoPlace.PhotoLON|0)f,%(PhotoPlace.PhotoLAT|0)f,%(PhotoPlace.PhotoELE|0)f</coordinates>

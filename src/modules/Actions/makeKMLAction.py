@@ -41,7 +41,7 @@ from definitions import *
 class MakeKML(Actions.Interface.Action, threading.Thread):
 
     def __init__(self, state, rootdata={}):
-        Actions.Interface.Action.__init__(self, state, 
+        Actions.Interface.Action.__init__(self, state,
             [state.lock_geophotos, state.lock_gpxdata, state.lock_kmldata])
         threading.Thread.__init__(self)
         self.photouri = state['photouri']
@@ -49,11 +49,19 @@ class MakeKML(Actions.Interface.Action, threading.Thread):
         self.quality = state.quality['img']
         self.jpgzoom = state['jpgzoom']
         self.outputdir = state.outputdir
+        utczoneminutes = state['utczoneminutes']
+        self.str_tzdiff = '-'
+        if utczoneminutes < 0:
+            utczoneminutes = -utczoneminutes
+            self.str_tzdiff = '+'
+        hours, remainder = divmod(utczoneminutes, 60)
+        minutes, seconds = divmod(remainder, 60)
+        self.str_tzdiff = self.str_tzdiff + "%.2d:%.2d" % (hours, minutes)
         self.rootdata = rootdata
 
 
     def ini(self, *args, **kwargs):
-        self._notify_ini(self.outputdir, self.photouri, 
+        self._notify_ini(self.outputdir, self.photouri,
             self.jpgsize, self.jpgzoom, self.quality)
         self.dgettext['jpgsize'] = self.jpgsize
         self.dgettext['jpgzoom'] = self.jpgzoom
@@ -69,6 +77,11 @@ class MakeKML(Actions.Interface.Action, threading.Thread):
 
     def go(self, rini):
         photodata = dict()
+        mode = 0
+        if '%(' in self.photouri:
+            mode = 1
+        elif '%s' in self.photouri:
+            mode = 2
         for photo in self.state.geophotos:
             self._notify_run(photo, 0)
             if photo.status < self.state.status:
@@ -89,15 +102,20 @@ class MakeKML(Actions.Interface.Action, threading.Thread):
                 photodata[PhotoPlace_PhotoWIDTH] = self.jpgsize[0]
                 photodata[PhotoPlace_PhotoHEIGHT] = self.jpgsize[1]
                 photodata[PhotoPlace_PhotoZOOM] = self.jpgzoom
+                photodata[PhotoPlace_URI] = self.photouri
+                str_utctime = photo.time.strftime("%Y-%m-%dT%H:%M:%S")
+                photodata[PhotoPlace_PhotoTZDATE] = str_utctime + self.str_tzdiff
                 for k in photo.exif.exif_keys:
                     try:
                         photodata[k] = str(photo.exif[k].value)
                     except:
                         pass
-                try:
+                if mode == 1:
                     photodata[PhotoPlace_PhotoURI] = self.photouri % photodata
-                except:
-                    photodata[PhotoPlace_PhotoURI] = self.photouri
+                elif mode == 2:
+                    photodata[PhotoPlace_PhotoURI] = self.photouri % photo.name
+                else:
+                    photodata[PhotoPlace_PhotoURI] = self.photouri + photo.name
                 # data to template.
                 self.state.kmldata.setData(photodata)
                 self._notify_run(photo, 1)

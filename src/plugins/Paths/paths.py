@@ -5,6 +5,7 @@ import os.path
 import sys
 import time
 import codecs
+import urlparse
 import gettext
 import locale
 
@@ -60,7 +61,7 @@ _KmlPaths_KMLPATH = ['kml.Document.Placemark']
 _KmlPaths_TEMPLATE = os.path.join("templates", "paths.template.kml")
 _KmlPaths_KMLDIR_APPEND = ".paths"
 _KmlPaths_TEMPLATE_REF = {
-    'kml.Document.Placemark.description': 
+    'kml.Document.Placemark.description':
         os.path.join(_KmlPaths_TEMPLATEDIR, "PathDescription.xhtml"),
 }
 
@@ -77,10 +78,10 @@ class KmlPaths(Plugin):
     copyright = "(c) Jose Riguera"
     date = "Sep 2010"
     license = "GPLv3"
-    capabilities = { 
+    capabilities = {
         'GTK': False,
     }
-    
+
     def init(self, state, widget_container):
         if not state.options.has_key(_KmlPaths_CONFKEY):
             state.options[_KmlPaths_CONFKEY] = dict()
@@ -95,7 +96,7 @@ class KmlPaths(Plugin):
                 msg = _("Main template file '%s' does not exist!.") % self.template
                 self.logger.error(msg)
                 raise ValueError(msg)
-        items = [ 
+        items = [
             _KmlPaths_CONFKEY_KMLPATH_NAME,
             _KmlPaths_CONFKEY_TEMPLATE,
         ]
@@ -116,7 +117,7 @@ class KmlPaths(Plugin):
                 if file_exist:
                     self.templates[k] = filename
         self.xmlnodes_sep = state._templateseparatornodes
-        self.delete_tag = state._templatedeltag 
+        self.delete_tag = state._templatedeltag
         self.separator_key  = state._templateseparatorkey
         self.default_value = state._templatedefaultvalue
         try:
@@ -156,11 +157,27 @@ class KmlPaths(Plugin):
             self.outputfile = os.path.basename(self.state.outputkml)
             if self.state.tmpdir:
                 # it is a KMZ, only one kml is allowed ...
+                # so we change the extension
                 self.outputfile += ".xml"
             outputdir = os.path.split(self.state.outputdir)
             self.outputdir = os.path.join(outputdir[0], outputdir[1])
             self.outputdir += _KmlPaths_KMLDIR_APPEND
-            self.outputuri = os.path.join(os.path.basename(self.outputdir), self.outputfile)
+            state_photouri = self.state['photouri']
+            photouri = urlparse.urlsplit(state_photouri)
+            scheme = photouri.scheme 
+            if os.path.splitdrive(state_photouri)[0]:
+                 scheme = ''
+            if scheme:
+                # URL
+                if '%(' in state_photouri:
+                    data = {'PhotoPlace.PhotoNAME': self.outputfile}
+                    self.outputuri = state_photouri % data
+                elif '%s' in state_photouri:
+                    self.outputuri = state_photouri % self.outputfile
+                else:
+                    self.outputuri = state_photouri + self.outputfile
+            else:
+                self.outputuri = os.path.basename(self.outputdir) + '/' + self.outputfile
             if not os.path.isdir(self.outputdir):
                 os.mkdir(self.outputdir)
             self.outputfile = os.path.join(self.outputdir, self.outputfile)
