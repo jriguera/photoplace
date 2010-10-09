@@ -45,17 +45,36 @@ PhotoPlace_url = "http://code.google.com/p/photoplace"
 PhotoPlace_date = "Sep 2010"
 
 # Variables on templates
-PhotoPlace_PhotoNAME = 'PhotoPlace.PhotoNAME'
-PhotoPlace_PhotoDATE = 'PhotoPlace.PhotoDATE'
-PhotoPlace_PhotoTZDATE = 'PhotoPlace.PhotoTZDATE'
-PhotoPlace_PhotoURI = 'PhotoPlace.PhotoURI'
-PhotoPlace_PhotoLAT = 'PhotoPlace.PhotoLAT'
-PhotoPlace_PhotoLON = 'PhotoPlace.PhotoLON'
-PhotoPlace_PhotoELE = 'PhotoPlace.PhotoELE'
-PhotoPlace_PhotoWIDTH = 'PhotoPlace.PhotoWIDTH'
-PhotoPlace_PhotoHEIGHT = 'PhotoPlace.PhotoHEIGHT'
-PhotoPlace_PhotoZOOM = 'PhotoPlace_PhotoZOOM'
-PhotoPlace_URI = 'PhotoPlace.URI'
+PhotoPlace_PhotoNAME = 'Photo.NAME'
+PhotoPlace_PhotoDATE = 'Photo.DATE'
+PhotoPlace_PhotoTZDATE = 'Photo.TZDATE'
+PhotoPlace_PhotoURI = 'Photo.URI'
+PhotoPlace_PhotoLAT = 'Photo.LAT'
+PhotoPlace_PhotoLON = 'Photo.LON'
+PhotoPlace_PhotoELE = 'Photo.ELE'
+PhotoPlace_PhotoWIDTH = 'Photo.WIDTH'
+PhotoPlace_PhotoHEIGHT = 'Photo.HEIGHT'
+PhotoPlace_PhotoZOOM = 'Photo.ZOOM'
+
+PhotoPlace_ResourceURI = 'ResourceURI'
+
+PhotoPlace_NumPOINTS = 'NunPOINTS'
+PhotoPlace_NumTRACKS = 'NunTRACKS'
+PhotoPlace_MinTime = 'MinTime'
+PhotoPlace_MaxTime = 'MaxTime'
+PhotoPlace_DiffTime = 'DiffTime'
+PhotoPlace_MinLAT = 'MinLAT'
+PhotoPlace_MaxLAT = 'MaxLAT'
+PhotoPlace_MinLON = 'MinLON'
+PhotoPlace_MaxLON = 'MaxLON'
+
+PhotoPlace_MidLAT = 'inilatitute'
+PhotoPlace_MidLON = 'inilongitude'
+PhotoPlace_IniHEADING = 'inialtitude'
+PhotoPlace_IniRANGE = 'inirange'
+PhotoPlace_IniTILT = 'initilt'
+PhotoPlace_IniHEADING = 'iniheading'
+
 
 # Default values
 PhotoPlace_Cfg_main_exifmode = 0

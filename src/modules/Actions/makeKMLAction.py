@@ -57,12 +57,64 @@ class MakeKML(Actions.Interface.Action, threading.Thread):
         hours, remainder = divmod(utczoneminutes, 60)
         minutes, seconds = divmod(remainder, 60)
         self.str_tzdiff = self.str_tzdiff + "%.2d:%.2d" % (hours, minutes)
-        self.rootdata = rootdata
+        self.rootdata = dict(rootdata)
 
 
     def ini(self, *args, **kwargs):
-        self._notify_ini(self.outputdir, self.photouri,
-            self.jpgsize, self.jpgzoom, self.quality)
+        min_time = datetime.datetime.max
+        max_time = datetime.datetime.min
+        total_length = 0.0
+        num_tracks = 0
+        num_points = 0
+        max_lat = -90.0
+        min_lat = 90.0
+        max_lon = -180.0
+        min_lon = 180.0
+        for track in self.state.gpxdata.tracks:
+            try:
+                (tmin, tmax, duration) = track.timeMinMaxDuration()
+                if tmin < min_time:
+                    min_time = tmin
+                if tmax > max_time:
+                    max_time = tmax
+                (lmin, lmax, length) = track.lengthMinMaxTotal()
+                total_length += length
+                points = track.listpoints()
+                for point in points:
+                    num_points += 1
+                    if max_lat < point.lat:
+                        max_lat = point.lat
+                    if min_lat > point.lat:
+                        min_lat = point.lat
+                    if max_lon < point.lon:
+                        max_lon = point.lon
+                    if min_lon > point.lon:
+                        min_lon = point.lon
+                points = None
+                num_tracks += 1
+            except Exception as e:
+                self.dgettext["error"] = str(e)
+                self.dgettext['path'] = track.name
+                msg = _("Cannot process '%(path)s': %(error)s.") % self.dgettext
+                self.logger.error(msg)
+        center_lon = (max_lon + min_lon)/2.0
+        center_lat = (max_lat + min_lat)/2.0
+        diff_time = abs(max_time - min_time)
+        self.rootdata[PhotoPlace_NumPOINTS] = num_points
+        self.rootdata[PhotoPlace_NumTRACKS] = num_tracks
+        str_time = min_time.strftime("%Y-%m-%dT%H:%M:%S")
+        self.rootdata[PhotoPlace_MinTime] = str_time + self.str_tzdiff
+        str_time = max_time.strftime("%Y-%m-%dT%H:%M:%S")
+        self.rootdata[PhotoPlace_MaxTime] = str_time + self.str_tzdiff
+        self.rootdata[PhotoPlace_DiffTime] = str(diff_time)
+        self.rootdata[PhotoPlace_MinLAT] = min_lat
+        self.rootdata[PhotoPlace_MaxLAT] = max_lat
+        self.rootdata[PhotoPlace_MinLON] = min_lon
+        self.rootdata[PhotoPlace_MaxLON] = max_lon
+        self.rootdata.setdefault(PhotoPlace_MidLAT, center_lat)
+        self.rootdata.setdefault(PhotoPlace_MidLON, center_lon)
+        self.rootdata[PhotoPlace_ResourceURI] = self.photouri
+        self._notify_ini(self.rootdata)
         self.dgettext['jpgsize'] = self.jpgsize
         self.dgettext['jpgzoom'] = self.jpgzoom
         self.dgettext['quality'] = self.quality
@@ -102,7 +154,7 @@ class MakeKML(Actions.Interface.Action, threading.Thread):
                 photodata[PhotoPlace_PhotoWIDTH] = self.jpgsize[0]
                 photodata[PhotoPlace_PhotoHEIGHT] = self.jpgsize[1]
                 photodata[PhotoPlace_PhotoZOOM] = self.jpgzoom
-                photodata[PhotoPlace_URI] = self.photouri
+                photodata[PhotoPlace_ResourceURI] = self.photouri
                 str_utctime = photo.time.strftime("%Y-%m-%dT%H:%M:%S")
                 photodata[PhotoPlace_PhotoTZDATE] = str_utctime + self.str_tzdiff
                 for k in photo.exif.exif_keys:
@@ -132,6 +184,7 @@ class MakeKML(Actions.Interface.Action, threading.Thread):
 
     def end(self, rgo):
         self.state.kmldata.close(self.rootdata)
+        self.rootdata = None
         self._notify_end(self.num_photos)
         self.dgettext['num_photos'] = self.num_photos
         msg = _("%(num_photos)s photos have been processed for KML data.")
