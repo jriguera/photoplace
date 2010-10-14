@@ -82,7 +82,14 @@ class LoadPhotos(Actions.Interface.Action, threading.Thread):
                 else:
                     geophoto.status = 1
                     self._notify_run(geophoto)
-                    self.state.geophotos.append(geophoto)
+                    position = 0
+                    for photo in self.state.geophotos:
+                        if geophoto.time <= photo.time:
+                            self.state.geophotos.insert(position, geophoto)
+                            break
+                        position += 1
+                    else:
+                        self.state.geophotos.append(geophoto)
                     self.num_photos += 1
                     msg = _("Photo file name '%(photo)s' was processed properly.")
                 self.logger.debug(msg % self.dgettext)
