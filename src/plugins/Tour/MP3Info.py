@@ -1,9 +1,10 @@
+#! /usr/bin/env python
 # -*- Mode: python -*-
 #
 # $Id: MP3Info.py,v 1.12 2004/05/19 16:07:09 vivake Exp $
-# 
+#
 # Copyright (c) 2002-2004 Vivake Gupta (vivakeATlab49.com).  All rights reserved.
-# 
+#
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
 # published by the Free Software Foundation; either version 2 of the
@@ -22,28 +23,28 @@
 # This software is maintained by Vivake (vivakeATlab49.com) and is available at:
 #     http://www.lab49.com/~vivake/python/MP3Info.py
 #
-#      ( 7/2003) - Incorporated various changes from Stan Seibert 
-#                  <volsungATxiph.org> for more robust ID3 detection.  Includes 
+#      ( 7/2003) - Incorporated various changes from Stan Seibert
+#                  <volsungATxiph.org> for more robust ID3 detection.  Includes
 #                  looking for all 11 sync bits and limits on how far to look
 #                  for sync bits depending on presence of ID3v2 headers.
-#      (11/2003) - Incorporated various changes from Stan Seibert 
+#      (11/2003) - Incorporated various changes from Stan Seibert
 #                  <volsungATxiph.org> for must robust ID3 detection.  Includes
 #                  fixes to VBR detection and better finding of frame headers.
 # 1.2  ( 4/2004) - Integrated a fix from Peter Finlayson <frnknstnATiafrica.com>
-#                  for the function ID3v2Frame.  I was determining the size of 
+#                  for the function ID3v2Frame.  I was determining the size of
 #                  the frame using struct unpacking for signed 8-bit integers,
 #                  but should have been getting unsigned 8-bit integers.
 # 1.3  ( 4/2004) - Added a proper CVS Id comment.
-# 1.4  ( 4/2004) - Added an 'is_vbr' flag to denote that a bitrate from a 
-#                  VBR-encoded file is an approximate (average) bitrate.  
+# 1.4  ( 4/2004) - Added an 'is_vbr' flag to denote that a bitrate from a
+#                  VBR-encoded file is an approximate (average) bitrate.
 #                  Suggested by Willem Broekema <willemATpastelhorn.com>
 # 1.5  ( 5/2004) - Protected contributor e-mail addresses from spamming.
-# 1.6  ( 5/2004) - Changed 'False' to '0' and 'True' to '1' globally, to work 
-#                  with older versions of Python. 
-# 1.7  ( 5/2004) - Fixed a mistake in the main call to _parse_xing() where the 
+# 1.6  ( 5/2004) - Changed 'False' to '0' and 'True' to '1' globally, to work
+#                  with older versions of Python.
+# 1.7  ( 5/2004) - Fixed a mistake in the main call to _parse_xing() where the
 #                  values for seekstart and seeklimit are inverted.  This causes
-#                  MP3Info to rarely find the Xing header and report invalid 
-#                  lengths for VBR mp3s. Thanks to Christophe Pelte 
+#                  MP3Info to rarely find the Xing header and report invalid
+#                  lengths for VBR mp3s. Thanks to Christophe Pelte
 #                  <cpelteATnoos.fr> for this patch.
 # 1.8  ( 5/2004) - Backported the 'filesize2' attribute from edna, which shows
 #                  the filesize in megabytes.
@@ -233,7 +234,7 @@ class ID3v1:
             self.tags['TCO'] = _genres[ord(data[127])]
         except IndexError:
             self.tags['TCO'] = None
-        
+
 
 class ID3v2:
     def __init__(self, file):
@@ -263,7 +264,7 @@ class ID3v2:
 
         self.frames = []
         self.tags = {}
-        
+
         file.seek(0, 0)
         if file.read(3) != "ID3":
             return
@@ -311,8 +312,8 @@ _samplerates = [
     [  None,  None,  None, None], # reserved
     [ 22050, 24000, 16000, None], # MPEG-2
     [ 44100, 48000, 32000, None], # MPEG-1
-]                                                                                                               
-                                                                                                                  
+]
+
 _modes = [ "stereo", "joint stereo", "dual channel", "mono" ]
 
 _mode_extensions = [
@@ -372,14 +373,14 @@ class MPEG:
                                            check_next_header=2)
         if offset == -1 or header is None:
             raise Error("Failed MPEG frame test.")
-            
+
         # Now we can look for the first header
         offset, header = self._find_header(file, seeklimit, seekstart)
         if offset == -1 or header is None:
             raise Error("Could not find MPEG header")
 
         # Note that _find_header already parsed the header
-        
+
         if not self.valid:
             raise Error("MPEG header not valid")
 
@@ -400,8 +401,8 @@ class MPEG:
         file.seek(seekstart, 0)
         # Don't read more than we are allowed to see (size of header is 4)
         header = file.read(min(amt,seeklimit+4))
-        
-        while curr_pos <= seeklimit:            
+
+        while curr_pos <= seeklimit:
             # look for the sync byte
             offset = string.find(header, chr(255), curr_pos)
             #print curr_pos + seekstart
@@ -422,11 +423,11 @@ class MPEG:
                 # WARNING: _parse_header has side effects!  This should
                 # be fixed, though in this case it does not matter.
                 self._parse_header(header[offset:offset+4])
-                    
+
                 if self.valid:
 
                     file_pos = file.tell()
-                    
+
                     next_off, next_header = \
                               self._find_header(file, seeklimit=0,
                                         seekstart=seekstart+offset
@@ -435,14 +436,14 @@ class MPEG:
 
                     # Move the file pointer back
                     file.seek(file_pos,0)
-                    
+
                     if next_off != -1:
                         return seekstart+offset, header[offset:offset+4]
                     else:
                         curr_pos = offset+2
                 else:
                     curr_pos = offset+2
-                    
+
             else:
                 curr_pos = offset+2 # Gotta be after the 2 bytes we looked at
 
@@ -453,16 +454,16 @@ class MPEG:
                     return -1, None
                 else:
                     header += chunk
-        
+
         # couldn't find the header
         return -1, None
 
     def _parse_header(self, header):
         self.valid = 0 # Assume the worst until proven otherwise
-        
+
         # AAAAAAAA AAABBCCD EEEEFFGH IIJJKLMM
         (bytes,) = struct.unpack('>i', header)
-        mpeg_version =    (bytes >> 19) & 3  # BB   00 = MPEG2.5, 01 = res, 10 = MPEG2, 11 = MPEG1  
+        mpeg_version =    (bytes >> 19) & 3  # BB   00 = MPEG2.5, 01 = res, 10 = MPEG2, 11 = MPEG1
         layer =           (bytes >> 17) & 3  # CC   00 = res, 01 = Layer 3, 10 = Layer 2, 11 = Layer 1
         protection_bit =  (bytes >> 16) & 1  # D    0 = protected, 1 = not protected
         bitrate =         (bytes >> 12) & 15 # EEEE 0000 = free, 1111 = bad
@@ -471,9 +472,9 @@ class MPEG:
         private_bit =     (bytes >> 8)  & 1  # H
         mode =            (bytes >> 6)  & 3  # II   00 = stereo, 01 = joint stereo, 10 = dual channel, 11 = mono
         mode_extension =  (bytes >> 4)  & 3  # JJ
-        copyright =       (bytes >> 3)  & 1  # K    00 = not copyrighted, 01 = copyrighted                            
-        original =        (bytes >> 2)  & 1  # L    00 = copy, 01 = original                                          
-        emphasis =        (bytes >> 0)  & 3  # MM   00 = none, 01 = 50/15 ms, 10 = res, 11 = CCIT J.17                
+        copyright =       (bytes >> 3)  & 1  # K    00 = not copyrighted, 01 = copyrighted
+        original =        (bytes >> 2)  & 1  # L    00 = copy, 01 = original
+        emphasis =        (bytes >> 0)  & 3  # MM   00 = none, 01 = 50/15 ms, 10 = res, 11 = CCIT J.17
 
         if mpeg_version == 0:
             self.version = 2.5
@@ -493,7 +494,7 @@ class MPEG:
 
         self.bitrate = _bitrates[mpeg_version & 1][self.layer - 1][bitrate]
         self.samplerate = _samplerates[mpeg_version][samplerate]
-        
+
         if self.bitrate is None or self.samplerate is None:
             return
 
@@ -519,10 +520,10 @@ class MPEG:
                     fake_samplerate = self.samplerate << 1
                 else:
                     fake_samplerate = self.samplerate
-                    
+
                 self.framelength = 144000 * self.bitrate / fake_samplerate + padding_bit
                 self.samplesperframe = 1152.0 # This might be wrong
-                
+
 
             self.length = int(round((self.filesize / self.framelength) * (self.samplesperframe / self.samplerate)))
         except ZeroDivisionError:
@@ -531,7 +532,7 @@ class MPEG:
         # More sanity checks
         if self.framelength < 0 or self.length < 0:
             return
-        
+
         self.valid = 1
 
     def _parse_xing(self, file, seekstart=0, seeklimit=_MP3_HEADER_SEEK_LIMIT):
@@ -570,11 +571,11 @@ class MPEG:
         # now just in case
         if seekstart != 0:
             self._parse_xing(file, 0, seeklimit)
-        
+
 class MP3Info:
 
     num_regex = re.compile("\d+")
-    
+
     def __init__(self, file):
         self.valid = 0
 
@@ -604,7 +605,7 @@ class MP3Info:
 
         if self.id3 is None:
             return
-        
+
         for tag in self.id3.tags.keys():
             if tag == 'TT2' or tag == 'TIT2':
                 self.title = self.id3.tags[tag]
