@@ -1,12 +1,33 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#   photoplace.py
+#
+#       Copyright 2010 Jose Riguera Lopez <jriguera@gmail.com>
+#
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
+#
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+#
+#       You should have received a copy of the GNU General Public License
+#       along with this program; if not, write to the Free Software
+#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#       MA 02110-1301, USA.
 """
+PhotoPlace executable
 """
+__program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.1.0"
-__date__ = "March 2010"
+__version__ = "0.5.0"
+__date__ = "September 2010"
 __license__ = "GPL (v2 or later)"
-__copyright__ ="(c) Jose Riguera, March 2010"
-
+__copyright__ ="(c) Jose Riguera, September 2010"
 
 import os
 import sys
@@ -16,6 +37,21 @@ import ConfigParser
 import gettext
 import locale
 
+# do imports
+try:
+    import Image
+except ImportError:
+    print("Sorry, you don't have the Image (PIL) module installed, and this")
+    print("program relies on it. Please install Image (PIL) module to continue.")
+    sys.exit(1)
+try:
+    import pyexiv2
+    version_pyexiv2 = pyexiv2.__version__
+except ImportError:
+    print("Sorry, you don't have the pyexiv2 >= 0.2 module installed, and this")
+    print("program relies on it. Please install pyexiv2 >= 0.2v module and ")
+    print("Exiv2 library.")
+    sys.exit(1)
 
 
 __GETTEXT_DOMAIN__ = 'photoplace'
@@ -23,10 +59,8 @@ __MODULES_PATH__ = 'modules'
 __RESOURCES_PATH__ = 'share'
 __LOCALE_PATH__ = 'locale'
 __LIB_PATH__ = 'lib'
-__GTK_CAPABLE__ = True
 __PROGRAM_PATH__ = None
 __RESOURCES_CONF_PATH__ = 'conf'
-__RESOURCES_GTK_PATH__ = 'gtkui'
 __SHARE_DIR__ = os.path.join('share', 'photoplace')
 
 
@@ -73,55 +107,12 @@ try:
     gettext.install(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
 except Exception as e:
     _ = lambda s: s
-    print "Error setting up the translations: %s" % (e)
+    print("Error setting up the translations: %s" % (e))
 
-
-# do imports
-try:
-    import Image
-except ImportError:
-    print "Sorry, you don't have the Image (PIL) module installed, and this"
-    print "program relies on it. Please install Image (PIL) module to continue."
-    sys.exit(1)
-try:
-    import pyexiv2
-    version_pyexiv2 = pyexiv2.__version__
-except ImportError:
-    print "Sorry, you don't have the pyexiv2 >= 0.2 module installed, and this"
-    print "program relies on it. Please install pyexiv2 >= 0.2v module and "
-    print "Exiv2 library."
-    sys.exit(1)
-
-if sys.platform.startswith("win"):
-    # Fetchs gtk2 path from registry
-    import _winreg
-    import msvcrt
-    try:
-        k = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, "Software\\GTK\\2.0")
-    except EnvironmentError:
-        print "You must install the Gtk+ 2.2 Runtime Environment to run this program"
-        while not msvcrt.kbhit():
-            pass
-        __GTK_CAPABLE__ = False
-    else:
-        gtkdir = _winreg.QueryValueEx(k, "Path")
-        os.environ['PATH'] += ";%s/lib;%s/bin" % (gtkdir[0], gtkdir[0])
-try:
-    import pygtk
-    pygtk.require("2.0")
-    import gtk
-    import gobject
-except Exception as e:
-    print "Warning: %s" % str(e)
-    print "You don't have the PyGTK 2.0 module installed. "
-    print "The GTK UI will not be launched."
-    __GTK_CAPABLE__ = False
 
 
 from definitions import *
 import userFacade
-from UserInterface.GTKUI import *
-
 
 
 def program(args=sys.argv):
@@ -155,10 +146,10 @@ def program(args=sys.argv):
         description = options_description,
         epilog = options_epilog)
     options_parser.add_option("-c", "--config-file",
-        dest = "configfile", metavar = "<configfile.cfg>",
+        dest = "configfile", metavar="<configfile.cfg>",
         help = _("Read the configuration from <configfile.cfg>"))
     options_parser.add_option("-g", "--only-geolocate",
-        action = "store_true", dest = "onlygeolocate", default = False,
+        action = "store_true", dest="onlygeolocate", default=False,
         help = _("Only do geolocating the photos of input directory, not "
             "generating any output file."))
     options_parser.add_option("-o", "--options",
@@ -166,10 +157,9 @@ def program(args=sys.argv):
         help = _("Other options like they are defined in the config file. This "
             "argument can be supplied as many times as it was necessary for "
             "all options. The format is '-o \"section:key=value\".'"))
-    options_parser.add_option("-u", "--gui",
-        action = "store_false", dest = "mode", default = True,
-        help=_("Launch the Graphical User Interface, even if all necessary "
-            "options are supplied."))
+    options_parser.add_option("-b", "--batch",
+        action = "store_true", dest="batch", default=False,
+        help=_("Launch the batch mode, with command line args."))
     options_parser.add_option("--fluzo", help=optparse.SUPPRESS_HELP)
     (options, oargs) = options_parser.parse_args()
     if options.configfile :
@@ -200,27 +190,32 @@ def program(args=sys.argv):
         finally:
             configuration = None
     userfacade = userFacade.UserFacade(__RESOURCES_PATH__, configfile, args, options, oargs)
-    if options.mode and __GTK_CAPABLE__:
-        gtkui_path = os.path.join(__RESOURCES_PATH__, __RESOURCES_GTK_PATH__)
+    if not options.batch:
         try:
-            gui = PhotoPlaceGUI(gtkui_path)
+            import UserInterface.GTKUI as GUI
+            gui = GUI.PhotoPlaceGUI(__RESOURCES_PATH__)
             gui.init(userfacade)
             gui.loadPlugins()
-            gui.load()
-            gui.loop()
+            gui.start(True)
         except KeyboardInterrupt:
             userfacade.end()
         except Exception as e:
-            msg = _("[PhotoPlace] Fatal error! Cannot launch GUI: %s.\n")
+            msg = _("Error: Cannot launch GUI: %s.\nTrying batch mode ...\n")
             sys.stderr.write(msg  % str(e))
-            sys.exit(1)
-    else:
+            options.batch = True
+    if options.batch:
         try:
-            raise
+            import UserInterface.commandUI as COM
+            command = COM.PhotoPlaceCOM(__RESOURCES_PATH__)
+            command.init(userfacade)
+            command.loadPlugins()
+            command.start(True)
         except Exception as e:
-            msg = _("[PhotoPlace] Fatal error! Cannot launch program: %s.\n")
+            msg = _("Fatal error: Cannot launch program: %s.\n")
             sys.stderr.write(msg  % str(e))
             sys.exit(1)
+        finally:
+            userfacade.end()
 
 
 if __name__ == "__main__":

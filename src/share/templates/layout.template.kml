@@ -17,8 +17,8 @@
     <Folder>
         <name>About</name>
         <Snippet maxLines="1">
-            All about %(name|this)s layer. 
-            Made with PhotoPlace.
+            All about this layer. 
+            (Made with PhotoPlace)
         </Snippet>
         <description></description>
     </Folder>

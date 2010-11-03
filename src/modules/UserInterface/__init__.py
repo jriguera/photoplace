@@ -29,11 +29,9 @@ __license__ = "GPL (v3 or later)"
 __copyright__ ="(c) Jose Riguera, May 2010"
 
 
-__all__ = ['Interface', 'GTKUI', 'commandUI']
+__all__ = ['Interface']
 
 import Interface
-import commandUI
-import GTKUI
 
 
 # EOF

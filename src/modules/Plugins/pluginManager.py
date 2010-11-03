@@ -171,8 +171,6 @@ class PluginManager(object):
         keyword arguments you pass in will be passed to the plugins.
         """
         errors = {}
-        #print "EVENTOS", self.events
-        #print "EVENT=", event
         if self.events.has_key(event):
             for plugin in self.events[event]:
                 name = plugin.__module__

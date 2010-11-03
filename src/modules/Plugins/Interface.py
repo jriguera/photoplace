@@ -39,6 +39,11 @@ __PLUGIN_IVERSION__ = 0.1
 __PLUGIN_ICLASS__ = "Plugin"
 __PLUGIN_PNAME__ = "PhotoPlace"
 __PLUGIN_PVERSION__ = "0.5.0"
+(
+    PLUGIN_GUI_NO,
+    PLUGIN_GUI_GTK,
+    PLUGIN_GUI_OTHER,
+) = range(3)
 
 
 
@@ -56,21 +61,23 @@ class Plugin(object):
     date = "-"
     license = "GPLv3"
     capabilities = {
-        'GTK': False,
+        'GUI' : PLUGIN_GUI_NO,
+        'NeedGUI' : False,
     }
     
-    def __init__(self, logger, args, argfiles=[], gtkbuilder=None):
+    def __init__(self, logger, state, args, argfiles=[], gtkbuilder=None):
         object.__init__(self)
         self.logger = logger
+        self.state = state
         self.argfiles = argfiles
         self.args = args
         self.gtkbuilder = gtkbuilder
     
-    def init(self, state, widget_container):
+    def init(self, options, widget_container):
         self.logger.debug("init")
         pass
     
-    def end(self, state):
+    def end(self, options):
         self.logger.debug("end")
         pass
 

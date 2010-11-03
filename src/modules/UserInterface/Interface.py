@@ -57,17 +57,8 @@ class InterfaceUI(object):
     def init(self, userfacade):
         self.userfacade = userfacade
         self.userfacade.init()
-    
-    def load(self):
-        pass
-    
-    def loop(self):
-        pass
 
-    def loadPlugins(self):
-        pass
-    
-    def unloadPlugins(self):
+    def start(self, load_files=True):
         pass
 
     def loadPlugins(self):

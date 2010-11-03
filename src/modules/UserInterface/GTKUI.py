@@ -35,26 +35,58 @@ import time
 import Image
 import StringIO
 import cgi
+import warnings
+
+if sys.platform.startswith("win"):
+    # Fetchs gtk2 path from registry
+    import _winreg
+    import msvcrt
+    try:
+        k = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, "Software\\GTK\\2.0")
+    except EnvironmentError:
+        print("You must install the Gtk+ 2.2 Runtime Environment to run this program")
+        while not msvcrt.kbhit():
+            pass
+        raise
+    else:
+        gtkdir = _winreg.QueryValueEx(k, "Path")
+        os.environ['PATH'] += ";%s/lib;%s/bin" % (gtkdir[0], gtkdir[0])
+
+warnings.filterwarnings('error', module='gtk')
 try:
     import pygtk
     pygtk.require("2.0")
     import gtk
     import gobject
+    gobject.set_prgname(__program__)
     gtk.gdk.threads_init()
     gobject.threads_init()
-except:
-    pass
+except Warning as w:
+    warnings.resetwarnings()
+    if str(w) == 'could not open display':
+        raise AttributeError("Cannot open display, no X server found")
+except Exception as e:
+    warnings.resetwarnings()
+    print("Warning: %s" % str(e))
+    print("You don't have the PyGTK 2.0 module installed")
+    raise
+warnings.resetwarnings()
+
+
+
+__RESOURCES_GTK_PATH__ = "gtkui"
+__GUIXML_FILE__ = os.path.join(__RESOURCES_GTK_PATH__, "photoplace.ui")
+__GUIICON_FILE__ = os.path.join(__RESOURCES_GTK_PATH__, "photoplace.png")
+__PIXBUF_SIZE__ = (568,426)
+
 
 from definitions import *
 from observerHandler import *
 from stateHandler import *
 from userFacade import *
+from Plugins.Interface import *
 from Interface import InterfaceUI
 
-
-
-__GUIXML_FILE__ = "photoplace.ui"
-__PIXBUF_SIZE__ = (568,426)
 
 
 def get_pixbuf_from_geophoto(geophoto, size=__PIXBUF_SIZE__):
@@ -166,12 +198,14 @@ class PhotoPlaceGUI(InterfaceUI):
         self.statusbar_context = self.statusbar.get_context_id(msg)
         self.statusbar.push(self.statusbar_context, msg)
         # make dialogs
+        self.window = self.builder.get_object("window")
         self.photoinfo_win = self.builder.get_object("window-photoinfo")
         self.kmz_save_dlg = self.make_save_dialog()
         self.dir_open_dlg = self.make_opendir_dialog()
         self.gpx_open_dlg = self.make_opengpx_dialog()
         # show window
-        self.window = self.builder.get_object("window")
+        #self.window.set_icon_from_file(os.path.join(resourcedir, __GUIICON_FILE__))
+        #gtk.window_set_default_icon_from_file(os.path.join(resourcedir, __GUIICON_FILE__))
         self.window.show_all()
 
     def __getitem__(self, key):
@@ -235,41 +269,38 @@ class PhotoPlaceGUI(InterfaceUI):
         self.checkbutton_outgeo = self.builder.get_object("checkbutton-outgeo")
         self._choose_outfile(False)
         self.set_progressbar(None, 0.0)
-        #        gtk.gdk.threads_init()
-        #        if sys.platform == 'win32':
-        #            gobject.timeout_add(400,sleeper)
-        #        gtk.gdk.threads_enter()
 
-    def load(self):
-        # Read current file
-        selection = False
-        if self.userfacade.state['gpxinputfile']:
-            if self.action_readgpx():
-                label = os.path.basename(self.userfacade.state['gpxinputfile'])
-                self["button-opengpx"].set_label(label + "  ")
-                selection = True
-        # Read current photodir
-        if self.userfacade.state['photoinputdir']:
-            if self.action_loadphotos():
-                label = os.path.basename(self.userfacade.state['photoinputdir'])
-                self["button-openphotos"].set_label(label + "  ")
-                selection = True
-        self["checkbutton-outgeo"].set_active(True)
-        self._toggle_geolocate_mode()
-        if self.userfacade.state["outputfile"]:
-            self["togglebutton-outfile"].set_active(True)
-            self._choose_outfile()
-        if not selection:
-            dgettext = dict()
-            dgettext['program'] = PhotoPlace_name
-            dgettext['version'] = PhotoPlace_version
-            msg = _("Welcome to %(program)s v %(version)s. If you like it, "
-                "please consider making a donation ;-) See 'About' menu for "
-                "more information") % dgettext
-            gobject.idle_add(self.statusbar.pop, self.statusbar_context)
-            gobject.idle_add(self.statusbar.push, self.statusbar_context, msg)
 
-    def loop(self):
+    def start(self, load_files=True):
+        loaded_templates = self.action_loadtemplates()
+        if load_files and loaded_templates:
+            # Read current file
+            selection = False
+            if self.userfacade.state['gpxinputfile']:
+                if self.action_readgpx():
+                    label = os.path.basename(self.userfacade.state['gpxinputfile'])
+                    self["button-opengpx"].set_label(label + "  ")
+                    selection = True
+            # Read current photodir
+            if self.userfacade.state['photoinputdir']:
+                if self.action_loadphotos():
+                    label = os.path.basename(self.userfacade.state['photoinputdir'])
+                    self["button-openphotos"].set_label(label + "  ")
+                    selection = True
+            self["checkbutton-outgeo"].set_active(True)
+            self._toggle_geolocate_mode()
+            if self.userfacade.state["outputfile"]:
+                self["togglebutton-outfile"].set_active(True)
+                self._choose_outfile()
+            if not selection:
+                dgettext = dict()
+                dgettext['program'] = PhotoPlace_name
+                dgettext['version'] = PhotoPlace_version
+                msg = _("Welcome to %(program)s v %(version)s. If you like it, "
+                    "please consider making a donation ;-) See 'About' menu for "
+                    "more information") % dgettext
+                gobject.idle_add(self.statusbar.pop, self.statusbar_context)
+                gobject.idle_add(self.statusbar.push, self.statusbar_context, msg)
         # GTK signals
         self.signals = {
             "on_aboutdialog_close": self.dialog_close,
@@ -303,16 +334,18 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_treeview-photoinfo_row_activated": self._clicked_photoinfo_att
         }
         self.builder.connect_signals(self.signals)
-        #gtk.gdk.threads_init()
-        #gobject.threads_init()
         if sys.platform.startswith('win'):
             sleeper = lambda: time.sleep(.001) or True
             gobject.timeout_add(400, sleeper)
-        #gtk.gdk.threads_enter()
+        gtk.gdk.threads_enter()
         gtk.main()
-        #gtk.gdk.threads_leave()
+        gtk.gdk.threads_leave()
 
     def window_exit(self,widget,data=None):
+        for plg in self.plugins.keys():
+            (plgobj, menuitem, notebookindex, notebookframe) = self.plugins[plg]
+            if menuitem.get_active():
+                menuitem.set_active(False)
         try:
             self.end()
         except Error as e:
@@ -376,7 +409,7 @@ class PhotoPlaceGUI(InterfaceUI):
                 "More info at: <b>%(plugin_url)s</b>\n\n<i>%(plugin_desc)s</i>")
             menuitem.set_tooltip_markup(markup % dgettext)
             menuitem.show()
-            if plgobj.capabilities['GTK']:
+            if plgobj.capabilities['GUI'] == PLUGIN_GUI_GTK:
                 notebooklabel = gtk.Label()
                 notebooklabel.set_markup(str("<b>%s</b>" % plg))
                 labelop = gtk.Label()
@@ -399,7 +432,7 @@ class PhotoPlaceGUI(InterfaceUI):
             if menuitem.get_active():
                 menuitem.set_active(False)
             menuitem.destroy()
-            if plgobj.capabilities['GTK']:
+            if plgobj.capabilities['GUI'] == PLUGIN_GUI_GTK:
                 self.notebook_plugins.remove_page(notebookindex)
                 notebookframe.destroy()
             del self.plugins[plg]
@@ -419,7 +452,7 @@ class PhotoPlaceGUI(InterfaceUI):
         (plgobj, menuitem, notebookindex, notebookframe) = self.plugins[plg]
         if menuitem.get_active():
             try:
-                if plgobj.capabilities['GTK']:
+                if plgobj.capabilities['GUI'] == PLUGIN_GUI_GTK:
                     notebookframe.set_sensitive(True)
                 self.userfacade.init_plugin(plg, '*', notebookframe)
             except Error as e:
@@ -427,7 +460,7 @@ class PhotoPlaceGUI(InterfaceUI):
                 self.show_dialog(e.type, e.msg, e.tip)
         else:
             try:
-                if plgobj.capabilities['GTK']:
+                if plgobj.capabilities['GUI'] == PLUGIN_GUI_GTK:
                     notebookframe.set_sensitive(False)
                 self.userfacade.end_plugin(plg)
             except Error as e:
@@ -530,7 +563,7 @@ class PhotoPlaceGUI(InterfaceUI):
     # ##############################################
 
     def make_opengpx_dialog(self, title=_("Select input GPX file ...")):
-        gpx_open_dlg = gtk.FileChooserDialog(title=title,
+        gpx_open_dlg = gtk.FileChooserDialog(title=title, parent=self.window,
             action=gtk.FILE_CHOOSER_ACTION_OPEN,
             buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         filter = gtk.FileFilter()
@@ -545,13 +578,13 @@ class PhotoPlaceGUI(InterfaceUI):
         return gpx_open_dlg
 
     def make_opendir_dialog(self, title=_("Select a directory with photos ...")):
-        photodir_open_dlg = gtk.FileChooserDialog(title=title,
+        photodir_open_dlg = gtk.FileChooserDialog(title=title, parent=self.window,
             action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
             buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         return photodir_open_dlg
 
     def make_save_dialog(self, title=_("Choose output file ...")):
-        kmz_save_dlg = gtk.FileChooserDialog(title=title,
+        kmz_save_dlg = gtk.FileChooserDialog(title=title, parent=self.window,
             action=gtk.FILE_CHOOSER_ACTION_SAVE,
             buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_SAVE, gtk.RESPONSE_OK))
         filter = gtk.FileFilter()
@@ -576,7 +609,7 @@ class PhotoPlaceGUI(InterfaceUI):
     # ##############################################
 
     def show_dialog(self, title, msg, tip="", dtype=gtk.MESSAGE_ERROR):
-        dialog = gtk.MessageDialog(None,
+        dialog = gtk.MessageDialog(self.window,
             gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, dtype, gtk.BUTTONS_CLOSE)
         window_title = PhotoPlace_name + " "
         if dtype == gtk.MESSAGE_INFO:
@@ -876,15 +909,14 @@ class PhotoPlaceGUI(InterfaceUI):
             self["entry-photoinfo-value"].set_text(value)
 
     def _add_photoinfo_attr(self, widget):
-        key = self["entry-photoinfo-key"].get_text()
-        key = key.strip()
+        key = self["entry-photoinfo-key"].get_text().strip()
         if key:
             value = self["entry-photoinfo-value"].get_text()
             self.geophoto_photoinfo.attr[key] = value.strip()
             self._show_photoinfo_attr(self.geophoto_photoinfo)
 
     def _del_photoinfo_attr(self, widget):
-        key = self["entry-photoinfo-key"].get_text()
+        key = self["entry-photoinfo-key"].get_text().strip()
         if self.geophoto_photoinfo.attr.has_key(key):
             del  self.geophoto_photoinfo.attr[key]
             self._show_photoinfo_attr(self.geophoto_photoinfo)
@@ -910,6 +942,18 @@ class PhotoPlaceGUI(InterfaceUI):
             self.geophoto_photoinfo = None
             self.treeview_model.clear()
             self.userfacade.DoTemplates().run()
+
+    def action_loadtemplates(self):
+        try:
+            loadtemplates = self.userfacade.DoTemplates()
+            if loadtemplates:
+                loadtemplates.run()
+                return True
+            else:
+                return False
+        except Error as e:
+            self.show_dialog(e.type, e.msg, e.tip)
+            return False
 
     def action_loadphotos(self, directory=None):
         try:

@@ -85,7 +85,7 @@ class UserFacade(object):
         self.argfiles = []
         self.args = args
         self.resourcedir = resources
-        defaultconfig = PhotoPlace_Cfg_default 
+        defaultconfig = dict(PhotoPlace_Cfg_default)
         if cfgopt.options:
             for opt in cfgopt.options:
                 try:
@@ -115,7 +115,7 @@ class UserFacade(object):
             else:
                 pass
         self.configfile = configfile
-        self.options = PhotoPlace_Cfg_default
+        self.options = defaultconfig
         if configfile:
             dgettext = dict()
             dgettext['configfile'] = configfile
@@ -184,7 +184,7 @@ class UserFacade(object):
         current = dict()
         for item in configuration.sections():
             current[item] = dict()
-        current.update(defaults)
+        current.update(PhotoPlace_Cfg_default)
         for section in current.keys():
             dictionary = dict()
             if not configuration.has_section(section):
@@ -196,6 +196,9 @@ class UserFacade(object):
                         dictionary[option] = configuration.get(section, option)
                     except:
                         dictionary[option] = None
+            if defaults.has_key(section):
+                for key, value in defaults[section].items():
+                    dictionary[key] = value
             for key, value in current[section].items():
                 if value:
                     dictionary[key] = value
@@ -209,10 +212,9 @@ class UserFacade(object):
         if defaults:
             self.options = PhotoPlace_Cfg_default
         self.state = stateHandler.State(self.resourcedir, self.options['main'])
-        self.DoTemplates().run()
 
     def end(self):
-        self.end_plugin()
+        #self.end_plugin()
         self.Clear()
         try:
             self.unload_plugins()
@@ -320,7 +322,7 @@ class UserFacade(object):
         plugins = self.list_plugins(capability)
         for plg in plugins.keys():
             try:
-                self.pluginmanager.activate(plugins[plg], self.args, self.argfiles, *args)
+                self.pluginmanager.activate(plugins[plg], self.state, self.args, self.argfiles, *args)
             except Plugins.pluginManager.PluginManagerError as pluginerror:
                 msg = str(pluginerror)
                 self.logger.error(msg)
@@ -330,7 +332,7 @@ class UserFacade(object):
 
 
     def unload_plugins(self, capability='*', plugin=None):
-        self.end_plugin(plugin, capability)
+        #self.end_plugin(plugin, capability)
         plugins = self.list_plugins(capability, plugin)
         for plg in plugins.keys():
             self.pluginmanager.deactivate(plugins[plg])
@@ -360,7 +362,7 @@ class UserFacade(object):
         value = None
         for plg in plugins.keys():
             try:
-                value = self.pluginmanager.init(plugins[plg], self.state, *args)
+                value = self.pluginmanager.init(plugins[plg], self.options, *args)
             except Plugins.pluginManager.PluginManagerError as pluginerror:
                 msg = str(pluginerror)
                 self.logger.error(msg)
@@ -376,9 +378,10 @@ class UserFacade(object):
             tip = _("Wait a moment ... ")
             raise Error(msg, tip, "Error")
         plugins = self.list_plugins(capability, plugin)
+        value = None
         for plg in plugins.keys():
             try:
-                value = self.pluginmanager.end(plugins[plg], self.state, *args)
+                value = self.pluginmanager.end(plugins[plg], self.options, *args)
             except Plugins.pluginManager.PluginManagerError as pluginerror:
                 msg = str(pluginerror)
                 self.logger.error(msg)
@@ -431,7 +434,7 @@ class UserFacade(object):
         return None
 
 
-    def MakeGPX(self, trackname):
+    def MakeGPX(self, trackname=None):
         try:
             makegpx = Actions.makeGPXAction.MakeGPX(self.state, trackname)
         except ValueError:

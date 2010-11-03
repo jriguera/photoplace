@@ -12,18 +12,18 @@ import locale
 
 # I18N gettext support
 __GETTEXT_DOMAIN__ = "photoplace-paths"
-__PACKAGE_DIR__ = os.path.abspath(os.path.dirname("."))
+__PACKAGE_DIR__ = os.path.dirname(__file__)
 __LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
-        print "Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__)
+        print("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
         __LOCALE_DIR__ = None
     locale.setlocale(locale.LC_ALL,"")
     gettext.install(__GETTEXT_DOMAIN__, __LOCALE_DIR__)
 except Exception as e:
     _ = lambda s: s
-    print "Error setting up the translations: %s" % (e)
+    print("Error setting up the translations: %s" % (e))
 
 
 
@@ -50,7 +50,7 @@ PhotoPlace_PathNWPT = "PhotoPlace.PathNWPT"
 
 # Configuration keys
 _KmlPaths_CONFKEY = "kmlpaths"
-_KmlPaths_CONFKEY_KMLPATH_NAME = "name"
+_KmlPaths_CONFKEY_KMLPATH_NAME = "pathsfolder"
 _KmlPaths_CONFKEY_KMLPATH = "kmlpath"
 _KmlPaths_CONFKEY_TEMPLATE = "templatefile"
 
@@ -79,19 +79,21 @@ class KmlPaths(Plugin):
     date = "Sep 2010"
     license = "GPLv3"
     capabilities = {
-        'GTK': False,
+        'GUI' : PLUGIN_GUI_NO,
+        'NeedGUI' : False,
     }
-
-    def init(self, state, widget_container):
-        if not state.options.has_key(_KmlPaths_CONFKEY):
-            state.options[_KmlPaths_CONFKEY] = dict()
-        self.name = state.options[_KmlPaths_CONFKEY].setdefault(
+    
+    def init(self, options, widget=None):
+        self.options = options
+        if not self.options.has_key(_KmlPaths_CONFKEY):
+            self.options[_KmlPaths_CONFKEY] = dict()
+        self.name = self.options[_KmlPaths_CONFKEY].setdefault(
             _KmlPaths_CONFKEY_KMLPATH_NAME, _KmlPaths_KMLPATH_NAME)
-        self.template = state.options[_KmlPaths_CONFKEY].setdefault(
+        self.template = self.options[_KmlPaths_CONFKEY].setdefault(
             _KmlPaths_CONFKEY_TEMPLATE, _KmlPaths_TEMPLATE)
         self.template = os.path.expandvars(os.path.expanduser(self.template))
         if not os.path.isfile(self.template):
-            self.template = os.path.join(state.resourcedir, self.template)
+            self.template = os.path.join(self.state.resourcedir, self.template)
             if not os.path.isfile(self.template):
                 msg = _("Main template file '%s' does not exist!.") % self.template
                 self.logger.error(msg)
@@ -102,28 +104,24 @@ class KmlPaths(Plugin):
         ]
         self.templates = dict()
         for k,v in _KmlPaths_TEMPLATE_REF.iteritems():
-            if not k in state.options[_KmlPaths_CONFKEY]:
-                state.options[_KmlPaths_CONFKEY][k] = v
-        for k,v in state.options[_KmlPaths_CONFKEY].iteritems():
+            if not k in self.options[_KmlPaths_CONFKEY]:
+                self.options[_KmlPaths_CONFKEY][k] = v
+        for k,v in self.options[_KmlPaths_CONFKEY].iteritems():
             if k not in items:
                 file_exist = True
                 filename = os.path.expandvars(os.path.expanduser(v))
                 if not os.path.isfile(filename):
-                    filename = os.path.join(state.resourcedir, filename)
+                    filename = os.path.join(self.state.resourcedir, filename)
                     if not os.path.isfile(filename):
                         msg = _("Template file '%s' does not exist!.") % filename
                         self.logger.warning(msg)
                         file_exist = False
                 if file_exist:
                     self.templates[k] = filename
-        self.xmlnodes_sep = state._templateseparatornodes
-        self.delete_tag = state._templatedeltag
-        self.separator_key  = state._templateseparatorkey
-        self.default_value = state._templatedefaultvalue
-        try:
-            self.rootdata = state.options['defaults']
-        except:
-            self.rootdata = dict()
+        self.xmlnodes_sep = self.state._templateseparatornodes
+        self.delete_tag = self.state._templatedeltag
+        self.separator_key  = self.state._templateseparatorkey
+        self.default_value = self.state._templatedefaultvalue
         xmlinfo = " XML generated with %s on %s" % (PhotoPlace_name, time.asctime())
         try:
             self.kmldata = DataTypes.kmlData.KmlData(
@@ -142,7 +140,6 @@ class KmlPaths(Plugin):
             msg = str(kmldataerror)
             self.logger.error(msg)
             raise
-        self.state = state
         self.ready = 1
 
 
@@ -153,6 +150,10 @@ class KmlPaths(Plugin):
         self.outputfile = None
         self.outputdir = None
         self.outputuri = None
+        try:
+            self.rootdata = self.options['defaults']
+        except:
+            self.rootdata = dict()
         try:
             self.outputfile = os.path.basename(self.state.outputkml)
             if self.state.tmpdir:
@@ -280,9 +281,9 @@ class KmlPaths(Plugin):
                 fd.close()
 
 
-    def end(self, state):
+    def end(self, options):
         self.ready = 0
-        self.state = None
+        self.options = None
         self.name = None
         self.template = None
         self.templates = None
