@@ -206,6 +206,10 @@ class PhotoPlaceGUI(InterfaceUI):
         # show window
         #self.window.set_icon_from_file(os.path.join(resourcedir, __GUIICON_FILE__))
         #gtk.window_set_default_icon_from_file(os.path.join(resourcedir, __GUIICON_FILE__))
+        self["treeviewcolumn-photoinfo-key"].set_title(_("Property"))
+        self["treeviewcolumn-photoinfo-value"].set_title(_("Value"))
+        self["treeview-photoinfo"].set_model(gtk.TreeStore(bool, bool, str, str, str))
+        self["treeview-photoinfo"].set_rules_hint(True)
         self.window.show_all()
 
     def __getitem__(self, key):
@@ -331,6 +335,8 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_button-photoinfo-close_clicked": self.dialog_close,
             "on_button-photoinfo-add_clicked": self._add_photoinfo_attr,
             "on_button-photoinfo-del_clicked": self._del_photoinfo_attr,
+            "on_button-photoinfo-next_clicked": self._clicked_next_photoinfo,
+            "on_button-photoinfo-prev_clicked": self._clicked_prev_photoinfo,
             "on_treeview-photoinfo_row_activated": self._clicked_photoinfo_att
         }
         self.builder.connect_signals(self.signals)
@@ -851,7 +857,10 @@ class PhotoPlaceGUI(InterfaceUI):
         geophoto_path = model.get_value(ite, TREEVIEWPHOTOS_COL_PATH)
         for geophoto in self.userfacade.state.geophotos:
             if geophoto.path == geophoto_path:
-                self.show_window_photoinfo(geophoto, ite)
+                self.treeview_iterator = ite
+                self.show_window_photoinfo(geophoto)
+                #self.photoinfo_win.resize(1, 1)
+                #self.photoinfo_win.show()
                 return True
         return False
 
@@ -860,19 +869,40 @@ class PhotoPlaceGUI(InterfaceUI):
     # Photo Extended information window
     # #################################
 
-    def show_window_photoinfo(self, geophoto, ite):
+    def show_window_photoinfo(self, geophoto):
         photoinfo_path = self["label-photoinfo-geophotopath"]
         photoinfo_path.set_text(geophoto.path)
         photoinfo_image = self["image-photoinfo"]
         scaled = get_pixbuf_from_geophoto(geophoto)
         photoinfo_image.set_from_pixbuf(scaled)
-        model = gtk.TreeStore(bool, bool, str, str, str)
-        self["treeview-photoinfo"].set_model(model)
-        self["treeviewcolumn-photoinfo-key"].set_title(_("Key name"))
-        self["treeviewcolumn-photoinfo-value"].set_title(_("Value"))
         self._show_photoinfo_attr(geophoto)
         self.photoinfo_win.resize(1, 1)
+        self.current_geophoto = geophoto
         self.photoinfo_win.show()
+
+    def _clicked_next_photoinfo(self, widget=None, data=None):
+        next = self.treeview_model.iter_next(self.treeview_iterator)
+        if next:
+            geophoto_path = self.treeview_model.get_value(next, TREEVIEWPHOTOS_COL_PATH)
+            for geophoto in self.userfacade.state.geophotos:
+                if geophoto.path == geophoto_path:
+                    self.treeview_iterator = next
+                    self.show_window_photoinfo(geophoto)
+                    return
+
+    def _clicked_prev_photoinfo(self, widget=None, data=None):
+        path = self.treeview_model.get_path(self.treeview_iterator)
+        position = path[-1]
+        if position != 0:
+            prev_path = list(path)[:-1]
+            prev_path.append(position - 1)
+            prev = self.treeview_model.get_iter(tuple(prev_path))
+            geophoto_path = self.treeview_model.get_value(prev, TREEVIEWPHOTOS_COL_PATH)
+            for geophoto in self.userfacade.state.geophotos:
+                if geophoto.path == geophoto_path:
+                    self.treeview_iterator = prev
+                    self.show_window_photoinfo(geophoto)
+                    return
 
     def _show_photoinfo_attr(self, geophoto):
         model = self["treeview-photoinfo"].get_model()
@@ -895,7 +925,6 @@ class PhotoPlaceGUI(InterfaceUI):
                 model.append(ite, [ False, False, str(k), str(geophoto[k]), color])
             except:
                 pass
-        self.geophoto_photoinfo = geophoto
         self["treeview-photoinfo"].expand_all()
 
     def _clicked_photoinfo_att(self, treeview, path, column, data=None):
@@ -912,14 +941,14 @@ class PhotoPlaceGUI(InterfaceUI):
         key = self["entry-photoinfo-key"].get_text().strip()
         if key:
             value = self["entry-photoinfo-value"].get_text()
-            self.geophoto_photoinfo.attr[key] = value.strip()
-            self._show_photoinfo_attr(self.geophoto_photoinfo)
+            self.current_geophoto.attr[key] = value.strip()
+            self._show_photoinfo_attr(self.current_geophoto)
 
     def _del_photoinfo_attr(self, widget):
         key = self["entry-photoinfo-key"].get_text().strip()
-        if self.geophoto_photoinfo.attr.has_key(key):
-            del  self.geophoto_photoinfo.attr[key]
-            self._show_photoinfo_attr(self.geophoto_photoinfo)
+        if self.current_geophoto.attr.has_key(key):
+            del  self.current_geophoto.attr[key]
+            self._show_photoinfo_attr(self.current_geophoto)
         self["entry-photoinfo-key"].set_text('')
         self["entry-photoinfo-value"].set_text('')
 
@@ -939,7 +968,8 @@ class PhotoPlaceGUI(InterfaceUI):
             self["checkbutton-outgeo"].set_active(True)
             self._toggle_geolocate_mode()
             self["togglebutton-outfile"].set_active(False)
-            self.geophoto_photoinfo = None
+            self.current_geophoto = None
+            self.treeview_iterator = None
             self.treeview_model.clear()
             self.userfacade.DoTemplates().run()
 

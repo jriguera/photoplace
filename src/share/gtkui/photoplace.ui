@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
@@ -49,7 +49,7 @@
     </columns>
   </object>
   <object class="GtkWindow" id="window">
-    <property name="width_request">800</property>
+    <property name="width_request">850</property>
     <property name="height_request">550</property>
     <property name="title">PhotoPlace</property>
     <property name="icon">photoplace.png</property>
@@ -436,7 +436,7 @@
                                         <property name="has_tooltip">True</property>
                                         <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="entry">The time zone of the photos. It depends on the settings of time/date of the camera and the GPS (UTC time), it is the difference in hours between both.</property>
                                         <property name="max_length">6</property>
-                                        <property name="invisible_char">&#x25CF;</property>
+                                        <property name="invisible_char">●</property>
                                         <property name="width_chars">8</property>
                                         <property name="secondary_icon_stock">gtk-home</property>
                                         <property name="adjustment">adjustment-utc</property>
@@ -479,7 +479,7 @@
                                         <property name="has_tooltip">True</property>
                                         <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="entry">The maximum time difference allowed between the time of a photo and the nearest point of GPX.</property>
                                         <property name="max_length">6</property>
-                                        <property name="invisible_char">&#x25CF;</property>
+                                        <property name="invisible_char">●</property>
                                         <property name="width_chars">10</property>
                                         <property name="caps_lock_warning">False</property>
                                         <property name="secondary_icon_stock">gtk-justify-fill</property>
@@ -539,7 +539,7 @@
                                             <property name="can_focus">True</property>
                                             <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="entry URI">This entry defines the Uniform Resource Identifier for each geolocated photo. It is useful to generate a independent KML file where the photos will be linked into it.</property>
                                             <property name="max_length">256</property>
-                                            <property name="invisible_char">&#x25CF;</property>
+                                            <property name="invisible_char">●</property>
                                           </object>
                                           <packing>
                                             <property name="position">1</property>
@@ -830,7 +830,7 @@
                                         <property name="sensitive">False</property>
                                         <property name="can_focus">True</property>
                                         <property name="max_length">666</property>
-                                        <property name="invisible_char">&#x25CF;</property>
+                                        <property name="invisible_char">●</property>
                                       </object>
                                       <packing>
                                         <property name="position">1</property>
@@ -1045,7 +1045,7 @@
     <property name="type_hint">dialog</property>
     <property name="program_name">PhotoPlace</property>
     <property name="version">0.5.0</property>
-    <property name="copyright" translatable="yes">Copyright &#xA9; 2010  Jos&#xE9; Riguera </property>
+    <property name="copyright" translatable="yes">Copyright © 2010  José Riguera </property>
     <property name="comments" translatable="yes">A program to geolocate photos and generate a Google Earth layer</property>
     <property name="website">http://code.google.com/p/photoplace/</property>
     <property name="license" translatable="yes" context="PhotoPlaceGUI" comments="GPL License">		    GNU GENERAL PUBLIC LICENSE
@@ -1140,7 +1140,7 @@ Each version is given a distinguishing version number.  If the Program specifies
 
 This General Public License does not permit incorporating your program into proprietary programs.  If your program is a subroutine library, you may consider it more useful to permit linking proprietary applications with the library.  If this is what you want to do, use the GNU Lesser General Public License instead of this License.
 </property>
-    <property name="authors">Jos&#xE9; Riguera L&#xF3;pez &lt;jriguera@gmail.com&gt;</property>
+    <property name="authors">José Riguera López &lt;jriguera@gmail.com&gt;</property>
     <property name="logo">photoplace.png</property>
     <property name="wrap_license">True</property>
     <signal name="close" handler="on_aboutdialog_close" object="aboutdialog"/>
@@ -1286,6 +1286,9 @@ This General Public License does not permit incorporating your program into prop
               <object class="GtkLabel" id="label-photoinfo-path">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Picture path :</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -1299,7 +1302,9 @@ This General Public License does not permit incorporating your program into prop
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="label" translatable="yes">label</property>
+                <property name="selectable">True</property>
                 <attributes>
+                  <attribute name="weight" value="bold"/>
                   <attribute name="foreground" value="#00000000ffff"/>
                 </attributes>
               </object>
@@ -1351,9 +1356,7 @@ This General Public License does not permit incorporating your program into prop
                     <property name="can_focus">True</property>
                     <property name="model">treestore-photoinfo</property>
                     <property name="headers_clickable">False</property>
-                    <property name="reorderable">True</property>
                     <property name="search_column">2</property>
-                    <property name="enable_grid_lines">horizontal</property>
                     <property name="enable_tree_lines">True</property>
                     <signal name="row_activated" handler="on_treeview-photoinfo_row_activated"/>
                     <child>
@@ -1423,7 +1426,7 @@ This General Public License does not permit incorporating your program into prop
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="max_length">100</property>
-                <property name="invisible_char">&#x25CF;</property>
+                <property name="invisible_char">●</property>
               </object>
               <packing>
                 <property name="position">1</property>
@@ -1434,7 +1437,7 @@ This General Public License does not permit incorporating your program into prop
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="max_length">1000</property>
-                <property name="invisible_char">&#x25CF;</property>
+                <property name="invisible_char">●</property>
               </object>
               <packing>
                 <property name="position">2</property>
@@ -1491,9 +1494,21 @@ This General Public License does not permit incorporating your program into prop
           <object class="GtkHButtonBox" id="hbuttonbox-photoinfo">
             <property name="visible">True</property>
             <property name="border_width">10</property>
-            <property name="spacing">10</property>
-            <property name="homogeneous">True</property>
-            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="button-photoinfo-prev">
+                <property name="label">gtk-go-back</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_button-photoinfo-prev_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
             <child>
               <object class="GtkButton" id="button-photoinfo-close">
                 <property name="label">gtk-close</property>
@@ -1506,13 +1521,27 @@ This General Public License does not permit incorporating your program into prop
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">0</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="button-photoinfo-next">
+                <property name="label">gtk-go-forward</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_button-photoinfo-next_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">False</property>
             <property name="position">4</property>
           </packing>
         </child>
