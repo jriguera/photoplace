@@ -509,6 +509,11 @@ class UserFacade(object):
 
 
     def goprocess(self):
+        if self.finalize:
+            msg = _("Some operations are pending ...")
+            self.logger.error(msg)
+            tip = _("Wait a moment ... ")
+            raise Error(msg, tip, "Error")
         if self.state.outputdir:
             try:
                 os.makedirs(self.state.outputdir)

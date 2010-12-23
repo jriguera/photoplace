@@ -151,6 +151,7 @@ class PhotoPlaceGUI(InterfaceUI):
         return cls._instance
     
     def __init__(self, resourcedir=None):
+        gtk.gdk.threads_enter()
         InterfaceUI.__init__(self, resourcedir)
         guifile = os.path.join(self.resourcedir, __GUIXML_FILE__)
         self.builder = gtk.Builder()
@@ -343,7 +344,7 @@ class PhotoPlaceGUI(InterfaceUI):
         if sys.platform.startswith('win'):
             sleeper = lambda: time.sleep(.001) or True
             gobject.timeout_add(400, sleeper)
-        gtk.gdk.threads_enter()
+        #gtk.gdk.threads_enter()
         gtk.main()
         gtk.gdk.threads_leave()
 
@@ -458,17 +459,17 @@ class PhotoPlaceGUI(InterfaceUI):
         (plgobj, menuitem, notebookindex, notebookframe) = self.plugins[plg]
         if menuitem.get_active():
             try:
+                self.userfacade.init_plugin(plg, '*', notebookframe)
                 if plgobj.capabilities['GUI'] == PLUGIN_GUI_GTK:
                     notebookframe.set_sensitive(True)
-                self.userfacade.init_plugin(plg, '*', notebookframe)
             except Error as e:
                 menuitem.set_active(False)
                 self.show_dialog(e.type, e.msg, e.tip)
         else:
             try:
+                self.userfacade.end_plugin(plg)
                 if plgobj.capabilities['GUI'] == PLUGIN_GUI_GTK:
                     notebookframe.set_sensitive(False)
-                self.userfacade.end_plugin(plg)
             except Error as e:
                 menuitem.set_active(True)
                 self.show_dialog(e.type, e.msg, e.tip)
@@ -616,7 +617,8 @@ class PhotoPlaceGUI(InterfaceUI):
 
     def show_dialog(self, title, msg, tip="", dtype=gtk.MESSAGE_ERROR):
         dialog = gtk.MessageDialog(self.window,
-            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, dtype, gtk.BUTTONS_CLOSE)
+            gtk.DIALOG_DESTROY_WITH_PARENT, dtype, gtk.BUTTONS_CLOSE)
+        #  gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT
         window_title = PhotoPlace_name + " "
         if dtype == gtk.MESSAGE_INFO:
             window_title += _("Info")
@@ -972,6 +974,7 @@ class PhotoPlaceGUI(InterfaceUI):
             self.treeview_iterator = None
             self.treeview_model.clear()
             self.userfacade.DoTemplates().run()
+            self.num_photos_process = 0
 
     def action_loadtemplates(self):
         try:
@@ -1055,10 +1058,18 @@ class PhotoPlaceGUI(InterfaceUI):
             if not self.action_makegpx():
                 return False
         if self.num_photos_process < 1:
-            return False
+            for geophoto in self.userfacade.state.geophotos:
+                if geophoto.status > 0 and geophoto.isGeoLocated():
+                    self.num_photos_process += 1
+            if self.num_photos_process < 1:
+                mtype = _("OOps ...")
+                msg = _("Cannot do anything!. No GPX data and those photos are not geolocated!")
+                tip = _("Load a GPX file to do that.")
+                self.show_dialog(mtype, msg, tip, gtk.MESSAGE_INFO)
+                return False
         self.progressbar.set_fraction(0.0)
         self.progressbar_percent = 0.0
-        self.progressbar_fraction = 1.0/(self.num_photos_process * 7)
+        self.progressbar_fraction = 1.0/(self.num_photos_process * 9)
         try:
             self.userfacade.goprocess()
         except Error as e:

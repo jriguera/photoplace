@@ -41,6 +41,15 @@ except Exception as e:
 
 
 _GVariables_OPTIONS_KEY = "defaults"
+_GVariables_MAIN = [
+    'author', 
+    'date', 
+    'mailto', 
+    'description', 
+    'shortdescription', 
+    'license',
+    'photofolder', 
+]
 # columns
 (
     _GVariables_COLUMN_KEY,
@@ -72,7 +81,7 @@ class GVariables(Plugin):
         if gtkbuilder:
             self.plugin = gtk.VBox(False, 5)
             label = gtk.Label()
-            label.set_markup(_("List of global variables to make KML:"))
+            label.set_markup(_("List of global KML variables: "))
             label.set_justify(gtk.JUSTIFY_LEFT)
             label.set_alignment(0.01, 0.5)
             label.set_line_wrap(True)
@@ -154,15 +163,21 @@ class GVariables(Plugin):
     def show_variables(self, options, *args, **kwargs):
         self.treestore.clear()
         self.options = options[_GVariables_OPTIONS_KEY]
+        ite_main = self.treestore.append(None, [str(_("Main Variables")), None, False])
+        ite_other = self.treestore.append(None, [str(_("Other Variables")), None, False])
         for k, v in self.options.iteritems():
-            if k == 'author' and not v:
-                v = getpass.getuser()
-                self.options[k] = v 
-            elif k == 'date' and not v:
-                v = datetime.date.today().strftime("%A %d. %B %Y")
-                self.options[k] = v 
-            self.treestore.append(None, [str(k), str(v), True])
-        self.treeview.expand_all()
+            if k in _GVariables_MAIN :
+                if k == 'author' and not v:
+                    v = getpass.getuser()
+                    self.options[k] = v 
+                elif k == 'date' and not v:
+                    v = datetime.date.today().strftime("%A %d. %B %Y")
+                    self.options[k] = v
+                self.treestore.append(ite_main, [str(k), str(v), True])
+            else:
+                self.treestore.append(ite_other, [str(k), str(v), True])
+        #self.treeview.expand_all()
+        self.treeview.expand_to_path((0))
 
 
     def init(self, options, widget):

@@ -1,90 +1,113 @@
 #! /usr/bin/env python
 
-
 import os.path
 import sys
-import time
 import codecs
-import urlparse
-import math
-import xml.dom.minidom
+import shutil
+import getpass
+import datetime
 import gettext
 import locale
+import urlparse
+import warnings
+warnings.filterwarnings('ignore', module='gtk')
+try:
+    import pygtk
+    pygtk.require("2.0")
+    import gtk
+except Exception as e:
+    warnings.resetwarnings()
+    print("Warning: %s" % str(e))
+    print("You don't have the PyGTK 2.0 module installed")
+    raise
+warnings.resetwarnings()
+
+
+from Plugins.Interface import *
+from definitions import *
+import DataTypes.kmlData
+import gpx
 
 
 # I18N gettext support
 __GETTEXT_DOMAIN__ = "photoplace-tour"
-__PACKAGE_DIR__ = os.path.abspath(os.path.dirname("."))
+__PACKAGE_DIR__ = os.path.dirname(__file__)
 __LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
-        print "Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__)
+        print("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
         __LOCALE_DIR__ = None
     locale.setlocale(locale.LC_ALL,"")
     gettext.install(__GETTEXT_DOMAIN__, __LOCALE_DIR__)
 except Exception as e:
     _ = lambda s: s
-    print "Error setting up the translations: %s" % (e)
-
-
-import MP3Info
-
-import DataTypes.kmlData
-import gpx
-from Plugins.Interface import *
-from definitions import *
+    print("Error setting up the translations: %s" % (e))
 
 
 # Default values
-_KmlTour_DIR_APPEND = ".tour"
-_KmlTour_SPLIT_CHAR = ";"
-_KmlTour_NAME = _("Play me")
-_KmlTour_DESC = ""
-_KmlTour_KMLTOUR_MUSIC_MIX = False
+KmlTour_SPLIT_CHAR = ";"
+KmlTour_NAME = _("Play me")
+KmlTour_DESC = _("A visual tour")
+KmlTour_KMLTOUR_MUSIC_MIX = False
+KmlTour_MUSIC_URI = ''
+KmlTour_BEGIN_PLCMK = _("Presentation")
+KmlTour_END_PLCMK = _("The end")
+KmlTour_BEGIN_STYLE =  '#tourfirst'
+KmlTour_END_STYLE = '#tourlast'
 
-_KmlTour_BEGIN_WAIT = 4.0
-_KmlTour_BEGIN_HEADING = 0
-_KmlTour_BEGIN_FLYTIME = 5.0
-_KmlTour_BEGIN_TILT = 45.0
-_KmlTour_BEGIN_RANGE = 500
+KmlTour_BEGIN_WAIT = 10.0
+KmlTour_BEGIN_HEADING = 0.0
+KmlTour_BEGIN_FLYTIME = 8.0
+KmlTour_BEGIN_TILT = 80.0
+KmlTour_BEGIN_RANGE = 5000.0
 
-_KmlTour_TILT = 30.0    # angulo desde, sentido tierra, sobre la vertical del punto y la camara
-_KmlTour_WAIT = 5.0
-_KmlTour_FLYTIME = 3.0
-_KmlTour_HEADING = 0    # rumbo u orientacion (grados desde el norte)
-_KmlTour_RANGE = 100    # distancia desde la que observar los puntos
+KmlTour_TILT = 60.0      # angulo desde, sentido tierra, sobre la vertical del punto y la camara
+KmlTour_WAIT = 7.0
+KmlTour_FLYTIME = 4.0
+KmlTour_HEADING = 0.0    # rumbo u orientacion (grados desde el norte)
+KmlTour_RANGE = 1000.0   # distancia desde la que observar los puntos
 
-_KmlTour_FLYMODE = "smooth"
-_KmlTour_ALTMODE = "relativeToSeaFloor"
+KmlTour_FLYMODE = "smooth"
+KmlTour_ALTMODE = "clampToGround"
 
-_KmlTour_END_FLYTIME = 5.0
-_KmlTour_END_HEADING = 0
-_KmlTour_END_TILT = 45.0
-_KmlTour_END_RANGE = 1000.0
+KmlTour_END_FLYTIME = 5.0
+KmlTour_END_HEADING = 0.0
+KmlTour_END_TILT = 45.0
+KmlTour_END_RANGE = 100.0
 
 
 # Configuration keys
-_KmlTour_CONFKEY = "kmltour"
-_KmlTour_CONFKEY_KMLTOUR_NAME = "name"
-_KmlTour_CONFKEY_KMLTOUR_DESC = "description"
-_KmlTour_CONFKEY_KMLTOUR_MUSIC = "mp3list"
-_KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX = "mixmp3"
+KmlTour_CONFKEY = "kmltour"
+KmlTour_CONFKEY_KMLTOUR_NAME = "name"
+KmlTour_CONFKEY_KMLTOUR_DESC = "description"
+KmlTour_CONFKEY_KMLTOUR_MUSIC = "mp3list"
+KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX = "mp3mix"
+KmlTour_CONFKEY_KMLTOUR_MUSIC_URI = "mp3uri"
 
-_KmlTour_CONFKEY_BEGIN_WAIT = "beginwait"
-_KmlTour_CONFKEY_BEGIN_HEADING = "beginheading"
-_KmlTour_CONFKEY_BEGIN_FLYTIME = "beginflytime"
-_KmlTour_CONFKEY_BEGIN_TILT = "begintilt"
-_KmlTour_CONFKEY_BEGIN_RANGE = "beginrange"
-_KmlTour_CONFKEY_WAIT = "wait"
-_KmlTour_CONFKEY_HEADING = "heading"
-_KmlTour_CONFKEY_FLYTIME = "flytime"
-_KmlTour_CONFKEY_TILT = "tilt"
-_KmlTour_CONFKEY_RANGE = "range"
-_KmlTour_CONFKEY_END_HEADING = "endheading"
-_KmlTour_CONFKEY_END_FLYTIME = "endflytime"
-_KmlTour_CONFKEY_END_TILT = "endtilt"
-_KmlTour_CONFKEY_END_RANGE = "endrange"
+KmlTour_CONFKEY_BEGIN_PLCMK = 'beginplacemark'
+KmlTour_CONFKEY_BEGIN_STYLE = 'beginstyle'
+KmlTour_CONFKEY_BEGIN_WAIT = "beginwait"
+KmlTour_CONFKEY_BEGIN_HEADING = "beginheading"
+KmlTour_CONFKEY_BEGIN_FLYTIME = "beginflytime"
+KmlTour_CONFKEY_BEGIN_TILT = "begintilt"
+KmlTour_CONFKEY_BEGIN_RANGE = "beginrange"
+KmlTour_CONFKEY_WAIT = "wait"
+KmlTour_CONFKEY_HEADING = "heading"
+KmlTour_CONFKEY_FLYTIME = "flytime"
+KmlTour_CONFKEY_TILT = "tilt"
+KmlTour_CONFKEY_RANGE = "range"
+
+KmlTour_CONFKEY_END_PLCMK = 'endplacemark'
+KmlTour_CONFKEY_END_STYLE = 'endstyle'
+KmlTour_CONFKEY_END_HEADING = "endheading"
+KmlTour_CONFKEY_END_FLYTIME = "endflytime"
+KmlTour_CONFKEY_END_TILT = "endtilt"
+KmlTour_CONFKEY_END_RANGE = "endrange"
+
+
+from gxTour import *
+import GTKui
 
 
 
@@ -99,474 +122,338 @@ class KmlTour(Plugin):
     date = "Oct 2010"
     license = "GPLv3"
     capabilities = {
-        'GTK': True,
+        'GUI' : PLUGIN_GUI_GTK,
+        'NeedGUI' : False,
     }
+    
+    def __init__(self, logger, state, args, argfiles=[], gtkbuilder=None):
+        Plugin.__init__(self, logger, state, args, argfiles, gtkbuilder)
+        self.options = dict()
+        # GTK widgets
+        self.gtkui = None
+        if gtkbuilder:
+            self.gtkui = GTKui.GTKTour(gtkbuilder)
+        self.ready = -1
 
-    def init(self, state, widget_container):
-        if not state.options.has_key(_KmlTour_CONFKEY):
-            state.options[_KmlTour_CONFKEY] = dict()
-        self.name = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_KMLTOUR_NAME, _KmlTour_NAME)
-        description = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_KMLTOUR_DESC, _KmlTour_DESC)
-        mp3list = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_KMLTOUR_MUSIC, [])
-        mix = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX, _KmlTour_KMLTOUR_MUSIC_MIX)
-        begin_wait = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_BEGIN_WAIT, _KmlTour_BEGIN_WAIT)
-        begin_heading = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_BEGIN_HEADING, _KmlTour_BEGIN_HEADING)
-        begin_flytime = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_BEGIN_FLYTIME, _KmlTour_BEGIN_FLYTIME)
-        begin_tilt = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_BEGIN_TILT, _KmlTour_BEGIN_TILT)
-        begin_range = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_BEGIN_RANGE, _KmlTour_BEGIN_RANGE)
-        wait = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_WAIT, _KmlTour_WAIT)
-        heading = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_HEADING, _KmlTour_HEADING)
-        flytime = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_FLYTIME, _KmlTour_FLYTIME)
-        tilt = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_TILT, _KmlTour_TILT)
-        range = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_RANGE, _KmlTour_RANGE)
-        end_heading = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_END_HEADING, _KmlTour_END_HEADING)
-        end_flytime = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_END_FLYTIME, _KmlTour_END_FLYTIME)
-        end_tilt = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_END_TILT, _KmlTour_END_TILT)
-        end_range = state.options[_KmlTour_CONFKEY].setdefault(
-            _KmlTour_CONFKEY_END_RANGE, _KmlTour_END_RANGE)
-        self.state = state
-        self.geophotos = None
+
+    def _set_option_float(self, options, key, value):
+        if options.has_key(key):
+            try:
+                tmp = options[key]
+                options[key] = float(tmp)
+            except:
+                options[key] = value
+                dgettext = dict(key=key, value=value)
+                self.logger.debug(
+                    _("Incorrect value for '%(key)s', setting default value '%(value)s'.") \
+                    % dgettext)
+        else:
+            options[key] = value
+            dgettext = dict(key=key, value=value)
+            self.logger.debug(
+                _("'%(key)s' not defined, setting default value '%(value)s'.") % dgettext)
+
+
+    def _set_option_float_none(self, options, key, value):
+        if options.has_key(key):
+            begin_heading = options[key]
+            if begin_heading:
+                try:
+                    options[key] = float(begin_heading)
+                except:
+                    options[key] = value
+                    dgettext = dict(key=key, value=value)
+                    self.logger.debug(
+                        _("Incorrect value for '%(key)s', setting default value '%(value)s'.") \
+                        % dgettext)
+        else:
+            options[key] = value
+            dgettext = dict(key=key, value=value)
+            self.logger.debug(
+                _("'%(key)s' not defined, setting default value '%(value)s'.") % dgettext)
+
+
+    def process_variables(self, options, *args, **kwargs):
+        options.setdefault(KmlTour_CONFKEY_KMLTOUR_NAME, KmlTour_NAME)
+        options.setdefault(KmlTour_CONFKEY_KMLTOUR_DESC, KmlTour_DESC)
+        mix = options.setdefault(KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX, KmlTour_KMLTOUR_MUSIC_MIX)
+        if not isinstance(mix, bool):
+            mp3mix = mix.lower().strip() in ["yes", "true", "si", "1"]
+            options[KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX] = mp3mix
+        options.setdefault(KmlTour_CONFKEY_KMLTOUR_MUSIC_URI, KmlTour_MUSIC_URI)
+        mp3s = options.setdefault(KmlTour_CONFKEY_KMLTOUR_MUSIC, [])
+        if not isinstance(mp3s, list):
+            mp3list = []
+            try:
+                for mp3 in mp3s.split(KmlTour_SPLIT_CHAR):
+                    if os.path.isfile(mp3):
+                        mp3list.append(mp3)
+            except:
+                self.logger.debug(_("Incorrect value for '%s'.") % KmlTour_CONFKEY_KMLTOUR_MUSIC)
+                pass
+            options[KmlTour_CONFKEY_KMLTOUR_MUSIC] = mp3list
+        # Placemarks
+        options.setdefault(KmlTour_CONFKEY_BEGIN_PLCMK, KmlTour_BEGIN_PLCMK)
+        options.setdefault(KmlTour_CONFKEY_BEGIN_STYLE, KmlTour_BEGIN_STYLE)
+        self._set_option_float(options, KmlTour_CONFKEY_BEGIN_WAIT, KmlTour_BEGIN_WAIT)
+        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_HEADING, KmlTour_BEGIN_HEADING)
+        self._set_option_float(options, KmlTour_CONFKEY_BEGIN_FLYTIME, KmlTour_BEGIN_FLYTIME)
+        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_TILT, KmlTour_BEGIN_TILT)
+        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_RANGE, KmlTour_BEGIN_RANGE)
+        self._set_option_float(options, KmlTour_CONFKEY_WAIT, KmlTour_WAIT)
+        self._set_option_float_none(options, KmlTour_CONFKEY_HEADING, KmlTour_HEADING)
+        self._set_option_float(options, KmlTour_CONFKEY_FLYTIME, KmlTour_FLYTIME)
+        self._set_option_float_none(options, KmlTour_CONFKEY_TILT, KmlTour_TILT)
+        self._set_option_float_none(options, KmlTour_CONFKEY_RANGE, KmlTour_RANGE)
+        options.setdefault(KmlTour_CONFKEY_END_PLCMK, KmlTour_END_PLCMK)
+        options.setdefault(KmlTour_CONFKEY_END_STYLE, KmlTour_END_STYLE)
+        self._set_option_float_none(options, KmlTour_CONFKEY_END_HEADING, KmlTour_END_HEADING)
+        self._set_option_float(options, KmlTour_CONFKEY_END_FLYTIME, KmlTour_END_FLYTIME)
+        self._set_option_float_none(options, KmlTour_CONFKEY_END_TILT, KmlTour_END_TILT)
+        self._set_option_float_none(options, KmlTour_CONFKEY_END_RANGE, KmlTour_END_RANGE)
+        self.options = options
+
+
+    def init(self, options, widget):
+        if not options.has_key(KmlTour_CONFKEY):
+            options[KmlTour_CONFKEY] = dict()
+        opt = options[KmlTour_CONFKEY]
+        self.process_variables(opt)
+        if self.gtkui:
+            if self.ready == -1:
+                # 1st time
+                self.gtkui.show(widget, opt)
+            else:
+                self.gtkui.show()
         self.ready = 1
+        self.logger.debug(_("Starting plugin ..."))
 
 
     @DRegister("MakeKML:ini")
     def process_ini(self, *args, **kwargs):
-        if not self.ready or not self.state.outputkml:
+        if not self.ready or not self.state.kmldata:
+            self.ready = 0
             return
-        self.name = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_KMLTOUR_NAME]
-        description = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_KMLTOUR_DESC]
-        mp3s = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_KMLTOUR_MUSIC]
-        mix = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX]
-        begin_wait = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_BEGIN_WAIT]
-        begin_heading = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_BEGIN_HEADING]
-        begin_flytime = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_BEGIN_FLYTIME]
-        begin_tilt = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_BEGIN_TILT]
-        begin_range = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_BEGIN_RANGE]
-        wait = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_WAIT]
-        heading = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_HEADING]
-        flytime = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_FLYTIME]
-        tilt = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_TILT]
-        range = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_RANGE]
-        end_heading = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_END_HEADING]
-        end_flytime = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_END_FLYTIME]
-        end_tilt = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_END_TILT]
-        end_range = self.state.options[_KmlTour_CONFKEY][_KmlTour_CONFKEY_END_RANGE]
+        mp3list = self.options[KmlTour_CONFKEY_KMLTOUR_MUSIC]
+        mp3mix = self.options[KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX]
+        mp3uri = self.options[KmlTour_CONFKEY_KMLTOUR_MUSIC_URI]
         try:
-            mp3mix = bool(int(mix))
-        except:
-            mp3mix = _KmlTour_KMLTOUR_MUSIC_MIX
-        mp3list = []
-        try:
-            for mp3 in mp3s.split(_KmlTour_SPLIT_CHAR):
-                if os.path.isfile(mp3):
-                    mp3list.append(mp3)
-        except:
-            pass
-        utczoneminutes = self.state['utczoneminutes']
-        self.str_tzdiff = '-'
-        if utczoneminutes < 0:
-            utczoneminutes = -utczoneminutes
-            self.str_tzdiff = '+'
-        hours, remainder = divmod(utczoneminutes, 60)
-        minutes, seconds = divmod(remainder, 60)
-        self.str_tzdiff = self.str_tzdiff + "%.2d:%.2d" % (hours, minutes)
-        self.gxtour = gxTour(mp3list, mp3mix, tilt, wait, range, flytime, heading)
-        self.gxtour.set_begin_options(begin_flytime, begin_heading,
-            begin_tilt, begin_range, begin_wait)
-        self.gxtour.set_end_options(end_flytime, end_heading, end_tilt, end_range)
-        self.gxtour.ini(self.name, description)
-        self.geophotos = []
+            self.gxtour = gxTour(mp3list, mp3mix, mp3uri)
+        except Exception as exception:
+            self.logger.error(_("Cannot set mp3 sound files: %s.") % str(exception))
+            self.gxtour = gxTour([], False, mp3uri)
 
 
+    def get_description(self, key):
+        description = ''
+        if self.gtkui:
+            description = self.gtkui.get_textview(key)
+        else:
+            filename = os.path.expandvars(os.path.expanduser(self.options[key]))
+            if os.path.isfile(filename):
+                try:
+                    fd = open(filename, "r")
+                    description = fd.read()
+                except Exception as exception:
+                    self.logger.error(_("Cannot read file '%s'.") % str(exception))
+                finally:
+                    if fd:
+                        fd.close()
+        return description
 
-    @DRegister("MakeKML:run")
-    def process_geophoto(self, geophoto, mode, *args, **kwargs):
-        if mode != 1 or not self.ready or not self.state.outputkml:
-            return
-        self.geophotos.append(geophoto)
+
+    def set_first(self, str_tzdiff=''):
+        # firt point for camera
+        geophoto = None
+        num_photo = 0
+        max_lat = -90.0
+        min_lat = 90.0
+        max_lon = -180.0
+        min_lon = 180.0
+        for gphoto in self.state.geophotos:
+            if gphoto.status > 0 and gphoto.isGeoLocated():
+                if num_photo == 0:
+                    geophoto = gphoto
+                if max_lat < geophoto.lat:
+                    max_lat = geophoto.lat
+                if min_lat > geophoto.lat:
+                    min_lat = geophoto.lat
+                if max_lon < geophoto.lon:
+                    max_lon = geophoto.lon
+                if min_lon > geophoto.lon:
+                    min_lon = geophoto.lon
+                num_photo += 1
+        if num_photo < 1:
+            self.logger.debug(_("No photos to process!"))
+            return None
+        self.center_lon = (max_lon + min_lon)/2.0
+        self.center_lat = (max_lat + min_lat)/2.0
+        self.first_lat = geophoto.lat
+        self.first_lon = geophoto.lon
+        self.first_ele = geophoto.ele
+        time = geophoto.time
+        if self.state.gpxdata:
+            found = False
+            for track in self.state.gpxdata.tracks:
+                points = track.listpoints()
+                for point in points:
+                    if self.first_lat == point.lat and self.first_lon == point.lon:
+                        self.first_lat = points[0].lat
+                        self.first_lon = points[0].lon
+                        self.first_ele = points[0].ele
+                        time = points[0].time
+                        found = True
+                        break
+                if found:
+                    # we have the first point
+                    break
+        begin_name = self.options[KmlTour_CONFKEY_BEGIN_NAME]
+        begin_style = self.options[KmlTour_CONFKEY_BEGIN_STYLE]
+        begin_wait = self.options[KmlTour_CONFKEY_BEGIN_WAIT]
+        begin_heading = self.options[KmlTour_CONFKEY_BEGIN_HEADING]
+        begin_flytime = self.options[KmlTour_CONFKEY_BEGIN_FLYTIME]
+        begin_tilt = self.options[KmlTour_CONFKEY_BEGIN_TILT]
+        begin_range = self.options[KmlTour_CONFKEY_BEGIN_RANGE]
+        begin_desc = self.get_description(KmlTour_CONFKEY_BEGIN_DESC)
+        strtime = time.strftime("%Y-%m-%dT%H:%M:%S") + str_tzdiff
+        if not begin_heading:
+            begin_heading = gpx.bearingCoord(
+                self.center_lat, self.center_lon, self.first_lat, self.first_lon)
+        self.gxtour.begin(self.first_lon, self.first_lat, self.first_ele, strtime, 
+            begin_name, begin_desc, begin_style, begin_wait, begin_heading, 
+            begin_tilt, begin_range, begin_flytime)
+        return geophoto
+
+
+    def set_last(self, str_tzdiff=''):
+        num_photo = len(self.state.geophotos) - 1
+        geophoto = None
+        while num_photo >= 0:
+            gphoto = self.state.geophotos[num_photo]
+            if gphoto.status > 0 and gphoto.isGeoLocated():
+                geophoto = gphoto
+                break
+            num_photos -= 1
+        if num_photo < 0:
+            self.logger.debug(_("No photos to process!"))
+            return None
+        self.last_lat = geophoto.lat
+        self.last_lon = geophoto.lon
+        self.last_ele = geophoto.ele
+        if self.state.gpxdata:
+            found = False
+            for track in self.state.gpxdata.tracks:
+                points = track.listpoints()
+                for point in points:
+                    if self.last_lat == point.lat and self.last_lon == point.lon:
+                        self.last_lat = points[-1].lat
+                        self.last_lon = points[-1].lon
+                        self.last_ele = points[-1].ele
+                        time = points[-1].time
+                        found = True
+                        break
+                if found:
+                    break
+        end_name = self.options[KmlTour_CONFKEY_END_NAME]
+        end_style = self.options[KmlTour_CONFKEY_END_STYLE]
+        end_heading = self.options[KmlTour_CONFKEY_END_HEADING]
+        end_flytime = self.options[KmlTour_CONFKEY_END_FLYTIME]
+        end_tilt = self.options[KmlTour_CONFKEY_END_TILT]
+        end_range = self.options[KmlTour_CONFKEY_END_RANGE]
+        end_desc = self.get_description(KmlTour_CONFKEY_END_DESC)
+        strtime = time.strftime("%Y-%m-%dT%H:%M:%S") + str_tzdiff
+        if not end_heading:
+            end_heading = gpx.bearingCoord(
+                self.center_lat, self.center_lon, self.last_lat, self.last_lon)
+        self.gxtour.end(self.last_lon, self.last_lat, self.last_ele, strtime,
+            end_name, end_desc, end_style, end_heading,
+            end_tilt, end_range, end_flytime)
+        return geophoto
 
 
     @DRegister("MakeKML:end")
     def process_end(self, num_photos, *args, **kwargs):
-        if not self.ready or not self.state.outputkml:
+        if not self.ready:
             return
-        self.firstitem = (0, 0, 0)
-        self.lastitem = (0, 0, 0)
-        previous = self.firstitem
-        wait_time = 4.0
-        range = 0.5
-        tilt = 20
-
-        position = 0
-        for geophoto in self.geophotos:
+        utczoneminutes = self.state['utczoneminutes']
+        str_tzdiff = '-'
+        if utczoneminutes < 0:
+            utczoneminutes = -utczoneminutes
+            str_tzdiff = '+'
+        hours, remainder = divmod(utczoneminutes, 60)
+        minutes, seconds = divmod(remainder, 60)
+        str_tzdiff = str_tzdiff + "%.2d:%.2d" % (hours, minutes)
+        
+        
+        name = self.options[KmlTour_CONFKEY_KMLTOUR_NAME]
+        description = self.options[KmlTour_CONFKEY_KMLTOUR_DESC]
+        wait = self.options[KmlTour_CONFKEY_WAIT]
+        heading = self.options[KmlTour_CONFKEY_HEADING]
+        flytime = self.options[KmlTour_CONFKEY_FLYTIME]
+        tilt = self.options[KmlTour_CONFKEY_TILT]
+        crange = self.options[KmlTour_CONFKEY_RANGE]
+        kml = self.state.kmldata.getKml()
+        if not kml:
+            self.ready = 0
+            return
+        self.gxtour.ini(name, description, kml)
+        # firt point for camera
+        geophoto = self.set_first(str_tzdiff)
+        if not geophoto:
+            self.ready = 0
+            return
+        self.gxtour.ini(name, description, kml)
+        previous = (geophoto.lat, geophoto.lon, geophoto.ele)
+        
+        for geophoto in self.state.geophotos:
+            if geophoto.status < 1:
+                # not selected
+                continue
             lat = geophoto.lat
             lon = geophoto.lon
             ele = geophoto.ele
             name = geophoto.name
-            strtime = geophoto.time.strftime("%Y-%m-%dT%H:%M:%S") + self.str_tzdiff
-            if position > 0:
-                bearing = gpx.bearingCoord(previous[0], previous[1], lat, lon)
-                if range < 1:
-                    distance = gpx.distanceCoord(previous[0], previous[1], lat, lon)
-                    distance = distance * range
-                else:
-                    distance = range
+            strtime = geophoto.time.strftime("%Y-%m-%dT%H:%M:%S") + str_tzdiff
+            bearing = gpx.bearingCoord(previous[0], previous[1], lat, lon)
+            if crange < 11:
+                distance = gpx.distanceCoord(previous[0], previous[1], lat, lon)
+                distance = distance * crange
             else:
-                bearing = 0
-                distance = 100
-
-            previous = (lat, lon, ele)
-
-            self.gxtour.do_flyto(lon, lat, ele, strtime, bearing, tilt, distance)
+                distance = crange
+            self.gxtour.do_flyto(lon, lat, ele, strtime, bearing, tilt, distance, flytime)
             self.gxtour.do_balloon(name)
-            self.gxtour.do_wait(wait_time)
+            self.gxtour.do_wait(wait)
             self.gxtour.do_balloon(name, False)
             self.gxtour.music()
-        self.geophotos = None
+            previous = (lat, lon, ele)
+        # last point
+        self.set_last(str_tzdiff)
 
 
-    @DRegister("MakeKML:finish")
-    def generate(self, *args, **kwargs):
-        if not self.ready or not self.state.gpxdata or not self.state.outputkml:
-            return
-        self.outputfile = None
-        self.outputdir = None
-        self.outputuri = None
-        try:
-            self.outputfile = os.path.basename(self.state.outputkml)
-            if self.state.tmpdir:
-                # it is a KMZ, only one kml is allowed ...
-                # so we change the extension
-                self.outputfile += ".xml"
-            outputdir = os.path.split(self.state.outputdir)
-            self.outputdir = os.path.join(outputdir[0], outputdir[1])
-            self.outputdir += _KmlTour_DIR_APPEND
-            state_photouri = self.state['photouri']
-            photouri = urlparse.urlsplit(state_photouri)
-            scheme = photouri.scheme 
-            if os.path.splitdrive(state_photouri)[0]:
-                 scheme = ''
-            if scheme:
-                # URL
-                if '%(' in state_photouri:
-                    data = {'PhotoPlace.PhotoNAME': self.outputfile}
-                    self.outputuri = state_photouri % data
-                elif '%s' in state_photouri:
-                    self.outputuri = state_photouri % self.outputfile
-                else:
-                    self.outputuri = state_photouri + self.outputfile
-            else:
-                self.outputuri = os.path.basename(self.outputdir) + '/' + self.outputfile
-            if not os.path.isdir(self.outputdir):
-                os.mkdir(self.outputdir)
-            self.outputfile = os.path.join(self.outputdir, self.outputfile)
-        except Exception as exception:
-            self.logger.error(_("Cannot set outputfile: %s.") % str(exception))
-            return
-        self.logger.debug(_("gx TOUR ... "))
-        #self.kmldata.close(self.rootdata)
-        # set up a reference to file in main kml dom
-        doc = self.state.kmldata.getKml()
-        networkLink = doc.createElement("NetworkLink")
-        name = doc.createElement("name")
-        nameid = doc.createTextNode(str(self.name))
-        name.appendChild(nameid)
-        networkLink.appendChild(name)
-        link = doc.createElement("Link")
-        networkLink.appendChild(link)
-        href = doc.createElement("href")
-        uri = doc.createTextNode(str(self.outputuri))
-        href.appendChild(uri)
-        link.appendChild(href)
-        document = doc.getElementsByTagName("Document")[0]
-        document.appendChild(networkLink)
-
-
-    @DRegister("SaveFiles:startgo")
-    def save(self, *args, **kwargs):
+    @DRegister("SaveFiles:ini")
+    def save(self, fd, outputkml, outputkmz, photouri, outputdir, quality):
         if not self.ready:
             return
         dgettext = dict()
-        dgettext['outputfile'] = self.outputfile
         try:
-            #return open(source, 'wb')
-            fd = codecs.open(self.outputfile, "wb", encoding="utf-8")
+            outdir = os.path.dirname(outputkml)
+            for mp3 in self.options[KmlTour_CONFKEY_KMLTOUR_MUSIC]:
+                basefile = os.path.basename(mp3)
+                dgettext['outputfile'] = os.path.join(outdir, basefile)
+                shutil.copy(mp3, dgettext['outputfile'])
         except Exception as exception:
             dgettext['error'] = str(exception)
-            msg = _("Cannot open '%(outputfile)s' for writing: %(error)s.")
+            msg = _("Cannot create '%(outputfile)s' for writing: %(error)s.")
             self.logger.error(msg % dgettext)
             raise
-        else:
-            msg = _("Generating output file in '%(outputfile)s' ...")
-            self.logger.debug(msg % dgettext)
-            try:
-                kmldom = self.gxtour.get_kml()
-                kmldom.writexml(fd, "", "   ","\n", "utf-8")
-            except Exception as exception:
-                dgettext['error'] = str(exception)
-                msg = _("Cannot write to file '%(outputfile)s': %(error)s.")
-                self.logger.error(msg % dgettext)
-            finally:
-                fd.close()
 
 
-    def end(self, state):
+    def end(self, options):
         self.ready = 0
-        self.state = None
-        self.name = None
         self.gxtour = None
-        self.geophotos = None
-        self.outputfile = None
-        self.outputdir = None
-        self.outputuri = None
-
-
-
-class gxTour(object):
-
-    def __init__(self,
-        soundlist = [],
-        sounds_mix = False,
-        tilt = _KmlTour_TILT,
-        wait = _KmlTour_WAIT,
-        range = _KmlTour_RANGE,
-        flytime = _KmlTour_FLYTIME,
-        heading = _KmlTour_HEADING):
-
-        object.__init__(self)
-        self.begin_wait = _KmlTour_BEGIN_WAIT
-        self.begin_heading = _KmlTour_BEGIN_HEADING
-        self.begin_flytime = _KmlTour_BEGIN_FLYTIME
-        self.begin_tilt = _KmlTour_BEGIN_TILT
-        self.begin_range = _KmlTour_BEGIN_RANGE
-        #
-        self.tilt = tilt
-        self.wait = wait
-        self.range = range
-        self.flytime = flytime
-        self.heading = heading
-        #
-        self.end_flytime = _KmlTour_END_FLYTIME
-        self.end_heading = _KmlTour_END_HEADING
-        self.end_tilt = _KmlTour_END_TILT
-        self.end_range = _KmlTour_END_RANGE
-        #
-        self.kmldoc = None
-        self.playlist = None
-        self.tour = None
-        self.sounds_mix = False
-        self.sounds_index = 0
-        self.music_time = 0
-        self.total_time = 0
-        self.sounds = []
-        if soundlist:
-            self.set_music(soundlist, sounds_mix)
-
-
-    def set_begin_options(self,
-        begin_flytime = _KmlTour_BEGIN_FLYTIME,
-        begin_heading = _KmlTour_BEGIN_HEADING,
-        begin_tilt = _KmlTour_BEGIN_TILT,
-        begin_range = _KmlTour_BEGIN_RANGE,
-        begin_wait = _KmlTour_BEGIN_WAIT ):
-        self.begin_wait = begin_wait
-        self.begin_heading = begin_heading
-        self.begin_flytime = begin_flytime
-        self.begin_tilt = begin_tilt
-        self.begin_range = begin_range
-
-
-    def set_end_options(self,
-        end_flytime = _KmlTour_END_FLYTIME,
-        end_heading = _KmlTour_END_HEADING,
-        end_tilt = _KmlTour_END_TILT,
-        end_range = _KmlTour_END_RANGE ):
-        self.end_flytime = end_flytime
-        self.end_heading = end_heading
-        self.end_tilt = end_tilt
-        self.end_range = end_range
-
-
-    def set_music(self, mp3list, mix=False):
-        for mp3 in mp3list:
-            try:
-                id3v2 = MP3Info.ID3v2(mp3)
-                if id3v2.valid:
-                    mpeg = MP3Info.MPEG(mp3, seekstart=id3v2.header_size+10)
-                else:
-                    mpeg = MP3Info.MPEG(mp3)
-                time = mpeg.total_time
-                self.sounds.append((mp3, time))
-            except Exception as exception:
-                print "EXCEPTION", str(exception)
-        self.sounds_mix = mix
-
-
-    def get_kml(self):
-        return self.kmldoc
-
-
-    def ini(self, name, description):
-        self.kmldoc = xml.dom.minidom.Document()
-        kml = self.kmldoc.createElementNS("http://www.opengis.net/kml/2.2", 'kml')
-        kml.setAttribute("xmlns", "http://www.opengis.net/kml/2.2")
-        kml.setAttribute("xmlns:gx", "http://www.google.com/kml/ext/2.2")
-        self.kmldoc.appendChild(kml)
-        document = self.kmldoc.createElement("Document")
-        kml.appendChild(document)
-        self.tour = self.kmldoc.createElement("gx:Tour")
-        name_node = self.kmldoc.createElement("name")
-        self.tour.appendChild(name_node)
-        description_node = self.kmldoc.createElement("description")
-        self.tour.appendChild(description_node)
-        name_node.appendChild(self.kmldoc.createTextNode(str(name)))
-        description_node.appendChild(self.kmldoc.createTextNode(str(description)))
-        self.playlist = self.kmldoc.createElement("gx:Playlist")
-        self.tour.appendChild(self.playlist)
-        document.appendChild(self.tour)
-        self.music()
-
-
-    def begin(self, name, lon, lat, ele, time):
-        self.do_flyto(lon, lat, ele, time,
-            self.begin_heading, self.begin_tilt, self.begin_range,
-            self.begin_flytime, "bounce")
-        self.do_balloon(name)
-        self.do_wait(self.begin_wait)
-        self.do_balloon(name, False)
-        self.music()
-
-
-    def music(self, mix=None):
-        if self.total_time >= self.music_time:
-            if mix == None:
-                tmp_mix = self.sounds_mix
-            else:
-                tmp_mix = mix
-            if tmp_mix:
-                music_time = 0
-                for mp3, time in self.sounds:
-                    self.do_soundclue(mp3)
-                    if time > music_time:
-                        music_time = time
-                self.music_time += music_time
-            elif len(self.sounds) > self.sounds_index:
-                mp3, time = self.sounds[self.sounds_index]
-                self.do_soundclue(mp3)
-                self.music_time += time
-                self.sounds_index += 1
-            if self.sounds_index >= len(self.sounds):
-                self.sounds_index = 0
-
-
-    def do_soundclue(self, path):
-        soundcue = self.kmldoc.createElement("gx:SoundCue")
-        href = self.kmldoc.createElement("href")
-        href.appendChild(self.kmldoc.createTextNode(path))
-        soundcue.appendChild(href)
-        self.playlist.appendChild(soundcue)
-
-
-    def do_wait(self, duration=1.0):
-        wait = self.kmldoc.createElement("gx:Wait")
-        duration_node = self.kmldoc.createElement("gx:duration")
-        duration_node.appendChild(self.kmldoc.createTextNode(str(duration)))
-        wait.appendChild(duration_node)
-        self.playlist.appendChild(wait)
-        self.total_time += duration
-
-
-    def do_flyto(self, lon, lat, ele, time,
-            heading = _KmlTour_HEADING,
-            tilt = _KmlTour_TILT,
-            rng = _KmlTour_RANGE,
-            fly_time = _KmlTour_FLYTIME,
-            fly_mode = _KmlTour_FLYMODE,
-            altitudemode = _KmlTour_ALTMODE):
-        flyto = self.kmldoc.createElement("gx:FlyTo")
-        duration = self.kmldoc.createElement("gx:duration")
-        duration.appendChild(self.kmldoc.createTextNode(str(fly_time)))
-        flyto.appendChild(duration)
-        flytomode = self.kmldoc.createElement("gx:flyToMode")
-        flytomode.appendChild(self.kmldoc.createTextNode(fly_mode))
-        flyto.appendChild(flytomode)
-        #timestamp = self.kmldoc.createElement("gx:TimeStamp")
-        #when = self.kmldoc.createElement("when")
-        #when.appendChild(self.kmldoc.createTextNode(str(time)))
-        #timestamp.appendChild(when)
-        #flyto.appendChild(timestamp)
-        lookat = self.kmldoc.createElement("LookAt")
-        longitude_node = self.kmldoc.createElement("longitude")
-        longitude_node.appendChild(self.kmldoc.createTextNode(str(lon)))
-        lookat.appendChild(longitude_node)
-        latitude_node = self.kmldoc.createElement("latitude")
-        latitude_node.appendChild(self.kmldoc.createTextNode(str(lat)))
-        lookat.appendChild(latitude_node)
-        altitude_node = self.kmldoc.createElement("altitude")
-        altitude_node.appendChild(self.kmldoc.createTextNode(str(ele)))
-        lookat.appendChild(altitude_node)
-        heading_node = self.kmldoc.createElement("heading")
-        heading_node.appendChild(self.kmldoc.createTextNode(str(heading)))
-        lookat.appendChild(heading_node)
-        tilt_node = self.kmldoc.createElement("tilt")
-        tilt_node.appendChild(self.kmldoc.createTextNode(str(tilt)))
-        lookat.appendChild(tilt_node)
-        range_node = self.kmldoc.createElement("range")
-        range_node.appendChild(self.kmldoc.createTextNode(str(rng)))
-        lookat.appendChild(range_node)
-        altitudemode_node = self.kmldoc.createElement("gx:altitudeMode")
-        altitudemode_node.appendChild(self.kmldoc.createTextNode(altitudemode))
-        lookat.appendChild(altitudemode_node)
-        flyto.appendChild(lookat)
-        self.playlist.appendChild(flyto)
-        self.total_time += fly_time
-
-    def do_balloon(self, name, visibility=True):
-        animatedupdate = self.kmldoc.createElement("gx:AnimatedUpdate")
-        update = self.kmldoc.createElement("Update")
-        animatedupdate.appendChild(update)
-        targetHref = self.kmldoc.createElement("targetHref")
-        update.appendChild(targetHref)
-        change = self.kmldoc.createElement("Change")
-        update.appendChild(change)
-        placemark = self.kmldoc.createElement("Placemark")
-        placemark.setAttribute("targetId", name)
-        change.appendChild(placemark)
-        balloonvisibility = self.kmldoc.createElement("gx:balloonVisibility")
-        balloonvisibility.appendChild(self.kmldoc.createTextNode(str(int(visibility))))
-        placemark.appendChild(balloonvisibility)
-        self.playlist.appendChild(animatedupdate)
-
-
-    def end(self, name, lon, lat, ele, time, loop=True):
-        self.do_flyto(lon, lat, ele, time,
-            self.end_heading, self.end_tilt, self.end_range, self.end_flytime)
-        self.do_balloon(name)
-        if loop:
-            heading = self.end_heading
-            while self.music_time >= self.total_time:
-                heading += 90.0
-                heading = math.fmod(heading, 360)
-                self.do_flyto(lon, lat, ele, time, heading,
-                    self.end_tilt, self.end_range, self.end_flytime)
-
+        if self.gtkui:
+            self.gtkui.hide()
+        self.logger.debug(_("Ending plugin ..."))
 
 
 # EOF

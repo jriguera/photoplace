@@ -454,11 +454,11 @@ class State(object):
             scheme = photouri.scheme 
             if os.path.splitdrive(self._photouri)[0]:
                  scheme = ''
-            if scheme or scheme != 'file':
+            if scheme != '' and scheme != 'file':
                 # URL
                 self.outputdir = os.path.join(outputdir, outputfilebase)
             else:
-                self.outputdir = os.path.join(outputdir, outputfilebase)
+                self.outputdir = os.path.join(outputdir, os.path.normcase(photouri.path))
 
 
     @DSynchronized()

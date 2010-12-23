@@ -79,7 +79,7 @@ PhotoPlace_IniHEADING = 'iniheading'
 # Default values
 PhotoPlace_Cfg_main_exifmode = 0
 PhotoPlace_Cfg_main_jpgsize = (0, 0)
-PhotoPlace_Cfg_main_jpgzoom = 0.5
+PhotoPlace_Cfg_main_jpgzoom = 0.25
 PhotoPlace_Cfg_main_quality = 1
 PhotoPlace_Cfg_main_maxdeltaseconds = 300
 PhotoPlace_Cfg_main_photouri = ""

@@ -70,7 +70,7 @@ _KmlPaths_TEMPLATE_REF = {
 class KmlPaths(Plugin):
 
     description = _("A plugin to generate paths from GPX tracks in "
-        "order to show them in KML layer.")
+        "order to show them in the KML layer.")
     version = "0.1.0"
     author = "Jose Riguera Lopez"
     email = "<jriguera@gmail.com>"
@@ -146,6 +146,7 @@ class KmlPaths(Plugin):
     @DRegister("MakeKML:finish")
     def generate(self, *args, **kwargs):
         if not self.ready or not self.state.gpxdata or not self.state.outputkml:
+            self.ready = 0
             return
         self.outputfile = None
         self.outputdir = None
@@ -160,22 +161,21 @@ class KmlPaths(Plugin):
                 # it is a KMZ, only one kml is allowed ...
                 # so we change the extension
                 self.outputfile += ".xml"
-            outputdir = os.path.split(self.state.outputdir)
-            self.outputdir = os.path.join(outputdir[0], outputdir[1])
+            outputdir = os.path.normpath(self.state.outputdir)
+            outputdir = os.path.basename(outputdir)
+            self.outputdir = os.path.join(self.state.outputdir, outputdir)
             self.outputdir += _KmlPaths_KMLDIR_APPEND
             state_photouri = self.state['photouri']
+            
             photouri = urlparse.urlsplit(state_photouri)
             scheme = photouri.scheme 
             if os.path.splitdrive(state_photouri)[0]:
-                 scheme = ''
-            if scheme:
+                scheme = ''
+            if scheme != '' and scheme != 'file':
                 # URL
-                if '%(' in state_photouri:
-                    data = {'PhotoPlace.PhotoNAME': self.outputfile}
-                    self.outputuri = state_photouri % data
-                elif '%s' in state_photouri:
+                try:
                     self.outputuri = state_photouri % self.outputfile
-                else:
+                except:
                     self.outputuri = state_photouri + self.outputfile
             else:
                 self.outputuri = os.path.basename(self.outputdir) + '/' + self.outputfile
@@ -184,6 +184,7 @@ class KmlPaths(Plugin):
             self.outputfile = os.path.join(self.outputdir, self.outputfile)
         except Exception as exception:
             self.logger.error(_("Cannot set outputfile: %s.") % str(exception))
+            self.ready = 0
             return
         self.logger.debug(_("Processing all tracks (paths) from GPX data ... "))
         num_tracks = 0
@@ -294,6 +295,7 @@ class KmlPaths(Plugin):
         self.template = None
         self.kmldata = None
         self.rootdata = None
+        self.logger.debug(_("Ending plugin ..."))
 
 
 # EOF

@@ -35,6 +35,7 @@ import datetime
 
 import Actions.Interface
 from definitions import *
+import gpx
 
 
 
@@ -61,8 +62,8 @@ class MakeKML(Actions.Interface.Action, threading.Thread):
 
 
     def ini(self, *args, **kwargs):
-        min_time = datetime.datetime.max
-        max_time = datetime.datetime.min
+        min_time = datetime.datetime.utcnow()
+        max_time = datetime.datetime(1980, 6, 2)
         total_length = 0.0
         num_tracks = 0
         num_points = 0
@@ -70,33 +71,57 @@ class MakeKML(Actions.Interface.Action, threading.Thread):
         min_lat = 90.0
         max_lon = -180.0
         min_lon = 180.0
-        for track in self.state.gpxdata.tracks:
-            try:
-                (tmin, tmax, duration) = track.timeMinMaxDuration()
-                if tmin < min_time:
-                    min_time = tmin
-                if tmax > max_time:
-                    max_time = tmax
-                (lmin, lmax, length) = track.lengthMinMaxTotal()
-                total_length += length
-                points = track.listpoints()
-                for point in points:
+        if self.state.gpxdata:
+            for track in self.state.gpxdata.tracks:
+                try:
+                    (tmin, tmax, duration) = track.timeMinMaxDuration()
+                    if tmin < min_time:
+                        min_time = tmin
+                    if tmax > max_time:
+                        max_time = tmax
+                    (lmin, lmax, length) = track.lengthMinMaxTotal()
+                    total_length += length
+                    points = track.listpoints()
+                    for point in points:
+                        num_points += 1
+                        if max_lat < point.lat:
+                            max_lat = point.lat
+                        if min_lat > point.lat:
+                            min_lat = point.lat
+                        if max_lon < point.lon:
+                            max_lon = point.lon
+                        if min_lon > point.lon:
+                            min_lon = point.lon
+                    points = None
+                    num_tracks += 1
+                except Exception as e:
+                    self.dgettext["error"] = str(e)
+                    self.dgettext['path'] = track.name
+                    msg = _("Cannot process '%(path)s': %(error)s.") % self.dgettext
+                    self.logger.error(msg)
+        else:
+            num_tracks = 1
+            prev_lat = 0.0
+            prev_lon = 0.0
+            for geophoto in self.state.geophotos:
+                if geophoto.status > 0 and geophoto.isGeoLocated():
+                    if num_points == 0:
+                        min_time = geophoto.time
+                    else:
+                        total_length += gpx.distanceCoord(prev_lat, prev_lon, 
+                            geophoto.lat, geophoto.lon)
+                    max_time = geophoto.time
+                    if max_lat < geophoto.lat:
+                        max_lat = geophoto.lat
+                    if min_lat > geophoto.lat:
+                        min_lat = geophoto.lat
+                    if max_lon < geophoto.lon:
+                        max_lon = geophoto.lon
+                    if min_lon > geophoto.lon:
+                        min_lon = geophoto.lon
+                    prev_lat = geophoto.lat
+                    prev_lon = geophoto.lon
                     num_points += 1
-                    if max_lat < point.lat:
-                        max_lat = point.lat
-                    if min_lat > point.lat:
-                        min_lat = point.lat
-                    if max_lon < point.lon:
-                        max_lon = point.lon
-                    if min_lon > point.lon:
-                        min_lon = point.lon
-                points = None
-                num_tracks += 1
-            except Exception as e:
-                self.dgettext["error"] = str(e)
-                self.dgettext['path'] = track.name
-                msg = _("Cannot process '%(path)s': %(error)s.") % self.dgettext
-                self.logger.error(msg)
         center_lon = (max_lon + min_lon)/2.0
         center_lat = (max_lat + min_lat)/2.0
         diff_time = abs(max_time - min_time)
