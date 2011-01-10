@@ -77,9 +77,8 @@ class ReadGPX(Actions.Interface.Action, threading.Thread):
     def ini(self, *args, **kwargs):
         self._notify_ini(self.fd, self.utc_time_delta)
         self.dgettext['utc_time_delta'] = self.utc_time_delta
-        msg = _("Processing GPX data from file '%(gpxinputfile)s' with time "
-                "delta +/- %(utc_time_delta)s ...") % self.dgettext
-        self.logger.info(msg)
+        msg = _("Processing GPX data (TZ %(utc_time_delta)s) from '%(gpxinputfile)s' ...")
+        self.logger.info(msg % self.dgettext)
         return self.state.gpxdata
 
 

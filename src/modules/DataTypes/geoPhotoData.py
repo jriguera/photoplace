@@ -309,7 +309,7 @@ class GeoPhoto(object):
         if gpsinfo:
             latRef = 'N'
             lonRef = 'E'
-            eleRef = 0
+            eleRef = '0'
             lat = self.lat
             lon = self.lon
             ele = self.ele
@@ -321,10 +321,10 @@ class GeoPhoto(object):
                 lonRef = 'W'
             if ele < 0:
                 ele = -ele
-                eleRef = 1
+                eleRef = '1'
             self.exif['Exif.GPSInfo.GPSAltitude'] = \
                 [pyexiv2.utils.Rational(int(ele * 100.0), 100)]
-            self.exif['Exif.GPSInfo.GPSAltitudeRef'] = chr(eleRef)
+            self.exif['Exif.GPSInfo.GPSAltitudeRef'] = eleRef
             (d, m, s) = geomath.NtoDMS(lat)
             fr_d = fractions.Fraction.from_float(float(d))
             Rd = pyexiv2.utils.Rational(int(fr_d.numerator),int(fr_d.denominator))

@@ -324,6 +324,7 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_togglebutton-outfile_toggled": self._toggle_outfile,
             "on_checkbutton-outgeo_toggled": self._toggle_geolocate_mode,
             "on_adjustment-utc_value_changed": self._adjust_utctimezone,
+            "on_adjustment-tdelta_value_changed": self._adjust_timedelta,
             "on_adjustment-quality_value_changed": self._adjust_quality,
             "on_adjustment-jpgzoom_value_changed": self._adjust_jpgzoom,
             "on_button-go_clicked": self.action_process,
@@ -760,6 +761,10 @@ class PhotoPlaceGUI(InterfaceUI):
             widget.set_value(new_value)
         self.userfacade.state['utczoneminutes'] = timefloat_to_minutes(new_value)
 
+    def _adjust_timedelta(self, widget, data=None):
+        value = widget.get_value()
+        self.userfacade.state['maxdeltaseconds'] = int(value)
+
     def _adjust_quality(self, widget, data=None):
         value = widget.get_value()
         self.userfacade.state['quality'] = int(value)
@@ -811,9 +816,9 @@ class PhotoPlaceGUI(InterfaceUI):
             tips = tips + _("# Description:\n %(description)s\n")
         except:
             dgettext['description'] = ''
-        information = _("Name: %(name)s\nDate: %(date)s\nTime: %(time)s") % dgettext
+        information = _("<b>%(name)s</b>\nDate: %(date)s\nTime: %(time)s") % dgettext
         if geophoto.isGeoLocated():
-            geodata = _("Longitude: %(lon)f\nLatitude: %(lat)f\nElevation: %(ele)f") % dgettext
+            geodata = _("Longitude:\t%(lon)f\nLatitude:   \t%(lat)f\nElevation:  \t%(ele)f") % dgettext
             color = PhotoPlace_Cfg_TreeViewColorGeo
         else:
             geodata = _("Picture not Geolocated!")
