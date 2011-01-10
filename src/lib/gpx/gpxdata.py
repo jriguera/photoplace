@@ -23,30 +23,33 @@ Main implementation for GPX package.
 import time
 import datetime
 
+__GPX_version__ = "1.1"
+__GPX_creator__ = "GPX4PhotoPlace"
+
+
 import os.path
 import gettext
 import locale
 
-
-__GPX_version__ = "1.1"
-__GPX_creator__ = "GPX4PhotoPlace"
-
-__GETTEXT_DOMAIN__ = "gpx"
+__GETTEXT_DOMAIN__ = "pygpx"
 __PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
 __LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
-        print "Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__)
+        print ("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
         __LOCALE_DIR__ = None
     locale.setlocale(locale.LC_ALL,"")
     t = gettext.translation(__GETTEXT_DOMAIN__, __LOCALE_DIR__, fallback=False)
     _ = t.ugettext
 except Exception as e:
-    print "Error setting up the translations: %s" % (e)
+    print ("Error setting up the translations: %s" % (str(e)))
     _ = lambda s: unicode(s)
 
+
+import exceptions
 import geomath
+
 
 
 # #############################
@@ -74,10 +77,11 @@ class GPXPoint(object):
         if lon < -180.0 or lon > 180.0:
             raise ValueError(_("longitude = '%d', not in [-180.0..180.0] range") % (lon))
         if not isinstance(time, datetime.datetime):
-            d = { 'type_expected': datetime.datetime.__name__}
-            d['type_got'] = time.__class__.__name__
-            msg = _("time type excepted %(type_expected)s, got %(type_got)s instead") % (d)
-            raise TypeError(msg)
+            dgettext = dict()
+            dgettext['type_expected'] = datetime.datetime.__name__
+            dgettext['type_got'] = time.__class__.__name__
+            msg = _("Time type excepted '%(type_expected)s', got '%(type_got)s' instead")
+            raise TypeError(msg % dgettext)
         self.time = time
         self.lat = lat
         self.lon = lon
@@ -120,13 +124,13 @@ class GPXPoint(object):
             lon = argv1.lon
         else:
             if not isinstance(argv1, float):
-                d = { 'type_expected': float.__name__, 'type_got': argv1.__class__.__name__}
-                msg = _("latitude type excepted %(type_expected)s, got %(type_got)s instead") % (d)
-                raise TypeError(msg)
+                dgettext = {'type_expected': float.__name__, 'type_got': argv1.__class__.__name__}
+                msg = _("Latitude type excepted '%(type_expected)s', got '%(type_got)s' instead")
+                raise TypeError(msg % dgettext)
             if not isinstance(argv2, float):
-                d = { 'type_expected': float.__name__, 'type_got': argv2.__class__.__name__}
-                msg = _("longitude type excepted %(type_expected)s, got %(type_got)s instead") % (d)
-                raise TypeError(msg)
+                dgettext = {'type_expected': float.__name__, 'type_got': argv2.__class__.__name__}
+                msg = _("Longitude type excepted '%(type_expected)s', got '%(type_got)s' instead")
+                raise TypeError(msg % dgettext)
             if argv1 < -90.0 or argv1 > 90.0:
                 raise ValueError(_("latitude = '%d', not in [-90.0..90.0] range") % (argv1))
             if argv2 < -180.0 or argv2 > 180.0:
@@ -169,9 +173,9 @@ class GPXSegment(object):
 
     def addPoint(self, wpt):
         if not isinstance(wpt, GPXPoint):
-            d = { 'type_expected': GPXPoint.__name__, 'type_got': wpt.__class__.__name__ }
-            msg = _("point type excepted %(type_expected)s, got %(type_got)s instead") % (d)
-            raise TypeError(msg)
+            dgettext = {'type_expected': GPXPoint.__name__, 'type_got': wpt.__class__.__name__}
+            msg = _("Point type excepted '%(type_expected)s', got '%(type_got)s' instead")
+            raise TypeError(msg % dgettext)
         pos = 0
         num_points = len(self.lwpts)
         if num_points < 1:
@@ -192,14 +196,14 @@ class GPXSegment(object):
         if pos >= 0 and pos < len(self.lwpts):
             del self.lwpts[pos]
         else:
-            raise exceptions.GPXErrorSegment(_("cannot delete point at pos %s!") % pos)
+            raise exceptions.GPXErrorSegment(_("Cannot delete point at pos %s!") % pos)
 
 
     def position(self, wpt):
         if not isinstance(wpt, GPXPoint):
-            d = { 'type_expected': GPXPoint.__name__, 'type_got': wpt.__class__.__name__ }
-            msg = _("point type excepted %(type_expected)s, got %(type_got)s instead") % (d)
-            raise TypeError(msg)
+            dgettext = {'type_expected': GPXPoint.__name__, 'type_got': wpt.__class__.__name__}
+            msg = _("Point type excepted '%(type_expected)s', got '%(type_got)s' instead")
+            raise TypeError(msg % dgettext)
         num_points = len(self.lwpts)
         for pos in range(0, num_points - 1):
             point = self.lwpts[pos]
@@ -358,11 +362,11 @@ class GPXTrack(object):
 
     def addSegment(self, trkseg):
         if not isinstance(trkseg, GPXSegment):
-            d = {'type_expected': GPXSegment.__name__, 'type_got': trkseg.__class__.__name__}
-            msg = _("segment type excepted %(type_expected)s, got %(type_got)s instead") % (d)
-            raise TypeError(msg)
+            dgettext = {'type_expected': GPXSegment.__name__, 'type_got': trkseg.__class__.__name__}
+            msg = _("Segment type excepted '%(type_expected)s', got '%(type_got)s' instead")
+            raise TypeError(msg % dgettext)
         if len(trkseg.lwpts) < 1:
-            raise exceptions.GPXErrorTrack(_("segment empty!"))
+            raise exceptions.GPXErrorTrack(_("Segment empty!"))
         num_seg = len(self.ltrkseg)
         pos = 0
         if num_seg < 1:
@@ -386,14 +390,14 @@ class GPXTrack(object):
         if pos >= 0 and pos < len(self.ltrkseg):
             del self.ltrkseg[pos]
         else:
-            raise exceptions.GPXErrorTrack(_("cannot delete segment at pos %s!") % pos)
+            raise exceptions.GPXErrorTrack(_("Cannot delete segment at pos %s!") % pos)
 
 
     def position(self, trkseg):
         if not isinstance(trkseg, GPXSegment):
-            d = {'type_expected': GPXSegment.__name__, 'type_got': trkseg.__class__.__name__}
-            msg = _("segment type excepted %(type_expected)s, got %(type_got)s instead") % (d)
-            raise TypeError(msg)
+            dgettext = {'type_expected': GPXSegment.__name__, 'type_got': trkseg.__class__.__name__}
+            msg = _("Segment type excepted '%(type_expected)s', got '%(type_got)s' instead")
+            raise TypeError(msg % dgettext)
         num_seg = len(self.ltrkseg)
         for pos in range(0, num_seg - 1):
             if trkseg.name == self.ltrkseg[pos].name:
@@ -503,9 +507,9 @@ class GPX(object):
             -`metadata`: Metadata dictionary from GPX
         """
         if not isinstance(time, datetime.datetime):
-            d = {'type_expected': datetime.datetime.__name__, 'type_got': time.__class__.__name__}
-            msg = _("time type excepted %(type_expected)s, got %(type_got)s instead") % (d)
-            raise TypeError(msg)
+            dgettext = {'type_expected': datetime.datetime.__name__, 'type_got': time.__class__.__name__}
+            msg = _("Time type excepted '%(type_expected)s', got '%(type_got)s' instead")
+            raise TypeError(msg % dgettext)
         self.version = __GPX_version__
         self.creator = __GPX_creator__
         self.metadata = metadata

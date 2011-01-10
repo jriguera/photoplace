@@ -219,7 +219,6 @@ class PhotoPlaceGUI(InterfaceUI):
     def __setitem__(self, key, value):
         raise ValueError(_("Cannot set key!"))
 
-
     def init(self, userfacade):
         self.userfacade = userfacade
         self.plugins = dict()
@@ -329,7 +328,6 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_adjustment-jpgzoom_value_changed": self._adjust_jpgzoom,
             "on_button-go_clicked": self.action_process,
             "on_button-geolocate_clicked": self._clicked_geolocate,
-            "on_checkbutton-gentrack_toggled": self._toggle_gentrack,
             "on_cellgeophotos_toggled": self._toggle_geophoto,
             "on_treeview-geophotos_row_activated": self._clicked_geophoto,
             "on_window-photoinfo_delete_event": self.dialog_close,
@@ -702,7 +700,6 @@ class PhotoPlaceGUI(InterfaceUI):
             self['hscale-zoom'].set_sensitive(True)
             self['entry-photouri'].set_sensitive(True)
             self._set_photouri()
-            self['checkbutton-gentrack'].set_sensitive(True)
         else:
             self['togglebutton-outfile'].set_label(
                 _("No generate output file! Select a file to continue."))
@@ -710,7 +707,6 @@ class PhotoPlaceGUI(InterfaceUI):
             self['hscale-zoom'].set_sensitive(False)
             self['entry-photouri'].set_text('')
             self['entry-photouri'].set_sensitive(False)
-            self['checkbutton-gentrack'].set_sensitive(False)
 
     def _toggle_outfile(self, widget=None, data=None):
         if self['togglebutton-outfile'].get_active():
@@ -834,12 +830,6 @@ class PhotoPlaceGUI(InterfaceUI):
             bool(geophoto.status), pixbuf, information, geodata, 
             tips, color])
     
-    def _toggle_gentrack(self, widget=None, data=None):
-        if self['checkbutton-gentrack'].get_active():
-            self['entry-gentrack'].set_sensitive(True)
-        else:
-            self['entry-gentrack'].set_sensitive(False)
-
     def _toggle_geophoto(self, cell, path, data=None):
         model = self["treeview-geophotos"].get_model()
         ite = model.get_iter(path)
@@ -960,19 +950,34 @@ class PhotoPlaceGUI(InterfaceUI):
     # ####################
 
     def action_clear(self, widget=None):
+        plugin_mode = self["toggletoolbutton-plugins"].get_active()
+        plugin_list = list()
+        if plugin_mode:
+            for plg in self.plugins.keys():
+                (plgobj, menuitem, notebookindex, notebookframe) = self.plugins[plg]
+                if menuitem.get_active():
+                    menuitem.set_active(False)
+                    plugin_list.append(menuitem)
         try:
             self.userfacade.Clear()
         except Error as e:
             self.show_dialog(e.type, e.msg, e.tip)
+            if plugin_mode:
+                for menuitem in plugin_list:
+                    menuitem.set_active(True)
         else:
             self["button-openphotos"].set_label(_("Select input photo directory") + "  ")
             self["button-opengpx"].set_label(_("Input GPX file") + "  ")
             self["checkbutton-outgeo"].set_active(True)
             self._toggle_geolocate_mode()
             self["togglebutton-outfile"].set_active(False)
+            self._toggle_outfile()
             self.current_geophoto = None
             self.treeview_iterator = None
             self.treeview_model.clear()
+            if plugin_mode:
+                for menuitem in plugin_list:
+                    menuitem.set_active(True)
             self.userfacade.DoTemplates().run()
             self.num_photos_process = 0
 
@@ -1033,19 +1038,6 @@ class PhotoPlaceGUI(InterfaceUI):
                 self.num_photos_process += 1
         return True
 
-    def action_makegpx(self):
-        gpxtrack = self["entry-gentrack"].get_text().strip()
-        try:
-            makegpx = self.userfacade.MakeGPX(gpxtrack)
-            if makegpx:
-                makegpx.run()
-            else:
-                return False
-        except Error as e:
-            self.show_dialog(e.type, e.msg, e.tip)
-            return False
-        return True
-
     def action_process(self, widget, data=None):
         self._set_photouri()
         iter_mode = self['combobox-exif'].get_active_iter()
@@ -1053,9 +1045,6 @@ class PhotoPlaceGUI(InterfaceUI):
         self.userfacade.state["exifmode"] = mode
         if self.userfacade.state['gpxinputfile']:
             if not self.action_geolocate():
-                return False
-        if self["checkbutton-gentrack"].get_active():
-            if not self.action_makegpx():
                 return False
         if self.num_photos_process < 1:
             for geophoto in self.userfacade.state.geophotos:
@@ -1069,7 +1058,11 @@ class PhotoPlaceGUI(InterfaceUI):
                 return False
         self.progressbar.set_fraction(0.0)
         self.progressbar_percent = 0.0
-        self.progressbar_fraction = 1.0/(self.num_photos_process * 9)
+        if self.userfacade.state.outputkmz != None:
+            factor = self.num_photos_process * 8
+        else:
+            factor = self.num_photos_process * 7
+        self.progressbar_fraction = 1.0/factor
         try:
             self.userfacade.goprocess()
         except Error as e:

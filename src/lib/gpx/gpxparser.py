@@ -28,24 +28,25 @@ import os.path
 import gettext
 import locale
 
-
-__GETTEXT_DOMAIN__ = "gpx"
+__GETTEXT_DOMAIN__ = "pygpx"
 __PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
 __LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
-        print "Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__)
+        print ("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
         __LOCALE_DIR__ = None
     locale.setlocale(locale.LC_ALL,"")
     t = gettext.translation(__GETTEXT_DOMAIN__, __LOCALE_DIR__, fallback=False)
     _ = t.ugettext
 except Exception as e:
-    print "Error setting up the translations: %s" % (e)
+    print ("Error setting up the translations: %s" % (str(e)))
     _ = lambda s: unicode(s)
+
 
 import exceptions
 import gpxdata
+
 
 
 # ########################
@@ -68,10 +69,11 @@ class GPXParser:
             -`timedelta`: timedelta to add to each waypoint time.
         """
         if not isinstance(timedelta, datetime.timedelta):
-            d = { 'type_expected': datetime.timedelta.__name__ }
-            d['type_got'] = timedelta.__class__.__name__
-            msg = _("time delta type excepted %(type_expected)s, got %(type_got)s instead") % (d)
-            raise TypeError(msg)
+            dgettext = dict() 
+            dgettext['type_expected'] = datetime.timedelta.__name__
+            dgettext['type_got'] = timedelta.__class__.__name__
+            msg = _("Time delta type excepted '%(type_expected)s', got '%(type_got)s' instead")
+            raise TypeError(msg % dgettext)
         self.timedelta = timedelta
         self.name = name
         self.gpx = None
@@ -80,9 +82,10 @@ class GPXParser:
 
 
     def _parseTime(self, node):
-        msg = "<time>"
+        msg = _("Cannot parse <time> node: ")
         if node.nodeType == xml.dom.minidom.Node.ELEMENT_NODE:
-            if node.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE:
+            if node.childNodes \
+            and node.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE:
                 time = node.firstChild.data
                 try:
                     yr = int(time[0:4])
@@ -135,8 +138,10 @@ class GPXParser:
                 if anode.nodeType != xml.dom.minidom.Node.ELEMENT_NODE:
                     continue
                 if anode.tagName == "name":
-                    if anode.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE:
-                        name = anode.firstChild.data
+                    if anode.childNodes:
+                        if anode.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE \
+                        or anode.firstChild.nodeType == xml.dom.minidom.Node.CDATA_SECTION_NODE:
+                            name = anode.firstChild.data
                 elif anode.tagName == "email":
                     emailid = anode.getAttribute('id')
                     emaildomain = anode.getAttribute('domain')
@@ -159,18 +164,22 @@ class GPXParser:
                 if cnode.nodeType != xml.dom.minidom.Node.ELEMENT_NODE:
                     continue
                 if cnode.tagName == "year":
-                    if cnode.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE:
-                        year = cnode.firstChild.data
+                    if cnode.childNodes \
+                    and cnode.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE:
+                            year = cnode.firstChild.data
                 elif cnode.tagName == "license":
-                    if cnode.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE:
-                        license = cnode.firstChild.data
+                    if cnode.childNodes:
+                        if cnode.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE \
+                        or cnode.firstChild.nodeType == xml.dom.minidom.Node.CDATA_SECTION_NODE:
+                            license = cnode.firstChild.data
             return (author, year, license)
         return None
 
 
     def _parseWpt(self, wpt):
+        msg = _("Cannot parse <wpt> node: ")
         if wpt.nodeType != xml.dom.minidom.Node.ELEMENT_NODE:
-            msg = "<%s>[!ELEMENT_NODE]" % (wpt.nodeName)
+            msg = msg + "[!ELEMENT_NODE]"
             raise exceptions.GPXErrorParse(msg)
         ele = 0.0
         attr = {}
@@ -184,7 +193,7 @@ class GPXParser:
             lat = float(wpt.getAttribute('lat'))
             lon = float(wpt.getAttribute('lon'))
         except ValueError as valerror:
-            msg = "<%s lat='%s' lon='%s'>[%s]" % (wpt.tagName, lat, lon, valerror)
+            msg = msg + "<lat='%s' lon='%s'> [%s]" % (lat, lon, valerror)
             raise exceptions.GPXErrorParse(msg)
         try:
             for node in wpt.childNodes:
@@ -194,7 +203,7 @@ class GPXParser:
                     try:
                         if node.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE:
                             ele = float(node.firstChild.data)
-                    except ValueError:
+                    except:
                         pass
                 elif node.tagName == "time":
                     dt = self._parseTime(node)
@@ -206,11 +215,15 @@ class GPXParser:
                     except:
                         pass
                 else:
-                    if node.tagName in string_tags:
-                        if node.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE:
+                    if node.childNodes and node.tagName in string_tags:
+                        if node.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE \
+                        or node.firstChild.nodeType == xml.dom.minidom.Node.CDATA_SECTION_NODE:
                             attr[node.tagName] = node.firstChild.data
         except exceptions.GPXErrorParse as gpxerror:
-            msg = "<%s lat='%s' lon='%s'>%s" % (wpt.nodeName, lat, lon, gpxerror)
+            msg = msg + "<lat='%s' lon='%s'> %s" % (lat, lon, gpxerror)
+            raise exceptions.GPXErrorParse(msg)
+        except Exception as exception:
+            msg = msg + str(exception)
             raise exceptions.GPXErrorParse(msg)
         wpt = gpxdata.GPXPoint(lat, lon, ele, dt, attr)
         return wpt
@@ -225,7 +238,9 @@ class GPXParser:
                 if node.tagName == "name" or \
                     node.tagName == "desc" or \
                     node.tagName == 'keywords':
-                    if node.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE:
+                    if node.childNodes \
+                    and (node.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE \
+                    or node.firstChild.nodeType == xml.dom.minidom.Node.CDATA_SECTION_NODE):
                         output[node.tagName] = node.firstChild.data
                     else:
                         output[node.tagName] = ""
@@ -239,13 +254,22 @@ class GPXParser:
                     maxlon = node.getAttribute("maxlon")
                     output['bounds'] = (minlat, maxlat, minlon, maxlon)
                 elif node.tagName == "link":
-                    if not 'link' in output: 
-                        output['link'] = []
-                    output['link'].append(self._parseLink(node))
+                    try:
+                        if not 'link' in output: 
+                            output['link'] = []
+                        output['link'].append(self._parseLink(node))
+                    except:
+                        pass
                 elif node.tagName == "author":
-                    output['author'] = self._parseAuthor(node)
+                    try:
+                        output['author'] = self._parseAuthor(node)
+                    except:
+                        pass
                 elif node.tagName == "copyright":
-                    output['copyright'] = self._parseCopyright(node)
+                    try:
+                        output['copyright'] = self._parseCopyright(node)
+                    except:
+                        pass
         return output
 
 
@@ -254,9 +278,9 @@ class GPXParser:
             dom = xml.dom.minidom.parse(self.fd)
             dom.normalize()
         except Exception as e:
-            raise exceptions.GPXErrorParse("%s" % e)
-        attr = {}
-        metadata = {}
+            raise exceptions.GPXErrorParse(str(e))
+        attr = dict()
+        metadata = dict()
         gpxdom = dom.documentElement
         if gpxdom.hasAttributes():
             for attribute in gpxdom.attributes.keys():
@@ -289,13 +313,14 @@ class GPXParser:
                         attr['link'] = []
                     attr["link"].append(self._parseLink(node))
                 else:
-                    if node.tagName in string_tags:
-                        if node.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE:
+                    if node.childNodes and node.tagName in string_tags:
+                        if node.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE \
+                        or node.firstChild.nodeType == xml.dom.minidom.Node.CDATA_SECTION_NODE:
                             attr[node.tagName] = node.firstChild.data
             attr.setdefault('number', traknumber)
             if not 'name' in attr.keys(): 
-                d = {'track_number': traknumber, 'number': attr["number"] }
-                attr["name"] = _("Track number %(track_number)s (%(number)s)") % (d)
+                dgettext = {'track_number': traknumber, 'number': attr["number"]}
+                attr["name"] = _("Track number %(track_number)s (%(number)s)") % (dgettext)
             if not 'desc' in attr.keys(): 
                 attr.setdefault('type', '')
                 attr.setdefault('src', '')
@@ -317,7 +342,7 @@ class GPXParser:
         routenumber = 0
         string_tags = ["name", "desc", "type", "src", "cmt", "number"]
         for rte in gpxdom.getElementsByTagName("rte"):
-            attr = {}
+            attr = dict()
             routenumber += 1
             pointlist = []
             for node in rte.childNodes:
@@ -331,13 +356,14 @@ class GPXParser:
                         attr['link'] = []
                     attr["link"].append(self._parseLink(node))
                 else:
-                    if node.tagName in string_tags:
-                        if node.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE:
+                    if node.childNodes and node.tagName in string_tags:
+                        if node.firstChild.nodeType == xml.dom.minidom.Node.TEXT_NODE \
+                        or node.firstChild.nodeType == xml.dom.minidom.Node.CDATA_SECTION_NODE:
                             attr[node.tagName] = node.firstChild.data
             attr.setdefault('number', routenumber)
             if not 'name' in attr.keys(): 
-                d = {'route_number': routenumber, 'number': attr["number"]}
-                attr["name"] = _("Route number %(route_number)s (%(number)s)") % (d)
+                dgettext = {'route_number': routenumber, 'number': attr["number"]}
+                attr["name"] = _("Route number %(route_number)s (of %(number)s)") % (dgettext)
             if not 'desc' in attr.keys(): 
                 attr.setdefault('type', '')
                 attr.setdefault('src', '')

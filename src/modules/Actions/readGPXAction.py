@@ -93,7 +93,7 @@ class ReadGPX(Actions.Interface.Action, threading.Thread):
             msg = _("Cannot parse GPX file '%(gpxinputfile)s': %(error)s") % self.dgettext
             self.logger.error(msg)
             tip = _("Check if file is compatible with GPS eXchange Format (GPX)")
-            raise Error(msg, tip, e.__class__.__name__)
+            raise Error(msg, tip, exception.__class__.__name__)
         finally:
             self.fd.close()
         return gpxparser

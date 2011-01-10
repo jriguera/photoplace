@@ -73,6 +73,34 @@ from definitions import *
 
 
 
+# ##############################
+# Dictionary Template Definition
+# ##############################
+
+class TemplateDict(dict):
+    
+    """
+    Class for string templates with dictionaries objects and operator %
+
+    This class inherits all attributes, methods, ... from dict and redefines "__getitem__"
+    in order to return a default value when an element is not found. The format 
+    "key<separator>defaultvalue" indicates that if "key" is not found, then "defaultvalue" 
+    will be returned. It is like an OR: returns value or "defaultvalue". 
+    It is possible to define a global default value for all keys.
+    """
+    _SEPARATORKEYTEMPLATE_ = '|'
+    _DEFAULTVALUETEMPLATE_ = " "
+    
+    def __getitem__(self, key):
+        try:
+            k, default = key.split(self._SEPARATORKEYTEMPLATE_, 1)
+        except ValueError:
+            k = key.split(self._SEPARATORKEYTEMPLATE_, 1)[0]
+            default = self._DEFAULTVALUETEMPLATE_
+        return self.get(k, default)
+
+
+
 # ################################
 # PhotoPlace UserFacade Definition
 # ################################
@@ -434,15 +462,6 @@ class UserFacade(object):
         return None
 
 
-    def MakeGPX(self, trackname=None):
-        try:
-            makegpx = Actions.makeGPXAction.MakeGPX(self.state, trackname)
-        except ValueError:
-            return None
-        self._setObservers(makegpx)
-        return makegpx
-
-
     def Geolocate(self):
         if self.finalize:
             return None
@@ -508,7 +527,7 @@ class UserFacade(object):
         return True
 
 
-    def goprocess(self):
+    def goprocess(self, wait=False):
         if self.finalize:
             msg = _("Some operations are pending ...")
             self.logger.error(msg)
@@ -528,8 +547,12 @@ class UserFacade(object):
                 self.logger.error(msg)
                 tip = _("Check if dir '%s' exists or is writable.") % self.state.outputdir
                 raise Error(msg, tip, e.__class__.__name__)
-        self.MakeKML().start()
-        self.WriteCopySave().start()
+        if wait:
+            self.MakeKML().run()
+            self.WriteCopySave().run()
+        else:
+            self.MakeKML().start()
+            self.WriteCopySave().start()
 
 
 # EOF

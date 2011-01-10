@@ -28,19 +28,19 @@ Tip: http://blog.ianbicking.org/templating-via-dict-wrappers.html
 More information, see test code.
 """
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.3.0"
-__date__ = "April 2010"
+__version__ = "0.4.0"
+__date__ = "December 2010"
 __license__ = "GPL (v3 or later)"
 __copyright__ ="(c) Jose Riguera"
 
 
 __package_name__ = "sxmltemplate"
 __package_revision__ = '0'
-__package_version__ = '0.3.0'
-__package_released__ = "October 2008"
-__package_author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__package_license__ = "GPL (v2 or later)"
-__package_copyright__ ="(c) Jose Riguera, October 2008"
+__package_version__ = __version__
+__package_released__ = __date__
+__package_author__ = __author__
+__package_license__ = __license__
+__package_copyright__ = __copyright__
 
 
 __all__ = ["sxmltemplate", "exceptions"]

@@ -18,9 +18,10 @@
 #
 import sys
 import os.path
-sys.path.append(os.path.join("..", ".."))
+sys.path.append(os.path.join("..",".."))
 
 import gpx
+
 
 # ###############
 # Test Code !!!!!
@@ -28,11 +29,11 @@ import gpx
 
 def test(f):
     print "\n* GPX TestCase (This is an example!!)\n"
-    
+
     print "Loading GPX file %s ..." % f
     fd = open(f)
-    gpxparser = gpx.GPXParser(fd, f)
-    gpxdata = gpxparser.gpx
+    gpxparse = gpx.GPXParser(fd, f)
+    gpxdata = gpxparse.gpx
     print gpxdata
     tracks = gpxdata.tracks
     for track in tracks:

@@ -19,6 +19,12 @@
 """
 Main implementation for SXMLTemplate module.
 """
+__author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
+__version__ = "0.4.0"
+__date__ = "December 2010"
+__license__ = "GPL (v3 or later)"
+__copyright__ ="(c) Jose Riguera"
+
 
 import xml.dom.minidom
 import string
@@ -32,13 +38,13 @@ __LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
-        print "Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__)
+        print ("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
         __LOCALE_DIR__ = None
     locale.setlocale(locale.LC_ALL,"")
     t = gettext.translation(__GETTEXT_DOMAIN__, __LOCALE_DIR__, fallback=False)
     _ = t.ugettext
 except Exception as e:
-    print "Error setting up the translations: %s" % (e)
+    print ("Error setting up the translations: %s" % (str(e)))
     _ = lambda s: unicode(s)
 
 import exceptions
@@ -55,8 +61,8 @@ class SXMLTemplate:
     It generates a XML DOM document that is based on a xml template source (file, string ...) 
     that will be filled with external data by appending the selected new xml elements with  
     data. Into XML input template, it changes all keys with the format $(key|defautlvalue)s 
-    into the data of "key" from the param dictionary, or "defaultvalue" if key is not found 
-    in dictionary.
+    into the data of "key" from the param dictionary, "defaultvalue" if key is not found 
+    in dictionary or "deletetag" to remove tag (and children). 
     
     Public Attibutes:
 
@@ -64,6 +70,7 @@ class SXMLTemplate:
         :param separatorKey: = "|" -> separator for default key values.
         :param separatorXml: = "." -> separator to indicates repeateable elements.
         :param defaultValue: = "NULL" -> default value for keys without default values.
+        :param deletetag: = "" -> with this value, a key will be deleted if not exists.
     """
     sizeLimit = 1048576 
     separatorKey = "|"

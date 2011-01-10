@@ -108,15 +108,11 @@ class PhotoPlaceCOM(InterfaceUI):
         self.activate_plugins()
         if self.action_loadtemplates():
             if self.action_loadphotos():
-                
                 if self.userfacade.state['gpxinputfile']:
                     if self.action_readgpx():
                         self.action_geolocate()
-                else:
-                    self.action_makegpx()
-                
                 try:
-                    self.userfacade.goprocess()
+                    self.userfacade.goprocess(True)
                 except Error as e:
                     print(e)
         self.deactivate_plugins()
@@ -166,19 +162,6 @@ class PhotoPlaceCOM(InterfaceUI):
             geolocate = self.userfacade.Geolocate()
             if geolocate:
                 geolocate.run()
-            else:
-                return False
-        except Error as e:
-            print(e)
-            return False
-        return True
-
-
-    def action_makegpx(self):
-        try:
-            makegpx = self.userfacade.MakeGPX()
-            if makegpx:
-                makegpx.run()
             else:
                 return False
         except Error as e:

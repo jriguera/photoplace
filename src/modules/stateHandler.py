@@ -367,7 +367,7 @@ class State(object):
                         raise Error(msg, tip, e.__class__.__name__)
             else:
                 outputfile = os.path.expandvars(self.options['outputfile'])
-        self._outputfile = outputfile
+        self._outputfile = os.path.normpath(outputfile)
         self.tmpdir = None
         self.outputkmz = None
         self.outputkml = None
@@ -479,7 +479,7 @@ class State(object):
             self.__logger.error(msg)
             tip = _("Check if the selected directory exist.")
             raise Error(msg, tip)
-        self._photoinputdir = photoinputdir
+        self._photoinputdir = os.path.normpath(photoinputdir)
         self._set_photouri()
 
 
@@ -501,7 +501,7 @@ class State(object):
             self.__logger.error(msg)
             tip = _("Check the selected GPX input file to continue.")
             raise Error(msg, tip)
-        self._gpxinputfile = gpxinputfile
+        self._gpxinputfile = os.path.normpath(gpxinputfile)
 
 
     @DSynchronized()

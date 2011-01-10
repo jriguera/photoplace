@@ -1,4 +1,33 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#       KmlgxTour.py
+#
+#       Copyright 2010 Jose Riguera Lopez <jriguera@gmail.com>
+#
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
+#
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+#
+#       You should have received a copy of the GNU General Public License
+#       along with this program; if not, write to the Free Software
+#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#       MA 02110-1301, USA.
+"""
+This plugin makes a visual tour with all pictures ....
+"""
+__program__ = "photoplace.tour"
+__author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
+__version__ = "0.1.1"
+__date__ = "December 2010"
+__license__ = "GPL (v2 or later)"
+__copyright__ ="(c) Jose Riguera"
 
 
 import xml.dom.minidom
@@ -45,6 +74,7 @@ class gxTour(object):
     def set_music(self, mp3list, mix=False, uri=None):
         self.sound_mix = mix
         for mp3 in mp3list:
+            fd = None
             try:
                 fd = open(mp3, 'rb')
                 id3v2 = MP3Info.ID3v2(fd)
@@ -56,7 +86,7 @@ class gxTour(object):
                 try:
                     mp3uri = uri % os.path.basename(mp3)
                 except:
-                    if uri:
+                    if uri != None:
                         mp3uri = uri + os.path.basename(mp3)
                     else:
                         mp3uri = os.path.basename(mp3)
@@ -74,7 +104,9 @@ class gxTour(object):
         return self.kmldoc
 
 
-    def ini(self, name, description, kmldoc=None, foldername=None, folderopen=True, visibility=True):
+    def ini(self, name, description, 
+        kmldoc=None, foldername=None, folderopen=True, visibility=True):
+        
         if not kmldoc:
             self.kmldoc = xml.dom.minidom.Document()
             kml = self.kmldoc.createElementNS("http://www.opengis.net/kml/2.2", 'kml')
@@ -85,21 +117,21 @@ class gxTour(object):
             self.kmldoc.appendChild(kml)
         else:
             self.document = kmldoc.getElementsByTagName("Document")[0]
-            if not document:
+            if not self.document:
                 return ValueError(_("KML not correct. Cannot found 'Document' tag!"))
             self.kmldoc = kmldoc
-        if foldername:
+        if foldername != None:
             folder = self.kmldoc.createElement("Folder")
-            document.appendChild(folder)
+            self.document.appendChild(folder)
             name_node = self.kmldoc.createElement("name")
             name_node.appendChild(self.kmldoc.createTextNode(str(foldername)))
             folder.appendChild(name_node)
-            openn = self.kmldoc.createElement("open")
-            openn.appendChild(self.kmldoc.createTextNode(str(int(folderopen))))
-            folder.appendChild(openn)
-            visibility = self.kmldoc.createElement("visibility")
-            visibility.appendChild(self.kmldoc.createTextNode(str(int(visibility))))
-            folder.appendChild(visibility)
+            open_node = self.kmldoc.createElement("open")
+            open_node.appendChild(self.kmldoc.createTextNode(str(int(folderopen))))
+            folder.appendChild(open_node)
+            visibility_node = self.kmldoc.createElement("visibility")
+            visibility_node.appendChild(self.kmldoc.createTextNode(str(int(visibility))))
+            folder.appendChild(visibility_node)
             self.document = folder
         self.tour = self.kmldoc.createElement("gx:Tour")
         name_node = self.kmldoc.createElement("name")
@@ -114,7 +146,6 @@ class gxTour(object):
         self.music()
 
 
-    #def begin(self, name, lon, lat, ele, time):
     def begin(self, lon, lat, ele, time, name, description, style,
         wait=KmlTour_BEGIN_WAIT,
         heading=KmlTour_BEGIN_FLYTIME, 
@@ -124,13 +155,14 @@ class gxTour(object):
         flymode="bounce", 
         altitudemode=KmlTour_ALTMODE):
         
-        self.do_placemark(lon, lat, ele, name, description, 1, style, altitudemode)
+        placemarckid = datetime.datetime.now().strftime("%Y%j%I%M" + "start")
+        self.do_placemark(lon, lat, ele, name, placemarckid, description, 1, style, altitudemode)
         self.do_flyto(lon, lat, ele, time, heading, tilt, crange, flytime, flymode, altitudemode)
-        if name:
-            self.do_balloon(name)
+        if name != None:
+            self.do_balloon(placemarckid)
         self.do_wait(wait)
-        if name:
-            self.do_balloon(name, False)
+        if name !=None:
+            self.do_balloon(placemarckid, False)
         self.music()
 
 
@@ -143,7 +175,7 @@ class gxTour(object):
             if tmp_mix:
                 music_time = 0
                 for mp3, time, mp3uri in self.sounds:
-                    if uri:
+                    if uri != None:
                         try:
                             mp3uri = uri % os.path.basename(mp3)
                         except:
@@ -154,7 +186,7 @@ class gxTour(object):
                 self.music_time += music_time
             elif len(self.sounds) > self.sound_index:
                 mp3, time, mp3uri = self.sounds[self.sound_index]
-                if uri:
+                if uri != None:
                     try:
                         mp3uri = uri % os.path.basename(mp3)
                     except:
@@ -166,30 +198,32 @@ class gxTour(object):
                 self.sound_index = 0
 
 
-    def do_placemark(self, lon, lat, ele, name, 
+    def do_placemark(self, lon, lat, ele, name, placemarkid=None,
         description=None, visibility=None, style=None, altitudemode=None):
         
         placemark = self.kmldoc.createElement("Placemark")
-        document.appendChild(placemark)
+        self.document.appendChild(placemark)
         name_node = self.kmldoc.createElement("name")
+        if placemarkid != None:
+            name_node.setAttribute("id", str(placemarkid))
         name_node.appendChild(self.kmldoc.createTextNode(str(name)))
         placemark.appendChild(name_node)
-        if visibility:
+        if visibility != None:
             visibility_node = self.kmldoc.createElement("visibility")
             visibility_node.appendChild(self.kmldoc.createTextNode(str(int(visibility))))
             placemark.appendChild(visibility_node)
-        if description:
+        if description != None:
             description_node = self.kmldoc.createElement("description")
             description_node.appendChild(self.kmldoc.createCDATASection(str(description)))
             placemark.appendChild(description_node)
-        if style:
+        if style != None:
             style_node = self.kmldoc.createElement("styleUrl")
             style_node.appendChild(self.kmldoc.createTextNode(str(style)))
             placemark.appendChild(style_node)
         point = self.kmldoc.createElement("Point")
         placemark.appendChild(point)
         altit_node = self.kmldoc.createElement("altitudeMode")
-        if not altitudemode:
+        if altitudemode == None:
             altit_node.appendChild(self.kmldoc.createTextNode("absolute"))
         else:
             altit_node.appendChild(self.kmldoc.createTextNode(str(altitudemode)))
@@ -223,6 +257,7 @@ class gxTour(object):
             fly_time = KmlTour_FLYTIME,
             fly_mode = KmlTour_FLYMODE,
             altitudemode = KmlTour_ALTMODE):
+        
         flyto = self.kmldoc.createElement("gx:FlyTo")
         duration = self.kmldoc.createElement("gx:duration")
         duration.appendChild(self.kmldoc.createTextNode(str(fly_time)))
@@ -245,12 +280,14 @@ class gxTour(object):
         altitude_node = self.kmldoc.createElement("altitude")
         altitude_node.appendChild(self.kmldoc.createTextNode("%.3f" % ele))
         lookat.appendChild(altitude_node)
-        heading_node = self.kmldoc.createElement("heading")
-        heading_node.appendChild(self.kmldoc.createTextNode(str(heading)))
-        lookat.appendChild(heading_node)
-        tilt_node = self.kmldoc.createElement("tilt")
-        tilt_node.appendChild(self.kmldoc.createTextNode(str(tilt)))
-        lookat.appendChild(tilt_node)
+        if heading != None:
+            heading_node = self.kmldoc.createElement("heading")
+            heading_node.appendChild(self.kmldoc.createTextNode(str(heading)))
+            lookat.appendChild(heading_node)
+        if tilt != None:
+            tilt_node = self.kmldoc.createElement("tilt")
+            tilt_node.appendChild(self.kmldoc.createTextNode(str(tilt)))
+            lookat.appendChild(tilt_node)
         range_node = self.kmldoc.createElement("range")
         range_node.appendChild(self.kmldoc.createTextNode("%.3f" % rng))
         lookat.appendChild(range_node)
@@ -287,10 +324,11 @@ class gxTour(object):
            flymode=KmlTour_FLYMODE, 
            altitudemode=KmlTour_ALTMODE):
         
-        self.do_placemark(lon, lat, ele, name, description, 1, style, altitudemode)
+        placemarckid = datetime.datetime.now().strftime("%Y%j%I%M" + "end")
+        self.do_placemark(lon, lat, ele, name, placemarckid, description, 1, style, altitudemode)
         self.do_flyto(lon, lat, ele, time, heading, tilt, crange, flytime, flymode, altitudemode)
-        if name:
-            self.do_balloon(name)
+        if name != None:
+            self.do_balloon(placemarckid)
 
 
 # EOF

@@ -1,4 +1,34 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#       tour.py
+#
+#       Copyright 2010 Jose Riguera Lopez <jriguera@gmail.com>
+#
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2 of the License, or
+#       (at your option) any later version.
+#
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+#
+#       You should have received a copy of the GNU General Public License
+#       along with this program; if not, write to the Free Software
+#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#       MA 02110-1301, USA.
+"""
+This plugin makes a visual tour with all pictures ....
+"""
+__program__ = "photoplace.tour"
+__author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
+__version__ = "0.1.1"
+__date__ = "December 2010"
+__license__ = "GPL (v2 or later)"
+__copyright__ ="(c) Jose Riguera"
+
 
 import os.path
 import sys
@@ -24,13 +54,14 @@ warnings.resetwarnings()
 
 
 from Plugins.Interface import *
-from definitions import *
 import DataTypes.kmlData
 import gpx
+from userFacade import TemplateDict
+from definitions import *
 
 
 # I18N gettext support
-__GETTEXT_DOMAIN__ = "photoplace-tour"
+__GETTEXT_DOMAIN__ = __program__
 __PACKAGE_DIR__ = os.path.dirname(__file__)
 __LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
 
@@ -49,44 +80,44 @@ except Exception as e:
 KmlTour_SPLIT_CHAR = ";"
 KmlTour_NAME = _("Play me")
 KmlTour_DESC = _("A visual tour")
+KmlTour_FOLDER = _("Tour")
 KmlTour_KMLTOUR_MUSIC_MIX = False
 KmlTour_MUSIC_URI = ''
-KmlTour_BEGIN_PLCMK = _("Presentation")
-KmlTour_END_PLCMK = _("The end")
-KmlTour_BEGIN_STYLE =  '#tourfirst'
-KmlTour_END_STYLE = '#tourlast'
+KmlTour_BEGIN_NAME = _("Start")
+KmlTour_BEGIN_DESC = _("Presentation ...")
+KmlTour_BEGIN_STYLE =  '#tour-first'
+KmlTour_END_NAME = _("End")
+KmlTour_END_DESC = _("The end ...")
+KmlTour_END_STYLE = '#tour-last'
+KmlTour_FLYMODE = "smooth"
+KmlTour_ALTMODE = "absolute"
 
 KmlTour_BEGIN_WAIT = 10.0
-KmlTour_BEGIN_HEADING = 0.0
+KmlTour_BEGIN_HEADING = None
 KmlTour_BEGIN_FLYTIME = 8.0
 KmlTour_BEGIN_TILT = 80.0
 KmlTour_BEGIN_RANGE = 5000.0
-
-KmlTour_TILT = 60.0      # angulo desde, sentido tierra, sobre la vertical del punto y la camara
+KmlTour_TILT = 30.0
 KmlTour_WAIT = 7.0
 KmlTour_FLYTIME = 4.0
-KmlTour_HEADING = 0.0    # rumbo u orientacion (grados desde el norte)
-KmlTour_RANGE = 1000.0   # distancia desde la que observar los puntos
-
-KmlTour_FLYMODE = "smooth"
-KmlTour_ALTMODE = "clampToGround"
-
+KmlTour_HEADING = None
+KmlTour_RANGE = 1000.0
 KmlTour_END_FLYTIME = 5.0
-KmlTour_END_HEADING = 0.0
-KmlTour_END_TILT = 45.0
-KmlTour_END_RANGE = 100.0
-
+KmlTour_END_HEADING = None
+KmlTour_END_TILT = 80.0
+KmlTour_END_RANGE = 1000.0
 
 # Configuration keys
-KmlTour_CONFKEY = "kmltour"
+KmlTour_CONFKEY = "tour"
+KmlTour_CONFKEY_KMLTOUR_FOLDER = "foldername"
 KmlTour_CONFKEY_KMLTOUR_NAME = "name"
 KmlTour_CONFKEY_KMLTOUR_DESC = "description"
 KmlTour_CONFKEY_KMLTOUR_MUSIC = "mp3list"
 KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX = "mp3mix"
 KmlTour_CONFKEY_KMLTOUR_MUSIC_URI = "mp3uri"
-
-KmlTour_CONFKEY_BEGIN_PLCMK = 'beginplacemark'
-KmlTour_CONFKEY_BEGIN_STYLE = 'beginstyle'
+KmlTour_CONFKEY_BEGIN_NAME = "beginname"
+KmlTour_CONFKEY_BEGIN_DESC = "begindescfile"
+KmlTour_CONFKEY_BEGIN_STYLE = "beginstyle"
 KmlTour_CONFKEY_BEGIN_WAIT = "beginwait"
 KmlTour_CONFKEY_BEGIN_HEADING = "beginheading"
 KmlTour_CONFKEY_BEGIN_FLYTIME = "beginflytime"
@@ -97,30 +128,29 @@ KmlTour_CONFKEY_HEADING = "heading"
 KmlTour_CONFKEY_FLYTIME = "flytime"
 KmlTour_CONFKEY_TILT = "tilt"
 KmlTour_CONFKEY_RANGE = "range"
-
-KmlTour_CONFKEY_END_PLCMK = 'endplacemark'
-KmlTour_CONFKEY_END_STYLE = 'endstyle'
+KmlTour_CONFKEY_END_NAME = "endname"
+KmlTour_CONFKEY_END_DESC = "enddescfile"
+KmlTour_CONFKEY_END_STYLE = "endstyle"
 KmlTour_CONFKEY_END_HEADING = "endheading"
 KmlTour_CONFKEY_END_FLYTIME = "endflytime"
 KmlTour_CONFKEY_END_TILT = "endtilt"
 KmlTour_CONFKEY_END_RANGE = "endrange"
 
 
-from gxTour import *
-import GTKui
+from KmlgxTour import *
 
 
 
 class KmlTour(Plugin):
 
-    description = _("A plugin to generate a presentation tour with your photos.")
-    version = "0.1.0"
+    description = _("A plugin to generate a visual tour with your photos.")
     author = "Jose Riguera Lopez"
     email = "<jriguera@gmail.com>"
     url = "http://code.google.com/p/photoplace/"
-    copyright = "(c) Jose Riguera"
-    date = "Oct 2010"
-    license = "GPLv3"
+    version = __version__
+    copyright = __copyright__
+    date = __date__
+    license = __license__
     capabilities = {
         'GUI' : PLUGIN_GUI_GTK,
         'NeedGUI' : False,
@@ -130,52 +160,71 @@ class KmlTour(Plugin):
         Plugin.__init__(self, logger, state, args, argfiles, gtkbuilder)
         self.options = dict()
         # GTK widgets
-        self.gtkui = None
+        self.gui = None
         if gtkbuilder:
-            self.gtkui = GTKui.GTKTour(gtkbuilder)
+            import GTKtour
+            self.gui = GTKtour.GTKTour(gtkbuilder, logger)
         self.ready = -1
 
 
-    def _set_option_float(self, options, key, value):
+    def _set_option_float(self, options, key, value, threshold=(0, None)):
         if options.has_key(key):
             try:
-                tmp = options[key]
-                options[key] = float(tmp)
+                val = float(options[key])
+                l_threshold = threshold[0]
+                h_threshold = threshold[1]
+                if not h_threshold:
+                    h_threshold = val
+                if not l_threshold:
+                    l_threshold = val
+                if val > h_threshold or val < l_threshold:
+                    raise UserWarning
+                options[key] = val
             except:
                 options[key] = value
                 dgettext = dict(key=key, value=value)
-                self.logger.debug(
-                    _("Incorrect value for '%(key)s', setting default value '%(value)s'.") \
-                    % dgettext)
+                self.logger.debug(_("Incorrect value for '%(key)s', "
+                    "setting default value '%(value)s'.") % dgettext)
         else:
             options[key] = value
             dgettext = dict(key=key, value=value)
-            self.logger.debug(
-                _("'%(key)s' not defined, setting default value '%(value)s'.") % dgettext)
+            self.logger.debug(_("'%(key)s' not defined, setting "
+                "default value '%(value)s'.") % dgettext)
 
 
-    def _set_option_float_none(self, options, key, value):
+    def _set_option_float_none(self, options, key, value, threshold=(0, None)):
         if options.has_key(key):
-            begin_heading = options[key]
-            if begin_heading:
+            current = options[key]
+            if current:
+                l_threshold = threshold[0]
+                h_threshold = threshold[1]
                 try:
-                    options[key] = float(begin_heading)
+                    val = float(current)
+                    if not h_threshold:
+                        h_threshold = val
+                    if not l_threshold:
+                        l_threshold = val
+                    if val > h_threshold or val < l_threshold:
+                        raise UserWarning
+                    options[key] = val
                 except:
                     options[key] = value
                     dgettext = dict(key=key, value=value)
-                    self.logger.debug(
-                        _("Incorrect value for '%(key)s', setting default value '%(value)s'.") \
-                        % dgettext)
+                    self.logger.debug(_("Incorrect value for '%(key)s', "
+                        "setting default value '%(value)s'.") % dgettext)
         else:
             options[key] = value
             dgettext = dict(key=key, value=value)
-            self.logger.debug(
-                _("'%(key)s' not defined, setting default value '%(value)s'.") % dgettext)
+            self.logger.debug(_("'%(key)s' not defined, setting "
+                "default value '%(value)s'.") % dgettext)
 
 
     def process_variables(self, options, *args, **kwargs):
         options.setdefault(KmlTour_CONFKEY_KMLTOUR_NAME, KmlTour_NAME)
         options.setdefault(KmlTour_CONFKEY_KMLTOUR_DESC, KmlTour_DESC)
+        folder = options.setdefault(KmlTour_CONFKEY_KMLTOUR_FOLDER, KmlTour_FOLDER)
+        if folder == "-":
+            options[KmlTour_CONFKEY_KMLTOUR_FOLDER] = None
         mix = options.setdefault(KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX, KmlTour_KMLTOUR_MUSIC_MIX)
         if not isinstance(mix, bool):
             mp3mix = mix.lower().strip() in ["yes", "true", "si", "1"]
@@ -186,45 +235,54 @@ class KmlTour(Plugin):
             mp3list = []
             try:
                 for mp3 in mp3s.split(KmlTour_SPLIT_CHAR):
+                    mp3 = mp3.strip()
                     if os.path.isfile(mp3):
                         mp3list.append(mp3)
+                    else:
+                        self.logger.error(_("Cannot read mp3 file '%s'.") % mp3)
             except:
-                self.logger.debug(_("Incorrect value for '%s'.") % KmlTour_CONFKEY_KMLTOUR_MUSIC)
-                pass
+                self.logger.error(_("Incorrect value for '%s'.") % KmlTour_CONFKEY_KMLTOUR_MUSIC)
             options[KmlTour_CONFKEY_KMLTOUR_MUSIC] = mp3list
         # Placemarks
-        options.setdefault(KmlTour_CONFKEY_BEGIN_PLCMK, KmlTour_BEGIN_PLCMK)
+        options.setdefault(KmlTour_CONFKEY_BEGIN_NAME, KmlTour_BEGIN_NAME)
+        filename = options.setdefault(KmlTour_CONFKEY_BEGIN_DESC)
+        if filename != None:
+            options[KmlTour_CONFKEY_BEGIN_DESC] = os.path.expandvars(os.path.expanduser(filename))
         options.setdefault(KmlTour_CONFKEY_BEGIN_STYLE, KmlTour_BEGIN_STYLE)
         self._set_option_float(options, KmlTour_CONFKEY_BEGIN_WAIT, KmlTour_BEGIN_WAIT)
-        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_HEADING, KmlTour_BEGIN_HEADING)
+        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_HEADING, KmlTour_BEGIN_HEADING, (0,360))
         self._set_option_float(options, KmlTour_CONFKEY_BEGIN_FLYTIME, KmlTour_BEGIN_FLYTIME)
-        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_TILT, KmlTour_BEGIN_TILT)
-        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_RANGE, KmlTour_BEGIN_RANGE)
+        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_TILT, KmlTour_BEGIN_TILT, (0,180))
+        self._set_option_float(options, KmlTour_CONFKEY_BEGIN_RANGE, KmlTour_BEGIN_RANGE)
         self._set_option_float(options, KmlTour_CONFKEY_WAIT, KmlTour_WAIT)
-        self._set_option_float_none(options, KmlTour_CONFKEY_HEADING, KmlTour_HEADING)
+        self._set_option_float_none(options, KmlTour_CONFKEY_HEADING, KmlTour_HEADING, (0,360))
         self._set_option_float(options, KmlTour_CONFKEY_FLYTIME, KmlTour_FLYTIME)
-        self._set_option_float_none(options, KmlTour_CONFKEY_TILT, KmlTour_TILT)
-        self._set_option_float_none(options, KmlTour_CONFKEY_RANGE, KmlTour_RANGE)
-        options.setdefault(KmlTour_CONFKEY_END_PLCMK, KmlTour_END_PLCMK)
+        self._set_option_float_none(options, KmlTour_CONFKEY_TILT, KmlTour_TILT, (0,180))
+        self._set_option_float(options, KmlTour_CONFKEY_RANGE, KmlTour_RANGE)
+        options.setdefault(KmlTour_CONFKEY_END_NAME, KmlTour_END_NAME)
+        filename = options.setdefault(KmlTour_CONFKEY_END_DESC)
+        if filename != None:
+            options[KmlTour_CONFKEY_END_DESC] = os.path.expandvars(os.path.expanduser(filename))
         options.setdefault(KmlTour_CONFKEY_END_STYLE, KmlTour_END_STYLE)
-        self._set_option_float_none(options, KmlTour_CONFKEY_END_HEADING, KmlTour_END_HEADING)
+        self._set_option_float_none(options, KmlTour_CONFKEY_END_HEADING, KmlTour_END_HEADING, (0,360))
         self._set_option_float(options, KmlTour_CONFKEY_END_FLYTIME, KmlTour_END_FLYTIME)
-        self._set_option_float_none(options, KmlTour_CONFKEY_END_TILT, KmlTour_END_TILT)
-        self._set_option_float_none(options, KmlTour_CONFKEY_END_RANGE, KmlTour_END_RANGE)
+        self._set_option_float_none(options, KmlTour_CONFKEY_END_TILT, KmlTour_END_TILT, (0,180))
+        self._set_option_float(options, KmlTour_CONFKEY_END_RANGE, KmlTour_END_RANGE)
         self.options = options
 
 
     def init(self, options, widget):
         if not options.has_key(KmlTour_CONFKEY):
             options[KmlTour_CONFKEY] = dict()
+        self.defaultsinfo = options['defaults']
         opt = options[KmlTour_CONFKEY]
         self.process_variables(opt)
-        if self.gtkui:
+        if self.gui:
             if self.ready == -1:
                 # 1st time
-                self.gtkui.show(widget, opt)
+                self.gui.show(widget, opt)
             else:
-                self.gtkui.show()
+                self.gui.show(None, opt)
         self.ready = 1
         self.logger.debug(_("Starting plugin ..."))
 
@@ -244,22 +302,28 @@ class KmlTour(Plugin):
             self.gxtour = gxTour([], False, mp3uri)
 
 
-    def get_description(self, key):
+    def get_description(self, key, bytes=102400):
         description = ''
-        if self.gtkui:
-            description = self.gtkui.get_textview(key)
+        if self.gui:
+            description = self.gui.get_textview(key)
         else:
-            filename = os.path.expandvars(os.path.expanduser(self.options[key]))
-            if os.path.isfile(filename):
+            filename = self.options[key]
+            if filename != None:
+                fd = None
                 try:
                     fd = open(filename, "r")
-                    description = fd.read()
+                    description = fd.read(bytes)
                 except Exception as exception:
                     self.logger.error(_("Cannot read file '%s'.") % str(exception))
+                    if key == KmlTour_CONFKEY_BEGIN_DESC:
+                        description = KmlTour_BEGIN_DESC
+                    elif key == KmlTour_CONFKEY_END_DESC:
+                        description = KmlTour_END_DESC
                 finally:
                     if fd:
                         fd.close()
-        return description
+        templatedata = TemplateDict(self.defaultsinfo)
+        return description % templatedata
 
 
     def set_first(self, str_tzdiff=''):
@@ -318,10 +382,18 @@ class KmlTour(Plugin):
         strtime = time.strftime("%Y-%m-%dT%H:%M:%S") + str_tzdiff
         if not begin_heading:
             begin_heading = gpx.bearingCoord(
-                self.center_lat, self.center_lon, self.first_lat, self.first_lon)
+                self.center_lat, self.center_lon, 
+                self.first_lat, self.first_lon)
+        if begin_range <= 10:
+            distance = gpx.distanceCoord(
+                self.center_lat, self.center_lon, 
+                self.first_lat, self.first_lon)
+            distance = distance * begin_range
+        else:
+            distance = begin_range
         self.gxtour.begin(self.first_lon, self.first_lat, self.first_ele, strtime, 
             begin_name, begin_desc, begin_style, begin_wait, begin_heading, 
-            begin_tilt, begin_range, begin_flytime)
+            begin_tilt, distance, begin_flytime)
         return geophoto
 
 
@@ -333,13 +405,14 @@ class KmlTour(Plugin):
             if gphoto.status > 0 and gphoto.isGeoLocated():
                 geophoto = gphoto
                 break
-            num_photos -= 1
+            num_photo -= 1
         if num_photo < 0:
             self.logger.debug(_("No photos to process!"))
             return None
         self.last_lat = geophoto.lat
         self.last_lon = geophoto.lon
         self.last_ele = geophoto.ele
+        time = geophoto.time
         if self.state.gpxdata:
             found = False
             for track in self.state.gpxdata.tracks:
@@ -364,10 +437,18 @@ class KmlTour(Plugin):
         strtime = time.strftime("%Y-%m-%dT%H:%M:%S") + str_tzdiff
         if not end_heading:
             end_heading = gpx.bearingCoord(
-                self.center_lat, self.center_lon, self.last_lat, self.last_lon)
+                self.center_lat, self.center_lon, 
+                self.last_lat, self.last_lon)
+        if end_range <= 10:
+            distance = gpx.distanceCoord(
+                self.center_lat, self.center_lon, 
+                self.last_lat, self.last_lon)
+            distance = distance * end_range
+        else:
+            distance = end_range
         self.gxtour.end(self.last_lon, self.last_lat, self.last_ele, strtime,
             end_name, end_desc, end_style, end_heading,
-            end_tilt, end_range, end_flytime)
+            end_tilt, distance, end_flytime)
         return geophoto
 
 
@@ -383,10 +464,9 @@ class KmlTour(Plugin):
         hours, remainder = divmod(utczoneminutes, 60)
         minutes, seconds = divmod(remainder, 60)
         str_tzdiff = str_tzdiff + "%.2d:%.2d" % (hours, minutes)
-        
-        
         name = self.options[KmlTour_CONFKEY_KMLTOUR_NAME]
         description = self.options[KmlTour_CONFKEY_KMLTOUR_DESC]
+        folder = self.options[KmlTour_CONFKEY_KMLTOUR_FOLDER]
         wait = self.options[KmlTour_CONFKEY_WAIT]
         heading = self.options[KmlTour_CONFKEY_HEADING]
         flytime = self.options[KmlTour_CONFKEY_FLYTIME]
@@ -395,16 +475,16 @@ class KmlTour(Plugin):
         kml = self.state.kmldata.getKml()
         if not kml:
             self.ready = 0
+            self.logger.debug(_("No KML output! Cowardly refusing to create a tour!"))
             return
-        self.gxtour.ini(name, description, kml)
+        self.gxtour.ini(name, description, kml, folder)
         # firt point for camera
         geophoto = self.set_first(str_tzdiff)
         if not geophoto:
             self.ready = 0
+            self.logger.debug(_("No photos! Cowardly refusing to create a tour!"))
             return
-        self.gxtour.ini(name, description, kml)
         previous = (geophoto.lat, geophoto.lon, geophoto.ele)
-        
         for geophoto in self.state.geophotos:
             if geophoto.status < 1:
                 # not selected
@@ -414,13 +494,14 @@ class KmlTour(Plugin):
             ele = geophoto.ele
             name = geophoto.name
             strtime = geophoto.time.strftime("%Y-%m-%dT%H:%M:%S") + str_tzdiff
-            bearing = gpx.bearingCoord(previous[0], previous[1], lat, lon)
-            if crange < 11:
+            if not heading:
+                heading = gpx.bearingCoord(previous[0], previous[1], lat, lon)
+            if crange <= 10:
                 distance = gpx.distanceCoord(previous[0], previous[1], lat, lon)
                 distance = distance * crange
             else:
                 distance = crange
-            self.gxtour.do_flyto(lon, lat, ele, strtime, bearing, tilt, distance, flytime)
+            self.gxtour.do_flyto(lon, lat, ele, strtime, heading, tilt, distance, flytime)
             self.gxtour.do_balloon(name)
             self.gxtour.do_wait(wait)
             self.gxtour.do_balloon(name, False)
@@ -451,8 +532,9 @@ class KmlTour(Plugin):
     def end(self, options):
         self.ready = 0
         self.gxtour = None
-        if self.gtkui:
-            self.gtkui.hide()
+        self.options = None
+        if self.gui:
+            self.gui.hide()
         self.logger.debug(_("Ending plugin ..."))
 
 
