@@ -39,19 +39,6 @@ import datetime
 import gettext
 import locale
 import urlparse
-import warnings
-warnings.filterwarnings('ignore', module='gtk')
-try:
-    import pygtk
-    pygtk.require("2.0")
-    import gtk
-except Exception as e:
-    warnings.resetwarnings()
-    print("Warning: %s" % str(e))
-    print("You don't have the PyGTK 2.0 module installed")
-    raise
-warnings.resetwarnings()
-
 
 from Plugins.Interface import *
 import DataTypes.kmlData
@@ -95,17 +82,17 @@ KmlTour_ALTMODE = "absolute"
 KmlTour_BEGIN_WAIT = 10.0
 KmlTour_BEGIN_HEADING = None
 KmlTour_BEGIN_FLYTIME = 8.0
-KmlTour_BEGIN_TILT = 80.0
-KmlTour_BEGIN_RANGE = 5000.0
+KmlTour_BEGIN_TILT = 50.0
+KmlTour_BEGIN_RANGE = 1000.0
 KmlTour_TILT = 30.0
 KmlTour_WAIT = 7.0
 KmlTour_FLYTIME = 4.0
 KmlTour_HEADING = None
-KmlTour_RANGE = 1000.0
+KmlTour_RANGE = 200.0
 KmlTour_END_FLYTIME = 5.0
 KmlTour_END_HEADING = None
-KmlTour_END_TILT = 80.0
-KmlTour_END_RANGE = 1000.0
+KmlTour_END_TILT = 50.0
+KmlTour_END_RANGE = 500.0
 
 # Configuration keys
 KmlTour_CONFKEY = "tour"
@@ -326,7 +313,7 @@ class KmlTour(Plugin):
         return description % templatedata
 
 
-    def set_first(self, str_tzdiff=''):
+    def set_first(self, str_tzdiff='', time_zone=datetime.timedelta()):
         # firt point for camera
         geophoto = None
         num_photo = 0
@@ -338,14 +325,14 @@ class KmlTour(Plugin):
             if gphoto.status > 0 and gphoto.isGeoLocated():
                 if num_photo == 0:
                     geophoto = gphoto
-                if max_lat < geophoto.lat:
-                    max_lat = geophoto.lat
-                if min_lat > geophoto.lat:
-                    min_lat = geophoto.lat
-                if max_lon < geophoto.lon:
-                    max_lon = geophoto.lon
-                if min_lon > geophoto.lon:
-                    min_lon = geophoto.lon
+                if max_lat < gphoto.lat:
+                    max_lat = gphoto.lat
+                if min_lat > gphoto.lat:
+                    min_lat = gphoto.lat
+                if max_lon < gphoto.lon:
+                    max_lon = gphoto.lon
+                if min_lon > gphoto.lon:
+                    min_lon = gphoto.lon
                 num_photo += 1
         if num_photo < 1:
             self.logger.debug(_("No photos to process!"))
@@ -365,7 +352,7 @@ class KmlTour(Plugin):
                         self.first_lat = points[0].lat
                         self.first_lon = points[0].lon
                         self.first_ele = points[0].ele
-                        time = points[0].time
+                        time = points[0].time + time_zone
                         found = True
                         break
                 if found:
@@ -382,8 +369,8 @@ class KmlTour(Plugin):
         strtime = time.strftime("%Y-%m-%dT%H:%M:%S") + str_tzdiff
         if not begin_heading:
             begin_heading = gpx.bearingCoord(
-                self.center_lat, self.center_lon, 
-                self.first_lat, self.first_lon)
+                self.first_lat, self.first_lon,
+                self.center_lat, self.center_lon)
         if begin_range <= 10:
             distance = gpx.distanceCoord(
                 self.center_lat, self.center_lon, 
@@ -397,7 +384,7 @@ class KmlTour(Plugin):
         return geophoto
 
 
-    def set_last(self, str_tzdiff=''):
+    def set_last(self, str_tzdiff='', time_zone=datetime.timedelta()):
         num_photo = len(self.state.geophotos) - 1
         geophoto = None
         while num_photo >= 0:
@@ -422,7 +409,7 @@ class KmlTour(Plugin):
                         self.last_lat = points[-1].lat
                         self.last_lon = points[-1].lon
                         self.last_ele = points[-1].ele
-                        time = points[-1].time
+                        time = points[-1].time + time_zone
                         found = True
                         break
                 if found:
@@ -457,6 +444,7 @@ class KmlTour(Plugin):
         if not self.ready:
             return
         utczoneminutes = self.state['utczoneminutes']
+        time_zone = datetime.timedelta(minutes=utczoneminutes)
         str_tzdiff = '-'
         if utczoneminutes < 0:
             utczoneminutes = -utczoneminutes
@@ -468,7 +456,7 @@ class KmlTour(Plugin):
         description = self.options[KmlTour_CONFKEY_KMLTOUR_DESC]
         folder = self.options[KmlTour_CONFKEY_KMLTOUR_FOLDER]
         wait = self.options[KmlTour_CONFKEY_WAIT]
-        heading = self.options[KmlTour_CONFKEY_HEADING]
+        bearing = self.options[KmlTour_CONFKEY_HEADING]
         flytime = self.options[KmlTour_CONFKEY_FLYTIME]
         tilt = self.options[KmlTour_CONFKEY_TILT]
         crange = self.options[KmlTour_CONFKEY_RANGE]
@@ -479,14 +467,14 @@ class KmlTour(Plugin):
             return
         self.gxtour.ini(name, description, kml, folder)
         # firt point for camera
-        geophoto = self.set_first(str_tzdiff)
+        geophoto = self.set_first(str_tzdiff, time_zone)
         if not geophoto:
             self.ready = 0
             self.logger.debug(_("No photos! Cowardly refusing to create a tour!"))
             return
-        previous = (geophoto.lat, geophoto.lon, geophoto.ele)
+        previous = (self.first_lat, self.first_lon, 0.0)
         for geophoto in self.state.geophotos:
-            if geophoto.status < 1:
+            if geophoto.status < 1 or not geophoto.isGeoLocated():
                 # not selected
                 continue
             lat = geophoto.lat
@@ -494,8 +482,10 @@ class KmlTour(Plugin):
             ele = geophoto.ele
             name = geophoto.name
             strtime = geophoto.time.strftime("%Y-%m-%dT%H:%M:%S") + str_tzdiff
-            if not heading:
+            if not bearing:
                 heading = gpx.bearingCoord(previous[0], previous[1], lat, lon)
+            else:
+                heading = bearing
             if crange <= 10:
                 distance = gpx.distanceCoord(previous[0], previous[1], lat, lon)
                 distance = distance * crange
@@ -508,7 +498,7 @@ class KmlTour(Plugin):
             self.gxtour.music()
             previous = (lat, lon, ele)
         # last point
-        self.set_last(str_tzdiff)
+        self.set_last(str_tzdiff, time_zone)
 
 
     @DRegister("SaveFiles:ini")
@@ -529,6 +519,12 @@ class KmlTour(Plugin):
             raise
 
 
+    def reset(self):
+        if self.ready:
+            self.gxtour = None
+            self.logger.debug(_("Resetting plugin ..."))
+    
+    
     def end(self, options):
         self.ready = 0
         self.gxtour = None

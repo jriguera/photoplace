@@ -78,27 +78,25 @@
         </SimpleField>
     </Schema>
 
-        <LookAt>
-            <TimeSpan>
-                <begin>%(MinTime|2000)s</begin>
-                <end>%(MaxTime|2020)s</end>
-            </TimeSpan>
-            <longitude>%(inilongitude|0.0)s</longitude>
-            <latitude>%(inilatitute|0.0)s</latitude>
-            <altitude>%(inialtitude|2000)s</altitude>
-            <range>%(inirange|0)s</range>
-            <tilt>%(initilt|0)s</tilt>
-            <heading>%(iniheading|0)s</heading>
-            <altitudeMode>relativeToGround</altitudeMode>
-        </LookAt>
+    <LookAt>
+        <TimeSpan>
+            <begin>%(MinTime|2000)s</begin>
+            <end>%(MaxTime|2020)s</end>
+        </TimeSpan>
+        <longitude>%(inilongitude|0.0)s</longitude>
+        <latitude>%(inilatitute|0.0)s</latitude>
+        <altitude>%(inialtitude|2000)s</altitude>
+        <range>%(inirange|0)s</range>
+        <tilt>%(initilt|0)s</tilt>
+        <heading>%(iniheading|0)s</heading>
+        <altitudeMode>relativeToGround</altitudeMode>
+    </LookAt>
 
     <Folder>
-
         <name>%(photofolder|Photos)s</name>
-
         <Placemark id="%(Photo.NAME|-)s">
             <TimeStamp>
-                <when>%(Photo.TZDATE|)s</when>
+                <when>%(Photo.DATE2UTC|)s</when>
             </TimeStamp>
             <name>%(Photo.NAME)s</name>
             <Snippet maxLines="1">%(title| )s</Snippet>
@@ -117,7 +115,6 @@
             </ExtendedData>
             <description></description>
         </Placemark>
-
     </Folder>
 
   </Document>

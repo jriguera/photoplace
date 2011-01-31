@@ -42,12 +42,12 @@ import logging.handlers
 PhotoPlace_name = "PhotoPlace"
 PhotoPlace_version = "0.5.0"
 PhotoPlace_url = "http://code.google.com/p/photoplace"
-PhotoPlace_date = "Sep 2010"
+PhotoPlace_date = "Jan 2011"
 
 # Variables on templates
 PhotoPlace_PhotoNAME = 'Photo.NAME'
 PhotoPlace_PhotoDATE = 'Photo.DATE'
-PhotoPlace_PhotoTZDATE = 'Photo.TZDATE'
+PhotoPlace_PhotoUTCDATE = 'Photo.DATE2UTC'
 PhotoPlace_PhotoURI = 'Photo.URI'
 PhotoPlace_PhotoLAT = 'Photo.LAT'
 PhotoPlace_PhotoLON = 'Photo.LON'
@@ -79,7 +79,7 @@ PhotoPlace_IniHEADING = 'iniheading'
 # Default values
 PhotoPlace_Cfg_main_exifmode = 0
 PhotoPlace_Cfg_main_jpgsize = (0, 0)
-PhotoPlace_Cfg_main_jpgzoom = 0.25
+PhotoPlace_Cfg_main_jpgzoom = 0.15
 PhotoPlace_Cfg_main_quality = 1
 PhotoPlace_Cfg_main_maxdeltaseconds = 300
 PhotoPlace_Cfg_main_photouri = ""
@@ -103,8 +103,6 @@ PhotoPlace_Cfg_file = "photoplace.cfg"
 PhotoPlace_Cfg_optionsep = "="
 PhotoPlace_Cfg_sectionsep = ":"
 PhotoPlace_Cfg_PhotoRegExp = re.compile(r"\.jpg$", re.I)
-PhotoPlace_Cfg_GeneratedTrackName =  _("GeoPhotos")
-PhotoPlace_Cfg_GeneratedTrackDescription = _("Track from geolocated photos")
 PhotoPlace_Cfg_KmlTemplatePhotoPath = ['kml.Document.Folder.Placemark']
 PhotoPlace_Cfg_DirMode = 0750
 PhotoPlace_Cfg_ExifModes = {

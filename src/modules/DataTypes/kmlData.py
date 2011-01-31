@@ -134,6 +134,7 @@ class KmlData(object):
     def _opentemplate(self, filename):
         dgettext = dict(filename=filename)
         template = None
+        fd = None
         try:
             try:
                 fd = urllib.urlopen(filename)

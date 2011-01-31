@@ -61,6 +61,7 @@ from paths import *
     _GTKPaths_COLUMN_EDITVAL,
 ) = range(7)
 
+_GTKPaths_DESCRIPTION_LINES = 1
 _GTKPaths_DESCRIPTION_CHARS = 40
 
 
@@ -77,17 +78,6 @@ class GTKPaths(object):
         self.photopaths = 0
         self.state = state
         # 1st line
-        hbox_desc = gtk.HBox(False)
-        label_desc = gtk.Label()
-        label_desc.set_markup(_("Short description for the paths:"))
-        hbox_desc.pack_start(label_desc, False, False, 5)
-        self.entry_desc = gtk.Entry(max=1024)
-        self.entry_desc.set_tooltip_text(
-            _("A short description for the collection of paths."))
-        self.entry_desc.connect('changed', 
-            self._set_entry, KmlPaths_CONFKEY_KMLPATH_DESC)
-        hbox_desc.pack_start(self.entry_desc, True, True, 5)
-        self.plugin.pack_start(hbox_desc, False, False)
         self.checkbutton_genpath = gtk.CheckButton(
             _("Generate a path from previously geotagged photos"))
         self.checkbutton_genpath.connect('toggled', self.photo_path)
@@ -131,8 +121,22 @@ class GTKPaths(object):
         self.plugin.show_all()
 
 
-    def hide(self):
+    def hide(self, reset=False):
         self.plugin.hide_all()
+        if reset:
+            self.reset()
+    
+    
+    def reset(self):
+        ite = self.treestore.get_iter_first()
+        deleted = []
+        while ite:
+            deleted.insert(0, ite)
+            ite = self.treestore.iter_next(ite)
+        for ite in deleted:
+            self.treestore.remove(ite)
+        self.tracknum = 0
+        self.photopaths = 0
 
 
     def clear_tracks(self):
@@ -190,7 +194,6 @@ class GTKPaths(object):
     def setup(self, options, tracks):
         self.treestore.clear()
         self.options = None
-        self.entry_desc.set_text(options[KmlPaths_CONFKEY_KMLPATH_DESC])
         self.checkbutton_genpath.set_active(options[KmlPaths_CONFKEY_KMLPATH_GENTRACK])
         self.tracksinfo = tracks
         self.options = options
@@ -212,7 +215,15 @@ class GTKPaths(object):
             filename = trackinfo[KmlPaths_CONFKEY_TRACKS_DESC]
             if os.path.isfile(filename):
                 description = self.get_description(filename)
-                desc = description[0:_GTKPaths_DESCRIPTION_CHARS] 
+                count = 0
+                desc = ''
+                for line in description.splitlines(True):
+                    if count == _GTKPaths_DESCRIPTION_LINES:
+                        break
+                    desc += line
+                    count += 1
+                desc = desc[0:_GTKPaths_DESCRIPTION_CHARS]
+                desc += " . . ."
                 desc_file = filename
         color = KmlPaths_TRACKS_COLOR
         if trackinfo.has_key(KmlPaths_CONFKEY_TRACKS_COLOR):
@@ -352,9 +363,11 @@ class GTKPaths(object):
         dialog.show_all()
         dialog.run()
         start, end = textbuffer.get_bounds()
-        line = textbuffer.get_iter_at_offset(_GTKPaths_DESCRIPTION_CHARS)
+        line = textbuffer.get_iter_at_line(_GTKPaths_DESCRIPTION_LINES)
+        contents = textbuffer.get_text(start, line).strip()[0:_GTKPaths_DESCRIPTION_CHARS]
+        contents += "\n . . ."
         self.treestore.set(ite, _GTKPaths_COLUMN_DESC, textbuffer.get_text(start, end))
-        self.treestore.set(ite, _GTKPaths_COLUMN_VALUE, textbuffer.get_text(start, line))
+        self.treestore.set(ite, _GTKPaths_COLUMN_VALUE, contents)
         dialog.destroy()
 
 

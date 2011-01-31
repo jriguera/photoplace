@@ -132,6 +132,19 @@ class PluginManager(object):
             msg = _("Cannot init module '%(module)s': %(error)s.")
             raise PluginManagerError(msg % dgettext)
 
+    def reset(self, plugin, *args, **kwargs):
+        dgettext = dict(module = plugin.__module__)
+        if not plugin in self.instances:
+            msg = _("Cannot init module '%(module)s': Not instanced!.")
+            raise PluginManagerError(msg % dgettext)
+        p = self.instances[plugin]
+        try:
+            return p.reset(*args, **kwargs)
+        except Exception as e:
+            dgettext['error'] = str(e)
+            msg = _("Cannot reset module '%(module)s': %(error)s.")
+            raise PluginManagerError(msg % dgettext)
+            
     def end(self, plugin, *args, **kwargs):
         dgettext = dict(module = plugin.__module__)
         try:

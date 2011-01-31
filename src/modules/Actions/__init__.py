@@ -35,7 +35,6 @@ __all__ = [
     'Interface', 
     'loadPhotosAction', 
     'readGPXAction', 
-    'makeGPXAction', 
     'geolocateAction', 
     'doTemplatesAction', 
     'saveFilesAction',
@@ -46,7 +45,6 @@ __all__ = [
 import Interface
 import loadPhotosAction
 import readGPXAction
-import makeGPXAction
 import geolocateAction
 import doTemplatesAction
 import saveFilesAction

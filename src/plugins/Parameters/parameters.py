@@ -44,11 +44,8 @@ try:
     import pygtk
     pygtk.require("2.0")
     import gtk
-except Exception as e:
-    warnings.resetwarnings()
-    print("Warning: %s" % str(e))
-    print("You don't have the PyGTK 2.0 module installed")
-    raise
+except:
+    pass
 warnings.resetwarnings()
 
 
@@ -122,7 +119,7 @@ class Parameters(Plugin):
             label.set_justify(gtk.JUSTIFY_LEFT)
             label.set_alignment(0.01, 0.5)
             label.set_line_wrap(True)
-            self.plugin.pack_start(label, False, True)
+            self.plugin.pack_start(label, False, True, 10)
             scroll = gtk.ScrolledWindow()
             scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
             scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)

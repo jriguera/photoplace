@@ -30,6 +30,7 @@ __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera, September 2010"
 
 import os
+import shutil
 import sys
 import imp
 import optparse
@@ -168,6 +169,19 @@ def program(args=sys.argv):
         configfile = PhotoPlace_Cfg_file
         if not os.path.isfile(configfile):
             configfile = os.path.join(PhotoPlace_Cfg_dir, configfile)
+        if not os.path.isfile(configfile):
+            if not os.path.exists(PhotoPlace_Cfg_dir):
+                try:
+                    os.makedirs(PhotoPlace_Cfg_dir)
+                except Exception as e:
+                    dgettext['error'] = str(e)
+                    msg = _("Cannot make dir '%(defaultconfigdir)s': %(error)s.\n")
+                    sys.stderr.write(msg % dgettext)
+            orig_cfg = os.path.join(__RESOURCES_PATH__, __RESOURCES_CONF_PATH__)
+            try:
+                shutil.copy(os.path.join(orig_cfg, PhotoPlace_Cfg_file), PhotoPlace_Cfg_dir)
+            except Exception as e:
+                sys.stderr.write(_("Cannot create default configfile in '%s'.\n") % PhotoPlace_Cfg_dir)
     if not os.path.isfile(configfile):
         sys.stderr.write(_("Cannot find configuration file '%s'.\n") % configfile)
         configfile = os.path.join(

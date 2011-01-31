@@ -136,6 +136,8 @@ class gxTour(object):
         self.tour = self.kmldoc.createElement("gx:Tour")
         name_node = self.kmldoc.createElement("name")
         self.tour.appendChild(name_node)
+        snippet_node = self.kmldoc.createElement("Snippet")
+        self.tour.appendChild(snippet_node)
         description_node = self.kmldoc.createElement("description")
         self.tour.appendChild(description_node)
         name_node.appendChild(self.kmldoc.createTextNode(str(name)))
@@ -153,7 +155,7 @@ class gxTour(object):
         crange=KmlTour_BEGIN_RANGE, 
         flytime=KmlTour_BEGIN_FLYTIME, 
         flymode="bounce", 
-        altitudemode=KmlTour_ALTMODE):
+        altitudemode='clampToGround'):
         
         placemarckid = datetime.datetime.now().strftime("%Y%j%I%M" + "start")
         self.do_placemark(lon, lat, ele, name, placemarckid, description, 1, style, altitudemode)
@@ -199,13 +201,13 @@ class gxTour(object):
 
 
     def do_placemark(self, lon, lat, ele, name, placemarkid=None,
-        description=None, visibility=None, style=None, altitudemode=None):
+        description=None, visibility=None, style=None, altitudemode=None, snippet=None):
         
         placemark = self.kmldoc.createElement("Placemark")
+        if placemarkid != None:
+            placemark.setAttribute("id", str(placemarkid))
         self.document.appendChild(placemark)
         name_node = self.kmldoc.createElement("name")
-        if placemarkid != None:
-            name_node.setAttribute("id", str(placemarkid))
         name_node.appendChild(self.kmldoc.createTextNode(str(name)))
         placemark.appendChild(name_node)
         if visibility != None:
@@ -220,6 +222,10 @@ class gxTour(object):
             style_node = self.kmldoc.createElement("styleUrl")
             style_node.appendChild(self.kmldoc.createTextNode(str(style)))
             placemark.appendChild(style_node)
+        snippet_node = self.kmldoc.createElement("Snippet")
+        if snippet != None:
+            snippet_node.appendChild(self.kmldoc.createTextNode(str(snippet)))
+        placemark.appendChild(snippet_node)
         point = self.kmldoc.createElement("Point")
         placemark.appendChild(point)
         altit_node = self.kmldoc.createElement("altitudeMode")
@@ -322,7 +328,7 @@ class gxTour(object):
            crange=KmlTour_END_RANGE, 
            flytime=KmlTour_END_FLYTIME, 
            flymode=KmlTour_FLYMODE, 
-           altitudemode=KmlTour_ALTMODE):
+           altitudemode='clampToGround'):
         
         placemarckid = datetime.datetime.now().strftime("%Y%j%I%M" + "end")
         self.do_placemark(lon, lat, ele, name, placemarckid, description, 1, style, altitudemode)

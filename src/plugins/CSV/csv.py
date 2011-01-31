@@ -1,20 +1,24 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#       csv.py:  csv plugin for photoplace
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Copyright © 2008 Jose Riguera Lopez <jriguera@gmail.com>
+#
 
-
-# Path
-PhotoPlace_PathNAME = 'PhotoPlace.PathNAME'
-PhotoPlace_PathDESC = 'PhotoPlace.PathDESC'
-PhotoPlace_PathNWPT = 'PhotoPlace.PathNWPT'
-PhotoPlace_PathNSEG = 'PhotoPlace.PathNSEG'
-PhotoPlace_PathTINI = 'PhotoPlace.PathTINI'
-PhotoPlace_PathTEND = 'PhotoPlace.PathTEND'
-PhotoPlace_PathDRTN = 'PhotoPlace.PathDRTN'
-PhotoPlace_PathLEN = 'PhotoPlace.PathLEN'
-PhotoPlace_PathLENMIN = 'PhotoPlace.PathLENMIN'
-PhotoPlace_PathLENMAX = 'PhotoPlace.PathLENMAX'
-PhotoPlace_PathSPMIN = 'PhotoPlace.PathSPMIN'
-PhotoPlace_PathSPMAX = 'PhotoPlace.PathSPMAX'
-PhotoPlace_PathSPAVG = 'PhotoPlace.PathSPAVG'
-PhotoPlace_PathWPTCOORDS = 'PhotoPlace.PathWPTCOORDS'
 
 
 PhotoPlace_Cfg_csv_headers = [] # ["PHOTO", "TITLE", "DESCRIPTION", "LAT", "LON", "ELE"]
@@ -25,16 +29,6 @@ PhotoPlace_Cfg_csv_photolatheader = '' #"LAT"
 PhotoPlace_Cfg_csv_photolonheader =  '' #"LON"
 PhotoPlace_Cfg_csv_photoeleheader = '' #"ELE"
 PhotoPlace_Cfg_csv_encodings = ["utf-8", "iso-8859-1", "iso-8859-2", "us-ascii"]
-
-
-
-    # set up logging to file
-    logfile = options['main']['logfile']
-    logging.basicConfig(filename=logfile, level=logging.DEBUG, filemode='w',
-        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-        datefmt='%m-%d %H:%M')
-
-
 
 
 def check_config(options):
@@ -128,9 +122,6 @@ def check_cvs_file(fd, options):
         raise NameError(msg % photolonheader)
     logger.debug(_("End. Checks for CSV file."))
     return (reader, options)
-
-
-
 
 
 def load_csv(fd, geophotos, options):

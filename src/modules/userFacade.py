@@ -144,7 +144,7 @@ class UserFacade(object):
                 pass
         self.configfile = configfile
         self.options = defaultconfig
-        if configfile:
+        if configfile != None:
             dgettext = dict()
             dgettext['configfile'] = configfile
             try:
@@ -160,7 +160,7 @@ class UserFacade(object):
                     "%(error)s. Ignoring it!\n") % dgettext
                 sys.stderr.write(msg)
         else:
-            # Crear fichero de configuracion
+            # Make configuration file
             pass
         self.logfile = self.options['main'].setdefault('logfile')
         self.loglevel = self.options['main'].setdefault('loglevel','')
@@ -174,7 +174,7 @@ class UserFacade(object):
         consoleformatter = logging.Formatter(PhotoPlace_Cfg_consolelogformat)
         self.mainloghandler.setFormatter(consoleformatter)
         self.logger.addHandler(self.mainloghandler)
-        if self.logfile:
+        if self.logfile != None:
             l = PhotoPlace_Cfg_loglevel
             try:
                 level = self.loglevel.lower()
@@ -399,6 +399,25 @@ class UserFacade(object):
         return value
 
 
+    def reset_plugin(self, plugin=None, capability='*', *args):
+        if self.finalize:
+            msg = _("Cannot reset plugin while some operations are pending ...")
+            self.logger.error(msg)
+            tip = _("Wait a moment ... ")
+            raise Error(msg, tip, "Error")
+        plugins = self.list_plugins(capability, plugin)
+        value = None
+        for plg in plugins.keys():
+            try:
+                value = self.pluginmanager.reset(plugins[plg], *args)
+            except Plugins.pluginManager.PluginManagerError as pluginerror:
+                msg = str(pluginerror)
+                self.logger.error(msg)
+                tip = _("Check Plugin reset method ... ")
+                raise Error(msg, tip, "PluginManagerError")
+        return value
+
+        
     def end_plugin(self, plugin=None, capability='*', *args):
         if self.finalize:
             msg = _("Cannot finish plugin while some operations are pending ...")

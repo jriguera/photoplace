@@ -51,6 +51,7 @@ class MakeKML(Actions.Interface.Action, threading.Thread):
         self.jpgzoom = state['jpgzoom']
         self.outputdir = state.outputdir
         utczoneminutes = state['utczoneminutes']
+        self.time_zone = datetime.timedelta(minutes=utczoneminutes)
         self.str_tzdiff = '-'
         if utczoneminutes < 0:
             utczoneminutes = -utczoneminutes
@@ -99,6 +100,8 @@ class MakeKML(Actions.Interface.Action, threading.Thread):
                     self.dgettext['path'] = track.name
                     msg = _("Cannot process '%(path)s': %(error)s.") % self.dgettext
                     self.logger.error(msg)
+            min_time = min_time + self.time_zone
+            max_time = max_time + self.time_zone
         else:
             num_tracks = 1
             prev_lat = 0.0
@@ -181,7 +184,7 @@ class MakeKML(Actions.Interface.Action, threading.Thread):
                 photodata[PhotoPlace_PhotoZOOM] = self.jpgzoom
                 photodata[PhotoPlace_ResourceURI] = self.photouri
                 str_utctime = photo.time.strftime("%Y-%m-%dT%H:%M:%S")
-                photodata[PhotoPlace_PhotoTZDATE] = str_utctime + self.str_tzdiff
+                photodata[PhotoPlace_PhotoUTCDATE] = str_utctime + self.str_tzdiff
                 for k in photo.exif.exif_keys:
                     try:
                         photodata[k] = str(photo.exif[k].value)

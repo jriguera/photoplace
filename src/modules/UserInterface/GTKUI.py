@@ -276,6 +276,15 @@ class PhotoPlaceGUI(InterfaceUI):
 
 
     def start(self, load_files=True):
+        if sys.platform.startswith('win'):
+            sleeper = lambda: time.sleep(.001) or True
+            gobject.timeout_add(400, sleeper)
+            # redirect standard I/O to files
+            cfg_dir = '.'
+            if self.userfacade.configfile != None:
+                cfg_dir = os.path.dirname(self.userfacade.configfile)
+            sys.stdout = open(os.path.join(cfg_dir, 'stdout.log'), 'w+')
+            sys.stderr = open(os.path.join(cfg_dir, 'stderr.log'), 'w+')
         loaded_templates = self.action_loadtemplates()
         if load_files and loaded_templates:
             # Read current file
@@ -310,6 +319,8 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_aboutdialog_close": self.dialog_close,
             "on_aboutdialog_response": self.dialog_response,
             "on_aboutdialog_delete_event": self.dialog_close,
+            "on_linkbutton-suggestion_clicked": self._open_link,
+            "on_linkbutton-donate_clicked": self._open_link,
             "on_window_destroy": self.window_exit,
             "on_imagemenuitem-opendir_activate": self._clicked_photodir,
             "on_imagemenuitem-opengpx_activate": self._clicked_gpx,
@@ -340,9 +351,6 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_treeview-photoinfo_row_activated": self._clicked_photoinfo_att
         }
         self.builder.connect_signals(self.signals)
-        if sys.platform.startswith('win'):
-            sleeper = lambda: time.sleep(.001) or True
-            gobject.timeout_add(400, sleeper)
         #gtk.gdk.threads_enter()
         gtk.main()
         gtk.gdk.threads_leave()
@@ -374,6 +382,13 @@ class PhotoPlaceGUI(InterfaceUI):
         if response < 0:
             dialog.hide()
             dialog.emit_stop_by_name('response')
+
+    def _open_link(self, widget, data=None):
+        # hack for windows platform. 
+        # GTK in windows cannot open links ...
+        if sys.platform.startswith('win'):
+            uri = widget.get_uri()
+            os.startfile(uri)
 
 
     # #################
@@ -818,7 +833,7 @@ class PhotoPlaceGUI(InterfaceUI):
             dgettext['description'] = ''
         information = _("<b>%(name)s</b>\nDate: %(date)s\nTime: %(time)s") % dgettext
         if geophoto.isGeoLocated():
-            geodata = _("Longitude:\t%(lon)f\nLatitude:   \t%(lat)f\nElevation:  \t%(ele)f") % dgettext
+            geodata = _("Longitude: \t%(lon)f\nLatitude:   \t%(lat)f\nElevation:  \t%(ele)f") % dgettext
             color = PhotoPlace_Cfg_TreeViewColorGeo
         else:
             geodata = _("Picture not Geolocated!")
@@ -956,23 +971,22 @@ class PhotoPlaceGUI(InterfaceUI):
 
     def action_clear(self, widget=None):
         plugin_mode = self["toggletoolbutton-plugins"].get_active()
-        plugin_list = list()
         if plugin_mode:
             for plg in self.plugins.keys():
                 (plgobj, menuitem, notebookindex, notebookframe) = self.plugins[plg]
                 if menuitem.get_active():
-                    menuitem.set_active(False)
-                    plugin_list.append(menuitem)
+                    #menuitem.set_active(False)
+                    try:
+                        self.userfacade.reset_plugin(plg, '*')
+                    except Error as e:
+                        self.show_dialog(e.type, e.msg, e.tip)
         try:
             self.userfacade.Clear()
         except Error as e:
             self.show_dialog(e.type, e.msg, e.tip)
-            if plugin_mode:
-                for menuitem in plugin_list:
-                    menuitem.set_active(True)
         else:
-            self["button-openphotos"].set_label(_("Select input photo directory") + "  ")
-            self["button-opengpx"].set_label(_("Input GPX file") + "  ")
+            self["button-openphotos"].set_label(_("Select input photo directory"))
+            self["button-opengpx"].set_label(_("Input GPX file"))
             self["checkbutton-outgeo"].set_active(True)
             self._toggle_geolocate_mode()
             self["togglebutton-outfile"].set_active(False)
@@ -980,9 +994,6 @@ class PhotoPlaceGUI(InterfaceUI):
             self.current_geophoto = None
             self.treeview_iterator = None
             self.treeview_model.clear()
-            if plugin_mode:
-                for menuitem in plugin_list:
-                    menuitem.set_active(True)
             self.userfacade.DoTemplates().run()
             self.num_photos_process = 0
 

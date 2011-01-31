@@ -292,9 +292,9 @@ class GTKTour(object):
 
     def get_textview(self, key):
         if key == KmlTour_CONFKEY_BEGIN_DESC:
-            textview = self.textview_end
-        elif key == KmlTour_CONFKEY_END_DESC:
             textview = self.textview_ini
+        elif key == KmlTour_CONFKEY_END_DESC:
+            textview = self.textview_end
         else:
             return ''
         textbuffer = textview.get_buffer()

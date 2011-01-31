@@ -119,13 +119,15 @@ class SXMLTemplate:
         self.rawtemplate = None
         self.redoelements = redoelements
         # Open stream (file, string ...) and read it
+        fd = None
         try: 
             fd = self._open(source)
             self.rawtemplate = fd.read(self.sizeLimit)
         except IOError as (errno, strerror):
             raise exceptions.SXMLTemplateErrorLoad(file, errno, strerror)
         else:
-            fd.close()
+            if fd:
+                fd.close()
         # Parse XML and checks that it is correct, well formed ...
         try:
             self.dom = xml.dom.minidom.parseString(self.rawtemplate)

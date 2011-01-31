@@ -52,7 +52,7 @@ class Plugin(object):
     The base class from which all plugins are derived.  It is used by the
     plugin loading functions to find all the installed plugins.
     """
-    description = _("A plugin to ...")
+    description = "A plugin to ..."
     version = "0.1.0"
     author = "Unknown developer"
     email = "<user@earth.milk>"
@@ -76,7 +76,11 @@ class Plugin(object):
     def init(self, options, widget_container):
         self.logger.debug("init")
         pass
-    
+
+    def reset(self):
+        self.logger.debug("reset")
+        pass        
+
     def end(self, options):
         self.logger.debug("end")
         pass

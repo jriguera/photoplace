@@ -127,7 +127,7 @@
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem-exit">
-                        <property name="label">gtk-quit</property>
+                        <property name="label" context="PhotoPlaceGUI">gtk-quit</property>
                         <property name="visible">True</property>
                         <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="menuitem">Exit the program. I hope see you soon :-)</property>
                         <property name="right_justified">True</property>
@@ -221,6 +221,7 @@
                     <property name="has_tooltip">True</property>
                     <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Select a directory with photos for geotagging. All photos will be geotagged if &lt;geotagged&gt; mode is selected.</property>
                     <property name="image">image-photodir</property>
+                    <property name="use_underline">True</property>
                     <signal name="clicked" handler="on_button-openphotos_clicked" object="button-openphotos"/>
                   </object>
                 </child>
@@ -243,6 +244,7 @@
                     <property name="has_tooltip">True</property>
                     <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Select an eXchange Format (GPX) in order to match the date of each photo with the position.</property>
                     <property name="image">image-gpx</property>
+                    <property name="use_underline">True</property>
                     <signal name="clicked" handler="on_button-opengpx_clicked" object="button-opengpx"/>
                   </object>
                 </child>
@@ -330,7 +332,6 @@
                       <object class="GtkFrame" id="frame-options">
                         <property name="visible">True</property>
                         <property name="label_xalign">0</property>
-                        <property name="shadow_type">in</property>
                         <child>
                           <object class="GtkVBox" id="vbox-options">
                             <property name="visible">True</property>
@@ -719,7 +720,6 @@ Not active for geottaging purposes, no output file will be generated.</property>
                       <object class="GtkFrame" id="frame-photos">
                         <property name="visible">True</property>
                         <property name="label_xalign">0</property>
-                        <property name="shadow_type">in</property>
                         <child>
                           <object class="GtkAlignment" id="alignment-photos">
                             <property name="visible">True</property>
@@ -870,13 +870,11 @@ Not active for geottaging purposes, no output file will be generated.</property>
                         <property name="visible">True</property>
                         <property name="tab_pos">right</property>
                         <property name="scrollable">True</property>
-                        <property name="tab_border">4</property>
-                        <property name="tab_hborder">20</property>
-                        <property name="tab_vborder">4</property>
                         <property name="homogeneous">True</property>
                       </object>
                       <packing>
                         <property name="position">2</property>
+                        <property name="tab_expand">True</property>
                       </packing>
                     </child>
                     <child type="tab">
@@ -1023,7 +1021,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
     <property name="program_name">PhotoPlace</property>
     <property name="version">0.5.0</property>
     <property name="copyright" translatable="yes">Copyright © 2010  José Riguera </property>
-    <property name="comments" translatable="yes">A program to geolocate photos and generate a Google Earth layer</property>
+    <property name="comments" translatable="yes" context="PhotoPlaceGUI">A program for geotagging photos and generate a Google Earth layer</property>
     <property name="website">http://code.google.com/p/photoplace/</property>
     <property name="license" translatable="yes" context="PhotoPlaceGUI" comments="GPL License">		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
@@ -1135,7 +1133,7 @@ This General Public License does not permit incorporating your program into prop
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">I have a dream ... well I have a lot of dreams, but this is one of them ...</property>
                 <property name="xpad">10</property>
-                <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="I have a dream ... well I have a lot of dreams, but this is one of them ...">The authors and developers hope you like this program. We would really appreciate it if you would consider making a small donation. We would like to visit Japan and these coins can help us to achieve this dream. Mas cosas?</property>
+                <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="I have a dream ... well I have a lot of dreams, but this is one of them ...">The authors and developers hope you like this program. We would really appreciate it if you would consider making a small donation: half of the money will be donated to a local NGO Ecodesarrollo Gaia (http://gaiadiaadia.blogspot.com) that helps people in Senegal (Africa), with the other half, I would like to visit Australia and,  in connection with a geotagging  program, my antipodes in New Zeland, and your coins can help me to achieve this goals.</property>
                 <property name="use_markup">True</property>
                 <property name="justify">fill</property>
                 <property name="wrap">True</property>
@@ -1155,6 +1153,7 @@ This General Public License does not permit incorporating your program into prop
                 <property name="relief">none</property>
                 <property name="focus_on_click">False</property>
                 <property name="uri">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=N6XRW9DLPFSRN</property>
+                <signal name="clicked" handler="on_linkbutton-donate_clicked"/>
               </object>
               <packing>
                 <property name="position">1</property>
@@ -1182,6 +1181,7 @@ This General Public License does not permit incorporating your program into prop
                     <property name="receives_default">True</property>
                     <property name="relief">none</property>
                     <property name="uri">mailto:photoplace-project@googlegroups.com</property>
+                    <signal name="clicked" handler="on_linkbutton-suggestion_clicked"/>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -1191,9 +1191,6 @@ This General Public License does not permit incorporating your program into prop
               <packing>
                 <property name="position">2</property>
               </packing>
-            </child>
-            <child>
-              <placeholder/>
             </child>
           </object>
           <packing>
@@ -1528,18 +1525,22 @@ This General Public License does not permit incorporating your program into prop
   <object class="GtkImage" id="image-clear">
     <property name="visible">True</property>
     <property name="stock">gtk-new</property>
+    <property name="icon-size">1</property>
   </object>
   <object class="GtkImage" id="image-opengpx">
     <property name="visible">True</property>
     <property name="stock">gtk-sort-ascending</property>
+    <property name="icon-size">1</property>
   </object>
   <object class="GtkImage" id="image-opendir">
     <property name="visible">True</property>
     <property name="stock">gtk-open</property>
+    <property name="icon-size">1</property>
   </object>
   <object class="GtkImage" id="image-save">
     <property name="visible">True</property>
     <property name="stock">gtk-save-as</property>
+    <property name="icon-size">1</property>
   </object>
   <object class="GtkImage" id="image-simulategeolocate">
     <property name="visible">True</property>

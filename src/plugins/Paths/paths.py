@@ -80,7 +80,6 @@ PhotoPlace_PathNWPT = "PhotoPlace.PathNWPT"
 # Configuration keys
 KmlPaths_CONFKEY = "paths"
 KmlPaths_CONFKEY_KMLPATH_NAME = "foldername"
-KmlPaths_CONFKEY_KMLPATH_DESC = "description"
 KmlPaths_CONFKEY_KMLPATH_GENTRACK = "generatetrack"
 KmlPaths_CONFKEY_TRACKS_SEPARATOR = '.'
 KmlPaths_CONFKEY_TRACKS_NAME = 'trackname'
@@ -92,9 +91,8 @@ KmlPaths_CONFKEY_TRACKS_WIDTH = 'trackwidth'
 KmlPaths_KMLPATH_NAME = _("Paths")
 KmlPaths_KMLPATH_GENNAME = _("Photo path")
 KmlPaths_KMLPATH_GENDESC = _("Generated path from geotagged photos")
-KmlPaths_KMLPATH_DESC = ''
 KmlPaths_KMLPATH_GENTRACK = True
-KmlPaths_TRACKS_COLOR = '7f0000ff'
+KmlPaths_TRACKS_COLOR = '20FFFF00'
 KmlPaths_TRACKS_WIDTH = '3'
 KmlPaths_GPX_GENNAME = _('Pictures')
 
@@ -146,8 +144,7 @@ class KmlPaths(Plugin):
         self.defaultsinfo = options['defaults']
         self.process_variables(opt)
         self.kmlpath = None
-        gpx_date = datetime.datetime.utcnow()
-        self.gengpx = gpx.GPX(KmlPaths_GPX_GENNAME, gpx_date)
+        self.gengpx = gpx.GPX(KmlPaths_GPX_GENNAME, datetime.datetime.utcnow())
         self.phototrack = dict()
         if self.gui:
             if self.ready == -1:
@@ -163,9 +160,6 @@ class KmlPaths(Plugin):
         name = options.setdefault(KmlPaths_CONFKEY_KMLPATH_NAME, KmlPaths_KMLPATH_NAME)
         if name == "-":
             options[KmlPaths_CONFKEY_KMLPATH_NAME] = None
-            options[KmlPaths_CONFKEY_KMLPATH_DESC] = None
-        else:
-            options.setdefault(KmlPaths_CONFKEY_KMLPATH_DESC, KmlPaths_KMLPATH_DESC)
         gentrack = options.setdefault(KmlPaths_CONFKEY_KMLPATH_GENTRACK, KmlPaths_KMLPATH_GENTRACK)
         if not isinstance(gentrack, bool):
             generate = gentrack.lower().strip() in ["yes", "true", "on", "si", "1"]
@@ -198,7 +192,11 @@ class KmlPaths(Plugin):
                         tmp_val = int(value)
                     elif tkey == KmlPaths_CONFKEY_TRACKS_DESC:
                         if not os.path.isfile(value):
-                            raise UserWarning
+                            tmp_val = os.path.join(self.state.resourcedir, value)
+                            if not os.path.isfile(tmp_val):
+                                raise UserWarning
+                            else:
+                                value = tmp_val
                 except:
                     msg = _("Cannot understand the key '%s' in config file.")
                     self.logger.warning(msg % key)
@@ -241,8 +239,7 @@ class KmlPaths(Plugin):
             return None
         kml = self.state.kmldata.getKml()
         name = self.options[KmlPaths_CONFKEY_KMLPATH_NAME]
-        description = self.options[KmlPaths_CONFKEY_KMLPATH_DESC]
-        self.kmlpath = KmlPath.KmlPath(name, description, kml)
+        self.kmlpath = KmlPath.KmlPath(name, None, kml)
         num_tracks = 0
         self.logger.debug(_("Processing all tracks (paths) from GPX data ... "))
         if self.options[KmlPaths_CONFKEY_KMLPATH_GENTRACK]:
@@ -257,6 +254,7 @@ class KmlPaths(Plugin):
         proc_photos = 0
         dgettext = dict()
         num_tracks = 0
+        time_zone = datetime.timedelta(minutes=self.state['utczoneminutes'])
         for name, track in self.phototrack.iteritems():
             gpxtrk = gpx.GPXTrack(name)
             gpxtrkseg = gpx.GPXSegment(name)
@@ -268,17 +266,18 @@ class KmlPaths(Plugin):
                         break
                 if not found or found.status < 1:
                     continue
+                photo_tutc = photo_time - time_zone
                 gpxwpt = gpx.GPXPoint(
-                    photo_lat, photo_lon, photo_ele, photo_time, found.name)
+                    photo_lat, photo_lon, photo_ele, photo_tutc, found.name)
                 dgettext['photo'] = found.name
                 dgettext['photo_lon'] = photo_lon
                 dgettext['photo_lat'] = photo_lat
                 dgettext['photo_ele'] = photo_ele
                 dgettext['photo_time'] = photo_time
-                self.logger.debug(_("Photo: '%(photo)s' (%(photo_time)s) "
-                    "geolocated with coordinates (lon=%(photo_lon).8f, "
-                    "lat=%(photo_lat).8f, ele=%(photo_ele).8f). Generated "
-                    "WayPoint.") % dgettext)
+                dgettext['photo_tutc'] = photo_tutc
+                self.logger.debug(_("Generated WayPoint from '%(photo)s' at %(photo_time)s "
+                    "(UTC=%(photo_tutc)s) with coordinates (lon=%(photo_lon).8f, "
+                    "lat=%(photo_lat).8f, ele=%(photo_ele).8f).") % dgettext)
                 gpxtrkseg.addPoint(gpxwpt)
                 proc_photos += 1
             try:
@@ -286,7 +285,7 @@ class KmlPaths(Plugin):
                 dgettext['track_name'] = name
                 dgettext['track_points'] = proc_photos
                 msg = _("Track '%(track_name)s' was generated from "
-                    " %(track_points)s geotagged photos.")
+                    "%(track_points)s geotagged photos.")
                 self.logger.info(msg % dgettext)
             except gpx.GPXError:
                 # GPXError if len(gpxtrkseg) == 0
@@ -414,12 +413,26 @@ class KmlPaths(Plugin):
         self.track_num += 1
 
 
+    def reset(self):
+        if self.ready:
+            self.kmlpath = None
+            self.gengpx = gpx.GPX(KmlPaths_GPX_GENNAME, datetime.datetime.utcnow())
+            self.phototrack = dict()
+            self.track_num = 0
+            if self.gui:
+                self.gui.clear_tracks()
+                self.gui.reset()
+            self.logger.debug(_("Resetting plugin ..."))
+
+   
     def end(self, options):
         self.ready = 0
         self.tracksinfo = None
         self.track_num = 0
         self.defaultsinfo = None
         self.options = None
+        self.phototrack = None
+        self.gengpx = None
         self.kmlpath = None
         if self.gui:
             self.gui.hide()

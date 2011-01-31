@@ -118,7 +118,7 @@ class KmlPath(object):
         coordinates = ''
         for point in track:
             coordinates += "%.8f,%.8f,%.8f " % (point)
-        coordinates_node = self.kmldoc.createElement("altitudeMode")
+        coordinates_node = self.kmldoc.createElement("coordinates")
         coordinates_node.appendChild(self.kmldoc.createTextNode(coordinates))
         linestring_node.appendChild(coordinates_node)
         self.document.appendChild(placemark)
