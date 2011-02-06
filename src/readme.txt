@@ -1,7 +1,7 @@
+		PhotoPlace v0.5.0 (February 2011)
 
-                PhotoPlace v0.5.0 (February 2011)
 
-    What is PhotoPlace?
+	What is PhotoPlace?
 
 It is a multiplatform program developed in python to easily geotag your photos. 
 It is tested on Linux and Windows platforms with python 2.x (>= 2.6) series. 
@@ -25,11 +25,11 @@ with a geotagging  program, my antipodes in New Zeland, and your coins
 can help me to achieve this goals.
 
 
-    Changes of this version.
+
+	Changes of this version.
 
 * New GTK User interface with theme support.
 * Intelligent templates for descriptions.
 * Plugins support.
 * Multi-language.
-
 
