@@ -1,0 +1,103 @@
+# Edit these colors and fonts however you like, after cp'ing the file to
+# another theme directory.
+# CleanIce GTK+ Theme 2001,2002 Rodney Dawes <dobey@free.fr>
+# Based on ThinIce GTK+ Engine by Tomas Ogren
+# and Clean GTK+ Engine by dengen40@yahoo.com
+# Debian colors: #d60451 #c50039 - erich@debian.org
+
+style "default"
+{
+  GtkRange::slider_width = 12
+  GtkRange::stepper_size = 12
+  GtkScrollbar::min_slider_length = 17
+  GtkCheckButton::indicator_size = 10
+
+  base[ACTIVE] = "#efafaf"
+  bg[ACTIVE] = "#efafaf"
+  fg[ACTIVE] = "#000000"
+  text[ACTIVE] = "#000000"
+
+  bg[INSENSITIVE] = "#dddddd"
+  base[INSENSITIVE] = "#dddddd"
+  text[INSENSITIVE] = "#efefef"
+
+  bg[NORMAL] = "#efefef"
+  fg[NORMAL] = "#000000"
+
+  base[SELECTED] = "#c50039"
+  text[SELECTED] = "#000000" #"#efefef"
+  bg[SELECTED] = "#c50039"
+  fg[SELECTED] = "#000000" #"#efefef"
+  
+  bg[PRELIGHT] = "#c50039"
+  fg[PRELIGHT] = "#000000" #"#efefef"
+  
+  engine "cleanice"
+  {
+  }
+}
+widget_class "*" style "default"
+
+style "entries" = "default"
+{
+	bg[SELECTED] = "#efefef"
+	fg[SELECTED] = "#c50039"
+	fg[NORMAL]   = "#000000"
+}
+widget_class "*Entry*" style "entries"
+widget_class "*List*"  style "entries"
+widget_class "*Tree*"  style "entries"
+
+style "progress" = "default"
+
+{
+	bg[SELECTED] = "#efefef"
+	fg[SELECTED] = "#c50039"
+}
+widget_class "*Progress*" style "progress"
+
+style "notebook" = "default"
+{
+	bg[ACTIVE] = "#dddddd"
+	bg[NORMAL] = "#efefef"
+}
+widget_class "*Notebook*" style "notebook"
+
+style "scrollbar" = "default"
+{
+	GtkScrollbar::has_forward_stepper = 1
+	GtkScrollbar::has_backward_stepper = 1
+	GtkScrollbar::has_secondary_backward_stepper = 0
+
+	bg[PRELIGHT] = "#c50039"
+	bg[ACTIVE] = "#dccccc"
+	fg[PRELIGHT] = "#efefef"
+}
+widget_class "*Scrollbar*" style "scrollbar"
+widget_class "*Scale*" style "scrollbar"
+
+style "menu" = "default"
+{
+	bg[PRELIGHT] = "#c50039"
+	fg[PRELIGHT] = "#000000"
+	bg[SELECTED] = "#c50039"
+	fg[SELECTED] = "#000000"
+}
+widget_class "*Menu*" style "menu"
+
+style "checkradio" = "default"
+{
+ fg[PRELIGHT] = "#000000"
+ bg[PRELIGHT] = "#c50039"
+ base[SELECTED] = "#efefef"
+ text[SELECTED] = "#000000"
+}
+widget_class "*CheckButton*" style "checkradio"
+widget_class "*RadioButton*" style "checkradio"
+
+style "ruler" = "default"
+{
+	font = "Helvetica 8"
+}
+widget_class "*Ruler*" style "ruler"
+

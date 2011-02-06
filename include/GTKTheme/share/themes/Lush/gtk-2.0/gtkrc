@@ -1,0 +1,362 @@
+# Theme Name  : Lush
+# Author(s)   : ajgenius ala Andrew Johnson (ajgenius@ajgenius.us) 
+# Description :
+#
+# A simple clean theme designed to match the Lush icons.
+#include "iconrc"
+
+style "default" {
+    GtkWidget::interior_focus         = 5
+    GtkButton::default_border         = {0, 0, 0, 0}
+    GtkButton::default_outside_border = {0, 0, 0, 0}
+
+    GtkCheckButton::indicator_size    = 13
+    GtkRadioButton::indicator_size    = 12
+
+    GtkPaned::handle_size  = 10
+
+    GtkRange::trough_border           = 2
+    GtkRange::slider_width            = 15
+    GtkRange::stepper_size            = 15
+    GtkRange::stepper_spacing         = 0
+  
+    GtkScrollbar::has_backward_stepper = 1
+    GtkScrollbar::has_secondary_forward_stepper = 0
+
+    GtkScrollbar::has_forward_stepper = 1
+    GtkScrollbar::has_secondary_backward_stepper = 1
+  
+    fg[ACTIVE]        = "#000000"
+    fg[INSENSITIVE]   = "#A7A7A7"
+    fg[NORMAL]        = "#000000"
+    fg[PRELIGHT]      = "#ffffff"
+    fg[SELECTED]      = "#ffffff"
+
+    bg[ACTIVE]        = "#D8D8D8"
+    bg[INSENSITIVE]   = "#E7E7E7"
+    bg[NORMAL]        = "#F0F0F0"
+    bg[PRELIGHT]      = "#A7DCBF"
+    bg[SELECTED]      = "#76C69E"
+
+    base[ACTIVE]      = "#A7DCBF"
+    base[INSENSITIVE] = "#fcfcfc"
+    base[NORMAL]      = "#fcfcfc"
+    base[PRELIGHT]    = "#ececec"
+    base[SELECTED]    = "#76C69E"
+
+    text[ACTIVE]      = "#ffffff"
+    text[INSENSITIVE] = "#A7A7A7"
+    text[NORMAL]      = "#000000"
+    text[PRELIGHT]    = "#000000"
+    text[SELECTED]    = "#ffffff"  
+ 
+    engine "smooth" {
+      fill {
+        style=gradient
+        hdirection = vertical
+        vdirection = vertical
+        color1[PRELIGHT] = "#D2F7DD"
+        color2[PRELIGHT] = "#7BC9A8"
+        color1[SELECTED] = "#D2F7DD"
+        color2[SELECTED] = "#7BC9A8"
+        color1[NORMAL]   = "#F3F3F3"
+        color2[NORMAL]   = "#DEDEDE"
+        color1[INSENSITIVE] = "#EAEAEA"
+        color2[INSENSITIVE] = "#D5D5D5"
+      }
+
+    line {
+        style=smooth
+        thickness=1
+    }
+
+   grip {
+        style=dots_out
+        toolbar_overlap = FALSE
+        line {
+          style=smooth
+          thickness=2
+        }
+        fill {
+          style=solid
+        }
+    }
+
+    check {
+        style=clean
+        motif=true
+        line {
+           style=smooth
+           thickness=2
+       }
+       fill {
+         style=gradient
+         hdirection =fdiagonal
+         vdirection =fdiagonal
+         color1[PRELIGHT] = "#D2F7DD"
+         color2[PRELIGHT] = "#7BC9A8"
+         color1[SELECTED] = "#D2F7DD"
+         color2[SELECTED] = "#7BC9A8"
+         color1[NORMAL]   = "#F3F3F3"
+         color2[NORMAL]   = "#DEDEDE"
+         color1[INSENSITIVE] = "#EAEAEA"
+         color2[INSENSITIVE] = "#D5D5D5"
+       }
+    }
+
+    option {
+        style=round
+        motif=true
+       line {
+          style=smooth
+          thickness=2
+      }
+      fill {
+        style=gradient
+        hdirection =fdiagonal
+        vdirection =fdiagonal
+        color1[PRELIGHT] = "#D2F7DD"
+        color2[PRELIGHT] = "#7BC9A8"
+        color1[SELECTED] = "#D2F7DD"
+        color2[SELECTED] = "#7BC9A8"
+        color1[NORMAL]   = "#F3F3F3"
+        color2[NORMAL]   = "#DEDEDE"
+        color1[INSENSITIVE] = "#EAEAEA"
+        color2[INSENSITIVE] = "#D5D5D5"
+      }
+    }
+
+    arrow {
+      style=cleanice
+      solid=TRUE
+      etched=FALSE
+    }
+
+    tab_style = round
+  }
+} widget_class "*" style "default"
+
+style "toolbar" {
+    engine "smooth" {
+        line {
+	    style=smooth
+	    thickness=1
+	}
+	
+	fill {
+	    style=solid
+	}
+	
+	grip {
+	    style=dots_out
+	    toolbar_overlap=TRUE
+            count = 3
+            spacing = 2
+	}
+    }
+}
+widget_class "*BonoboDockItem*" style "toolbar"
+class "*BonoboDockItem*" style "toolbar"
+
+widget_class "*HandleBox*" style "toolbar"
+class "*HandleBox*" style "toolbar"
+
+widget_class "*Tool*" style "toolbar"
+class "*Tool*" style "toolbar"
+
+widget_class "*MenuBar*" style "toolbar"
+class "*MenuBar*" style "toolbar"
+
+style "menuitem" {
+   engine "smooth" {
+      fill {
+        style=gradient
+        hdirection = vertical
+        vdirection =vertical
+        color1[PRELIGHT] = "#D2F7DD"
+        color2[PRELIGHT] = "#7BC9A8"
+        color1[SELECTED] = "#D2F7DD"
+        color2[SELECTED] = "#7BC9A8"
+        color1[NORMAL]   = "#F3F3F3"
+        color2[NORMAL]   = "#DEDEDE"
+        color1[INSENSITIVE] = "#EAEAEA"
+        color2[INSENSITIVE] = "#D5D5D5"
+      }
+
+      line {
+          style=thin
+          thickness=1
+      }
+
+   edge {
+       line {
+          style=flat
+          thickness=1
+      }
+    }
+
+    check {
+        style=clean
+       line {
+          style=flat
+          thickness=1
+      }
+      fill {
+        style=solid
+      }
+    }
+
+    option {
+        style=round
+       line {
+          style=none
+          thickness=0
+      }
+      fill {
+        style=solid
+      }
+    }
+
+    arrow {
+        style= cleanice
+        solid=TRUE
+        etched=FALSE
+    }
+    }
+} widget_class "*MenuItem*"		style "menuitem"
+class "*MenuItem*"		style "menuitem"
+
+style "radio_check" {
+    text[PRELIGHT]	= "#ecefec" #radio buttons use text[state] for the check colour
+    text[ACTIVE]	= "#76C69E"
+    text[NORMAL]	= "#000000"
+    text[SELECTED]	= "#76C69E"
+}
+widget_class "*RadioButton*" style "radio_check"
+widget_class "*CheckButton*" style "radio_check"
+
+style "scrollbar" {
+    engine "smooth" {
+      fill {
+        style=gradient
+        hdirection = vertical
+        vdirection =horizontal
+        color1[PRELIGHT] = "#D2F7DD"
+        color2[PRELIGHT] = "#7BC9A8"
+        color1[SELECTED] = "#D2F7DD"
+        color2[SELECTED] = "#7BC9A8"
+        color1[NORMAL]   = "#F3F3F3"
+        color2[NORMAL]   = "#DEDEDE"
+        color1[INSENSITIVE] = "#EAEAEA"
+        color2[INSENSITIVE] = "#D5D5D5"
+      }
+
+      line {
+          style=smooth
+          thickness=1
+      }
+
+     trough {
+        fill {
+           style=solid
+        }
+     }
+
+     grip {
+          style=dots_out
+          xpadding = 1 
+          ypadding = 1 
+      }
+
+    arrow {
+        style= cleanice
+        solid=TRUE
+        etched=FALSE
+        xpadding = 1 
+        ypadding = 1 
+    }
+  }
+}
+widget_class "*Scrollbar*" style "scrollbar"
+class "*Scrollbar*" style "scrollbar"
+
+style "scales"  {
+    bg[SELECTED]		= "#76C69E"		#scroll bar background
+  GtkRange::trough_border        = 0
+  GtkRange::slider-width = 14
+  GtkScale::slider-length = 26
+  engine "smooth"
+  {	
+   real_sliders = FALSE
+      fill {
+        style=gradient
+        hdirection = vertical
+        vdirection = horizontal
+        color1[PRELIGHT] = "#D2F7DD"
+        color2[PRELIGHT] = "#7BC9A8"
+        color1[SELECTED] = "#D2F7DD"
+        color2[SELECTED] = "#7BC9A8"
+        color1[NORMAL]   = "#F3F3F3"
+        color2[NORMAL]   = "#DEDEDE"
+        color1[INSENSITIVE] = "#EAEAEA"
+        color2[INSENSITIVE] = "#D5D5D5"
+      }
+      line {
+        style=smooth
+        thickness=2
+     }
+     trough {
+          xpadding = 3
+          ypadding = 3
+          show_value = TRUE
+    }
+     grip {
+          style=dots_out
+          count = 1
+          spacing = 2
+          xpadding =0
+          ypadding = 0
+      }
+  }
+} 
+widget_class "*Scale*" style "scales"
+class "*Scale*" style "scales"
+
+style "infobar" {
+  xthickness = 2
+  ythickness = 2
+  engine "smooth"
+  {	
+   real_sliders = FALSE
+      fill {
+        style=gradient
+        hdirection = vertical
+        vdirection =horizontal
+        color1[PRELIGHT] = "#D2F7DD"
+        color2[PRELIGHT] = "#7BC9A8"
+        color1[SELECTED] = "#D2F7DD"
+        color2[SELECTED] = "#7BC9A8"
+        color1[NORMAL]   = "#F3F3F3"
+        color2[NORMAL]   = "#DEDEDE"
+        color1[INSENSITIVE] = "#EAEAEA"
+        color2[INSENSITIVE] = "#D5D5D5"
+      }
+   progress {
+        line {
+          style=smooth
+          thickness=2
+       }
+    }
+   trough {
+        line {
+          style=smooth
+          thickness=1
+       }
+      fill {
+        style=solid
+      }
+    }
+  }
+}
+class "*Progress*"		style "infobar"
+widget_class "*Progress*"		style "infobar"
