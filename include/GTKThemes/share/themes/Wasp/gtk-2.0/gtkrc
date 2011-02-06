@@ -1,0 +1,401 @@
+#include "iconrc"
+style "default" {
+    GtkWidget::interior_focus         = 5
+    GtkButton::default_border         = {0, 0, 0, 0}
+    GtkButton::default_outside_border = {0, 0, 0, 0}
+
+    GtkCheckButton::indicator_size    = 13
+    GtkRadioButton::indicator_size    = 12
+
+    GtkPaned::handle_size  = 10
+  
+    fg[NORMAL]      = { 0.08, 0.08, 0.08 }
+    fg[PRELIGHT]    = { 0.08, 0.08, 0.08 }
+    fg[ACTIVE]      = { 0.00, 0.00, 0.00 }
+    fg[SELECTED]    = { 0.00, 0.00, 0.00 }
+    fg[INSENSITIVE] = { 0.35, 0.35, 0.35 }
+
+    bg[NORMAL]      = "#d8d8d8"
+    bg[PRELIGHT]    = "#ffce00" 
+    bg[ACTIVE]      = { 0.78, 0.78, 0.78 }
+    bg[SELECTED]    = "#ffce00" 
+    bg[INSENSITIVE] = "#d8d8d8"
+
+    text[NORMAL] = { 0.0, 0.0, 0.0 }
+    text[ACTIVE] = { 0.0, 0.0, 0.0 }
+    text[PRELIGHT] = { 0.0, 0.0, 0.0 }
+    text[SELECTED] = { 0.0, 0.0, 0.0 }
+    text[INSENSITIVE] = "#753075307530"
+
+    base[NORMAL]    = { 0.92, 0.92, 0.92 }
+    base[ACTIVE] = "#ffce00"
+    base[PRELIGHT] =  "#ffce00"
+    base[SELECTED] = "#ffce00"
+    base[INSENSITIVE] = { 0.92, 0.92, 0.92 }
+ 
+    engine "smooth" {
+        fill {
+	    style=shaded
+	    hdirection=vertical
+	    vdirection=horizontal
+	    shade1=1.1
+	    shade2=0.97
+	}
+
+        line {
+	    style=smooth
+	    thickness=2
+	}
+
+	grip {
+	    style=mac_buds_in
+	}
+
+	trough {
+	    fill {
+	        style=solid
+	    }
+	}
+
+	arrow {
+           style=CleanIce
+	   solid=TRUE
+        }
+
+	tab_style=square
+    }
+} widget_class "*" style "default"
+
+style "toolbar" {
+    bg[NORMAL] = "#c7c7c7"
+    bg[ACTIVE] = "#c7c7c7"
+    bg[PRELIGHT] = "#ffce00" #{ 0.96, 0.72, 0.36 }
+    bg[SELECTED] = "#ffce00" #{ 0.96, 0.72, 0.36 }
+    engine "smooth" {
+        line {
+	    style=smooth
+	    thickness=2
+	}
+	
+        fill {
+	    style=shaded
+	    hdirection=vertical
+	    vdirection=horizontal
+	    shade1=1.1
+	    shade2=0.97
+	}
+	
+	grip {
+	    style=mac_buds_in
+	    toolbar_overlap=TRUE
+	}
+    }
+}
+widget_class "*BonoboDockItem*" style "toolbar"
+class "*BonoboDockItem*" style "toolbar"
+
+widget_class "*HandleBox*" style "toolbar"
+class "*HandleBox*" style "toolbar"
+
+widget_class "*Tool*" style "toolbar"
+class "*Tool*" style "toolbar"
+
+widget_class "*MenuBar*" style "toolbar"
+class "*MenuBar*" style "toolbar"
+
+style "button" {
+    bg[NORMAL] = "#c7c7c7"
+    bg[ACTIVE] = "#c7c7c7"
+    bg[PRELIGHT] = "#ffce00" 
+    bg[SELECTED] = "#ffce00" 
+
+    base[ACTIVE] = { 0.92, 0.92, 0.92 }
+    base[PRELIGHT] = { 0.92, 0.92, 0.92 }
+    text[ACTIVE] = "#ffce00" 
+
+    engine "smooth" {
+        fill {
+	    style=shaded
+	    hdirection=vertical
+	    vdirection=horizontal
+	    shade1=1.1
+	    shade2=0.97
+	}
+
+        line {
+	    style=smooth
+	    thickness=2
+	}
+
+        check {
+	    style=clean
+	    motif=false
+	    fill {
+	        style=shaded
+		hdirection=fdiagonal
+		vdirection=fdiagonal
+  	        shade1=1.2
+	        shade2=0.97
+	    }
+	}
+	
+	option {
+	    style=round
+	    motif=false
+	    fill {
+	        style=shaded
+		hdirection=fdiagonal
+		vdirection=fdiagonal
+		shade1=1.2
+		shade2=0.97
+	    }
+	}
+	
+	trough {
+	    fill {
+	        style=solid
+	    }
+	    line {
+	        style=none
+	    }
+	}
+
+	arrow {
+           style=CleanIce
+	   solid=TRUE
+        }
+
+	tab_style=round
+    }
+}
+class "*Button*" style "button"
+widget_class "*Button*" style "button"
+
+class "*OptionMenu*" style "button"
+widget_class "*OptionMenu*" style "button"
+
+class "*Button*" style "button"
+widget_class "*Button*" style "button"
+
+class "*OptionMenu*" style "button"
+widget_class "*OptionMenu*" style "button"
+
+class "*RadioButton*" style "button"
+widget_class "*RadioButton*" style "button"
+
+class "*CheckButton*" style "button"
+widget_class "*CheckButton*" style "button"
+
+style "menuitem" {
+    bg[NORMAL] = "#c7c7c7"
+    bg[ACTIVE] = "#c7c7c7"
+    bg[PRELIGHT] = "#ffce00" 
+    bg[SELECTED] = "#ffce00" 
+    engine "smooth" {
+        fill {
+	    style=shaded
+	    hdirection=vertical
+	    vdirection=horizontal
+	    shade1=1.1
+	    shade2=0.97
+	}
+
+        line {
+	    style=smooth
+	    thickness=2
+	}
+
+        check {
+	    style=clean
+	    fill {
+	        style=solid
+	    }
+	    line {
+	        style=none
+	    }
+	}
+	
+	option {
+	    style=round
+	    fill {
+	        style=solid
+	    }
+	    line {
+	        style=none
+	    }
+	}
+	
+	arrow {
+           style=CleanIce
+	   solid=TRUE
+        }
+    }
+}
+class "*MenuItem*" style "menuitem"
+widget_class "*MenuItem*" style "menuitem"
+
+style "scrollbar" {
+    bg[NORMAL] = "#c7c7c7"
+    bg[ACTIVE] = { 0.92, 0.92, 0.92 }
+    bg[PRELIGHT] = "#ffce00" 
+    bg[SELECTED] = "#ffce00" 
+
+    GtkRange::trough_border           = 0
+    GtkRange::slider_width            = 15
+    GtkRange::stepper_size            = 15
+    GtkRange::stepper_spacing         = 0
+
+    engine "smooth" {
+        fill {
+	    style=shaded
+	    hdirection=vertical
+	    vdirection=horizontal
+	    shade1=1.1
+	    shade2=0.97
+	}
+
+        line {
+	    style=smooth
+	    thickness=2
+	}
+
+	trough {
+	    fill {
+	        style=solid
+	    }
+	    line {
+	        style=none
+	        thickness=0
+	    }
+	}
+
+	grip {
+          style=mac_buds_in
+          line {
+              style=smooth
+              thickness=2
+          }
+	}
+
+	arrow {
+           style=CleanIce
+	   solid=TRUE
+           xpadding = 1
+           ypadding = 1
+        }
+    }
+}
+widget_class "*Scrollbar*" style "scrollbar"
+class "*Scrollbar*" style "scrollbar"
+
+style "hscales"  {
+    bg[NORMAL] = "#c7c7c7"    
+    bg[PRELIGHT] = "#ffce00" 
+    bg[SELECTED] = "#ffce00"
+
+    GtkRange::trough_border	= 0
+    GtkRange::slider-width	= 15
+    GtkScale::slider-length	= 26
+    
+    engine "smooth" {	
+        line {
+	    style=smooth
+	    thickness=2
+	}
+	
+	fill {
+	    style=shaded
+	    hdirection=vertical
+	    vdirection=horizontal
+	    shade1=1.1
+	    shade2=0.97
+	}
+	
+	trough {
+	    xpadding=2
+	    ypadding=1
+	    show_value=TRUE
+            fill {
+              style = solid
+            }
+	}
+	
+	grip {
+	    style=mac_buds_in
+	}
+	
+	real_sliders=FALSE
+    }
+}
+widget_class "*HScale*" style "hscales"
+class "*HScale*" style "hscales"
+
+style "vscales"  {
+    bg[NORMAL] = "#c7c7c7"    
+    bg[PRELIGHT] = "#ffce00" 
+    bg[SELECTED] = "#ffce00"
+
+    GtkRange::trough_border	= 0
+    GtkRange::slider-width	= 15
+    GtkScale::slider-length	= 26
+    
+    engine "smooth" {
+        line {
+	    style=smooth
+	    thickness=2
+	}
+	
+	fill {
+	    style=shaded
+	    hdirection=vertical
+	    vdirection=horizontal
+	    shade1=1.1
+	    shade2=0.97
+	}
+	
+	trough {
+	    xpadding=1
+	    ypadding=2
+	    show_value=TRUE
+            fill {
+              style = solid
+            }
+	}
+	
+	grip {
+	    style=mac_buds_in
+	}
+	
+	real_sliders=FALSE
+    }
+}
+widget_class "*VScale*" style "vscales"
+class "*VScale*" style "vscales"
+
+style "infobar" {
+    xthickness=2
+    ythickness=2
+    
+    engine "smooth" {
+        line {
+	    style=smooth
+	    thickness=2
+	}
+	
+	fill {
+	    style=shaded
+	    hdirection=vertical
+	    vdirection=horizontal
+	    shade1=1.2
+	    shade2=0.97
+	}
+	
+	trough {
+	    fill {
+	        style=solid
+	    }
+	}
+    }
+}
+class "*Progress*" style "infobar"
+widget_class "*Progress*" style "infobar"

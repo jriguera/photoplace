@@ -1,0 +1,8 @@
+# Edit these colors and fonts however you like, after cp'ing the file to
+# another theme directory.
+
+style "cleanice" {
+  engine "cleanice" {}
+}
+widget_class "*" style "cleanice"
+

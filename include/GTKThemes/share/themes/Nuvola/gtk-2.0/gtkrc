@@ -1,0 +1,432 @@
+# Theme Name  : Nuvola
+# Author(s)   : ajgenius ala Andrew Johnson (ajgenius_AT_ajgenius.us) 
+#               sub_pop_culture ala Link Dupont (link_AT_subpop.net)
+# Description :
+#
+# A smooth blue theme modified from the Smooth-Winter theme, 
+# to match the Nuvola icon set
+
+gtk-icon-sizes = "panel-menu=32,32"
+
+style "default" {
+	######  GTK Style Flags  ###### 
+	GtkWidget::interior_focus		= 5
+	GtkButton::default_border		= {5, 5, 5, 5}
+	GtkButton::default_outside_border	= {5, 5, 5, 5}
+
+	GtkCheckButton::indicator_size		= 13
+	GtkRadioButton::indicator_size		= 12
+
+	GtkPaned::handle_size			= 10
+
+	GtkRange::trough_border			= 2
+	GtkRange::slider_width			= 13
+	GtkRange::stepper_size			= 13
+	GtkRange::stepper_spacing		= 0
+
+	###  Nautilus Specific Style Flags  ###
+	NautilusIconContainer::selection_box_alpha	= 64
+	NautilusIconContainer::highlight_alpha		= 255
+	NautilusIconContainer::light_info_color		= "#FFFFFF"
+	NautilusIconContainer::dark_info_color		= "#0B4884"
+	NautilusIconContainer::frame_text 		= 0
+
+	###### GTK Style Colours ######
+	fg[ACTIVE]		= "#000000"
+	fg[SELECTED]		= "#FFFFFF"
+	fg[NORMAL]		= "#000000"
+	fg[PRELIGHT]		= "#FFFFFF"
+	fg[INSENSITIVE]		= "#949494"
+
+	bg[ACTIVE]		= "#C6C6D2"
+	bg[SELECTED]		= "#5B98D4"
+	bg[NORMAL]		= "#E9E9F4"
+	bg[PRELIGHT]		= "#5B98D4"
+	bg[INSENSITIVE]		= "#E1E1EA"
+
+	base[ACTIVE]		= "#6BA8E4"
+	base[SELECTED]		= "#5B98D4"
+	base[NORMAL]		= "#FFFFFF"
+	base[PRELIGHT]		= "#E2DEEB"
+	base[INSENSITIVE]	= "#DBDBE5"
+
+	text[ACTIVE]		= "#FFFFFF"
+	text[SELECTED]		= "#FFFFFF"
+	text[NORMAL]		= "#000000"
+	text[PRELIGHT]		= "#000000"
+	text[INSENSITIVE]	= "#949494"
+ 
+	###### Theme Engine Style ######
+	engine "smooth" {
+		tab_style	= round
+		
+		fill {
+			style		= gradient
+			hdirection	= vertical
+			vdirection	= vertical
+			
+			color1[SELECTED]	= "#EAF5FF"
+			color2[SELECTED]	= "#166FD5"
+			color1[NORMAL]		= "#F8F8FB"
+			color2[NORMAL]		= "#CDCDDF"
+			color1[PRELIGHT]	= "#EAF5FF"
+			color2[PRELIGHT]	= "#166FD5"
+			color1[INSENSITIVE]	= "#EEEEF3"
+			color2[INSENSITIVE]	= "#C5C5D0"
+		}
+
+		line {
+			style		= smooth
+			thickness	= 1
+		}
+
+		grip {
+			style		= dots_out
+			count		= 3
+			spacing		= 2
+			
+			fill {
+				style	= solid
+			}
+		}
+
+		check {
+			style	= clean
+			motif	= FALSE
+		}
+
+		option {
+			style	= round
+			motif	= FALSE
+		}
+
+		arrow {
+			style	= cleanice
+			solid	= TRUE
+		}
+	}
+} widget_class "*" style "default"
+
+style "toolbar" {
+	###### Theme Engine Style ######
+	engine "smooth" {
+		fill {
+			style	= solid
+		}
+	
+		line {
+			style		= smooth
+			thickness	= 1
+		}
+	
+		grip {
+			style		= dots_out
+			count		= 3
+			spacing		= 2
+			
+			toolbar_overlap	= TRUE
+		}
+	}
+}
+widget_class "*BonoboDockItem*" style "toolbar"
+class "*BonoboDockItem*" style "toolbar"
+
+widget_class "*HandleBox*" style "toolbar"
+class "*HandleBox*" style "toolbar"
+
+widget_class "*Tool*" style "toolbar"
+class "*Tool*" style "toolbar"
+
+widget_class "*MenuBar*" style "toolbar"
+class "*MenuBar*" style "toolbar"
+
+style "menuitem" {
+	###### GTK Style Colours ######
+	text[NORMAL]		= "#000000"
+	text[PRELIGHT]		= "#FFFFFF" 
+    
+	###### Theme Engine Style ######
+	engine "smooth" {
+		fill {
+			style		= gradient
+			hdirection	= vertical
+			vdirection	= vertical
+			
+			color1[SELECTED]	= "#EAF5FF"
+			color2[SELECTED]	= "#166FD5"
+			color1[NORMAL]		= "#F8F8FB"
+			color2[NORMAL]		= "#CDCDDF"
+			color1[PRELIGHT]	= "#EAF5FF"
+			color2[PRELIGHT]	= "#166FD5"
+			color1[INSENSITIVE]	= "#EEEEF3"
+			color2[INSENSITIVE]	= "#C5C5D0"
+		}
+	
+		line {
+			style		= smooth
+			thickness	= 1
+		}
+	
+		check {
+			style	= clean
+			
+			fill {
+				style	= solid
+			}
+
+			line {
+				style		= none
+				thickness	= 0
+			}
+		}
+	
+		option {
+			style	= round
+			
+			fill {
+				style	= solid
+			}
+
+			line {
+				style		= none
+				thickness	= 0
+			}
+		}
+	
+		arrow {
+			style	= cleanice
+			solid	= TRUE
+		}
+	}
+}
+widget_class "*MenuItem*" style "menuitem"
+class "*MenuItem*" style "menuitem"
+
+style "radio_check" {
+	###### GTK Style Colours ######
+	base[PRELIGHT]	= "#FFFFFF"
+
+	text[ACTIVE]	= "#FFFFFF"
+	text[SELECTED]	= "#AFAFAF"
+	text[NORMAL]	= "#000000"
+	text[PRELIGHT]	= "#5B98D4"
+}
+widget_class "*RadioButton*" style "radio_check"
+widget_class "*CheckButton*" style "radio_check"
+
+style "scrollbar" {
+	###### Theme Engine Style ######
+	engine "smooth" {
+		fill {
+			style		= gradient
+			hdirection	= vertical
+			vdirection	= horizontal
+			
+			color1[SELECTED]	= "#EAF5FF"
+			color2[SELECTED]	= "#166FD5"
+			color1[NORMAL]		= "#F8F8FB"
+			color2[NORMAL]		= "#CDCDDF"
+			color1[PRELIGHT]	= "#EAF5FF"
+			color2[PRELIGHT]	= "#166FD5"
+			color1[INSENSITIVE]	= "#EEEEF3"
+			color2[INSENSITIVE]	= "#C5C5D0"
+		}
+	
+		line {
+			style		= smooth
+			thickness	= 0
+		}
+	
+		trough {
+			fill {
+				style	= solid
+			}
+		}
+	
+		grip {
+			style	= none
+		}
+	
+		arrow {
+			style	= cleanice
+			solid	= TRUE
+			
+			xpadding	= 1
+			ypadding	= 1
+		}
+	}
+}
+widget_class "*Scrollbar*" style "scrollbar"
+class "*Scrollbar*" style "scrollbar"
+
+style "hscales"  {
+	######  GTK Style Flags  ###### 
+	GtkRange::trough_border			= 0
+	GtkRange::slider-width			= 22
+	GtkScale::slider-length			= 13
+	
+	###### GTK Style Colours ######
+	bg[SELECTED]		= "#5B98D4"
+    
+	###### Theme Engine Style ######
+	engine "smooth" {	
+		real_sliders	= FALSE
+
+		fill {
+			style		= gradient
+			hdirection	= vertical
+			vdirection	= horizontal
+
+			color1[SELECTED]	= "#EAF5FF"
+			color2[SELECTED]	= "#166FD5"
+			color1[NORMAL]		= "#F8F8FB"
+			color2[NORMAL]		= "#CDCDDF"
+			color1[PRELIGHT]	= "#EAF5FF"
+			color2[PRELIGHT]	= "#166FD5"
+			color1[INSENSITIVE]	= "#EEEEF3"
+			color2[INSENSITIVE]	= "#C5C5D0"
+		}
+
+		line {
+			style		= smooth
+			thickness	= 2
+		}
+	
+		trough {
+			show_value	= TRUE
+
+			xpadding	= 7
+			ypadding	= 1
+
+			fill {
+				style	= solid
+			}
+		}
+	
+		grip {
+			style	= none
+		}
+	}
+}
+widget_class "*HScale*" style "hscales"
+class "*HScale*" style "hscales"
+
+style "vscales"  {
+	######  GTK Style Flags  ###### 
+	GtkRange::trough_border			= 0
+	GtkRange::slider-width			= 22
+	GtkScale::slider-length			= 13
+	
+	###### GTK Style Colours ######
+	bg[SELECTED]		= "#5B98D4"
+    
+	###### Theme Engine Style ######
+	engine "smooth" {	
+		real_sliders	= FALSE
+
+		fill {
+			style		= gradient
+			hdirection	= vertical
+			vdirection	= horizontal
+
+			color1[SELECTED]	= "#EAF5FF"
+			color2[SELECTED]	= "#166FD5"
+			color1[NORMAL]		= "#F8F8FB"
+			color2[NORMAL]		= "#CDCDDF"
+			color1[PRELIGHT]	= "#EAF5FF"
+			color2[PRELIGHT]	= "#166FD5"
+			color1[INSENSITIVE]	= "#EEEEF3"
+			color2[INSENSITIVE]	= "#C5C5D0"
+		}
+
+		line {
+			style		= smooth
+			thickness	= 2
+		}
+	
+		trough {
+			show_value	= TRUE
+
+			xpadding	= 1
+			ypadding	= 7
+
+			fill {
+				style	= solid
+			}
+		}
+	
+		grip {
+			style	= none
+		}
+	}
+}
+widget_class "*VScale*" style "vscales"
+class "*VScale*" style "vscales"
+
+style "infobar" {
+	######  GTK Style Flags  ###### 
+	xthickness		= 2
+	ythickness		= 2
+    
+	###### Theme Engine Style ######
+	engine "smooth" {
+		fill {
+			style		= gradient
+			hdirection	= vertical
+			vdirection	= horizontal
+			
+			color1[SELECTED]	= "#EAF5FF"
+			color2[SELECTED]	= "#166FD5"
+			color1[NORMAL]		= "#F8F8FB"
+			color2[NORMAL]		= "#CDCDDF"
+			color1[PRELIGHT]	= "#EAF5FF"
+			color2[PRELIGHT]	= "#166FD5"
+			color1[INSENSITIVE]	= "#EEEEF3"
+			color2[INSENSITIVE]	= "#C5C5D0"
+		}
+
+		line {
+			style		= smooth
+			thickness	= 2
+		}
+	
+		trough {
+			fill {
+				style	= solid
+			}
+		}
+	}
+}
+class "*Progress*" style "infobar"
+widget_class "*Progress*" style "infobar"
+
+style "metacity-frame"
+{
+	###### GTK Style Colours ######
+	bg[SELECTED]		= "#99CCFF"
+	
+	###### Theme Engine Style ######
+	engine "smooth" {
+		fill {
+			style		= gradient
+			hdirection	= vertical
+			vdirection	= horizontal
+			
+			color1[SELECTED]	= "#EAF5FF"
+			color2[SELECTED]	= "#166FD5"
+			color1[NORMAL]		= "#F8F8FB"
+			color2[NORMAL]		= "#CDCDDF"
+			color1[PRELIGHT]	= "#EAF5FF"
+			color2[PRELIGHT]	= "#166FD5"
+			color1[INSENSITIVE]	= "#EEEEF3"
+			color2[INSENSITIVE]	= "#C5C5D0"
+		}
+
+		line {
+			style		= smooth
+			thickness	= 2
+		}
+	}
+}
+class "MetaFrames" style "metacity-frame"
+widget_class "MetaFrames" style "metacity-frame"
