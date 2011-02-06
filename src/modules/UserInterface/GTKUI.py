@@ -37,21 +37,6 @@ import StringIO
 import cgi
 import warnings
 
-if sys.platform.startswith("win"):
-    # Fetchs gtk2 path from registry
-    import _winreg
-    import msvcrt
-    try:
-        k = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, "Software\\GTK\\2.0")
-    except EnvironmentError:
-        print("You must install the Gtk+ 2.2 Runtime Environment to run this program")
-        while not msvcrt.kbhit():
-            pass
-        raise
-    else:
-        gtkdir = _winreg.QueryValueEx(k, "Path")
-        os.environ['PATH'] += ";%s/lib;%s/bin" % (gtkdir[0], gtkdir[0])
-
 warnings.filterwarnings('error', module='gtk')
 try:
     import pygtk
@@ -71,8 +56,6 @@ except Exception as e:
     print("You don't have the PyGTK 2.0 module installed")
     raise
 warnings.resetwarnings()
-
-
 
 __RESOURCES_GTK_PATH__ = "gtkui"
 __GUIXML_FILE__ = os.path.join(__RESOURCES_GTK_PATH__, "photoplace.ui")
@@ -717,8 +700,7 @@ class PhotoPlaceGUI(InterfaceUI):
             self['entry-photouri'].set_sensitive(True)
             self._set_photouri()
         else:
-            self['togglebutton-outfile'].set_label(
-                _("No generate output file! Select a file to continue."))
+            self['togglebutton-outfile'].set_label(_(" No generate output file!"))
             self['hscale-quality'].set_sensitive(False)
             self['hscale-zoom'].set_sensitive(False)
             self['entry-photouri'].set_text('')

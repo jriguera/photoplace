@@ -19,20 +19,23 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
+#
+# http://wiki.maemo.org/Internationalize_a_Python_application
+# http://wiki.maemo.org/User:Mohammad7410/Packaging
+# http://www.learningpython.com/2006/12/03/translating-your-pythonpygtk-application/
 """
 PhotoPlace Setup Script
 
  USAGE:
+ 
+ * To see all available commands:
+    - python setup.py --help-commands
 
-   1) Windows:
-      - python setup.py [--full]
-
-   3) Boil an Egg
-      - python setup.py bdist_egg
-
-   4) Install as a python package
-      - python setup.py install
-            - '--no-clean' can be specified to skip old file cleanup
+ * Make for windows (on windows):
+    - python setup.py py2exe [--full]
+   
+ * Create an installer (for windows, after running py2exe)
+    - python setup.py bdist_wininst|nsis
 
  @summary: Used for building the photoplace distribution files and installations
 """
@@ -64,42 +67,43 @@ from distutils.util import byte_compile as _byte_compile
 import msgfmt
 
 
-#http://wiki.maemo.org/Internationalize_a_Python_application
-#http://wiki.maemo.org/User:Mohammad7410/Packaging
-#http://www.learningpython.com/2006/12/03/translating-your-pythonpygtk-application/
-
-
 PLATFORM = os.sys.platform
 SRC_DIR = 'src'
 PROGRAM = 'src/photoplace.py'
 VERSION = '0.5.0'
 DIST_LIB = 'lib/shared.zip'
 DIST_DIR = 'photoplace-' + VERSION
+NSIS = 'setup.nsi'
 DATE = datetime.datetime.now().strftime("%B %Y")
-LANGUAGES = ['en*', 'es*', 'pt'] 
+LANGUAGES = ['en_GB', 'es', 'pt'] 
 CLASSIFIERS = [
-    'Development Status :: 3 - Alpha',
-    'Environment :: MacOS X',
+    'Development Status :: 5 - Production/Stable',
+    'Environment :: Console',
     'Environment :: Win32 (MS Windows)',
     'Environment :: X11 Applications :: GTK',
     'Intended Audience :: Developers',
+    'Intended Audience :: Science/Research',
     'Intended Audience :: Information Technology',
     'Intended Audience :: End Users/Desktop',
-    'License :: OSI Approved',
+    'License :: OSI Approved :: GNU General Public License (GPL)',
     'Natural Language :: English',
     'Natural Language :: Spanish',
-    'Natural Language :: Swedish',
-    'Natural Language :: Turkish',
-    'Operating System :: MacOS :: MacOS X',
-    'Operating System :: Microsoft :: Windows',
+    'Operating System :: Microsoft :: Windows :: Windows NT/2000',
     'Operating System :: POSIX',
     'Programming Language :: Python',
+    'Topic :: Scientific/Engineering :: GIS',
+    'Topic :: Utilities',
 ]
 ICON = { 
     'win32' : os.path.join("logos", "photoplace.ico"),
     'other' : os.path.join("logos", "photoplace.png"),
 }
 
+
+
+# ########################
+# Generic helper functions
+# ########################
 
 def find_files(base, dir, badfiles=['*.*~'], baddirs=['.*'], goodfiles=['*']):
     def walker(base, dir, files=[]):
@@ -109,7 +113,7 @@ def find_files(base, dir, badfiles=['*.*~'], baddirs=['.*'], goodfiles=['*']):
         realdir = os.path.join(base, dir)
         list_contents = os.listdir(realdir)
         for f in list_contents:
-            if os.path.isfile(os.path.join(realdir, f)):                
+            if os.path.isfile(os.path.join(realdir, f)):
                 for badfile in badfiles:
                     if fnmatch.fnmatch(f, badfile):
                         break
@@ -184,8 +188,12 @@ def get_packages(base, directory):
 
 
 
+# #########################
+#  Custom distutils classes
+# #########################
+
 class build_plugins(cmd.Command):
-    description = 'Create core plugins'
+    description = 'create core plugins'
     
     def initialize_options(self):
         self.optimize = 1
@@ -224,7 +232,7 @@ class build_plugins(cmd.Command):
 
 
 class build_trans(cmd.Command):
-    description = 'Compile .po files into .mo files'
+    description = 'compile .po files into .mo files'
     
     def initialize_options(self):
         self.base = SRC_DIR
@@ -260,6 +268,62 @@ class build(_build):
         _build.run(self)
 
 
+class clean_home(cmd.Command):
+    description = "custom clean command that forcefully removes dist/build directories"
+    user_options = []
+    
+    def initialize_options(self):
+        self.dirs = ['build', 'dist', DIST_DIR]
+        
+    def finalize_options(self):
+        pass
+    
+    def run(self):
+        for d in self.dirs:
+            if os.path.exists(d):
+                shutil.rmtree(d)       
+        
+
+class compile_nsis(cmd.Command):
+    description = "make and instalable with NSIS on windows platforms"
+    user_options = []
+
+    def initialize_options(self):
+        self.verbose = 3
+        self.nsis = NSIS
+    
+    def finalize_options(self):
+        pass
+    
+    def run(self):
+        import subprocess
+        try:
+            import _winreg
+            # Get the path of the NSIS compiler
+            key = _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, 'NSIS.Script\\shell\\compile\\command')
+            compilerPath = _winreg.QueryValueEx(key, '')[0]
+            secondQuote = compilerPath.find('"', 1)
+            compilerPath = compilerPath[1:secondQuote]
+            compilerPath = compilerPath.replace('makensisw', 'makensis') 
+        except:
+            print 'Error: could not find registry entry for NSIS!'
+            print 'Using sytem Path ....'
+            compilerPath = 'makensis.exe'
+        cmd = '"%s" /V%d %s' % (compilerPath, self.verbose, self.nsis)
+        try:
+            retcode = subprocess.call(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if retcode < 0:
+                print("makensis was terminated by signal %s" % (-retcode))
+            else:
+                print("makensis returned: %s" % retcode)
+        except OSError as e:
+            print ("Execution failed: %s" % e)
+
+
+# ######################
+# setup helper functions
+# ######################
+
 def get_program_libs(base=SRC_DIR, directory='lib'):
     """
     Generate the list of packages in lib directory
@@ -293,9 +357,9 @@ def get_bin_files(base='', dirs=['include']):
 
 
 
-# ##########
+# #################
 # platform builders
-# ##########
+# #################
 
 def build4win(program, icon=None, generatezip=None, data=True, destination=DIST_DIR):
     """
@@ -312,32 +376,31 @@ def build4win(program, icon=None, generatezip=None, data=True, destination=DIST_
     # enable the "MS-Windows" theme. In order to make gtk+ find the data files
     # we also ensure that the gtk+ libraries are not bundled.
     class py2exe(_py2exe):
+        description = "make a windows executable"
         keyfile = 'libgtk-win32-2.0-0.dll'
         gtkthemes = None
         gtktheme = None
         gtkdata = True
         gtkdir = None
-        def create_binaries(self, py_files, extensions, dlls):            
+        def create_binaries(self, py_files, extensions, dlls):
             if not self.gtkdir:
                 gtkdir = None
-                for libdir in os.environ['PATH'].split(os.path.pathsep):
-                    test_path = os.path.join(libdir, self.keyfile)
-                    if os.path.exists(test_path):
-                        gtkdir = os.path.dirname(os.path.dirname(libdir))
-                        break
+                # Fetchs gtk2 path from registry
+                import _winreg
+                import msvcrt
+                try:
+                    k = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, "Software\\GTK\\2.0")
+                except EnvironmentError:
+                    raise DistutilsError('Could not find gtk+ 2.2 Runtime Environmet to copy libraries and data files.')
                 else:
-                    raise DistutilsError('Could not find gtk+ to copy libraries and data files.')
+                    dir = _winreg.QueryValueEx(k, "Path")
+                    os.environ['PATH'] += ";%s/lib;%s/bin" % (dir[0], dir[0])
+                    gtkdir = dir[0]
             else:
                 gtkdir = self.gtkdir
             _py2exe.create_binaries(self, py_files, extensions, dlls)
             if self.gtkdata:
-                for f in find_files(gtkdir, 'lib', ['*.*~'], ['pkgconfig', 'glib-2.0']):
-                    dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
-                    if not os.path.exists(dest_dir):
-                        os.makedirs(dest_dir)
-                    _copy_file(os.path.join(gtkdir, f), os.path.join(self.exe_dir, f), preserve_mode=0)
-                for f in find_files(gtkdir, 'share', ['*.*~'], 
-                    ['gtk-doc', 'aclocal', 'doc', 'man', 'themes', 'locale', 'gtk-2.0', 'glib-2.0']):
+                for f in find_files(gtkdir, 'lib', ['*.dll.a', '*.def', '*.lib'], ['pkgconfig', 'glib-2.0']):
                     dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
                     if not os.path.exists(dest_dir):
                         os.makedirs(dest_dir)
@@ -345,7 +408,7 @@ def build4win(program, icon=None, generatezip=None, data=True, destination=DIST_
                 for f in find_files(gtkdir, 'etc', ['*.*~']):
                     dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
                     if not os.path.exists(dest_dir):
-                        os.makedirs(dest_dir)                    
+                        os.makedirs(dest_dir)
                     _copy_file(os.path.join(gtkdir, f), os.path.join(self.exe_dir, f), preserve_mode=0)
                 # GTK locales
                 for lang in LANGUAGES:
@@ -359,40 +422,45 @@ def build4win(program, icon=None, generatezip=None, data=True, destination=DIST_
                             _copy_file(f, dest_dir)
                 _copy_file(os.path.join(gtkdir, 'share\\locale\\locale.alias'), 
                     os.path.join(self.exe_dir, 'share\\locale'), preserve_mode=0)
-            else:
-                for f in find_files(gtkdir, 'lib\\gtk-2.0', ['*.*~']):
+                # GTK Themes
+                for f in find_files(gtkdir, 'share\\themes', ['*.*~']):
                     dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
                     if not os.path.exists(dest_dir):
                         os.makedirs(dest_dir)
                     _copy_file(os.path.join(gtkdir, f), os.path.join(self.exe_dir, f), preserve_mode=0)
             if self.gtktheme:
-                print "*** Enabling theme for gtk+ ***"
-                for f in find_files(self.gtkthemes, os.path.join('share', 'themes'), ['*.*~']):
+                print "*** Enabling additional themes for gtk+ ***"
+                for f in find_files(self.gtkthemes, 'share\\themes', ['*.*~']):
                     dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
                     if not os.path.exists(dest_dir):
-                        os.makedirs(dest_dir)                    
+                        os.makedirs(dest_dir)
+                    _copy_file(os.path.join(self.gtkthemes, f), os.path.join(self.exe_dir, f), preserve_mode=0)
+                for f in find_files(self.gtkthemes, 'lib\\gtk-2.0', ['*.*~']):
+                    dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
+                    if not os.path.exists(dest_dir):
+                        os.makedirs(dest_dir)
                     _copy_file(os.path.join(self.gtkthemes, f), os.path.join(self.exe_dir, f), preserve_mode=0)
                 gtktheme_dir = os.path.join(self.exe_dir, 'etc', 'gtk-2.0')
                 if not os.path.exists(gtktheme_dir):
                     os.makedirs(gtktheme_dir)
                 file = open(os.path.join(gtktheme_dir, 'gtkrc'), 'w')
-                print >>file, 'gtk-theme-name = "%s"' % self.gtktheme
+                file.write("# Generated from setup.py\n")
+                file.write('gtk-theme-name = "%s"\n' % self.gtktheme)
                 file.close()
-    
+                
+    py2exe.gtkdata = data
+    py2exe.gtktheme = "Human"
+    py2exe.gtkthemes = "include\\GTKTheme\\"
     windows = dict(script=program, icon_resources=[(1, icon)])
     options = dict(
         includes=['encodings', 'gobject', 'glib', 'gio', 'gtk', 'cairo', 'pango', 'pangocairo', 'atk'],
         excludes=['_ssl', '_scproxy', 'ICCProfile', 'bsddb', 'curses', 'tcl', 'Tkconstants', 'Tkinter'],
-        dll_excludes=['libglade-2.0-0.dll', 'w9xpopen.exe', 'tcl84.dll', 'tk84.dll'],
+        dll_excludes=['libglade-2.0-0.dll', 'w9xpopen.exe', 'tcl84.dll', 'tk84.dll'], 
         bundle_files=3,
         optimize=2,
         compressed=1,
         ascii=False,
         dist_dir=destination)
-    py2exe.gtkdata = data
-    py2exe.gtkdir = 'C:\\gtk\\'
-    py2exe.gtktheme = "MS-Windows"
-    py2exe.gtkthemes = "include\\GTKTheme\\"
     kwargs = dict(
         zipfile=generatezip, 
         windows=[windows], 
@@ -405,32 +473,34 @@ def build4pkg(program):
     base = os.path.dirname(program)
     kwargs = dict(scripts=program)
     return kwargs
+    
 
-
-
-# ###
+# #####
 # setup
-# ###
+# #####
 
 if __name__ == '__main__':
     sys.path.append(os.path.join(SRC_DIR, 'modules'))
     sys.path.append(os.path.join(SRC_DIR, 'lib'))
     kwargs = {}
+    kwargs['cmdclass'] = {}
     data_files = []
-    if PLATFORM == "win32" and 'py2exe' in sys.argv:
+    if PLATFORM == "win32":
         if '--full' in sys.argv:
             sys.argv.remove('--full')
             kwargs = build4win(PROGRAM, ICON['win32'], DIST_LIB)
             data_files = get_bin_files()
         else:
-            kwargs = build4win(PROGRAM, ICON['win32'], DIST_LIB, False)
+            kwargs = build4win(PROGRAM, ICON['win32'], DIST_LIB)
+        kwargs['cmdclass']['nsis'] = compile_nsis
+        kwargs['cmdclass']['bdist_wininst'] = compile_nsis
     elif PLATFORM == "darwin" and 'py2app' in sys.argv:
-        print "TODO"
-    elif 'clean' in sys.argv:
-        print "CLEAN"
+        print "TODO ..."
+        sys.exit()
     kwargs.update(get_program_libs())
     data_files += get_data_files()
     kwargs['cmdclass']['build'] = build
+    kwargs['cmdclass']['clean'] = clean_home
     kwargs['cmdclass']['build_plugins'] = build_plugins
     setup(name='photoplace',
         version=VERSION,

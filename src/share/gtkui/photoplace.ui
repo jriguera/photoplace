@@ -63,16 +63,16 @@
             <child>
               <object class="GtkMenuItem" id="menuitem-file">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="menuitem">_File</property>
+                <property name="label" translatable="yes" comments="menuitem.">_File</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu-file">
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem-opendir">
-                        <property name="label">Open _Directory</property>
+                        <property name="label" translatable="yes">Open _Directory</property>
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="menuitem">Directory with photos for geotagging. All photos will be geotagged if &lt;geotagged&gt; mode is selected.</property>
+                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Directory with photos for geotagging. All photos will be geotagged if &lt;geotagged&gt; mode is selected.</property>
                         <property name="use_underline">True</property>
                         <property name="image">image-opendir</property>
                         <property name="use_stock">False</property>
@@ -84,7 +84,7 @@
                       <object class="GtkImageMenuItem" id="imagemenuitem-opengpx">
                         <property name="label" translatable="yes">Open _GPX</property>
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="menuitem">Open an eXchange Format (GPX) in order to match the date of each photo with the position.</property>
+                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Open an eXchange Format (GPX) in order to match the date of each photo with the position.</property>
                         <property name="use_underline">True</property>
                         <property name="image">image-opengpx</property>
                         <property name="use_stock">False</property>
@@ -93,9 +93,9 @@
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem-save">
-                        <property name="label">_Save as</property>
+                        <property name="label" translatable="yes">_Save as</property>
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="menuitem">Output file to save the KML data.</property>
+                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Output file to save the KML data.</property>
                         <property name="use_underline">True</property>
                         <property name="image">image-save</property>
                         <property name="use_stock">False</property>
@@ -110,9 +110,9 @@
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem-new">
-                        <property name="label" translatable="yes" context="PhotoPlaceGUI">_Reset</property>
+                        <property name="label" translatable="yes">_Reset</property>
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="menuitem">Remove all loaded files/directories to start again.</property>
+                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Remove all loaded files/directories to start again.</property>
                         <property name="use_underline">True</property>
                         <property name="image">image-clear</property>
                         <property name="use_stock">False</property>
@@ -129,7 +129,7 @@
                       <object class="GtkImageMenuItem" id="imagemenuitem-exit">
                         <property name="label" context="PhotoPlaceGUI">gtk-quit</property>
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="menuitem">Exit the program. I hope see you soon :-)</property>
+                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Exit the program. I hope see you soon :-)</property>
                         <property name="right_justified">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
@@ -144,7 +144,7 @@
             <child>
               <object class="GtkMenuItem" id="menuitem-prefs">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="menuitem">_Preferences</property>
+                <property name="label" translatable="yes" comments="menuitem.">_Preferences</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu-prefs">
@@ -153,7 +153,7 @@
                       <object class="GtkImageMenuItem" id="imagemenuitem-saveconf">
                         <property name="label">gtk-save</property>
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Save the current preferences.</property>
+                        <property name="tooltip_text" translatable="yes">Save the current preferences.</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <property name="always_show_image">True</property>
@@ -167,8 +167,8 @@
                     <child>
                       <object class="GtkMenuItem" id="imagemenuitem-plugins">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="menuitem">List of available plugins. To see information about each plugin, put the mouse over its name,</property>
-                        <property name="label" translatable="yes" context="PhotoPlaceGUI">_Plugins</property>
+                        <property name="tooltip_text" translatable="yes" comments="menuitem.">List of available plugins. To see information about each plugin, put the mouse over its name,</property>
+                        <property name="label" translatable="yes">_Plugins</property>
                         <property name="use_underline">True</property>
                       </object>
                     </child>
@@ -179,7 +179,7 @@
             <child>
               <object class="GtkMenuItem" id="menuitem-help">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="menuitem">_Help</property>
+                <property name="label" translatable="yes" comments="menuitem.">_Help</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu-help">
@@ -214,12 +214,12 @@
                 <property name="is_important">True</property>
                 <child>
                   <object class="GtkButton" id="button-openphotos">
-                    <property name="label" translatable="yes" context="PhotoPlaceGUI">Select input photo directory</property>
+                    <property name="label" translatable="yes">Select input photo directory</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="has_tooltip">True</property>
-                    <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Select a directory with photos for geotagging. All photos will be geotagged if &lt;geotagged&gt; mode is selected.</property>
+                    <property name="tooltip_text" translatable="yes">Select a directory with photos for geotagging. All photos will be geotagged if &lt;geotagged&gt; mode is selected.</property>
                     <property name="image">image-photodir</property>
                     <property name="use_underline">True</property>
                     <signal name="clicked" handler="on_button-openphotos_clicked" object="button-openphotos"/>
@@ -237,12 +237,12 @@
                 <property name="is_important">True</property>
                 <child>
                   <object class="GtkButton" id="button-opengpx">
-                    <property name="label" translatable="yes" context="PhotoPlaceGUI">Input GPX file</property>
+                    <property name="label" translatable="yes">Input GPX file</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="has_tooltip">True</property>
-                    <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Select an eXchange Format (GPX) in order to match the date of each photo with the position.</property>
+                    <property name="tooltip_text" translatable="yes">Select an eXchange Format (GPX) in order to match the date of each photo with the position.</property>
                     <property name="image">image-gpx</property>
                     <property name="use_underline">True</property>
                     <signal name="clicked" handler="on_button-opengpx_clicked" object="button-opengpx"/>
@@ -267,8 +267,8 @@
               <object class="GtkToggleToolButton" id="toggletoolbutton-plugins">
                 <property name="visible">True</property>
                 <property name="has_tooltip">True</property>
-                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">If is selected, all the plugins will be activated.</property>
-                <property name="label" translatable="yes" context="PhotoPlaceGUI">Plugins</property>
+                <property name="tooltip_text" translatable="yes">If is selected, all the plugins will be activated.</property>
+                <property name="label" translatable="yes">Plugins</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-convert</property>
                 <property name="active">True</property>
@@ -294,8 +294,8 @@
               <object class="GtkToolButton" id="toolbutton-exit">
                 <property name="visible">True</property>
                 <property name="has_tooltip">True</property>
-                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Exit the program. I hope see you soon :-)</property>
-                <property name="label" translatable="yes" context="PhotoPlaceGUI">Exit</property>
+                <property name="tooltip_text" translatable="yes">Exit the program. I hope see you soon :-)</property>
+                <property name="label" translatable="yes" comments="toolbar">_Exit</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-quit</property>
                 <signal name="clicked" handler="on_toolbutton-exit_clicked"/>
@@ -345,7 +345,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="geomode">If active, the exif data of pictures will be updated. With "write" mode each photo will be updated only if photo is not geotagged, by other hand "overwrite" will update each photo with the values calculated by PhotoPlace.</property>
+                                    <property name="tooltip_text" translatable="yes" comments="geomode.">If active, the exif data of pictures will be updated. With "write" mode each photo will be updated only if photo is not geotagged, by other hand "overwrite" will update each photo with the values calculated by PhotoPlace.</property>
                                     <property name="image">image-geo</property>
                                     <property name="focus_on_click">False</property>
                                     <property name="xalign">1</property>
@@ -378,7 +378,7 @@
                                 <child>
                                   <object class="GtkLabel" id="label-and">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="label separator between buttons in first page of notebook">and</property>
+                                    <property name="label" translatable="yes" comments="label separator between buttons in first page of notebook.">and</property>
                                     <property name="use_markup">True</property>
                                     <property name="justify">center</property>
                                     <property name="single_line_mode">True</property>
@@ -394,7 +394,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
-                                    <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">If it is active, this will be the output file. It can be a KMZ (all in one, compressed Google Earth Layer) or KML and a directory with the processed photos.
+                                    <property name="tooltip_text" translatable="yes">If it is active, this will be the output file. It can be a KMZ (all in one, compressed Google Earth Layer) or KML and a directory with the processed photos.
 Not active for geottaging purposes, no output file will be generated.</property>
                                     <property name="image">image-outfile</property>
                                     <property name="xalign">0</property>
@@ -424,9 +424,9 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                       <object class="GtkLabel" id="label-utc">
                                         <property name="visible">True</property>
                                         <property name="has_tooltip">True</property>
-                                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="label">The time zone of the photos. It depends on the settings of time/date of the camera and the GPS (UTC time), it is the difference in hours between both.</property>
+                                        <property name="tooltip_text" translatable="yes" comments="label.">The time zone of the photos. It depends on the settings of time/date of the camera and the GPS (UTC time), it is the difference in hours between both.</property>
                                         <property name="xalign">1</property>
-                                        <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="label">Time zone of photos:</property>
+                                        <property name="label" translatable="yes" comments="label.">Time zone of photos:</property>
                                         <property name="use_markup">True</property>
                                         <property name="single_line_mode">True</property>
                                       </object>
@@ -439,7 +439,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="has_tooltip">True</property>
-                                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="entry">The time zone of the photos. It depends on the settings of time/date of the camera and the GPS (UTC time), it is the difference in hours between both.</property>
+                                        <property name="tooltip_text" translatable="yes" comments="entry.">The time zone of the photos. It depends on the settings of time/date of the camera and the GPS (UTC time), it is the difference in hours between both.</property>
                                         <property name="max_length">6</property>
                                         <property name="invisible_char">●</property>
                                         <property name="width_chars">8</property>
@@ -468,9 +468,9 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                     <child>
                                       <object class="GtkLabel" id="label-tdelta">
                                         <property name="visible">True</property>
-                                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="label">The maximum difference in seconds allowed between the time of a photo and the nearest point of GPX.</property>
+                                        <property name="tooltip_text" translatable="yes" comments="label.">The maximum difference in seconds allowed between the time of a photo and the nearest point of GPX.</property>
                                         <property name="xalign">1</property>
-                                        <property name="label" translatable="yes" context="PhotoPlaceGUI">Maximum geotagging delta seconds:</property>
+                                        <property name="label" translatable="yes">Maximum geotagging delta seconds:</property>
                                         <property name="use_markup">True</property>
                                       </object>
                                       <packing>
@@ -482,7 +482,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="has_tooltip">True</property>
-                                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="entry">The maximum time difference allowed between the time of a photo and the nearest point of GPX.</property>
+                                        <property name="tooltip_text" translatable="yes" comments="entry.">The maximum time difference allowed between the time of a photo and the nearest point of GPX.</property>
                                         <property name="max_length">6</property>
                                         <property name="invisible_char">●</property>
                                         <property name="width_chars">10</property>
@@ -529,9 +529,9 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                         <child>
                                           <object class="GtkLabel" id="label-photouri">
                                             <property name="visible">True</property>
-                                            <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="URI label">This entry defines the Uniform Resource Identifier for each geolocated photo. It is useful to generate a independent KML file where the photos will be linked into it.</property>
+                                            <property name="tooltip_text" translatable="yes" comments="URI label.">This entry defines the Uniform Resource Identifier for each geolocated photo. It is useful to generate a independent KML file where the photos will be linked into it.</property>
                                             <property name="xalign">1</property>
-                                            <property name="label" translatable="yes" context="PhotoPlaceGUI">URI for geotagging photos:</property>
+                                            <property name="label" translatable="yes">URI for geotagging photos:</property>
                                             <property name="selectable">True</property>
                                           </object>
                                           <packing>
@@ -542,7 +542,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                           <object class="GtkEntry" id="entry-photouri">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="entry URI">This entry defines the Uniform Resource Identifier for each geotagged photo. It is useful to generate a independent KML file where the photos will be linked into it.</property>
+                                            <property name="tooltip_text" translatable="yes" comments="entry URI.">This entry defines the Uniform Resource Identifier for each geotagged photo. It is useful to generate a independent KML file where the photos will be linked into it.</property>
                                             <property name="max_length">256</property>
                                             <property name="invisible_char">●</property>
                                           </object>
@@ -569,7 +569,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                               <object class="GtkLabel" id="label-morequality">
                                                 <property name="visible">True</property>
                                                 <property name="xalign">1</property>
-                                                <property name="label" translatable="yes" context="PhotoPlaceGUI">Quality</property>
+                                                <property name="label" translatable="yes">Quality</property>
                                                 <property name="use_markup">True</property>
                                                 <property name="justify">right</property>
                                               </object>
@@ -583,11 +583,10 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                               <object class="GtkHScale" id="hscale-quality">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
-                                                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">JPEG/ZIP Quality vs. Compression. The best quality will make big KMZ files with best JPEG quality and poor compression. This settings are also applicable to zip KMZ compression ratio.</property>
+                                                <property name="tooltip_text" translatable="yes">JPEG/ZIP Quality vs. Compression. The best quality will make big KMZ files with best JPEG quality and poor compression. This settings are also applicable to zip KMZ compression ratio.</property>
                                                 <property name="update_policy">delayed</property>
                                                 <property name="adjustment">adjustment-quality</property>
                                                 <property name="inverted">True</property>
-                                                <property name="show_fill_level">True</property>
                                                 <property name="fill_level">3</property>
                                                 <property name="digits">0</property>
                                                 <property name="draw_value">False</property>
@@ -601,7 +600,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                               <object class="GtkLabel" id="label-morecompress">
                                                 <property name="visible">True</property>
                                                 <property name="xalign">1</property>
-                                                <property name="label" translatable="yes" context="PhotoPlaceGUI">Compression</property>
+                                                <property name="label" translatable="yes">Compression</property>
                                                 <property name="use_markup">True</property>
                                                 <property name="single_line_mode">True</property>
                                               </object>
@@ -625,9 +624,9 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                             <child>
                                               <object class="GtkLabel" id="label-zoom">
                                                 <property name="visible">True</property>
-                                                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Output photo zoom percentage. 1.00 means original size, 0.50 means half size and so on ...</property>
+                                                <property name="tooltip_text" translatable="yes">Output photo zoom percentage. 1.00 means original size, 0.50 means half size and so on ...</property>
                                                 <property name="xalign">1</property>
-                                                <property name="label" translatable="yes" context="PhotoPlaceGUI">Photo size:</property>
+                                                <property name="label" translatable="yes">Photo size:</property>
                                                 <property name="justify">right</property>
                                               </object>
                                               <packing>
@@ -639,11 +638,10 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                               <object class="GtkHScale" id="hscale-zoom">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
-                                                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Zoom percentaje. 1 means original size, 0.5 means half size and so on ...</property>
+                                                <property name="tooltip_text" translatable="yes">Zoom percentaje. 1 means original size, 0.5 means half size and so on ...</property>
                                                 <property name="update_policy">delayed</property>
                                                 <property name="adjustment">adjustment-jpgzoom</property>
                                                 <property name="inverted">True</property>
-                                                <property name="show_fill_level">True</property>
                                                 <property name="fill_level">1</property>
                                                 <property name="digits">2</property>
                                                 <property name="value_pos">left</property>
@@ -669,8 +667,8 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                 <child type="label">
                                   <object class="GtkLabel" id="label-expander-advanced">
                                     <property name="visible">True</property>
-                                    <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI" comments="expander advanced">Advanced options. Default settings are safe and good for most of the users.</property>
-                                    <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="advanced options in main page of notebook">&lt;b&gt;Advanced&lt;/b&gt;</property>
+                                    <property name="tooltip_text" translatable="yes" comments="expander advanced.">Advanced options. Default settings are safe and good for most of the users.</property>
+                                    <property name="label" translatable="yes" comments="advanced options in main page of notebook.">&lt;b&gt;Advanced&lt;/b&gt;</property>
                                     <property name="use_markup">True</property>
                                     <property name="single_line_mode">True</property>
                                   </object>
@@ -689,7 +687,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                             <property name="visible">True</property>
                             <property name="xpad">2</property>
                             <property name="ypad">8</property>
-                            <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="options label inside first notebook">&lt;b&gt;Options&lt;/b&gt;</property>
+                            <property name="label" translatable="yes" comments="options label inside first notebook.">&lt;b&gt;Options&lt;/b&gt;</property>
                             <property name="use_markup">True</property>
                             <property name="single_line_mode">True</property>
                           </object>
@@ -705,7 +703,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                     <child type="tab">
                       <object class="GtkLabel" id="notebook-label-main">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="main label of notebook">Main</property>
+                        <property name="label" translatable="yes" comments="main label of notebook.">Main</property>
                         <property name="use_markup">True</property>
                         <property name="single_line_mode">True</property>
                       </object>
@@ -820,11 +818,11 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                     <property name="right_padding">17</property>
                                     <child>
                                       <object class="GtkButton" id="button-geolocate">
-                                        <property name="label" translatable="yes" context="PhotoPlaceGUI">Simulate geotagging</property>
+                                        <property name="label" translatable="yes">Simulate geotagging</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
-                                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">It simulates the geottaging process with the current GPX data and time values.</property>
+                                        <property name="tooltip_text" translatable="yes">It simulates the geottaging process with the current GPX data and time values.</property>
                                         <property name="image">image-simulategeolocate</property>
                                         <signal name="clicked" handler="on_button-geolocate_clicked"/>
                                       </object>
@@ -845,7 +843,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                             <property name="visible">True</property>
                             <property name="xpad">2</property>
                             <property name="ypad">8</property>
-                            <property name="label" translatable="yes" context="PhotoPlaceGUI">&lt;b&gt;Loaded photos&lt;/b&gt;</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Loaded photos&lt;/b&gt;</property>
                             <property name="use_markup">True</property>
                           </object>
                         </child>
@@ -857,7 +855,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                     <child type="tab">
                       <object class="GtkLabel" id="notebook-label-photos">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="picture label of notebook">Photos</property>
+                        <property name="label" translatable="yes" comments="picture label of notebook.">Photos</property>
                         <property name="use_markup">True</property>
                       </object>
                       <packing>
@@ -880,7 +878,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                     <child type="tab">
                       <object class="GtkLabel" id="notebook-label-plugins">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes" context="PhotoPlaceGUI">Plugins</property>
+                        <property name="label" translatable="yes">Plugins</property>
                         <property name="use_markup">True</property>
                       </object>
                       <packing>
@@ -903,7 +901,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                     <child>
                       <object class="GtkProgressBar" id="progressbar-go">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">Press this to start! The show must go on!</property>
+                        <property name="tooltip_text" translatable="yes">Press this to start! The show must go on!</property>
                         <property name="show_text">True</property>
                       </object>
                     </child>
@@ -949,7 +947,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                     <child type="label">
                       <object class="GtkLabel" id="label-output">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="label of expansor for textview">&lt;b&gt;Output&lt;/b&gt;</property>
+                        <property name="label" translatable="yes" comments="label of expansor for textview">&lt;b&gt;Output&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                         <property name="single_line_mode">True</property>
                       </object>
@@ -1011,7 +1009,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
   </object>
   <object class="GtkAboutDialog" id="aboutdialog">
     <property name="border_width">5</property>
-    <property name="title" translatable="yes">About ...</property>
+    <property name="title" translatable="yes" comments="window title">About ...</property>
     <property name="window_position">center-on-parent</property>
     <property name="default_width">600</property>
     <property name="default_height">400</property>
@@ -1020,10 +1018,10 @@ Not active for geottaging purposes, no output file will be generated.</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">PhotoPlace</property>
     <property name="version">0.5.0</property>
-    <property name="copyright" translatable="yes">Copyright © 2010  José Riguera </property>
-    <property name="comments" translatable="yes" context="PhotoPlaceGUI">A program for geotagging photos and generate a Google Earth layer</property>
+    <property name="copyright">Copyright © 2010  José Riguera </property>
+    <property name="comments" translatable="yes">A program for geotagging photos and generate a Google Earth layer</property>
     <property name="website">http://code.google.com/p/photoplace/</property>
-    <property name="license" translatable="yes" context="PhotoPlaceGUI" comments="GPL License">		    GNU GENERAL PUBLIC LICENSE
+    <property name="license" translatable="yes" comments="GPL License.">		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 
 Copyright (C) 1989, 1991 Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA. Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
@@ -1131,12 +1129,13 @@ This General Public License does not permit incorporating your program into prop
             <child>
               <object class="GtkLabel" id="label-donate">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">I have a dream ... well I have a lot of dreams, but this is one of them ...</property>
+                <property name="tooltip_text" translatable="yes">I have a dream ... well I have a lot of dreams, but this is one of them ...</property>
                 <property name="xpad">10</property>
-                <property name="label" translatable="yes" context="PhotoPlaceGUI" comments="I have a dream ... well I have a lot of dreams, but this is one of them ...">The authors and developers hope you like this program. We would really appreciate it if you would consider making a small donation: half of the money will be donated to a local NGO Ecodesarrollo Gaia (http://gaiadiaadia.blogspot.com) that helps people in Senegal (Africa), with the other half, I would like to visit Australia and,  in connection with a geotagging  program, my antipodes in New Zeland, and your coins can help me to achieve this goals.</property>
+                <property name="label" translatable="yes" comments="I have a dream ... well I have a lot of dreams, but this is one of them ...">The authors and developers hope you like this program. We would really appreciate it if you would consider making a small donation: half of the money will be donated to a local NGO Ecodesarrollo Gaia (http://gaiadiaadia.blogspot.com) that helps people in Senegal (Africa), with the other half, I would like to visit Australia and,  in connection with a geotagging  program, my antipodes in New Zeland, and your coins can help me to achieve this goals.</property>
                 <property name="use_markup">True</property>
                 <property name="justify">fill</property>
                 <property name="wrap">True</property>
+                <property name="selectable">True</property>
               </object>
               <packing>
                 <property name="position">0</property>
@@ -1144,14 +1143,13 @@ This General Public License does not permit incorporating your program into prop
             </child>
             <child>
               <object class="GtkLinkButton" id="linkbutton-donate">
-                <property name="label" translatable="yes" context="PhotoPlaceGUI">Donate via PayPal</property>
+                <property name="label" translatable="yes" comments="donations">Donate via PayPal</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="has_tooltip">True</property>
-                <property name="tooltip_text" translatable="yes" context="PhotoPlaceGUI">I have a dream ... well I have a lot of dreams, but this is one of them ...</property>
+                <property name="tooltip_text" translatable="yes">I have a dream ... well I have a lot of dreams, but this is one of them ...</property>
                 <property name="relief">none</property>
-                <property name="focus_on_click">False</property>
                 <property name="uri">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=N6XRW9DLPFSRN</property>
                 <signal name="clicked" handler="on_linkbutton-donate_clicked"/>
               </object>
@@ -1166,8 +1164,9 @@ This General Public License does not permit incorporating your program into prop
                 <child>
                   <object class="GtkLabel" id="label-suggestion">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes" context="photoplace"> As well, you can write suggestions or impressions to :</property>
+                    <property name="label" translatable="yes"> As well, you can write suggestions or impressions to :</property>
                     <property name="use_markup">True</property>
+                    <property name="selectable">True</property>
                   </object>
                   <packing>
                     <property name="position">0</property>
@@ -1175,7 +1174,7 @@ This General Public License does not permit incorporating your program into prop
                 </child>
                 <child>
                   <object class="GtkLinkButton" id="linkbutton-suggestion">
-                    <property name="label" translatable="yes">photoplace-project@googlegroups.com</property>
+                    <property name="label">photoplace-project@googlegroups.com</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -1259,7 +1258,7 @@ This General Public License does not permit incorporating your program into prop
             <child>
               <object class="GtkLabel" id="label-photoinfo-path">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Picture path :</property>
+                <property name="label" translatable="yes">Picture path:</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -1275,7 +1274,6 @@ This General Public License does not permit incorporating your program into prop
               <object class="GtkLabel" id="label-photoinfo-geophotopath">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">label</property>
                 <property name="selectable">True</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
@@ -1386,7 +1384,7 @@ This General Public License does not permit incorporating your program into prop
               <object class="GtkLabel" id="label-photoinfo">
                 <property name="visible">True</property>
                 <property name="xalign">1</property>
-                <property name="label" translatable="yes" context="PhotoPlaceGUI" comments=".">Add, delete or modify key/value:</property>
+                <property name="label" translatable="yes">Add, delete or modify key/value:</property>
                 <property name="use_markup">True</property>
                 <property name="single_line_mode">True</property>
               </object>

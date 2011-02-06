@@ -1,0 +1,24 @@
+
+        Development environment for PhotoPlace:
+
+1   Install pyexiv2 (formed python-pyexiv2) version 0.2 
+    (recommended version is 0.2.2) but the latest available version is 0.3 is ok.
+    Since pyexiv2 0.2/0.3 is not in the official repostiories of Ubuntu/Debian 
+    you must download it from https://launchpad.net/~pyexiv2-developers/+archive/ppa/+packages
+
+    Download one of:
+        python-pyexiv2_0.3.0-0ubuntu1ppa1~maverick1_amd64.deb (230.0 KiB)
+        python-pyexiv2_0.3.0-0ubuntu1ppa1~maverick1_i386.deb (224.6 KiB) 
+
+    and type:
+        $dpkg -i python-pyexiv2_0.3.0-0ubuntu1ppa1~maverick1_i386.deb
+
+2)  Install PIL (Python Image Library) version 1.1.7 or superior.
+    Since it is in ubuntu repositories, just type
+    $ sudo apt-get install python-imaging
+
+3)  Install pyGTK
+    $ sudo apt-get install python-gtk2
+
+
+Happy coding!

@@ -196,7 +196,7 @@ class UserFacade(object):
         self.pluginmanager = Plugins.pluginManager.PluginManager()
         self.logger.debug("# " + PhotoPlace_name)
         self.logger.debug(
-            _("# Launched with command line args %s, files: %s") % 
+            "# Launched with command line args %s, files: %s" % 
             (self.args, self.argfiles))
         self.logger.debug(_("# with configuration file '%s'.") % self.configfile)
         self.logger.debug(_("# main options: %s") % self.options['main'])
