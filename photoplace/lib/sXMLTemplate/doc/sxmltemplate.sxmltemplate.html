@@ -1,0 +1,121 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module sxmltemplate</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>sxmltemplate</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="../sxmltemplate.py">../sxmltemplate.py</a></font></td></tr></table>
+    <p><tt>Main&nbsp;implementation&nbsp;for&nbsp;<a href="#SXMLTemplate">SXMLTemplate</a>&nbsp;module.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="exceptions.html">exceptions</a><br>
+<a href="gettext.html">gettext</a><br>
+</td><td width="25%" valign=top><a href="locale.html">locale</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="xml.html">xml</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="sxmltemplate.html#SXMLTemplate">SXMLTemplate</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SXMLTemplate">class <strong>SXMLTemplate</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Base&nbsp;class&nbsp;for&nbsp;Simple&nbsp;XML&nbsp;Templates<br>
+&nbsp;<br>
+It&nbsp;generates&nbsp;a&nbsp;XML&nbsp;DOM&nbsp;document&nbsp;that&nbsp;is&nbsp;based&nbsp;on&nbsp;a&nbsp;xml&nbsp;template&nbsp;source&nbsp;(file,&nbsp;string&nbsp;...)&nbsp;<br>
+that&nbsp;will&nbsp;be&nbsp;filled&nbsp;with&nbsp;external&nbsp;data&nbsp;by&nbsp;appending&nbsp;the&nbsp;selected&nbsp;new&nbsp;xml&nbsp;elements&nbsp;with&nbsp;&nbsp;<br>
+data.&nbsp;Into&nbsp;XML&nbsp;input&nbsp;template,&nbsp;it&nbsp;changes&nbsp;all&nbsp;keys&nbsp;with&nbsp;the&nbsp;format&nbsp;$(key|defautlvalue)s&nbsp;<br>
+into&nbsp;the&nbsp;data&nbsp;of&nbsp;"key"&nbsp;from&nbsp;the&nbsp;param&nbsp;dictionary,&nbsp;or&nbsp;"defaultvalue"&nbsp;if&nbsp;key&nbsp;is&nbsp;not&nbsp;found&nbsp;<br>
+in&nbsp;dictionary.<br>
+&nbsp;<br>
+Public&nbsp;Attibutes:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;:param&nbsp;sizeLimit:&nbsp;=&nbsp;1024&nbsp;-&gt;&nbsp;(bytes)&nbsp;max&nbsp;size&nbsp;of&nbsp;template&nbsp;source.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;:param&nbsp;separatorKey:&nbsp;=&nbsp;"|"&nbsp;-&gt;&nbsp;separator&nbsp;for&nbsp;default&nbsp;key&nbsp;values.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;:param&nbsp;separatorXml:&nbsp;=&nbsp;"."&nbsp;-&gt;&nbsp;separator&nbsp;to&nbsp;indicates&nbsp;repeateable&nbsp;elements.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;:param&nbsp;defaultValue:&nbsp;=&nbsp;"NULL"&nbsp;-&gt;&nbsp;default&nbsp;value&nbsp;for&nbsp;keys&nbsp;without&nbsp;default&nbsp;values.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="SXMLTemplate-__init__"><strong>__init__</strong></a>(self, source, redoelements<font color="#909090">=[]</font>)</dt><dd><tt><a href="#SXMLTemplate">SXMLTemplate</a>&nbsp;class&nbsp;constructor<br>
+&nbsp;<br>
+:Parameters:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-`source`:&nbsp;URI,&nbsp;filename,&nbsp;or&nbsp;string&nbsp;of&nbsp;XML&nbsp;template.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-`redoelements`:&nbsp;list&nbsp;of&nbsp;XML&nbsp;nodes&nbsp;to&nbsp;repeat&nbsp;into&nbsp;XML&nbsp;with&nbsp;data.</tt></dd></dl>
+
+<dl><dt><a name="SXMLTemplate-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Dumps&nbsp;the&nbsp;XML&nbsp;DOM&nbsp;structure&nbsp;from&nbsp;memory&nbsp;with&nbsp;indent&nbsp;like&nbsp;"toprettyxml"&nbsp;function<br>
+from&nbsp;&nbsp;"xml.dom.minidom"&nbsp;module.</tt></dd></dl>
+
+<dl><dt><a name="SXMLTemplate-getDom"><strong>getDom</strong></a>(self, template<font color="#909090">=False</font>)</dt><dd><tt>Get&nbsp;a&nbsp;DOM&nbsp;object.<br>
+&nbsp;<br>
+:Parameters:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-`template`:&nbsp;"True"&nbsp;returns&nbsp;original&nbsp;template.&nbsp;"False"&nbsp;returns&nbsp;current&nbsp;XML&nbsp;with&nbsp;data.</tt></dd></dl>
+
+<dl><dt><a name="SXMLTemplate-setData"><strong>setData</strong></a>(self, data, lwhere<font color="#909090">=[]</font>)</dt><dd><tt>It&nbsp;sets&nbsp;up&nbsp;data&nbsp;for&nbsp;"repeatable"&nbsp;nodes&nbsp;of&nbsp;template.<br>
+This&nbsp;function&nbsp;clones&nbsp;the&nbsp;"repeatable"&nbsp;nodes&nbsp;from&nbsp;template&nbsp;and&nbsp;fills&nbsp;it&nbsp;with&nbsp;data<br>
+from&nbsp;the&nbsp;dictionary.<br>
+&nbsp;<br>
+:Parameters:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-`data`:&nbsp;dictionary&nbsp;with&nbsp;data&nbsp;for&nbsp;new&nbsp;XML&nbsp;nodes.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-`lwhere`:&nbsp;list&nbsp;of&nbsp;nodes&nbsp;which&nbsp;will&nbsp;be&nbsp;filled&nbsp;with&nbsp;data.</tt></dd></dl>
+
+<dl><dt><a name="SXMLTemplate-setRootInfo"><strong>setRootInfo</strong></a>(self, data)</dt><dd><tt>It&nbsp;sets&nbsp;up&nbsp;basic&nbsp;data&nbsp;for&nbsp;not&nbsp;"repeatable"&nbsp;nodes&nbsp;(root&nbsp;XML&nbsp;elements)&nbsp;of&nbsp;template.<br>
+&nbsp;<br>
+:Parameters:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-`data`:&nbsp;dictionary&nbsp;with&nbsp;data&nbsp;for&nbsp;base&nbsp;nodes&nbsp;of&nbsp;template.</tt></dd></dl>
+
+<dl><dt><a name="SXMLTemplate-setTemplates"><strong>setTemplates</strong></a>(self, redoelements<font color="#909090">=[]</font>)</dt><dd><tt>Sets&nbsp;up&nbsp;the&nbsp;list&nbsp;of&nbsp;nodes&nbsp;of&nbsp;template&nbsp;to&nbsp;be&nbsp;repeated&nbsp;with&nbsp;new&nbsp;data.&nbsp;<br>
+With&nbsp;each&nbsp;value,&nbsp;these&nbsp;nodes&nbsp;will&nbsp;be&nbsp;created&nbsp;with&nbsp;new&nbsp;data.<br>
+Each&nbsp;node&nbsp;is&nbsp;indicated&nbsp;with&nbsp;the&nbsp;format:&nbsp;"xmlrootnode.subnode---subnode.node"<br>
+&nbsp;<br>
+:Parameters:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-`redoelements`:&nbsp;list&nbsp;of&nbsp;XML&nbsp;nodes&nbsp;to&nbsp;repeat&nbsp;into&nbsp;XML.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>TemplateDict</strong> = &lt;class 'sxmltemplate.TemplateDict'&gt;<dd><tt>Class&nbsp;for&nbsp;string&nbsp;templates&nbsp;with&nbsp;dictionaries&nbsp;objects&nbsp;and&nbsp;operator&nbsp;%<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;inherits&nbsp;all&nbsp;attributes,&nbsp;methods,&nbsp;...&nbsp;from&nbsp;dict&nbsp;and&nbsp;redefines&nbsp;"__getitem__"<br>
+in&nbsp;order&nbsp;to&nbsp;return&nbsp;a&nbsp;default&nbsp;value&nbsp;when&nbsp;an&nbsp;element&nbsp;is&nbsp;not&nbsp;found.&nbsp;The&nbsp;format&nbsp;<br>
+"key&lt;separator&gt;defaultvalue"&nbsp;indicates&nbsp;that&nbsp;if&nbsp;"key"&nbsp;is&nbsp;not&nbsp;found,&nbsp;then&nbsp;"defaultvalue"&nbsp;<br>
+will&nbsp;be&nbsp;returned.&nbsp;It&nbsp;is&nbsp;like&nbsp;an&nbsp;OR:&nbsp;returns&nbsp;value&nbsp;or&nbsp;"defaultvalue".&nbsp;<br>
+It&nbsp;is&nbsp;posible&nbsp;to&nbsp;define&nbsp;a&nbsp;global&nbsp;default&nbsp;value&nbsp;for&nbsp;all&nbsp;keys.</tt></dl>
+
+<dl><dt><strong>defaultValue</strong> = 'NULL'</dl>
+
+<dl><dt><strong>separatorKey</strong> = '|'</dl>
+
+<dl><dt><strong>separatorXml</strong> = '.'</dl>
+
+<dl><dt><strong>sizeLimit</strong> = 1048576</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__GETTEXT_DOMAIN__</strong> = 'sxmltemplate'<br>
+<strong>__LOCALE_DIR__</strong> = '../locale'<br>
+<strong>__PACKAGE_DIR__</strong> = '../sxmltemplate'<br>
+<strong>t</strong> = &lt;gettext.GNUTranslations instance at 0x293ed88&gt;</td></tr></table>
+</body></html>
