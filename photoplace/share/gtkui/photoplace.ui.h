@@ -134,6 +134,7 @@ char *s = N_("Open an eXchange Format (GPX) in order to match the date of each p
 char *s = N_("Output file to save the KML data.");
 char *s = N_("Output photo zoom percentage. 1.00 means original size, 0.50 means half size and so on ...");
 char *s = N_("Photo size:");
+char *s = N_("PhotoPlace");
 /* picture label of notebook. */
 char *s = N_("Photos");
 char *s = N_("Picture path:");
@@ -162,6 +163,8 @@ char *s = N_("This entry defines the Uniform Resource Identifier for each geotag
 /* label. */
 char *s = N_("Time zone of photos:");
 char *s = N_("URI for geotagging photos:");
+char *s = N_("Validate");
+char *s = N_("Variables");
 char *s = N_("Zoom percentaje. 1 means original size, 0.5 means half size and so on ...");
 /* toolbar */
 char *s = N_("_Exit");
@@ -176,3 +179,18 @@ char *s = N_("_Reset");
 char *s = N_("_Save as");
 /* label separator between buttons in first page of notebook. */
 char *s = N_("and");
+char *s = C_("photoplace", "Additional info");
+char *s = C_("photoplace", "Checks if XML data is well formed, otherwise, the content will not be considered as XML data. ");
+char *s = C_("photoplace", "Close this window");
+char *s = C_("photoplace", "Create an empty template");
+char *s = C_("photoplace", "Exit");
+char *s = C_("photoplace", "List of parameters to make KML:");
+char *s = C_("photoplace", "Load");
+char *s = C_("photoplace", "Load a template from file");
+char *s = C_("photoplace", "New");
+char *s = C_("photoplace", "Open a web browser with online help");
+char *s = C_("photoplace", "Recover");
+char *s = C_("photoplace", "Recover the default template");
+char *s = C_("photoplace", "Save");
+char *s = C_("photoplace", "Save document as template");
+char *s = C_("photoplace", "Select Template:");

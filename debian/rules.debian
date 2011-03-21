@@ -1,0 +1,63 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+#
+# $Id: rules,v 1.5 2008/10/25 14:22:05 ghantoos Exp $
+#
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+PYTHON=`which python`
+
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	# Add here commands to configure the package.
+	touch configure-stamp
+
+
+build: build-stamp
+
+build-stamp: configure-stamp 
+	dh_testdir
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -rf debian/photoplace 
+	rm -f build-stamp configure-stamp 
+
+install: build
+	# Add here commands to install the package into debian/myprojectname 
+	# refer to Makefile
+	$(PYTHON) setup.py install --prefix debian/photoplace
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_pycentral
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure
+

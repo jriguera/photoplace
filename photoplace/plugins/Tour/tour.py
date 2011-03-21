@@ -423,8 +423,8 @@ class KmlTour(Plugin):
         strtime = time.strftime("%Y-%m-%dT%H:%M:%S") + str_tzdiff
         if not end_heading:
             end_heading = pyGPX.bearingCoord(
-                self.center_lat, self.center_lon, 
-                self.last_lat, self.last_lon)
+                self.last_lat, self.last_lon,
+                self.center_lat, self.center_lon)
         if end_range <= 10:
             distance = pyGPX.distanceCoord(
                 self.center_lat, self.center_lon, 

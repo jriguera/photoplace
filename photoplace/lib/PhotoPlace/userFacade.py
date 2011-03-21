@@ -358,6 +358,15 @@ class UserFacade(object):
     def load_plugins(self, capability='*', *args):
         errors = []
         for plugin, path in self.options["plugins"].iteritems():
+            path = os.path.expanduser(path)
+            path = os.path.expandvars(path)
+            path = os.path.normpath(path)
+            if not os.path.isdir(path):
+                new_path = os.path.join(self.state.resourcedir_user, path)
+                if not os.path.isdir(new_path):
+                    path = os.path.join(self.state.resourcedir, path)
+                else:
+                    path = new_path
             try:
                 self.pluginmanager.load(plugin, path)
             except Plugins.pluginManager.PluginManagerError as pluginerror:

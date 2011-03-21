@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+# -*- mode: makefile; coding: utf-8 -*-
+
+%:
+	dh $@
+
+override_dh_auto_build:
+
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/photoplace
+	mv debian/photoplace/usr/bin/photoplace.py debian/photoplace/usr/bin/photoplace
+	#dh_desktop
+	dh_install debian/photoplace.desktop /usr/share/applications
+
+
+.PHONY: override_dh_auto_build override_dh_auto_install
+

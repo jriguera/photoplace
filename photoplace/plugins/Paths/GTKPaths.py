@@ -265,11 +265,11 @@ class GTKPaths(object):
         if pos != None:
             ite = self.treestore.insert(None, pos,
                 [str(KmlPaths_CONFKEY_TRACKS_NAME), 
-                    name, desc, description, desc_file, True, True, False])
+                    name, desc, description, desc_file, True, True, True])
         else:
             ite = self.treestore.append(None, 
                 [str(KmlPaths_CONFKEY_TRACKS_NAME), 
-                    name, desc, description, desc_file, True, True, False])
+                    name, desc, description, desc_file, True, True, True])
         self.treestore.append(ite, 
             [str(KmlPaths_CONFKEY_TRACKS_COLOR), 
                 str(KmlPaths_CONFKEY_TRACKS_COLOR), color, None, None, False, True, True])

@@ -550,7 +550,7 @@ class PhotoPlaceGUI(InterfaceUI):
             menuitem.show()
             if plgobj.capabilities['GUI'] == PLUGIN_GUI_GTK:
                 notebooklabel = gtk.Label()
-                notebooklabel.set_markup(str("<b>%s</b>" % plg))
+                notebooklabel.set_markup(str("   <b>%s</b>  " % plg))
                 labelop = gtk.Label()
                 labelop.set_markup(str(_("<b>Options</b>")))
                 labelop.set_padding(2, 8)
@@ -1275,8 +1275,12 @@ class PhotoPlaceGUI(InterfaceUI):
         ite = textbuffer.get_iter_at_mark(textbuffer.get_insert())
         row = ite.get_line()
         col = ite.get_line_offset()
+        dgettext = {}
+        dgettext['line'] = row + 1
+        dgettext['column'] = col
+        dgettext['chars'] = count
         self["statusbar-window-templates"].push(0, 
-            _('Line %d, column %d (%d chars in document)') % (row + 1, col, count))
+            _('Line %(line)d, column %(column)d (%(chars)d chars in document)') % dgettext)
 
     def _new_wintemplate(self, widget=None):
         self["statusbar-window-templates"].pop(0)

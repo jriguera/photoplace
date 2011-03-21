@@ -78,8 +78,8 @@ class PluginManager(object):
 
 
     def load(self, module, path=None):
-        dgettext = dict(path = 'sys.path')
-        if path and not path in sys.path:
+        dgettext = dict(path='sys.path')
+        if path != None and not path in sys.path:
             sys.path.insert(0, path)
             dgettext['path'] = path
         dgettext['module'] = module
@@ -102,7 +102,7 @@ class PluginManager(object):
                 fd.close()
 
     def activate(self, plugin, *args, **kwargs):
-        dgettext = dict(module = plugin.__module__) 
+        dgettext = dict(module=plugin.__module__) 
         if not plugin in self.instances:
             try:
                 logger = logging.getLogger(plugin.__module__)
@@ -120,7 +120,7 @@ class PluginManager(object):
         return plugin in self.instances
 
     def init(self, plugin, *args, **kwargs):
-        dgettext = dict(module = plugin.__module__)
+        dgettext = dict(module=plugin.__module__)
         if not plugin in self.instances:
             msg = _("Cannot init module '%(module)s': Not instanced!.")
             raise PluginManagerError(msg % dgettext)
@@ -133,7 +133,7 @@ class PluginManager(object):
             raise PluginManagerError(msg % dgettext)
 
     def reset(self, plugin, *args, **kwargs):
-        dgettext = dict(module = plugin.__module__)
+        dgettext = dict(module=plugin.__module__)
         if not plugin in self.instances:
             msg = _("Cannot init module '%(module)s': Not instanced!.")
             raise PluginManagerError(msg % dgettext)
@@ -146,7 +146,7 @@ class PluginManager(object):
             raise PluginManagerError(msg % dgettext)
             
     def end(self, plugin, *args, **kwargs):
-        dgettext = dict(module = plugin.__module__)
+        dgettext = dict(module=plugin.__module__)
         try:
             p = self.instances[plugin]
         except:

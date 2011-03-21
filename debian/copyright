@@ -1,0 +1,65 @@
+This work was packaged for Debian by:
+
+    José Riguera López <jriguera@gmail.com> on Wed, 09 Feb 2011 20:48:06 +0100
+
+It was downloaded from:
+
+    <http://code.google.com/p/photoplace/>
+
+Upstream Author(s):
+
+    José Riguera López <jriguera@gmail.com>
+
+Copyright:
+
+    <Copyright (C) 2011 José Riguera López>
+
+License:
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This package is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+On Debian systems, the complete text of the GNU General
+Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
+
+The Debian packaging is:
+
+    Copyright (C) 2011 José Riguera López <jriguera@gmail.com>
+
+and is licensed under the GPL version 3, see above.
+
+
+Other license packages included:
+
+MP3Info.py,v 1.12 2004/05/19 at core plugin <tour>:
+    Copyright (c) 2002-2004 Vivake Gupta (vivakeATlab49.com).
+    All rights reserved.
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License as
+    published by the Free Software Foundation; either version 2 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+    USA
+
+    This software is maintained by Vivake (vivakeATlab49.com) and is available at:
+    http://www.lab49.com/~vivake/python/MP3Info.py
+

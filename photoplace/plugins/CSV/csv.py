@@ -18,7 +18,46 @@
 #
 # Copyright © 2008 Jose Riguera Lopez <jriguera@gmail.com>
 #
+"""
+A plugin for PhotoPlace to read CSV data.
+"""
+__program__ = "photoplace.csv"
+__author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
+__version__ = "0.2.0"
+__date__ = "March 2011"
+__license__ = "GPL (v2 or later)"
+__copyright__ ="(c) Jose Riguera"
 
+
+import os.path
+import sys
+import time
+import codecs
+import datetime
+import urlparse
+import gettext
+import locale
+
+
+# I18N gettext support
+__GETTEXT_DOMAIN__ = __program__
+__PACKAGE_DIR__ = os.path.dirname(__file__)
+__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
+
+try:
+    if not os.path.isdir(__LOCALE_DIR__):
+        print("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
+        __LOCALE_DIR__ = None
+    locale.setlocale(locale.LC_ALL,"")
+    gettext.install(__GETTEXT_DOMAIN__, __LOCALE_DIR__)
+except Exception as e:
+    _ = lambda s: s
+    print("Error setting up the translations: %s" % (e))
+
+
+from PhotoPlace.userFacade import TemplateDict
+from PhotoPlace.Plugins.Interface import *
+from PhotoPlace.definitions import *
 
 
 PhotoPlace_Cfg_csv_headers = [] # ["PHOTO", "TITLE", "DESCRIPTION", "LAT", "LON", "ELE"]
@@ -32,24 +71,24 @@ PhotoPlace_Cfg_csv_encodings = ["utf-8", "iso-8859-1", "iso-8859-2", "us-ascii"]
 
 
 def check_config(options):
-        if options['main'].has_key('gpxinputfile'):
+    if options['main'].has_key('gpxinputfile'):
         options['main']['gpxinputfile'] = os.path.expandvars(options['main']['gpxinputfile'])
         if not os.path.isfile(options['main']['gpxinputfile']):
             errors.append(_("Input GPX file '%s' does not exists!.") % \
                 options['main']['gpxinputfile'])
 
-        # csv section
-    if options['csv'].has_key('headers'):
-        options['csv']['headers'] = options['csv']['headers'].split()
-    else:
-        options['csv']['headers'] = PhotoPlace_Cfg_csv_headers
-    options['csv'].setdefault('delimiter', PhotoPlace_Cfg_csv_delimiter)
-    options['csv'].setdefault('quotechar', PhotoPlace_Cfg_csv_quotechar)
-    options['csv'].setdefault('photonameheader', PhotoPlace_Cfg_csv_photonameheader)
-    if options['csv'].has_key('encodings'):
-        options['csv']['encodings'] = options['csv']['encodings'].split()
-    else:
-        options['csv']['encodings'] = PhotoPlace_Cfg_csv_encodings
+#        # csv section
+#    if options['csv'].has_key('headers'):
+#        options['csv']['headers'] = options['csv']['headers'].split()
+#    else:
+#        options['csv']['headers'] = PhotoPlace_Cfg_csv_headers
+#    options['csv'].setdefault('delimiter', PhotoPlace_Cfg_csv_delimiter)
+#    options['csv'].setdefault('quotechar', PhotoPlace_Cfg_csv_quotechar)
+#    options['csv'].setdefault('photonameheader', PhotoPlace_Cfg_csv_photonameheader)
+#    if options['csv'].has_key('encodings'):
+#        options['csv']['encodings'] = options['csv']['encodings'].split()
+#    else:
+#        options['csv']['encodings'] = PhotoPlace_Cfg_csv_encodings
 
 
 
@@ -218,3 +257,4 @@ def load_csv(fd, geophotos, options):
 
 if __name__ == "__main__":
     print __doc__
+

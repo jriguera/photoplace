@@ -1,0 +1,17 @@
+[Desktop Entry]
+X-AppInstall-Package=photoplace
+X-Ubuntu-Gettext-Domain=photoplace
+X-GNOME-FullName=PhotoPlace
+Encoding=UTF-8
+Version=1.0
+Name=photoplace
+GenericName=Geotagging Photos
+Icon=/usr/share/photoplace/gtkui/photoplace.png
+Comment=A tool for geotagging your photos and ... much more!
+Comment[en]=A tool for geotagging your photos and ... much more!
+Comment[es]=Una herramienta para geolocalizar tus fotos y ... mucho más!
+Exec=/usr/bin/photoplace %d
+Terminal=false
+Type=Application
+Categories=Graphics;GTK;Utility;
+StartupNotify=True

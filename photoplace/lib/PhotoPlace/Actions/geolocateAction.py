@@ -55,8 +55,8 @@ class Geolocate(Interface.Action, threading.Thread):
         self._notify_ini(self.maxdeltaseconds, self.forcegeolocation)
         self.dgettext['maxdeltaseconds'] = self.maxdeltaseconds
         self.dgettext['timezone'] = self.time_zone
-        msg = _("Geotagging with mode <%(exifmode)s>, diff from UTC %(timezone)s "
-            "and time delta of %(maxdeltaseconds)s seconds ...") % self.dgettext
+        msg = _("Geotagging mode <%(exifmode)s>, diff from UTC %(timezone)s "
+            "and delta of %(maxdeltaseconds)s seconds ...") % self.dgettext
         self.logger.info(msg)
         return self.geolocated
 

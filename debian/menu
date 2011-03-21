@@ -1,0 +1,2 @@
+?package(photoplace):needs="X11" section="Applications/Graphics"\
+  title="PhotoPlace" command="/usr/bin/photoplace"

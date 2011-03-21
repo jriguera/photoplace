@@ -31,11 +31,17 @@ PhotoPlace Setup Script
  * To see all available commands:
     - python setup.py --help-commands
 
+ * Make a source distribution file
+    - python setup.py sdist
+
+ * Make a debian/ubuntu package:
+    - python setup.py bdist_deb
+
  * Make for windows (on windows):
     - python setup.py py2exe [--full]
    
- * Create an installer (for windows, after running py2exe)
-    - python setup.py bdist_wininst|nsis
+ * Create an installer (for windows)
+    - python setup.py bdist_wininst
 
  @summary: Used for building the photoplace distribution files and installations
 """
@@ -54,26 +60,37 @@ import zipfile
 import time
 import fnmatch
 import datetime
-from distutils.core import setup
-from distutils import cmd
-from distutils import log
-from distutils.errors import DistutilsError
-from distutils.command.install_data import install_data as _install_data
-from distutils.command.build_py import build_py as _build_py
-from distutils.command.build import build as _build
-from distutils.file_util import copy_file as _copy_file
-from distutils.util import byte_compile as _byte_compile
 
 import msgfmt
 
+from distutils.core import setup
+from distutils import cmd
+from distutils import log
+from distutils.spawn import spawn
+from distutils.errors import DistutilsError
+from distutils.util import byte_compile as _byte_compile
+from distutils.dir_util import remove_tree as _remove_tree
+from distutils.command.install_data import install_data as _install_data
+from distutils.command.install import install as _install
+from distutils.command.install_lib import install_lib as _install_lib
+from distutils.command.build_py import build_py as _build_py
+from distutils.command.build import build as _build
+from distutils.command.sdist import sdist as _sdist
+from distutils.command.clean import clean as _clean
+__WIN_PLATFORM__ = False
+try:
+    import py2exe
+    from py2exe.build_exe import py2exe as _py2exe 
+    __WIN_PLATFORM__ = True
+except ImportError:
+    if os.sys.platform == "win32":
+        print "\n!! You dont have py2exe installed. !!\n"
+
 
 PLATFORM = os.sys.platform
-SRC_DIR = 'src'
-PROGRAM = 'src/photoplace.py'
+SRC_DIR = 'photoplace'
+PROGRAM = 'photoplace/photoplace.py'
 VERSION = '0.5.0'
-DIST_LIB = 'lib/shared.zip'
-DIST_DIR = 'photoplace-' + VERSION
-NSIS = 'setup.nsi'
 DATE = datetime.datetime.now().strftime("%B %Y")
 LANGUAGES = ['en_GB', 'es', 'pt'] 
 CLASSIFIERS = [
@@ -98,7 +115,6 @@ ICON = {
     'win32' : os.path.join("logos", "photoplace.ico"),
     'other' : os.path.join("logos", "photoplace.png"),
 }
-
 
 
 # ########################
@@ -127,14 +143,17 @@ def find_files(base, dir, badfiles=['*.*~'], baddirs=['.*'], goodfiles=['*']):
         return files
     return walker(base, dir)
 
-    
-def get_files(base, dir, baddirs=['.*'], goodfiles=['*.*'], badfiles=['*.*~']):
-    def walker(base, dir, contents=[]):
+
+def get_files(base, dir, dst, baddirs=['.*'], goodfiles=['*.*'], badfiles=['*.*~']):
+    def walker(base, dir, dst, contents=[]):
         for baddir in baddirs:
             if fnmatch.fnmatch(os.path.basename(dir), baddir):
                 return contents
         realdir = os.path.join(base, dir)
-        list_contents = os.listdir(realdir)
+        try:
+            list_contents = os.listdir(realdir)
+        except:
+            return contents
         files = []
         for f in list_contents:
             if os.path.isfile(os.path.join(realdir, f)):
@@ -146,14 +165,14 @@ def get_files(base, dir, baddirs=['.*'], goodfiles=['*.*'], badfiles=['*.*~']):
                         if fnmatch.fnmatch(f, goodfile):
                             files.append(os.path.join(realdir, f))
         if files:
-            contents.append((dir, files))
+            contents.append((dst, files))
         for f in list_contents:
             if os.path.isdir(os.path.join(realdir, f)):
-                contents = walker(base, os.path.join(dir, f), contents)
+                contents = walker(base, os.path.join(dir, f), os.path.join(dst, f), contents)
         return contents
-    return walker(base, dir)
+    return walker(base, dir, dst)
 
-    
+
 def get_plugins(base, directory):
     lib_dir = os.path.join(base, directory)
     packages = [f for f in os.listdir(lib_dir) 
@@ -166,7 +185,7 @@ def get_plugins(base, directory):
         plugins[package] = (data_dir, package_files, package_data)
     return plugins
 
-    
+
 def get_packages(base, directory):
     lib_dir = os.path.join(base, directory)
     packages = [f for f in os.listdir(lib_dir) 
@@ -194,62 +213,87 @@ def get_packages(base, directory):
 
 class build_plugins(cmd.Command):
     description = 'create core plugins'
-    
+    user_options = [
+        ('plugin-base=', 'b', "base directory of plugins"),
+        ('plugin-dir=', None, "base directory of plugins"),
+        ('plugin-dist=', 'd', "base directory for build plugins"),
+    ]
+
     def initialize_options(self):
-        self.optimize = 1
-        self.verbose = 1
-        self.base = SRC_DIR
-        self.dir = 'plugins'
-        self.dist_dir = DIST_DIR
+        self.optimize = 0
+        self.verbose = 0
+        self.force = 0
+        self.plugin_base = None
+        self.plugin_dir = None
+        self.plugin_dist = None
     
     def finalize_options(self):
-        pass
+        if self.plugin_base == None:
+            self.plugin_base = '.'
+        if self.plugin_dist == None:
+            self.plugin_dist = 'build'
+        if self.plugin_dir == None:
+            self.plugin_dir = 'plugins'
     
     def run(self):
-        print "*** creating core plugins ***"
-        plugins = get_plugins(self.base, self.dir)
+        plugins = get_plugins(self.plugin_base, self.plugin_dir)
         compile_names = list()
         for k, v in plugins.iteritems():
             src, pfiles, pdata = v
             compile_names = []
             for f in pfiles:
-                dest = os.path.join(self.dist_dir, self.dir, f)
+                dest = os.path.join(self.plugin_dist, self.plugin_dir, f)
                 dest_dir = os.path.dirname(dest)
-                f = os.path.join(self.base, self.dir, f)
+                f = os.path.join(self.plugin_base, self.plugin_dir, f)
                 if not os.path.exists(dest_dir):
                     os.makedirs(dest_dir)
-                _copy_file(f, dest, preserve_mode=0)
+                self.copy_file(f, dest, preserve_mode=0)
                 compile_names.append(dest)
-            _byte_compile(compile_names, self.optimize, 1, None, None, self.verbose)
+            _byte_compile(compile_names, self.optimize, self.force, None, None, self.verbose)
             for f in compile_names:
                 os.remove(f)
             for f in pdata:
-                dest_dir = os.path.dirname(os.path.join(self.dist_dir, self.dir, f))
-                f = os.path.join(self.base, self.dir, f)
+                dest_dir = os.path.dirname(os.path.join(self.plugin_dist, self.plugin_dir, f))
+                f = os.path.join(self.plugin_base, self.plugin_dir, f)
                 if not os.path.exists(dest_dir):
                     os.makedirs(dest_dir)
-                _copy_file(f, dest_dir)
+                self.copy_file(f, dest_dir)
 
 
 class build_trans(cmd.Command):
     description = 'compile .po files into .mo files'
-    
+    user_options = [
+        ('trans-base=', 'b', "base directory of locales"),
+        ('trans-dir=', None, "base directory of locales"),
+        ('trans-dist=', 'd', "base directory for build locales"),
+        ('trans-domain=', None, "base directory for build locales"),
+    ]
+
     def initialize_options(self):
-        self.base = SRC_DIR
-        self.dist_dir = DIST_DIR
+        self.trans_base = None
+        self.trans_dist = None
+        self.trans_domain = None
+        self.trans_dir = None
     
     def finalize_options(self):
-        pass
+        if self.trans_base == None:
+            self.trans_base = '.'
+        if self.trans_dist == None:
+            self.trans_dist = os.path.join('build', 'locale')
+        if self.trans_domain == None:
+            self.trans_domain = 'domain.mo'
+        if self.trans_dir == None:
+            self.trans_dir = 'po'
     
     def run(self):
-        po_dir = os.path.join(os.path.dirname(os.curdir), 'po')
+        po_dir = os.path.join(self.trans_base, self.trans_dir)
         for path, names, filenames in os.walk(po_dir):
             for f in filenames:
                 if f.endswith('.po'):
                     lang = f[:len(f) - 3]
                     src = os.path.join(path, f)
-                    dest_path = os.path.join('build', 'locale', lang, 'LC_MESSAGES')
-                    dest = os.path.join(dest_path, 'mussorgsky.mo')
+                    dest_path = os.path.join(self.trans_dist, lang, 'LC_MESSAGES')
+                    dest = os.path.join(dest_path, self.domain)
                     if not os.path.exists(dest_path):
                         os.makedirs(dest_path)
                     if not os.path.exists(dest):
@@ -261,117 +305,107 @@ class build_trans(cmd.Command):
                         if src_mtime > dest_mtime:
                             print 'Compiling %s' % src
                             msgfmt.make(src, dest)
-                            
+
+
 class build(_build):
-    sub_commands = _build.sub_commands + [('build_plugins', None)]
+
+    def has_trans(self):
+        if self.trans_dir == None or not os.path.exists(self.trans_dir):
+            return False
+        return True
+
+    sub_commands = _build.sub_commands + [('build_plugins', None), ('build_trans', has_trans)]
+    user_options = _build.user_options + [
+        ('plugin-base=', None, "base directory of plugins"),
+        ('plugin-dir=', None, "base directory of plugins"),
+        ('plugin-dist=', None, "base directory for build plugins"),
+        ('trans-base=', None, "base directory of locales"),
+        ('trans-dir=', None, "base directory of locales"),
+        ('trans-dist=', None, "base directory for build locales"),
+        ('trans-domain=', None, "base directory for build locales"),
+    ]
+
+    def initialize_options(self):
+        _build.initialize_options(self)
+        self.trans_base = None
+        self.trans_dist = None
+        self.trans_domain = None
+        self.trans_dir = None
+        self.plugin_base = None
+        self.plugin_dir = None
+        self.plugin_dist = None
+
+    def finalize_options(self):
+        if self.trans_base == None:
+            self.trans_base = '.'
+        if self.trans_dist == None:
+            self.trans_dist = os.path.join('build', 'locale')
+        if self.trans_domain == None:
+            self.trans_domain = 'domain.mo'
+        if self.trans_dir == None:
+            self.trans_dir = 'po'
+        if self.plugin_base == None:
+            self.plugin_base = '.'
+        if self.plugin_dist == None:
+            self.plugin_dist = 'build'
+        if self.plugin_dir == None:
+            self.plugin_dir = 'plugins'
+        _build.finalize_options(self)
+
     def run(self):
+        b_plugins = self.get_finalized_command('build_plugins')
+        b_plugins.plugin_base = SRC_DIR
+        b_plugins.plugin_dir = 'plugins'
+        b_plugins.plugin_dist = os.path.join(self.build_base, 'share', 'photoplace')
+        b_trans = self.get_finalized_command('build_trans')
+        b_trans.trans_base = SRC_DIR
+        b_trans.trans_dist = os.path.join(self.build_base, 'share', 'locale')
+        b_trans.trans_domain = "photoplace.mo"
+        b_trans.trans_dir = os.path.join(SRC_DIR, 'po')
         _build.run(self)
 
 
-class clean_home(cmd.Command):
-    description = "custom clean command that forcefully removes dist/build directories"
-    user_options = []
-    
-    def initialize_options(self):
-        self.dirs = ['build', 'dist', DIST_DIR]
-        
-    def finalize_options(self):
-        pass
-    
-    def run(self):
-        for d in self.dirs:
-            if os.path.exists(d):
-                shutil.rmtree(d)       
-        
 
-class compile_nsis(cmd.Command):
-    description = "make and instalable with NSIS on windows platforms"
-    user_options = []
+class install(_install):
 
     def initialize_options(self):
-        self.verbose = 3
-        self.nsis = NSIS
-    
+        self.install_share = None
+        self.install_root = None
+        _install.initialize_options(self)
+
     def finalize_options(self):
-        pass
-    
+        if self.install_share == None:
+            self.install_share = 'share'
+        if self.install_root == None:
+            self.install_root = 'usr'
+        _install.finalize_options(self)
+
     def run(self):
-        import subprocess
-        try:
-            import _winreg
-            # Get the path of the NSIS compiler
-            key = _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, 'NSIS.Script\\shell\\compile\\command')
-            compilerPath = _winreg.QueryValueEx(key, '')[0]
-            secondQuote = compilerPath.find('"', 1)
-            compilerPath = compilerPath[1:secondQuote]
-            compilerPath = compilerPath.replace('makensisw', 'makensis') 
-        except:
-            print 'Error: could not find registry entry for NSIS!'
-            print 'Using sytem Path ....'
-            compilerPath = 'makensis.exe'
-        cmd = '"%s" /V%d %s' % (compilerPath, self.verbose, self.nsis)
-        try:
-            retcode = subprocess.call(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            if retcode < 0:
-                print("makensis was terminated by signal %s" % (-retcode))
-            else:
-                print("makensis returned: %s" % retcode)
-        except OSError as e:
-            print ("Execution failed: %s" % e)
+        _install.run(self)
+        root = self.install_root
+        if self.root != None:
+            if os.path.isabs(self.prefix):
+                self.prefix = self.prefix.strip()[1:]
+            root = self.root
+        root = os.path.join(root, self.prefix, self.install_share)
+        build = self.get_finalized_command('build')
+        from_dir = os.path.join(build.build_base, self.install_share)
+        if os.path.isdir(from_dir):
+            outfiles = self.copy_tree(from_dir, root)
 
 
-# ######################
-# setup helper functions
-# ######################
+class clean(_clean):
 
-def get_program_libs(base=SRC_DIR, directory='lib'):
-    """
-    Generate the list of packages in lib directory
-    """
-    kwargs = get_packages(base, directory)
-    return kwargs
-
-def get_program_plugins(base=SRC_DIR, directory='plugins'):
-    """
-    Generate the list of plugins
-    """
-    kwargs = get_packages(base, directory)
-    return kwargs
-    
-def get_data_files(base=SRC_DIR, dirs=['share', 'locale']):
-    """
-    Generate the list of files for package
-    """
-    includes = [('.', glob.glob(os.path.join(base, "*.txt")))]
-    for directory in dirs:
-        includes += get_files(base, directory)
-    return includes
-
-def get_bin_files(base='', dirs=['include']):
-    includes = []
-    for directory in dirs:
-        extra_dir = os.path.join(base, directory, os.sys.platform)
-        if os.path.exists(extra_dir):
-            includes += get_files(os.path.join(directory, os.sys.platform), '')
-    return includes
+    def run(self):
+        _clean.run(self)
+        dist_dir = ['bdist', 'build', 'dist']
+        full_name = self.distribution.get_fullname()
+        for dist in dist_dir:
+            if os.path.isdir(dist):
+                _remove_tree(dist, dry_run=self.dry_run)
 
 
-
-# #################
-# platform builders
-# #################
-
-def build4win(program, icon=None, generatezip=None, data=True, destination=DIST_DIR):
-    """
-    Generate the list of files needed for pygtk package files
-    """
-    try:
-        import py2exe
-    except ImportError:
-        print "\n!! You dont have py2exe installed. !!\n"
-        sys.exit(1)
-    from py2exe.build_exe import py2exe as _py2exe 
-    base = os.path.dirname(program)
+if __WIN_PLATFORM__:
     # Extend the py2exe command, to also include data files required by gtk+ and
     # enable the "MS-Windows" theme. In order to make gtk+ find the data files
     # we also ensure that the gtk+ libraries are not bundled.
@@ -382,6 +416,14 @@ def build4win(program, icon=None, generatezip=None, data=True, destination=DIST_
         gtktheme = None
         gtkdata = True
         gtkdir = None
+        copysharebuild = True
+        
+        def initialize_options(self):
+            _py2exe.initialize_options(self)
+            build_plg = self.get_finalized_command('build_plugins')
+            # Optimize plugins
+            build_plg.optimize = 1
+
         def create_binaries(self, py_files, extensions, dlls):
             if not self.gtkdir:
                 gtkdir = None
@@ -404,12 +446,12 @@ def build4win(program, icon=None, generatezip=None, data=True, destination=DIST_
                     dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
                     if not os.path.exists(dest_dir):
                         os.makedirs(dest_dir)
-                    _copy_file(os.path.join(gtkdir, f), os.path.join(self.exe_dir, f), preserve_mode=0)
+                    self.copy_file(os.path.join(gtkdir, f), os.path.join(self.exe_dir, f), preserve_mode=0)
                 for f in find_files(gtkdir, 'etc', ['*.*~']):
                     dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
                     if not os.path.exists(dest_dir):
                         os.makedirs(dest_dir)
-                    _copy_file(os.path.join(gtkdir, f), os.path.join(self.exe_dir, f), preserve_mode=0)
+                    self.copy_file(os.path.join(gtkdir, f), os.path.join(self.exe_dir, f), preserve_mode=0)
                 # GTK locales
                 for lang in LANGUAGES:
                     glob_dir = os.path.join(gtkdir, 'share\\locale', lang, 'LC_MESSAGES\\*.mo')
@@ -419,27 +461,27 @@ def build4win(program, icon=None, generatezip=None, data=True, destination=DIST_
                             dest_dir = os.path.join(self.exe_dir, 'share\\locale', country, 'LC_MESSAGES')
                             if not os.path.exists(dest_dir):
                                 os.makedirs(dest_dir)
-                            _copy_file(f, dest_dir)
-                _copy_file(os.path.join(gtkdir, 'share\\locale\\locale.alias'), 
+                            self.copy_file(f, dest_dir)
+                self.copy_file(os.path.join(gtkdir, 'share\\locale\\locale.alias'), 
                     os.path.join(self.exe_dir, 'share\\locale'), preserve_mode=0)
                 # GTK Themes
                 for f in find_files(gtkdir, 'share\\themes', ['*.*~']):
                     dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
                     if not os.path.exists(dest_dir):
                         os.makedirs(dest_dir)
-                    _copy_file(os.path.join(gtkdir, f), os.path.join(self.exe_dir, f), preserve_mode=0)
+                    self.copy_file(os.path.join(gtkdir, f), os.path.join(self.exe_dir, f), preserve_mode=0)
             if self.gtktheme:
                 print "*** Enabling additional themes for gtk+ ***"
                 for f in find_files(self.gtkthemes, 'share\\themes', ['*.*~']):
                     dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
                     if not os.path.exists(dest_dir):
                         os.makedirs(dest_dir)
-                    _copy_file(os.path.join(self.gtkthemes, f), os.path.join(self.exe_dir, f), preserve_mode=0)
+                    self.copy_file(os.path.join(self.gtkthemes, f), os.path.join(self.exe_dir, f), preserve_mode=0)
                 for f in find_files(self.gtkthemes, 'lib\\gtk-2.0', ['*.*~']):
                     dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
                     if not os.path.exists(dest_dir):
                         os.makedirs(dest_dir)
-                    _copy_file(os.path.join(self.gtkthemes, f), os.path.join(self.exe_dir, f), preserve_mode=0)
+                    self.copy_file(os.path.join(self.gtkthemes, f), os.path.join(self.exe_dir, f), preserve_mode=0)
                 gtktheme_dir = os.path.join(self.exe_dir, 'etc', 'gtk-2.0')
                 if not os.path.exists(gtktheme_dir):
                     os.makedirs(gtktheme_dir)
@@ -447,70 +489,224 @@ def build4win(program, icon=None, generatezip=None, data=True, destination=DIST_
                 file.write("# Generated from setup.py\n")
                 file.write('gtk-theme-name = "%s"\n' % self.gtktheme)
                 file.close()
-                
-    py2exe.gtkdata = data
-    py2exe.gtktheme = "Human"
-    py2exe.gtkthemes = "include\\GTKTheme\\"
-    windows = dict(script=program, icon_resources=[(1, icon)])
-    options = dict(
-        includes=['encodings', 'gobject', 'glib', 'gio', 'gtk', 'cairo', 'pango', 'pangocairo', 'atk'],
-        excludes=['_ssl', '_scproxy', 'ICCProfile', 'bsddb', 'curses', 'tcl', 'Tkconstants', 'Tkinter'],
-        dll_excludes=['libglade-2.0-0.dll', 'w9xpopen.exe', 'tcl84.dll', 'tk84.dll'], 
-        bundle_files=3,
-        optimize=2,
-        compressed=1,
-        ascii=False,
-        dist_dir=destination)
-    kwargs = dict(
-        zipfile=generatezip, 
-        windows=[windows], 
-        options={'py2exe': options}, 
-        cmdclass={'py2exe': py2exe})
+            # Share
+            if self.copysharebuild:
+                build = self.get_finalized_command('build')
+                share_dir = os.path.join(build.build_base, 'share')
+                for f in find_files(build.build_base, 'share', ['*.*~']):
+                    dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
+                    if not os.path.exists(dest_dir):
+                        os.makedirs(dest_dir)
+                    self.copy_file(os.path.join(build.build_base, f), os.path.join(self.exe_dir, f), preserve_mode=0)
+
+
+    class bdist_win(cmd.Command):
+        description = "make an instalable with NSIS on windows platforms"
+        user_options =  py2exe.user_options +  [
+            ('nsis=', 'n', "nsis script"),
+        ]
+        
+        def initialize_options(self):
+            self.verbose = 3
+            self.nsis = None
+        
+        def finalize_options(self):
+            self.verbose = 3
+            if self.nsis == None:
+                self.nsis = 'setup.nsi'
+
+        def run(self):
+            self.run_command('py2exe')
+            self.make_nsis()
+        
+        def make_nsis(self):
+            try:
+                import _winreg
+                # Get the path of the NSIS compiler
+                key = _winreg.OpenKey(_winreg.HKEY_CLASSES_ROOT, 'NSIS.Script\\shell\\compile\\command')
+                compilerPath = _winreg.QueryValueEx(key, '')[0]
+                secondQuote = compilerPath.find('"', 1)
+                compilerPath = compilerPath[1:secondQuote]
+                compilerPath = compilerPath.replace('makensisw', 'makensis') 
+            except:
+                print 'Error: could not find registry entry for NSIS!'
+                print 'Using sytem Path ....'
+                compilerPath = 'makensis.exe'
+            cmd = [compilerPath, '/V%d' % self.verbose, self.nsis]
+            try:
+                spawn(cmd, verbose=1)
+            except DistutilsError as e:
+                print ("Execution failed: %s" % str(e))
+else:
+    # Not a windows platform
+    class bdist_deb(_sdist):
+        description = "make an instalable for debian/ubuntu platforms"
+        user_options =  _sdist.user_options +  [
+            ('debian=', None, "debian dir"),
+        ]
+        
+        def initialize_options(self):
+            _sdist.initialize_options(self)
+            self.debian = None
+            self.dist_dir = None
+            self.keep_temp = True
+            self.format = None
+            self.buildcmd = None
+            self.buildargs = [] 
+        
+        def finalize_options(self):
+            _sdist.finalize_options(self)
+            if self.debian == None:
+                self.debian = 'debian'
+            self.dist_dir = 'bdist'
+            self.keep_temp = True
+            self.format = 'gztar'
+            self.buildcmd = 'dpkg-buildpackage'
+            self.buildargs = ['-uc', '-us'] 
+        
+        def get_file_list(self):
+            _sdist.get_file_list(self)
+            for f in find_files('.', self.debian):
+                self.filelist.append(f)
+        
+        def make_release_tree(self, base_dir, files):
+            if os.path.isdir(base_dir):
+                _remove_tree(base_dir, dry_run=self.dry_run)
+            _sdist.make_release_tree(self, base_dir, files)
+
+        def make_distribution(self):
+            full_name = self.distribution.get_fullname()
+            base_dir = os.path.join(self.dist_dir, full_name)
+            self.make_release_tree(base_dir, self.filelist.files)
+            archive_files = []
+            name = self.distribution.get_name()
+            version = self.distribution.get_version()
+            base_name = os.path.join(self.dist_dir, name + '_' + version + '.orig')
+            filename = self.make_archive(base_name, self.format, self.dist_dir, full_name)
+            archive_files.append(filename)
+            self.distribution.dist_files.append((self.dist_dir, '', filename))
+            filename = self.make_debian(base_dir)
+            self.archive_files = archive_files
+            if not self.keep_temp:
+                _remove_tree(base_dir, dry_run=self.dry_run)
+        
+        def make_debian(self, base_dir):
+            cmd = [self.buildcmd] + self.buildargs
+            try:
+                os.chdir(base_dir)
+                spawn(cmd, verbose=1)
+            except DistutilsError as e:
+                print ("Execution failed: %s" % str(e))
+                return None
+            name = self.distribution.get_name()
+            version = self.distribution.get_version()
+            return name + '_' + version + '-1_all.deb'
+
+
+# ######################
+# setup helper functions
+# ######################
+
+def get_program_libs(base=SRC_DIR, directory='lib'):
+    """
+    Generate the list of packages in lib directory
+    """
+    libs = get_packages(base, directory)
+    libs_photoplace = get_packages(os.path.join(base, directory), 'PhotoPlace')
+    for lib in libs_photoplace['packages']:
+        libs['packages'].append('PhotoPlace.' + lib)
+        for key, data in libs_photoplace['package_data'].iteritems():
+            libs['package_data']['PhotoPlace.' + key] = data
+        for key, data in libs_photoplace['package_dir'].iteritems():
+            libs['package_dir']['PhotoPlace.' + key] = data
+    return libs
+
+def get_program_plugins(base=SRC_DIR, directory='plugins'):
+    """
+    Generate the list of plugins
+    """
+    kwargs = get_packages(base, directory)
     return kwargs
 
-    
-def build4pkg(program):
-    base = os.path.dirname(program)
-    kwargs = dict(scripts=program)
-    return kwargs
-    
+def get_data_files(base=SRC_DIR, directory='share', dst=os.path.join('share', 'photoplace')):
+    """
+    Generate the list of files for package
+    """
+    includes = [('.', glob.glob(os.path.join(base, "*.txt")))]
+    includes += get_files(base, directory, dst)
+    locales = get_files(base, 'locale', os.path.join('share', 'locale'))
+    return includes + locales
+
+def get_bin_files(base='', dirs=['include']):
+    includes = []
+    for directory in dirs:
+        extra_dir = os.path.join(base, directory, os.sys.platform)
+        if os.path.exists(extra_dir):
+            includes += get_files(os.path.join(directory, os.sys.platform), '', '')
+    return includes
+
 
 # #####
 # setup
 # #####
 
 if __name__ == '__main__':
-    sys.path.append(os.path.join(SRC_DIR, 'modules'))
     sys.path.append(os.path.join(SRC_DIR, 'lib'))
     kwargs = {}
     kwargs['cmdclass'] = {}
-    data_files = []
+    kwargs['options'] = {}
+    data_files = get_files(SRC_DIR, 'share', os.path.join('share', 'photoplace'))
     if PLATFORM == "win32":
         if '--full' in sys.argv:
             sys.argv.remove('--full')
-            kwargs = build4win(PROGRAM, ICON['win32'], DIST_LIB)
-            data_files = get_bin_files()
-        else:
-            kwargs = build4win(PROGRAM, ICON['win32'], DIST_LIB)
-        kwargs['cmdclass']['nsis'] = compile_nsis
-        kwargs['cmdclass']['bdist_wininst'] = compile_nsis
+            data_files += get_bin_files()
+        py2exe.gtkdata = True
+        py2exe.gtktheme = "Human"
+        py2exe.gtkthemes = "include\\GTKThemes\\"
+        kwargs['windows'] = [{
+            'script':PROGRAM, 
+            'icon_resources':[(1, ICON['win32'])]
+        }]
+        kwargs['options']['py2exe'] = {
+            'includes': ['encodings', 'gobject', 'glib', 'gio', 'gtk', 'cairo', 'pango', 'pangocairo', 'atk'],
+            'excludes': ['_ssl', '_scproxy', 'ICCProfile', 'bsddb', 'curses', 'tcl', 'Tkconstants', 'Tkinter'],
+            'dll_excludes': ['libglade-2.0-0.dll', 'w9xpopen.exe', 'tcl84.dll', 'tk84.dll'], 
+            'bundle_files': 3,
+            'optimize': 2,
+            'compressed': 1,
+            'ascii': False,
+            'dist_dir': os.path.join('bdist', 'photoplace-' + VERSION)
+        }
+        kwargs['zipfile'] = os.path.join('lib', 'shared.zip')
+        kwargs['cmdclass']['py2exe'] = py2exe
+        data_files += [('.', glob.glob(os.path.join(SRC_DIR, "*.txt")))]
+        data_files += get_files(SRC_DIR, 'locale', 'locale')
+        kwargs['cmdclass']['nsis'] = bdist_win
+        kwargs['cmdclass']['bdist_wininst'] = bdist_win
     elif PLATFORM == "darwin" and 'py2app' in sys.argv:
         print "TODO ..."
         sys.exit()
+    else:
+        data_files += get_files(SRC_DIR, 'locale', os.path.join('share', 'locale'), goodfiles=['*.mo'])
+        data_files += [(os.path.join('share','doc','photoplace'), glob.glob(os.path.join(SRC_DIR, "*.txt")))]
+        kwargs['cmdclass']['bdist_deb'] = bdist_deb
     kwargs.update(get_program_libs())
-    data_files += get_data_files()
     kwargs['cmdclass']['build'] = build
-    kwargs['cmdclass']['clean'] = clean_home
+    kwargs['cmdclass']['clean'] = clean
     kwargs['cmdclass']['build_plugins'] = build_plugins
+    kwargs['cmdclass']['install'] = install
+    kwargs['cmdclass']['build_trans'] = build_trans
     setup(name='photoplace',
         version=VERSION,
         license='GNU General Public License v3',
         description='A tool for geotagging your photos and ... much more!',
-        long_description=open(os.path.join(SRC_DIR, 'readme.txt')).read(),
+        long_description=open(os.path.join(SRC_DIR, 'README.txt')).read(),
         author='Jose Riguera Lopez',
         author_email='jriguera@gmail.com',
         classifiers=CLASSIFIERS,
+        platforms="Python 2.x, 2.6 and later",
         url='http://code.google.com/p/photoplace/',
+        scripts=[PROGRAM],
         data_files=data_files,
         **kwargs)
 

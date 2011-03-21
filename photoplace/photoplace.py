@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #   photoplace.py
@@ -32,7 +32,7 @@ to present your photo collection.
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
 __version__ = "0.5.0"
-__date__ = "September 2010"
+__date__ = "March 2011"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera, September 2010"
 
@@ -69,7 +69,6 @@ __RESOURCES_PATH__ = 'share'
 __LOCALE_PATH__ = 'locale'
 __LIB_PATH__ = 'lib'
 __RESOURCES_CONF_PATH__ = 'conf'
-
 __SHARE_DIR__ = os.path.join('share', 'photoplace')
 
 
@@ -81,7 +80,7 @@ if hasattr(sys, "frozen") or \
     imp.is_frozen("__main__"):
     __PROGRAM_PATH__ = os.path.dirname(sys.executable)
 else:
-    __PROGRAM_PATH__ = os.path.dirname(sys.argv[0])
+    __PROGRAM_PATH__ = os.path.dirname(os.path.realpath(__file__))
 
 lib_path = os.path.join(__PROGRAM_PATH__, __LIB_PATH__)
 if os.path.isdir(lib_path):
@@ -94,9 +93,14 @@ resources_path = os.path.join(__PROGRAM_PATH__, __RESOURCES_PATH__)
 if not os.path.isdir(resources_path):
     # installed
     __RESOURCES_PATH__ = os.path.realpath(
-        os.path.join('..', __RESOURCES_PATH__, __PROGRAM__))
+        os.path.join(__PROGRAM_PATH__, '..', __RESOURCES_PATH__, __PROGRAM__))
 else:
-    __RESOURCES_PATH__ = resources_path
+    new_resources_path = os.path.join(resources_path, __PROGRAM__)
+    if not os.path.isdir(new_resources_path):
+        __RESOURCES_PATH__ = resources_path
+    else:
+        # windows install
+        __RESOURCES_PATH__ = new_resources_path
 
 # Gettext
 locale_path = os.path.join(__PROGRAM_PATH__, __LOCALE_PATH__)

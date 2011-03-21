@@ -28,6 +28,8 @@
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_STARTMENU_REGVAL "NSIS:StartMenuDir"
 !define MSVC2008 "http://download.microsoft.com/download/1/1/1/1116b75a-9ec3-481a-a3c8-1777b5381140/vcredist_x86.exe"
+!define INPUT_DIR "bdist\photoplace-0.5.0"
+!define OUTPUT_FILE "bdist\photoplace-0.5.0.exe"
 
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
@@ -47,7 +49,7 @@ var CURRENT_LANG
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
 ; License page
-!insertmacro MUI_PAGE_LICENSE "photoplace-0.5.0\license.txt"
+!insertmacro MUI_PAGE_LICENSE "${INPUT_DIR}\LICENSE.txt"
 ; Directory page
 !insertmacro MUI_PAGE_DIRECTORY
 ; Start menu page
@@ -62,7 +64,7 @@ var ICONS_GROUP
 !insertmacro MUI_PAGE_INSTFILES
 ; Finish page
 !define MUI_FINISHPAGE_RUN "$INSTDIR\photoplace.exe"
-!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\readme.txt"
+!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\README.txt"
 !insertmacro MUI_PAGE_FINISH
 
 ; Uninstaller pages
@@ -74,7 +76,7 @@ var ICONS_GROUP
 ; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "${PRODUCT_NAME}-${PRODUCT_VERSION}.exe"
+OutFile "${OUTPUT_FILE}"
 InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
@@ -107,7 +109,7 @@ Section "${PRODUCT_NAME}" SEC01
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
   ; Put files here
-  File /r "${PRODUCT_NAME}-${PRODUCT_VERSION}\*.*"
+  File /r "${INPUT_DIR}\*.*"
   ; Shortcuts
   SetShellVarContext all
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
@@ -161,7 +163,7 @@ Section -AdditionalIcons
 SectionEnd
 
 Section -Localization
-  CopyFiles "$INSTDIR\share\templates\$CURRENT_LANG\*.*" "$INSTDIR\share\templates"
+  CopyFiles "$INSTDIR\share\photoplace\templates\$CURRENT_LANG\*.*" "$INSTDIR\share\photoplace\templates"
 SectionEnd
 
 Section -Post

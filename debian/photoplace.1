@@ -1,0 +1,62 @@
+.\"(c) Jose Riguera <jriguera@gmail.com>
+.TH photoplace 1 "February 2011" "" "usage"
+
+.SH NAME
+photoplace \- Python program to geotagging photos from a GPX data.
+
+.SH SYNOPSIS
+.B photoplace
+.RI [options] 
+.RI <photodir>
+.RI <file.gpx>
+.RI [<output.kml>|<output.kmz>]
+.br
+
+.SH DESCRIPTION
+Apart from geotagging pictures, it can generate a KMZ layer for Google Earth 
+with all geolocated photos. By default, it tries to launch a graphical GTK UI, if 
+that is not possible, to set up the proper parameters, all options must be 
+supplied into the configuration file or by command line.
+
+.SH OPTIONS
+Options supplied by command line take preference over those defined into
+the configuration file. A summary of options is included below.
+.TP
+.B --version
+Show program's version number and exit.
+.TP
+.B -h, --help
+Show this help message and exit.
+.TP
+.B -c <configfile.cfg>, --config-file=<configfile.cfg>
+Read the configuration from <configfile.cfg>
+.TP
+.B -g, --only-geotagging
+Only for geotagging the photos of input directory, not for generating any output file.
+.TP
+.B -o SECTION:KEY=VALUE, --options=SECTION:KEY=VALUE
+Other options like are defined in the config file. This argument can be supplied as 
+many times as necessary to set up all options.
+.TP
+.B -b, --batch
+Run in batch mode without graphical UI, options by command line args.
+
+.SH FILES
+By default, the program searchs the configuration file \fIphotoplace.cfg\fP in
+current directory, then in user home directory under \fI~/.photoplace.cfg\fP
+
+.I /usr/share/photoplace/conf/photoplace.cfg
+.RS
+Global system wide configuration file.
+.RE
+.I /usr/share/photoplace/templates
+.RS
+Global directory for templates
+.RE
+
+.SH AUTHOR
+PhotoPlace was written by José Riguera López <jriguera@gmail.com>
+
+.SH SEE ALSO
+For recent info read the PhotoPlace home page:
+<URL:http://code.google.com/p/photoplace/>
