@@ -30,7 +30,6 @@ __copyright__ ="(c) Jose Riguera, September 2010"
 
 
 import sys
-import logging
 import threading
 
 
@@ -100,7 +99,6 @@ class Observer(object):
 
     def __init__(self, notifications=None, filters=[]):
         object.__init__(self)
-        self.logger = logging.getLogger(self.__class__.__name__)
         self._setNotifications(notifications, filters)
         self._setArgs()
 
@@ -126,7 +124,6 @@ class Observable(object):
     def __init__(self):
         object.__init__(self)
         self._observers = {}
-        self.logger = logging.getLogger(self.__class__.__name__)
 
     def addObserver(self, observer, notifications=None, *args, **kwargs):
         if callable(observer):
@@ -162,12 +159,8 @@ class Observable(object):
             return None
 
     def notify(self, event=None, *args, **kwargs):
-        #print "EVENTI  ------------------------------------>", event
-        #print "OBSERVERKEYS: > %s <" % self._observers
         for observer in self._observers.keys():
-            #print "*******", observer
             for (n, a, k) in self._observers[observer]:
-                #print "@@ %s, %s, %s" % (n,a,k)
                 observer._lock.acquire()
                 old_n = observer.notifications
                 old_a = observer.args
@@ -176,12 +169,11 @@ class Observable(object):
                 observer.args = a
                 observer.kwargs = k
                 observer._event = event
-                #print "OBSERVER: ", observer
                 try:
                     observer(*args, **kwargs)
                 except Exception as e:
                     msg = "Notification Exception with %s: %s."
-                    self.logger.error(msg % (str(observer), str(e)))
+                    print(msg % (str(observer), str(e)))
                 observer.notifications = old_n
                 observer.args = old_a
                 observer.kwargs = old_k

@@ -221,7 +221,6 @@ class PhotoPlaceGUI(InterfaceUI):
         return cls._instance
 
     def __init__(self, resourcedir=None):
-        gtk.gdk.threads_enter()
         InterfaceUI.__init__(self, resourcedir)
         guifile = os.path.join(self.resourcedir, __GUIXML_FILE__)
         self.builder = gtk.Builder()
@@ -307,6 +306,8 @@ class PhotoPlaceGUI(InterfaceUI):
             "To get all supported variables press <b>&lt;ctl&gt;&lt;space&gt;</b>"))
         self["textview-templates"].add_events( gtk.gdk.KEY_PRESS_MASK )
         self["textview-templates"].connect( "key_press_event", self._key_press_wintemplate)
+        settings = gtk.settings_get_default()
+        settings.props.gtk_button_images = True
         self.window.show_all()
 
     def __getitem__(self, key):
@@ -374,6 +375,7 @@ class PhotoPlaceGUI(InterfaceUI):
         self.variables_iterator = None
 
     def start(self, load_files=True):
+        gtk.gdk.threads_enter()
         if sys.platform.startswith('win'):
             sleeper = lambda: time.sleep(.001) or True
             gobject.timeout_add(400, sleeper)
@@ -411,8 +413,7 @@ class PhotoPlaceGUI(InterfaceUI):
                 msg = _("Welcome to %(program)s v %(version)s. If you like it, "
                     "please consider making a donation ;-) See 'About' menu for "
                     "more information") % dgettext
-                gobject.idle_add(self.statusbar.pop, self.statusbar_context)
-                gobject.idle_add(self.statusbar.push, self.statusbar_context, msg)
+                gobject.idle_add(self.set_statusbar, msg)
         # GTK signals
         self.signals = {
             "on_aboutdialog_close": self.dialog_close,
@@ -466,7 +467,6 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_toolbutton-wintemplates-check_clicked": self._validate_wintemplate,
         }
         self.builder.connect_signals(self.signals)
-        #gtk.gdk.threads_enter()
         gtk.main()
         gtk.gdk.threads_leave()
 
@@ -615,8 +615,11 @@ class PhotoPlaceGUI(InterfaceUI):
     @DObserver
     def _log_to_statusbar_observer(self, formatter, record):
         msg = formatter.format(record)
-        gobject.idle_add(self.statusbar.pop, self.statusbar_context)
-        gobject.idle_add(self.statusbar.push, self.statusbar_context, msg)
+        gobject.idle_add(self.set_statusbar, msg)
+
+    def set_statusbar(self, msg):
+        self.statusbar.pop(self.statusbar_context)
+        self.statusbar.push(self.statusbar_context, msg)
 
     @DObserver
     def _log_to_textview_observer(self, formatter, record):
@@ -637,24 +640,24 @@ class PhotoPlaceGUI(InterfaceUI):
         self.textview.scroll_to_mark(self.textbuffer.get_insert(), 0.1)
 
     def pulse_progressbar(self, msg=''):
-        gobject.idle_add(self.progressbar.set_text, msg)
-        gobject.idle_add(self.progressbar.pulse)
+        self.progressbar.set_text(msg)
+        self.progressbar.pulse()
 
     @DObserver
     def _update_progressbar_loadphoto_observer(self, geophoto, *args):
         msg = _("Loading photo %s ...") % geophoto.name
-        self.pulse_progressbar(msg)
+        gobject.idle_add(self.pulse_progressbar, msg)
         self._load_geophoto(geophoto)
 
     @DObserver
     def _update_progressbar_geolocate_observer(self, photo, *args):
         msg = _("Geotagging photo %s ...") % photo.name
-        self.pulse_progressbar(msg)
+        gobject.idle_add(self.pulse_progressbar, msg)
 
     @DObserver
     def _update_progressbar_makegpx_observer(self, photo, *args):
         msg = _("Processing photo %s ...") % photo.name
-        self.pulse_progressbar(msg)
+        gobject.idle_add(self.pulse_progressbar, msg)
 
     def set_progressbar(self, text=None, percent=-1.0):
         if percent < 0.0:
@@ -669,32 +672,32 @@ class PhotoPlaceGUI(InterfaceUI):
             msg = "[" + str(int(self.progressbar_percent * 100)) + "%]"
             if text:
                 msg = msg + "  " + text 
-        gobject.idle_add(self.progressbar.set_text, msg)
-        gobject.idle_add(self.progressbar.set_fraction, self.progressbar_percent)
+        self.progressbar.set_text(msg)
+        self.progressbar.set_fraction(self.progressbar_percent)
 
     @DObserver
     def _set_progressbar_makekml_observer(self, photo, *args):
         msg = _("Adding to KML info of %s ...") % photo.name
-        self.set_progressbar(msg)
+        gobject.idle_add(self.set_progressbar, msg)
 
     @DObserver
     def _set_progressbar_writeexif_observer(self, photo, *args):
         msg = _("Writing EXIF info of %s ...") % photo.name
-        self.set_progressbar(msg)
+        gobject.idle_add(self.set_progressbar, msg)
 
     @DObserver
     def _set_progressbar_copyfiles_observer(self, photo, *args):
         msg = _("Copying photo %s ...") % photo.name
-        self.set_progressbar(msg)
+        gobject.idle_add(self.set_progressbar, msg)
 
     @DObserver
     def _set_progressbar_savefiles_observer(self, filename, *args):
         msg = _("Saving file %s ...") % filename
-        self.set_progressbar(msg)
+        gobject.idle_add(self.set_progressbar, msg)
 
     @DObserver
     def _set_progressbar_end_observer(self, *args):
-        self.set_progressbar(None, 0.0)
+        gobject.idle_add(self.set_progressbar, None, 0.0)
 
 
     # ##############################################
