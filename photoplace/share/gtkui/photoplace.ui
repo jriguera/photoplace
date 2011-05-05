@@ -114,6 +114,7 @@
                         <property name="use_underline">True</property>
                         <property name="image">image-opengpx</property>
                         <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
                         <signal name="activate" handler="on_imagemenuitem-opengpx_activate"/>
                       </object>
                     </child>
@@ -452,12 +453,11 @@ Not active for geottaging purposes, no output file will be generated.</property>
                             <child>
                               <object class="GtkHBox" id="hbox-time">
                                 <property name="visible">True</property>
-                                <property name="spacing">5</property>
                                 <property name="homogeneous">True</property>
                                 <child>
                                   <object class="GtkHBox" id="hbox-utc">
                                     <property name="visible">True</property>
-                                    <property name="spacing">10</property>
+                                    <property name="spacing">5</property>
                                     <child>
                                       <object class="GtkLabel" id="label-utc">
                                         <property name="visible">True</property>
@@ -500,15 +500,58 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                   </packing>
                                 </child>
                                 <child>
+                                  <object class="GtkHBox" id="hbox-toffset">
+                                    <property name="visible">True</property>
+                                    <property name="spacing">5</property>
+                                    <child>
+                                      <object class="GtkLabel" id="label-toffset">
+                                        <property name="visible">True</property>
+                                        <property name="tooltip_text" translatable="yes" comments="label.">Seconds (positive or negative) to add to the photos time in order to match them with GPS data.</property>
+                                        <property name="xalign">1</property>
+                                        <property name="label" translatable="yes" comments="label.">Time offset:</property>
+                                        <property name="use_markup">True</property>
+                                        <property name="single_line_mode">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkSpinButton" id="spinbutton-toffset">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes" comments="entry.">Seconds (positive or negative) to add to the photos time in order to match them with GPS data.</property>
+                                        <property name="max_length">5</property>
+                                        <property name="invisible_char">●</property>
+                                        <property name="width_chars">6</property>
+                                        <property name="secondary_icon_stock">gtk-zoom-fit</property>
+                                        <property name="adjustment">adjustment-toffset</property>
+                                        <property name="climb_rate">10</property>
+                                        <property name="numeric">True</property>
+                                        <property name="update_policy">if-valid</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
                                   <object class="GtkHBox" id="hbox-tdelta">
                                     <property name="visible">True</property>
-                                    <property name="spacing">10</property>
+                                    <property name="spacing">5</property>
                                     <child>
                                       <object class="GtkLabel" id="label-tdelta">
                                         <property name="visible">True</property>
-                                        <property name="tooltip_text" translatable="yes" comments="label.">The maximum difference in seconds allowed between the time of a photo and the nearest point of GPX.</property>
+                                        <property name="tooltip_text" translatable="yes" comments="label.">The maximum time gap allowed between the time of a photo and the nearest point of GPS data.</property>
                                         <property name="xalign">1</property>
-                                        <property name="label" translatable="yes">Maximum geotagging delta seconds:</property>
+                                        <property name="label" translatable="yes">Delta seconds for geotagging:</property>
                                         <property name="use_markup">True</property>
                                       </object>
                                       <packing>
@@ -520,12 +563,12 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="has_tooltip">True</property>
-                                        <property name="tooltip_text" translatable="yes" comments="entry.">The maximum time difference allowed between the time of a photo and the nearest point of GPX.</property>
-                                        <property name="max_length">6</property>
+                                        <property name="tooltip_text" translatable="yes" comments="entry.">The maximum time gap allowed between the time of a photo and the nearest point of GPS data.</property>
+                                        <property name="max_length">5</property>
                                         <property name="invisible_char">●</property>
-                                        <property name="width_chars">10</property>
+                                        <property name="width_chars">6</property>
                                         <property name="caps_lock_warning">False</property>
-                                        <property name="secondary_icon_stock">gtk-justify-fill</property>
+                                        <property name="secondary_icon_stock">gtk-justify-center</property>
                                         <property name="adjustment">adjustment-tdelta</property>
                                         <property name="snap_to_ticks">True</property>
                                         <property name="numeric">True</property>
@@ -540,7 +583,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                   </object>
                                   <packing>
                                     <property name="fill">False</property>
-                                    <property name="position">1</property>
+                                    <property name="position">2</property>
                                   </packing>
                                 </child>
                               </object>
@@ -624,6 +667,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                                 <property name="update_policy">delayed</property>
                                                 <property name="adjustment">adjustment-quality</property>
                                                 <property name="inverted">True</property>
+                                                <property name="show_fill_level">True</property>
                                                 <property name="fill_level">3</property>
                                                 <property name="digits">0</property>
                                                 <property name="draw_value">False</property>
@@ -679,6 +723,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                                 <property name="update_policy">delayed</property>
                                                 <property name="adjustment">adjustment-jpgzoom</property>
                                                 <property name="inverted">True</property>
+                                                <property name="show_fill_level">True</property>
                                                 <property name="fill_level">1</property>
                                                 <property name="digits">2</property>
                                                 <property name="value_pos">left</property>
@@ -2005,5 +2050,12 @@ Note that contents will be checked by place them into a &lt;div&gt; section.</pr
   <object class="GtkTextBuffer" id="textbuffer-templates">
     <signal name="changed" handler="on_textbuffer-templates_changed"/>
     <signal name="mark_set" handler="on_textbuffer-templates_mark_set"/>
+  </object>
+  <object class="GtkAdjustment" id="adjustment-toffset">
+    <property name="lower">-3600</property>
+    <property name="upper">3600</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">60</property>
+    <signal name="value_changed" handler="on_adjustment-toffset_value_changed"/>
   </object>
 </interface>
