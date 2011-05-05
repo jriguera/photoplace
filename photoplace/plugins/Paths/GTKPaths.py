@@ -54,7 +54,7 @@ from paths import *
 
 
 # columns
-(   
+(
     _GTKPaths_COLUMN_KEY,
     _GTKPaths_COLUMN_VKEY,
     _GTKPaths_COLUMN_VALUE,
@@ -73,7 +73,8 @@ _GTKPaths_DESCRIPTION_CHARS = 40
 class CellRendererTextClick(gtk.CellRendererText):
 
     __gproperties__ = {
-        'clickable': (gobject.TYPE_BOOLEAN, 'clickable', 'is clickable?', False, gobject.PARAM_READWRITE),
+        'clickable': (gobject.TYPE_BOOLEAN, 'clickable', 'is clickable?',
+            False, gobject.PARAM_READWRITE),
     }
 
     def __init__(self):
@@ -88,7 +89,7 @@ class CellRendererTextClick(gtk.CellRendererText):
 
     def do_start_editing(self, event, treeview, path, background_area, cell_area, flags):
         if not self.clickable:
-            return gtk.CellRendererText.do_start_editing(self, 
+            return gtk.CellRendererText.do_start_editing(self,
                 event, treeview, path, background_area, cell_area, flags)
         self.emit('edited', path, '')
 
@@ -100,13 +101,13 @@ class GTKPaths(object):
 
     def __init__(self, gtkbuilder, state, logger):
         object.__init__(self)
-        self.plugin = gtk.VBox(False)
-        self.logger = logger
         self.options = None
         self.tracksinfo = None
         self.tracknum = 0
         self.photopaths = 0
         self.state = state
+        self.logger = logger
+        self.plugin = gtk.VBox(False)
         # 1st line
         self.checkbutton_genpath = gtk.CheckButton(
             _("Generate a path from previously geotagged photos"))
@@ -125,7 +126,7 @@ class GTKPaths(object):
         # columns
         renderer = gtk.CellRendererText()
         renderer.connect('edited', self._edit_cell, KmlPaths_CONFKEY_TRACKS_NAME)
-        column = gtk.TreeViewColumn(_("Path Name/Parameter"), renderer, 
+        column = gtk.TreeViewColumn(_("Path Name/Parameter"), renderer,
             text=_GTKPaths_COLUMN_VKEY,
             editable=_GTKPaths_COLUMN_EDITKEY)
         column.set_resizable(True)
@@ -133,8 +134,8 @@ class GTKPaths(object):
         renderer = CellRendererTextClick()
         renderer.connect('editing-started', self._edit_value)
         renderer.connect('edited', self._edit_cell, KmlPaths_CONFKEY_TRACKS_DESC)
-        column = gtk.TreeViewColumn(_("Description/Value"), renderer, 
-            text=_GTKPaths_COLUMN_VALUE, 
+        column = gtk.TreeViewColumn(_("Description/Value"), renderer,
+            text=_GTKPaths_COLUMN_VALUE,
             editable=_GTKPaths_COLUMN_EDITVAL,
             clickable=_GTKPaths_COLUMN_CLICK)
         column.set_resizable(True)
@@ -214,8 +215,8 @@ class GTKPaths(object):
         try:
             fd = codecs.open(filename, "r", encoding="utf-8")
             description = fd.read(bytes)
-        except Exception as exception:
-            self.logger.error(_("Cannot read file '%s'.") % str(exception))
+        except Exception as e:
+            self.logger.error(_("Cannot read file '%s'.") % str(e))
         finally:
             if fd != None:
                 fd.close()
@@ -224,7 +225,6 @@ class GTKPaths(object):
 
     def setup(self, options, tracks):
         self.treestore.clear()
-        self.options = None
         self.checkbutton_genpath.set_active(options[KmlPaths_CONFKEY_KMLPATH_GENTRACK])
         self.tracksinfo = tracks
         self.options = options
@@ -264,17 +264,17 @@ class GTKPaths(object):
             width = trackinfo[KmlPaths_CONFKEY_TRACKS_WIDTH]
         if pos != None:
             ite = self.treestore.insert(None, pos,
-                [str(KmlPaths_CONFKEY_TRACKS_NAME), 
+                [str(KmlPaths_CONFKEY_TRACKS_NAME),
                     name, desc, description, desc_file, True, True, True])
         else:
-            ite = self.treestore.append(None, 
-                [str(KmlPaths_CONFKEY_TRACKS_NAME), 
+            ite = self.treestore.append(None,
+                [str(KmlPaths_CONFKEY_TRACKS_NAME),
                     name, desc, description, desc_file, True, True, True])
-        self.treestore.append(ite, 
-            [str(KmlPaths_CONFKEY_TRACKS_COLOR), 
+        self.treestore.append(ite,
+            [str(KmlPaths_CONFKEY_TRACKS_COLOR),
                 str(KmlPaths_CONFKEY_TRACKS_COLOR), color, None, None, False, True, True])
-        self.treestore.append(ite, 
-            [str(KmlPaths_CONFKEY_TRACKS_WIDTH), 
+        self.treestore.append(ite,
+            [str(KmlPaths_CONFKEY_TRACKS_WIDTH),
                 str(KmlPaths_CONFKEY_TRACKS_WIDTH), width, None, None, False, True, False])
         self.tracknum += 1
 
@@ -309,8 +309,8 @@ class GTKPaths(object):
         try:
             colorsel.set_current_alpha(int((int(value[0:2], 16)*65535)/255))
             colorsel.set_current_color(gtk.gdk.Color(
-                red=int((int(value[6:8], 16)*65535)/255), 
-                green=int((int(value[4:6], 16)*65535)/255), 
+                red=int((int(value[6:8], 16)*65535)/255),
+                green=int((int(value[4:6], 16)*65535)/255),
                 blue=int((int(value[2:4], 16)*65535)/255) ))
         except:
             pass
@@ -382,7 +382,7 @@ class GTKPaths(object):
         image.set_from_stock(gtk.STOCK_FILE, gtk.ICON_SIZE_BUTTON)
         filechooserbutton.set_image(image)
         filechooserbutton.set_label(filename)
-        filechooserbutton.connect('clicked', 
+        filechooserbutton.connect('clicked',
             self._load_file, textview, ite, prefilename)
         hbox.pack_start(filechooserbutton, False, False, 5)
         alignment = gtk.Alignment(1.0, 0.5, 0.0, 0.0)
@@ -405,10 +405,10 @@ class GTKPaths(object):
         dialog.destroy()
 
 
-    def _load_file(self, widget, textview, ite, 
+    def _load_file(self, widget, textview, ite,
         prefilename=None, bytes=102400, wrap=gtk.WRAP_NONE):
-        
-        dialog = gtk.FileChooserDialog(title=_("Select text file ..."), 
+
+        dialog = gtk.FileChooserDialog(title=_("Select text file ..."),
             parent=self.window, action=gtk.FILE_CHOOSER_ACTION_OPEN,
             buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         ffilter = gtk.FileFilter()
@@ -438,7 +438,7 @@ class GTKPaths(object):
 
     def get_data(self, key, tracknum):
         ite = self.treestore.get_iter_from_string(str(tracknum))
-        if key == KmlPaths_CONFKEY_TRACKS_COLOR: 
+        if key == KmlPaths_CONFKEY_TRACKS_COLOR:
             ite = self.treestore.iter_nth_child(ite, 0)
             return self.treestore.get_value(ite, _GTKPaths_COLUMN_VALUE)
         elif key == KmlPaths_CONFKEY_TRACKS_WIDTH:

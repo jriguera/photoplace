@@ -95,6 +95,7 @@ KmlPaths_KMLPATH_GENTRACK = True
 KmlPaths_TRACKS_COLOR = '20FFFF00'
 KmlPaths_TRACKS_WIDTH = '3'
 KmlPaths_GPX_GENNAME = _('Pictures')
+KmlPaths_VARIABLES = 'defaults'
 
 
 import KmlPath
@@ -122,15 +123,15 @@ class KmlPaths(Plugin):
 
     def __init__(self, logger, state, args, argfiles=[], gtkbuilder=None):
         Plugin.__init__(self, logger, state, args, argfiles, gtkbuilder)
-        self.options = dict()
         # GTK widgets
         self.gui = None
         self.tracksinfo = None
-        self.track_num = 0
         self.defaultsinfo = None
         self.kmlpath = None
         self.phototrack = None
         self.gengpx = None
+        self.options = None
+        self.track_num = 0
         if gtkbuilder:
             import GTKPaths
             self.gui = GTKPaths.GTKPaths(gtkbuilder, state, logger)
@@ -141,9 +142,9 @@ class KmlPaths(Plugin):
         if not options.has_key(KmlPaths_CONFKEY):
             options[KmlPaths_CONFKEY] = dict()
         opt = options[KmlPaths_CONFKEY]
-        self.defaultsinfo = options['defaults']
+        self.defaultsinfo = options[KmlPaths_VARIABLES]
+        self.options = None
         self.process_variables(opt)
-        self.kmlpath = None
         self.phototrack = dict()
         if self.gui:
             if self.ready == -1:
@@ -163,7 +164,7 @@ class KmlPaths(Plugin):
         if not isinstance(gentrack, bool):
             generate = gentrack.lower().strip() in ["yes", "true", "on", "si", "1"]
             options[KmlPaths_CONFKEY_KMLPATH_GENTRACK] = generate
-        self.tracksinfo = { 
+        self.tracksinfo = {
         0:{
             KmlPaths_CONFKEY_TRACKS_NAME : KmlPaths_KMLPATH_GENNAME,
             KmlPaths_CONFKEY_TRACKS_DESC : '',
@@ -190,6 +191,7 @@ class KmlPaths(Plugin):
                     elif tkey == KmlPaths_CONFKEY_TRACKS_WIDTH:
                         tmp_val = int(value)
                     elif tkey == KmlPaths_CONFKEY_TRACKS_DESC:
+                        value = os.path.normpath(value)
                         if not os.path.isfile(value):
                             tmp_val = os.path.join(self.state.resourcedir, value)
                             if not os.path.isfile(tmp_val):
@@ -211,9 +213,7 @@ class KmlPaths(Plugin):
         if self.gui:
             self.gui.clear_tracks()
             for track in self.state.gpxdata.tracks:
-                name = str(track.name)
-                desc = str(track.desc)
-                self.gui.add_track(name, desc)
+                self.gui.add_track(track.name, track.desc)
 
 
     @DRegister("LoadPhotos:finish")
@@ -248,6 +248,8 @@ class KmlPaths(Plugin):
         num_tracks += self.gentrack(self.state.gpxdata.tracks)
         self.logger.info(_("%s paths have been generated for KML data.") % num_tracks)
         self.track_num = 0
+        self.gengpx = None
+        self.kmlpath = None
 
 
     def maketrack(self):
@@ -394,8 +396,8 @@ class KmlPaths(Plugin):
                     try:
                         fd = codecs.open(filename, "r", encoding="utf-8")
                         description = fd.read()
-                    except Exception as exception:
-                        self.logger.error(_("Cannot read file '%s'.") % str(exception))
+                    except Exception as e:
+                        self.logger.error(_("Cannot read file '%s'.") % str(e))
                     finally:
                         if fd != None:
                             fd.close()
@@ -415,8 +417,8 @@ class KmlPaths(Plugin):
 
     def reset(self):
         if self.ready:
-            self.kmlpath = None
             self.gengpx = None
+            self.kmlpath = None
             self.phototrack = dict()
             self.track_num = 0
             if self.gui:
@@ -424,20 +426,19 @@ class KmlPaths(Plugin):
                 self.gui.reset()
             self.logger.debug(_("Resetting plugin ..."))
 
-   
+
     def end(self, options):
         self.ready = 0
         self.tracksinfo = None
-        self.track_num = 0
         self.defaultsinfo = None
         self.options = None
         self.phototrack = None
         self.gengpx = None
         self.kmlpath = None
+        self.track_num = 0
         if self.gui:
-            self.gui.hide()
+            self.gui.hide(True)
         self.logger.debug(_("Ending plugin ..."))
 
 
 # EOF
-

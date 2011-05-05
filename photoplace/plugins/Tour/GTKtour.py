@@ -121,7 +121,7 @@ class GTKTour(object):
         image.set_from_stock(gtk.STOCK_FILE, gtk.ICON_SIZE_BUTTON)
         self.filechooserbutton_ini.set_image(image)
         self.filechooserbutton_ini.set_label(_('[select a file]'))
-        self.filechooserbutton_ini.connect('clicked', 
+        self.filechooserbutton_ini.connect('clicked',
             self._load_file, self.textview_ini, KmlTour_CONFKEY_BEGIN_DESC)
         hbox_ini.pack_start(self.filechooserbutton_ini, True, True, 10)
         vbox_ini.pack_start(hbox_ini, False, False)
@@ -152,7 +152,7 @@ class GTKTour(object):
         image.set_from_stock(gtk.STOCK_FILE, gtk.ICON_SIZE_BUTTON)
         self.filechooserbutton_end.set_image(image)
         self.filechooserbutton_end.set_label(_('[select a file]'))
-        self.filechooserbutton_end.connect('clicked', 
+        self.filechooserbutton_end.connect('clicked',
             self._load_file, self.textview_end, KmlTour_CONFKEY_END_DESC)
         hbox_end.pack_start(self.filechooserbutton_end, True, True, 10)
         vbox_end.pack_start(hbox_end, False, False)
@@ -224,7 +224,7 @@ class GTKTour(object):
 
 
     def _load_file(self, widget, textview, key):
-        dialog = gtk.FileChooserDialog(title=_("Select text file ..."), 
+        dialog = gtk.FileChooserDialog(title=_("Select text file ..."),
             parent=self.window, action=gtk.FILE_CHOOSER_ACTION_OPEN,
             buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         ffilter = gtk.FileFilter()
@@ -305,7 +305,7 @@ class GTKTour(object):
 
 
     def _add_music(self, widget, *args, **kwargs):
-        dialog = gtk.FileChooserDialog(_("Select MP3 files ..."), 
+        dialog = gtk.FileChooserDialog(_("Select MP3 files ..."),
             self.window, gtk.FILE_CHOOSER_ACTION_OPEN,
             (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         ffilter = gtk.FileFilter()
@@ -371,7 +371,7 @@ class GTKTour(object):
         treeview.append_column(column)
         renderer = gtk.CellRendererText()
         renderer.connect('edited', self._edit_cell)
-        column = gtk.TreeViewColumn(_("Value"), renderer, 
+        column = gtk.TreeViewColumn(_("Value"), renderer,
             text=_KmlTour_COLUMN_VALUE, editable=_KmlTour_COLUMN_EDITABLE)
         column.set_resizable(True)
         column.set_sort_column_id(_KmlTour_COLUMN_VALUE)
@@ -385,39 +385,39 @@ class GTKTour(object):
             self.options[KmlTour_CONFKEY_BEGIN_DESC] , True])
         self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_STYLE,
             self.options[KmlTour_CONFKEY_BEGIN_STYLE], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_FLYTIME, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_FLYTIME,
             self.options[KmlTour_CONFKEY_BEGIN_FLYTIME], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_HEADING, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_HEADING,
             self.options[KmlTour_CONFKEY_BEGIN_HEADING], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_RANGE, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_RANGE,
             self.options[KmlTour_CONFKEY_BEGIN_RANGE], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_TILT, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_TILT,
             self.options[KmlTour_CONFKEY_BEGIN_TILT], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_WAIT, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_WAIT,
             self.options[KmlTour_CONFKEY_BEGIN_WAIT], True])
         ite = self.treestore.append(None, [str(_("Default Camera Parameters")), None, False])
-        self.treestore.append(ite, [KmlTour_CONFKEY_FLYTIME, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_FLYTIME,
             self.options[KmlTour_CONFKEY_FLYTIME], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_HEADING, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_HEADING,
             self.options[KmlTour_CONFKEY_HEADING], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_RANGE, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_RANGE,
             self.options[KmlTour_CONFKEY_RANGE], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_TILT, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_TILT,
             self.options[KmlTour_CONFKEY_TILT], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_WAIT, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_WAIT,
             self.options[KmlTour_CONFKEY_WAIT], True])
         ite = self.treestore.append(None, [str(_("End Camera Parameters")), None, False])
         self.treestore.append(ite, [KmlTour_CONFKEY_END_DESC,
             self.options[KmlTour_CONFKEY_END_DESC] , True])
         self.treestore.append(ite, [KmlTour_CONFKEY_END_STYLE,
             self.options[KmlTour_CONFKEY_END_STYLE], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_END_FLYTIME, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_END_FLYTIME,
             self.options[KmlTour_CONFKEY_END_FLYTIME], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_END_HEADING, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_END_HEADING,
             self.options[KmlTour_CONFKEY_END_HEADING], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_END_RANGE, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_END_RANGE,
             self.options[KmlTour_CONFKEY_END_RANGE], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_END_TILT, 
+        self.treestore.append(ite, [KmlTour_CONFKEY_END_TILT,
             self.options[KmlTour_CONFKEY_END_TILT], True])
         treeview.expand_all()
         dialog.resize(height, width)
