@@ -92,7 +92,7 @@ class SaveFiles(Interface.Action, threading.Thread):
 
     def go(self, rini):
         kmz_out = None
-        if not self.outputkmz:
+        if self.outputkmz == None:
             self._notify_run(self.outputkml)
             msg = _("KML output file '%(outputkml)s' has been generated.")
             self.logger.info(msg % self.dgettext)

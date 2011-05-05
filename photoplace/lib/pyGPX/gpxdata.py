@@ -64,10 +64,10 @@ class GPXPoint(object):
     def __init__(self, lat, lon, ele=0.0, time=datetime.datetime.utcnow(), attr={}):
         """
         GPX Point (trackpoint/waypoint) class constructor
-        
+
         :Parameters:
-            -`lat`: The latitude of the point. Decimal degrees, WGS84 datum. 
-            -`lon`: The longitude of the point. Decimal degrees, WGS84 datum. 
+            -`lat`: The latitude of the point. Decimal degrees, WGS84 datum.
+            -`lon`: The longitude of the point. Decimal degrees, WGS84 datum.
             -`ele`: Elevation of the point. Meters.
             -`time`: Time (UTC data).
             -`attr`: Dictionary type with other data
@@ -109,10 +109,10 @@ class GPXPoint(object):
         if self.lat == wpt.lat:
             if self.lon == wpt.lon:
                 if samele:
-                    if self.ele != wpt.ele: 
+                    if self.ele != wpt.ele:
                         same_ele = False
                 if ontime:
-                    if not self.time == wpt.time: 
+                    if not self.time == wpt.time:
                         same_time = False
                 return same_time & same_ele
         return False
@@ -150,7 +150,7 @@ class GPXSegment(object):
     """
     def __init__(self, name, attr={}, lwpts=[]):
         """GPX Track Seg class constructor
-        
+
         :Parameters:
             -`name`: identifier for this track segment.
             -`attr`: Dictionary type with other data.
@@ -334,11 +334,11 @@ class GPXTrack(object):
     """
     Base class for GPX Traks
     """
-    
+
     def __init__(self, name, desc='', attr={}):
         """
         GPX Trk (Track) class constructor
-        
+
         :Parameters:
             -`name`: Name for the point
             -`desc`: Description.
@@ -407,8 +407,40 @@ class GPXTrack(object):
 
     def listpoints(self):
         list_points = []
-        for trkseg in self.ltrkseg :
+        for trkseg in self.ltrkseg:
             list_points = list_points + trkseg.lwpts
+        return list_points
+
+
+    def listPath(self, first_lat, first_lon, last_lat, last_lon):
+        list_points = []
+        found_first = False
+        found_last = False
+        track_pos = 0
+        for trkseg in self.ltrkseg:
+            point_pos = 0
+            for point in trkseg.lwpts:
+                if found_first:
+                    list_points.append(point)
+                    if point.lat == last_lat and point.lon == last_lon:
+                        found_last = True
+                        break
+                else:
+                    if point.lat == first_lat and point.lon == first_lon:
+                        found_first = True
+                        list_points.append(point)
+                    elif point.lat == last_lat and point.lon == last_lon:
+                        pos = 0
+                        while pos < track_pos:
+                            list_points = list_points + self.ltrkseg[pos].lwpts
+                            pos = pos + 1
+                        list_points = list_points + trkseg.lwpts[:point_pos + 1]
+                        found_last = True
+                        break
+                point_pos += 1
+            if found_last:
+                break
+            track_pos += 1
         return list_points
 
 
@@ -516,8 +548,8 @@ class GPX(object):
         self.metadata.setdefault('name', name)
         self.metadata.setdefault('time', time)
         self.waypoints = []
-        self.tracks = [] 
-        self.routes = [] 
+        self.tracks = []
+        self.routes = []
 
 
     def __repr__(self):

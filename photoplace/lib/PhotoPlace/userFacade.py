@@ -80,19 +80,19 @@ from definitions import *
 # ##############################
 
 class TemplateDict(dict):
-    
+
     """
     Class for string templates with dictionaries objects and operator %
 
     This class inherits all attributes, methods, ... from dict and redefines "__getitem__"
-    in order to return a default value when an element is not found. The format 
-    "key<separator>defaultvalue" indicates that if "key" is not found, then "defaultvalue" 
-    will be returned. It is like an OR: returns value or "defaultvalue". 
+    in order to return a default value when an element is not found. The format
+    "key<separator>defaultvalue" indicates that if "key" is not found, then "defaultvalue"
+    will be returned. It is like an OR: returns value or "defaultvalue".
     It is possible to define a global default value for all keys.
     """
     _SEPARATORKEYTEMPLATE_ = '|'
     _DEFAULTVALUETEMPLATE_ = " "
-    
+
     def __getitem__(self, key):
         try:
             k, default = key.split(self._SEPARATORKEYTEMPLATE_, 1)
@@ -198,7 +198,7 @@ class UserFacade(object):
         self.pluginmanager = Plugins.pluginManager.PluginManager()
         self.logger.debug("# " + PhotoPlace_name)
         self.logger.debug(
-            "# Launched with command line args %s, files: %s" % 
+            "# Launched with command line args %s, files: %s" %
             (self.args, self.argfiles))
         self.logger.debug(_("# with configuration file '%s'.") % self.configfile)
         self.logger.debug(_("# main options: %s") % self.options['main'])
@@ -263,6 +263,7 @@ class UserFacade(object):
         if self.configfile != None:
             resourcedir_user = os.path.dirname(self.configfile)
         self.state = stateHandler.State(self.resourcedir, self.options['main'], resourcedir_user)
+
 
     def end(self):
         #self.end_plugin()

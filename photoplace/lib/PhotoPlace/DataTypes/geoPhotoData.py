@@ -62,7 +62,7 @@ class GeoPhotoError(Exception):
     """
     def __init__(self, msg='GeoPhotoError!'):
         self.value = msg
-    
+
     def __str__(self):
         return self.value
 
@@ -74,7 +74,7 @@ class GeoPhotoError(Exception):
 
 # Default values
 _GeoPhoto_DEFAULT_LAT = 0.00001                 # default latitue value
-_GeoPhoto_DEFAULT_LON = 0.00001                 # longitude 
+_GeoPhoto_DEFAULT_LON = 0.00001                 # longitude
 _GeoPhoto_DEFAULT_ELE = 0.00001                 # elevation
 _GeoPhoto_DEFAULT_AZI = 0.0                     # azimut or heading
 _GeoPhoto_DEFAULT_TILT = 90.0                   # default tilt with vertical
@@ -88,19 +88,19 @@ class GeoPhoto(object):
     implementacion. Moreover, it does not touch jpeg data so, the quality of photos
     is the original. More info about pyexiv2: http://tilloy.net/dev/pyexiv2/
     """
-    def __init__(self, path, name='-', 
-        lat = _GeoPhoto_DEFAULT_LAT, 
-        lon = _GeoPhoto_DEFAULT_LON, 
-        ele = _GeoPhoto_DEFAULT_ELE, 
-        time = _GeoPhoto_DEFAULT_TIME, 
-        azi = _GeoPhoto_DEFAULT_AZI, 
-        tilt = _GeoPhoto_DEFAULT_TILT, 
+    def __init__(self, path, name='-',
+        lat = _GeoPhoto_DEFAULT_LAT,
+        lon = _GeoPhoto_DEFAULT_LON,
+        ele = _GeoPhoto_DEFAULT_ELE,
+        time = _GeoPhoto_DEFAULT_TIME,
+        azi = _GeoPhoto_DEFAULT_AZI,
+        tilt = _GeoPhoto_DEFAULT_TILT,
         loadexif = True):
         """
         GeoPhoto class constructor. It represents a geolocalized image with
         coordinates and time. Other attributes are allowed in attr internal
         dictionary. Exif data is a object of type pyexiv2.Image.
-        
+
         :Parameters:
             -`path`: path of the jpeg file.
             -`name`: id name of the photo. $basename(path) if omited.
@@ -114,6 +114,7 @@ class GeoPhoto(object):
         self.path = path
         self.name = name
         self.status = 0
+        self.toffset = 0
         if name == "-":
             self.name = os.path.basename(self.path)
         self.exif = None
@@ -154,7 +155,8 @@ class GeoPhoto(object):
             "time",
             "azi",
             "tilt",
-            'status'
+            "status",
+            "toffset"
         ]
         if k in keys:
             return getattr(self, key)
@@ -196,6 +198,8 @@ class GeoPhoto(object):
             self.tilt = value
         elif k == "status":
             self.status = value
+        elif k == "toffset":
+            self.toffset = value
         else:
             if self.loadexif and k in self.exif.exif_keys:
                 self.exif[k] = value
@@ -207,7 +211,7 @@ class GeoPhoto(object):
         """
         Get the Exif tags of file.
         Optional GPSInfo tags will be read if 'gpsinfo' parameter is 'True'.
-        
+
         :Parameters:
             -`gpsinfo`: if true, GPSInfo Exif data will be read.
         """
@@ -273,8 +277,8 @@ class GeoPhoto(object):
 
     def writeExif(self, gpsinfo=True):
         """
-        Write the Exif tags to file only if exif data were read previously. 
-        Optional GPSInfo tags will be written if 'gpsinfo' parameter is 'True' 
+        Write the Exif tags to file only if exif data were read previously.
+        Optional GPSInfo tags will be written if 'gpsinfo' parameter is 'True'
         and exif was read before.
         Return value is 'True' if tags were written.
 
@@ -297,10 +301,10 @@ class GeoPhoto(object):
     def attrToExif(self, gpsinfo=True):
         """
         It sets up the Exif tags to metadata image (but no saved).
-        Optional GPSInfo tags will be set up if 'gpsinfo' parameter is 'True' 
+        Optional GPSInfo tags will be set up if 'gpsinfo' parameter is 'True'
         and exif was read before.
         Return value is 'True' if the tags were set up.
-        
+
         :Parameters:
             -`gpsinfo`: if true, GPSInfo Exif data will be set up.
         """
@@ -359,7 +363,7 @@ class GeoPhoto(object):
         """
         It copies (or overwrites) the image file to `dst` and resizes it if it is necessary.
         The ANTIALIAS mode of PIL pacakge is used for copying and the image will be rotated
-        according with Exif orientation. As an option `copyexif` indicates if exif data 
+        according with Exif orientation. As an option `copyexif` indicates if exif data
         will be copied as well.
 
         :Parameters:
@@ -456,13 +460,15 @@ class GeoPhoto(object):
 
     def __repr__(self):
         return "(%s, %s),(%f, %f, %f, %f, %f, %s)" % \
-            (self.name, self.path, 
+            (self.name, self.path,
                 self.lat, self.lon, self.ele, self.azi, self.tilt, self.time)
 
 
     def __str__(self):
-        s1 = "[(name= %s, path=%s, attr=%s)(lat=%f, lon=%f, ele=%f, azi=%f, tilt=%f, time=%s)]\n" % \
-            (self.name, self.path, self.attr, self.lat, self.lon, self.ele, self.azi, self.tilt, self.time)
+        s1 = "[(name= %s, path=%s, attr=%s)\
+            (lat=%f, lon=%f, ele=%f, azi=%f, tilt=%f, time=%s, toffset=%d)]\n" % \
+            (self.name, self.path, self.attr,
+            self.lat, self.lon, self.ele, self.azi, self.tilt, self.time, self.toffset)
         s2 = "EXIF => %s" % self.exif
         return s1 + s2
 

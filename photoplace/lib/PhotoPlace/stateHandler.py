@@ -95,9 +95,9 @@ def minutes_to_timefloat(value):
 
 
 class DSynchronized(object):
-    """ 
+    """
     Class enapsulating a lock and a function allowing it to be used as a synchronizing
-    decorator making the wrapped function thread-safe 
+    decorator making the wrapped function thread-safe
     """
     _debug = False
 
@@ -110,7 +110,7 @@ class DSynchronized(object):
             try:
                 self.lock.acquire()
                 if self._debug:
-                    sys.stderr.write('DSynchronized(%s): Acquired lock => %s\n' % 
+                    sys.stderr.write('DSynchronized(%s): Acquired lock => %s\n' %
                         (f.__name__, threading.currentThread()))
                 try:
                     return f(*args, **kwargs)
@@ -119,7 +119,7 @@ class DSynchronized(object):
             finally:
                 self.lock.release()
                 if self._debug:
-                    sys.stderr.write('DSynchronized(%s): Released lock => %s\n' % 
+                    sys.stderr.write('DSynchronized(%s): Released lock => %s\n' %
                         (f.__name__, threading.currentThread()))
         return lockedfunc
 
@@ -147,6 +147,7 @@ class State(object):
         self._jpgzoom = PhotoPlace_Cfg_main_jpgzoom
         self._jpgsize = PhotoPlace_Cfg_main_jpgsize
         self._maxdeltaseconds = PhotoPlace_Cfg_main_maxdeltaseconds
+        self._timeoffsetseconds = PhotoPlace_Cfg_main_timeoffsetseconds
         self._exifmode = PhotoPlace_Cfg_main_exifmode
         self._copyonlygeolocated = PhotoPlace_Cfg_main_copyonlygeolocated
         self._photoinputdir = ''
@@ -181,6 +182,7 @@ class State(object):
             "exifmode",
             "utczoneminutes",
             "maxdeltaseconds",
+            "timeoffsetseconds",
             "gpxinputfile",
             "photoinputdir",
             "photouri",
@@ -206,6 +208,8 @@ class State(object):
             self.set_utczoneminutes(value)
         elif k == "maxdeltaseconds":
             self.set_maxdeltaseconds(value)
+        elif k == "timeoffsetseconds":
+            self.set_timeoffsetseconds(value)
         elif k == "gpxinputfile":
             self.set_gpxinputfile(value)
         elif k == "photoinputdir":
@@ -267,6 +271,7 @@ class State(object):
         self.set_jpgzoom()
         self.set_exifmode()
         self.set_maxdeltaseconds()
+        self.set_timeoffsetseconds()
         self.set_utczoneminutes()
         self._set_kmltemplate()
         try:
@@ -287,7 +292,7 @@ class State(object):
     def set_quality(self, value=None):
         quality = PhotoPlace_Cfg_main_quality
         try:
-            if value:
+            if value != None:
                 quality = int(value)
             else:
                 quality = int(self.options["quality"])
@@ -310,7 +315,7 @@ class State(object):
     @DSynchronized()
     def set_jpgzoom(self, value=None):
         try:
-            if value:
+            if value != None:
                 jpgzoom = float(value)
             else:
                 jpgzoom = float(self.options["jpgzoom"])
@@ -329,7 +334,7 @@ class State(object):
     @DSynchronized()
     def set_jpgsize(self, size=None):
         try:
-            if size:
+            if size != None:
                 (width, height) = size
                 w = int(width)
                 h = int(height)
@@ -351,7 +356,7 @@ class State(object):
     @DSynchronized()
     def set_outputfile(self, value=None, log=True):
         dgettext = {}
-        if value:
+        if value != None:
             outputfile = os.path.expandvars(value)
         else:
             if not self.options.has_key('outputfile'):
@@ -424,11 +429,11 @@ class State(object):
 
     @DSynchronized()
     def _set_photouri(self, value=None):
-        if value:
+        if value != None:
             photouri = value
         else:
             if not self.options.has_key('photouri'):
-                if self._photoinputdir:
+                if self._photoinputdir != None:
                     photouri = os.path.split(self._photoinputdir)[1]
                     if not photouri:
                         photouri = os.path.split(os.path.split(self._photoinputdir)[0])[1]
@@ -445,7 +450,7 @@ class State(object):
             else:
                 photouri = self.options['photouri']
         self._photouri = photouri
-        if self._outputfile:
+        if self._outputfile != None:
             outputfile = os.path.basename(self._outputfile)
             if self.tmpdir:
                 outputdir = self.tmpdir
@@ -453,7 +458,7 @@ class State(object):
                 outputdir = os.path.dirname(self._outputfile)
             (outputfilebase, outpufileext) = os.path.splitext(outputfile)
             photouri = urlparse.urlsplit(self._photouri)
-            scheme = photouri.scheme 
+            scheme = photouri.scheme
             if os.path.splitdrive(self._photouri)[0]:
                  scheme = ''
             if scheme != '' and scheme != 'file':
@@ -465,7 +470,7 @@ class State(object):
 
     @DSynchronized()
     def set_photoinputdir(self, value=None, log=True):
-        if value:
+        if value != None:
             photoinputdir = os.path.expandvars(value)
         else:
             if self.options.has_key('photoinputdir'):
@@ -487,7 +492,7 @@ class State(object):
 
     @DSynchronized()
     def set_gpxinputfile(self, value=None, log=True):
-        if value:
+        if value != None:
             gpxinputfile = os.path.expandvars(value)
         else:
             if self.options.has_key('gpxinputfile'):
@@ -510,7 +515,7 @@ class State(object):
     def set_utczoneminutes(self, value=None):
         utczoneminutes = timedelta_to_minutes(local_utc())
         try:
-            if value:
+            if value != None:
                 utczoneminutes = int(value)
             else:
                 utczoneminutes = int(self.options["utczoneminutes"])
@@ -532,7 +537,7 @@ class State(object):
     def set_maxdeltaseconds(self, value=None):
         maxdeltaseconds = PhotoPlace_Cfg_main_maxdeltaseconds
         try:
-            if value:
+            if value != None:
                 maxdeltaseconds = int(value)
             else:
                 maxdeltaseconds = int(self.options["maxdeltaseconds"])
@@ -547,10 +552,28 @@ class State(object):
 
 
     @DSynchronized()
+    def set_timeoffsetseconds(self, value=None):
+        timeoffsetseconds = PhotoPlace_Cfg_main_timeoffsetseconds
+        try:
+            if value != None:
+                timeoffsetseconds = int(value)
+            else:
+                timeoffsetseconds = int(self.options["timeoffsetseconds"])
+        except KeyError:
+            self.__logger.warning(_("Value of 'timeoffsetseconds' not defined in the "
+            "configuration file. Setting default value '%s'.") % timeoffsetseconds)
+        except ValueError as valueerror:
+            dgettext = {'error': str(valueerror), 'value': timeoffsetseconds }
+            self.__logger.warning(_("Value of 'timeoffsetseconds' incorrect: %(error)s. "
+                "Setting default value '%(value)s'.") % dgettext)
+        self._timeoffsetseconds = timeoffsetseconds
+
+
+    @DSynchronized()
     def set_exifmode(self, value=None):
         exifmode = PhotoPlace_Cfg_main_exifmode
         try:
-            if value:
+            if value != None:
                 exifmode = int(value)
             else:
                 exifmode = int(self.options["exifmode"])
@@ -630,7 +653,7 @@ class State(object):
     def set_copyonlygeolocated(self, value=None):
         copyonlygeolocated = PhotoPlace_Cfg_main_copyonlygeolocated
         try:
-            if value:
+            if value != None:
                 copyonlygeolocated = value
             else:
                 copyonlygeolocated = bool(int(self.options["copyonlygeolocated"]))

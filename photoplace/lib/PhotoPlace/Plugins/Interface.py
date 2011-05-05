@@ -20,6 +20,7 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 """
+Interface definitions for plugins: Class and Register method.
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
@@ -64,7 +65,7 @@ class Plugin(object):
         'GUI' : PLUGIN_GUI_NO,
         'NeedGUI' : False,
     }
-    
+
     def __init__(self, logger, state, args, argfiles=[], gtkbuilder=None):
         object.__init__(self)
         self.logger = logger
@@ -72,14 +73,14 @@ class Plugin(object):
         self.argfiles = argfiles
         self.args = args
         self.gtkbuilder = gtkbuilder
-    
+
     def init(self, options, widget_container):
         self.logger.debug("init")
         pass
 
     def reset(self):
         self.logger.debug("reset")
-        pass        
+        pass
 
     def end(self, options):
         self.logger.debug("end")
@@ -88,12 +89,12 @@ class Plugin(object):
 
 
 def DRegister(*events):
-    """ 
+    """
     This decorator is to be used for registering a function as a plugin for
-    a specific event or list of events. 
+    a specific event or list of events.
     """
     _debug = False
-    
+
     def registered_plugin(f):
         for event in events:
             pluginManager.PluginManager.set_event(event, f)

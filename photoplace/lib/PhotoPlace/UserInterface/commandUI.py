@@ -20,6 +20,7 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 """
+A command line implementation for a user interface.
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
@@ -46,16 +47,17 @@ class PhotoPlaceCOM(InterfaceUI):
     GTK GUI for PhotoPlace
     """
     _instance = None
-    
+
     # Singleton
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super(PhotoPlaceCOM, cls).__new__(cls)
         return cls._instance
-    
+
     def __init__(self, resourcedir=None):
         InterfaceUI.__init__(self, resourcedir)
-    
+
+
     def init(self, userfacade):
         self.userfacade = userfacade
         self.plugins = dict()
@@ -67,6 +69,7 @@ class PhotoPlaceCOM(InterfaceUI):
             print(e)
             self.userfacade.init(True)
 
+
     def loadPlugins(self):
         try:
             errors = self.userfacade.load_plugins('*', None)
@@ -75,6 +78,7 @@ class PhotoPlaceCOM(InterfaceUI):
         else:
             for e in errors:
                 print(e)
+
 
     def unloadPlugins(self):
         pass

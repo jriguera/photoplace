@@ -105,6 +105,7 @@ PhotoPlace_Cfg_main_jpgsize = (0, 0)
 PhotoPlace_Cfg_main_jpgzoom = 0.15
 PhotoPlace_Cfg_main_quality = 1
 PhotoPlace_Cfg_main_maxdeltaseconds = 300
+PhotoPlace_Cfg_main_timeoffsetseconds = 0
 PhotoPlace_Cfg_main_photouri = ""
 PhotoPlace_Cfg_main_copyonlygeolocated = True
 PhotoPlace_Cfg_main_kmltemplate = os.path.join("templates", "layout.template.kml")

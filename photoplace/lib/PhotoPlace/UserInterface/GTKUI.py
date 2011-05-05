@@ -165,7 +165,7 @@ class TextViewCompleter(object):
         tbuffer = self.textview.get_buffer()
         ite = tbuffer.get_iter_at_mark(tbuffer.get_insert())
         rectangle = self.textview.get_iter_location(ite)
-        absX, absY = self.textview.buffer_to_window_coords(gtk.TEXT_WINDOW_TEXT, 
+        absX, absY = self.textview.buffer_to_window_coords(gtk.TEXT_WINDOW_TEXT,
             rectangle.x + rectangle.width + 0 ,
             rectangle.y + rectangle.height + 70)
         parent = self.textview.get_parent()
@@ -322,10 +322,10 @@ class PhotoPlaceGUI(InterfaceUI):
         self.num_photos_process = 0
         self.reloadtemplates = False
         # Observer for statusbar. INFO or ERROR loglevels
-        self.userfacade.addlogObserver(self._log_to_statusbar_observer, 
+        self.userfacade.addlogObserver(self._log_to_statusbar_observer,
             [logging.INFO, logging.ERROR], self, self.statusbar_formatter)
         # Observer for textview
-        self.userfacade.addlogObserver(self._log_to_textview_observer, 
+        self.userfacade.addlogObserver(self._log_to_textview_observer,
             [], self, self.textview_formatter)
         # Progress bar
         self.progressbar_fraction = 0.0
@@ -338,11 +338,11 @@ class PhotoPlaceGUI(InterfaceUI):
             ["CopyFiles:run"], self)
         self.userfacade.addNotifier(self._set_progressbar_savefiles_observer,
             ["SaveFiles:run"], self)
-        self.userfacade.addNotifier(self._update_progressbar_loadphoto_observer, 
+        self.userfacade.addNotifier(self._update_progressbar_loadphoto_observer,
             ["LoadPhotos:run"], self)
-        self.userfacade.addNotifier(self._update_progressbar_geolocate_observer, 
+        self.userfacade.addNotifier(self._update_progressbar_geolocate_observer,
             ["Geolocate:run"], self)
-        self.userfacade.addNotifier(self._update_progressbar_makegpx_observer, 
+        self.userfacade.addNotifier(self._update_progressbar_makegpx_observer,
             ["MakeGPX:run"], self)
         self.userfacade.addNotifier(
             self._set_progressbar_end_observer, [
@@ -437,6 +437,7 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_checkbutton-outgeo_toggled": self._toggle_geolocate_mode,
             "on_adjustment-utc_value_changed": self._adjust_utctimezone,
             "on_adjustment-tdelta_value_changed": self._adjust_timedelta,
+            "on_adjustment-toffset_value_changed": self._adjust_toffset,
             "on_adjustment-quality_value_changed": self._adjust_quality,
             "on_adjustment-jpgzoom_value_changed": self._adjust_jpgzoom,
             "on_button-go_clicked": self.action_process,
@@ -499,7 +500,7 @@ class PhotoPlaceGUI(InterfaceUI):
             dialog.emit_stop_by_name('response')
 
     def _open_link(self, widget, data=None):
-        # hack for windows platform. 
+        # hack for windows platform.
         # GTK in windows cannot open links ...
         if sys.platform.startswith('win'):
             uri = widget.get_uri()
@@ -671,7 +672,7 @@ class PhotoPlaceGUI(InterfaceUI):
         else:
             msg = "[" + str(int(self.progressbar_percent * 100)) + "%]"
             if text:
-                msg = msg + "  " + text 
+                msg = msg + "  " + text
         self.progressbar.set_text(msg)
         self.progressbar.set_fraction(self.progressbar_percent)
 
@@ -889,6 +890,21 @@ class PhotoPlaceGUI(InterfaceUI):
         value = widget.get_value()
         self.userfacade.state['maxdeltaseconds'] = int(value)
 
+    def _adjust_toffset(self, widget, data=None):
+        value = widget.get_value()
+        self.userfacade.state['timeoffsetseconds'] = int(value)
+        print "Cambiando"
+        for geophoto in self.userfacade.state.geophotos:
+            offset = geophoto.toffset + self.userfacade.state['timeoffsetseconds']
+            geophoto.time = geophoto.time + datetime.timedelta(seconds=offset)
+            geophoto.toffset = -self.userfacade.state['timeoffsetseconds']
+            print "-------",geophoto.time
+            #old_time_offset = datetime.timedelta(seconds=geophoto.toffset)
+            #orig_time_photo = geophoto.time - old_time_offset
+            #new_time_offset = datetime.timedelta(seconds=self.userfacade.state['timeoffsetseconds'])
+            #geophoto.time = orig_time_photo + new_time_offset
+        print "Cambiado"
+
     def _adjust_quality(self, widget, data=None):
         value = widget.get_value()
         self.userfacade.state['quality'] = int(value)
@@ -956,7 +972,7 @@ class PhotoPlaceGUI(InterfaceUI):
             for k,v in geophoto.attr.iteritems():
                 tips += "\t%s: %s\n" % (k, v)
         model = self["treeview-geophotos"].get_model()
-        iterator = model.append(None, [ 
+        iterator = model.append(None, [
             geophoto.status, geophoto.name, geophoto.path, geophoto.time,
             bool(geophoto.status), pixbuf, information, geodata, geovalue, color, True, False, tips])
         self._set_geophoto_variables(model, iterator, geophoto)
@@ -964,18 +980,18 @@ class PhotoPlaceGUI(InterfaceUI):
 
     def _set_geophoto_variables(self, model, iterator, geophoto):
         child_iter = model.iter_children(iterator)
-        while child_iter != None: 
+        while child_iter != None:
             model.remove(child_iter)
             child_iter = model.iter_children(iterator)
         for variable in self.userfacade.state.kmldata.photo_variables:
-            if not (variable in PhotoPlace_TEMPLATE_VARS): 
+            if not (variable in PhotoPlace_TEMPLATE_VARS):
                 #( ... or variable in  self.userfacade.options['defaults']):
                 try:
                     value = geophoto.attr[variable]
                 except:
                     value = ''
-                model.append(iterator, [ 
-                    geophoto.status, variable, geophoto.path, None, bool(geophoto.status), None, None, 
+                model.append(iterator, [
+                    geophoto.status, variable, geophoto.path, None, bool(geophoto.status), None, None,
                     "<tt><b>%s</b></tt> :" % variable, value, None, False, True, _("Variable from template")])
 
     def _toggle_geophoto(self, cell, path, data=None):
@@ -1040,7 +1056,7 @@ class PhotoPlaceGUI(InterfaceUI):
             else:
                 if k == 'author' and not v:
                     v = getpass.getuser()
-                    self.userfacade.options[VARIABLES_KEY][k] = v 
+                    self.userfacade.options[VARIABLES_KEY][k] = v
                 elif k == 'date' and not v:
                     v = datetime.date.today().strftime("%A %d. %B %Y")
                     self.userfacade.options[VARIABLES_KEY][k] = v
@@ -1097,7 +1113,7 @@ class PhotoPlaceGUI(InterfaceUI):
     def _load_template_file(self, widget=None, template_file=None):
         self.popup = None
         if template_file == None:
-            dialog = gtk.FileChooserDialog(title=_("Select file to load ..."), 
+            dialog = gtk.FileChooserDialog(title=_("Select file to load ..."),
                 parent=self.window, action=gtk.FILE_CHOOSER_ACTION_OPEN,
                 buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
             ffilter = gtk.FileFilter()
@@ -1145,7 +1161,7 @@ class PhotoPlaceGUI(InterfaceUI):
                     break
                 else:
                     tbuffer.delete(ite_nline, ite_end)
-                ite_end = ite_nline 
+                ite_end = ite_nline
                 nline -= 1
             # Delete first template div, if it exists!
             ite_start = tbuffer.get_start_iter()
@@ -1163,9 +1179,9 @@ class PhotoPlaceGUI(InterfaceUI):
                     break
                 else:
                     tbuffer.delete(ite_start, ite_nline)
-                ite_start = ite_nline 
+                ite_start = ite_nline
                 nline += 1
-            self["statusbar-window-templates"].push(0, 
+            self["statusbar-window-templates"].push(0,
                 _("Template from file '%s' loaded") % os.path.basename(filename))
         except Exception as exception:
             self["statusbar-window-templates"].push(0, str(exception))
@@ -1212,10 +1228,10 @@ class PhotoPlaceGUI(InterfaceUI):
                         next = model.iter_next(next)
                     iterator = next
                 self["treeview-geophotos"].expand_all()
-                self["statusbar-window-templates"].push(0, 
+                self["statusbar-window-templates"].push(0,
                     _('Template saved and reloaded without problems'))
             else:
-                self["statusbar-window-templates"].push(0, 
+                self["statusbar-window-templates"].push(0,
                     _('Error processing template'))
 
     def _key_press_wintemplate(self, textview, event):
@@ -1282,7 +1298,7 @@ class PhotoPlaceGUI(InterfaceUI):
         dgettext['line'] = row + 1
         dgettext['column'] = col
         dgettext['chars'] = count
-        self["statusbar-window-templates"].push(0, 
+        self["statusbar-window-templates"].push(0,
             _('Line %(line)d, column %(column)d (%(chars)d chars in document)') % dgettext)
 
     def _new_wintemplate(self, widget=None):
@@ -1377,7 +1393,7 @@ class PhotoPlaceGUI(InterfaceUI):
         path = model.get_path(self.treeview_iterator)
         position = path[0]
         if position != 0:
-            prev_path = position - 1 
+            prev_path = position - 1
             prev = model.get_iter(str(prev_path))
             geophoto_path = model.get_value(prev, TREEVIEWPHOTOS_COL_PATH)
             for geophoto in self.userfacade.state.geophotos:

@@ -54,7 +54,7 @@ class CopyFiles(Interface.Action, threading.Thread):
             self.jpgsize, self.jpgzoom, self.quality)
         self.num_copies = 0
         self.num_photos = 0
-        if self.outputdir:
+        if self.outputdir != None:
             self.dgettext['outputdir'] = self.outputdir
             msg = _("Generating copy of JPEG files in '%(outputdir)s' ...")
             self.logger.info(msg % self.dgettext)
@@ -64,7 +64,7 @@ class CopyFiles(Interface.Action, threading.Thread):
 
 
     def go(self, rini):
-        if not self.outputdir:
+        if self.outputdir == None:
             return False
         ok = True
         for photo in self.state.geophotos:

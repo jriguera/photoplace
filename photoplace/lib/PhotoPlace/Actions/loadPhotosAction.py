@@ -20,6 +20,7 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 """
+Load all jpeg files from a dir in order to get a list o GeoPhoto objects
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
@@ -33,7 +34,7 @@ import os.path
 import threading
 
 import Interface
-from PhotoPlace.DataTypes import geoPhotoData 
+from PhotoPlace.DataTypes import geoPhotoData
 from PhotoPlace.userFacade import Error
 from PhotoPlace.definitions import *
 
@@ -48,6 +49,7 @@ class LoadPhotos(Interface.Action, threading.Thread):
         self.photoinputdir = state['photoinputdir']
         self.dgettext['photoinputdir'] = self.photoinputdir
         self.allowed_names = PhotoPlace_Cfg_PhotoRegExp.search
+        self.toffset = state['timeoffsetseconds']
         self.num_photos = 0
         try:
             self.listphotoinputdir = os.listdir(self.photoinputdir)
@@ -81,6 +83,9 @@ class LoadPhotos(Interface.Action, threading.Thread):
                     msg = _("Error processing photo '%(photo)s': %(error)s.")
                 else:
                     geophoto.status = 1
+                    offset = geophoto.toffset + self.toffset
+                    geophoto.time = geophoto.time + datetime.timedelta(seconds=offset)
+                    geophoto.toffset = -self.toffset
                     self._notify_run(geophoto)
                     position = 0
                     for photo in self.state.geophotos:
