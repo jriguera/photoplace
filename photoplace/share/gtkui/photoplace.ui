@@ -453,7 +453,6 @@ Not active for geottaging purposes, no output file will be generated.</property>
                             <child>
                               <object class="GtkHBox" id="hbox-time">
                                 <property name="visible">True</property>
-                                <property name="homogeneous">True</property>
                                 <child>
                                   <object class="GtkHBox" id="hbox-utc">
                                     <property name="visible">True</property>
@@ -521,9 +520,9 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="tooltip_text" translatable="yes" comments="entry.">Seconds (positive or negative) to add to the photos time in order to match them with GPS data.</property>
-                                        <property name="max_length">5</property>
+                                        <property name="max_length">6</property>
                                         <property name="invisible_char">●</property>
-                                        <property name="width_chars">6</property>
+                                        <property name="width_chars">8</property>
                                         <property name="secondary_icon_stock">gtk-zoom-fit</property>
                                         <property name="adjustment">adjustment-toffset</property>
                                         <property name="climb_rate">10</property>

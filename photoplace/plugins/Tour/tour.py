@@ -368,8 +368,15 @@ class KmlTour(Plugin):
         self.first_lon = geophoto.lon
         self.first_ele = geophoto.ele
         time = geophoto.time
+        
         found = False
-        for path in self.tracks_points:
+        tracks_pos = 0
+        print "tracks-pos", self.tracks_pos
+        print geophoto.lat
+        print geophoto.lon
+        while tracks_pos < len(self.tracks_points):
+            path = self.tracks_points[tracks_pos]
+            print ">>>>", path
             for point in path:
                 if self.first_lat == point.lat and self.first_lon == point.lon:
                     self.first_lat = path[0].lat
@@ -380,7 +387,11 @@ class KmlTour(Plugin):
                     break
             if found:
                 # we have the first point
+                self.tracks_pos = tracks_pos
+                print "Encuentro primera latlon", self.first_lat, self.first_lon
                 break
+            tracks_pos += 1
+            
         begin_name = self.options[KmlTour_CONFKEY_BEGIN_NAME]
         begin_style = self.options[KmlTour_CONFKEY_BEGIN_STYLE]
         begin_wait = self.options[KmlTour_CONFKEY_BEGIN_WAIT]
@@ -501,7 +512,21 @@ class KmlTour(Plugin):
             if found_last:
                 break
             self.tracks_pos += 1
-        return list_points
+        # removes repeated points
+        new_list_points = []
+        len_list_points = len(list_points)
+        if len_list_points > 1:
+            position = 1
+            new_list_points = [list_points[0]]
+            while position < len_list_points:
+                current = list_points[position]
+                previous = list_points[position - 1]
+                if current.lat != previous.lat or current.lon != previous.lon:
+                    new_list_points.append(current)
+                position += 1
+        else:
+            new_list_points = list_points
+        return new_list_points
 
 
     def set_path(self, prev_lon, prev_lat, prev_ele, lon, lat, ele, strtime,
@@ -509,6 +534,7 @@ class KmlTour(Plugin):
 
         list_points = []
         total_distance = pyGPX.distanceCoord(prev_lat, prev_lon, lat, lon)
+        print "FROM %s %s -> %s %s" % (prev_lat, prev_lon, lat, lon)
         if total_distance < self.options[KmlTour_CONFKEY_KMLTOUR_POINT_DISTANCE_LIMIT]:
             heading = fly_bearing
             if not fly_bearing:
@@ -518,27 +544,30 @@ class KmlTour(Plugin):
                 crange = total_distance * fly_crange
             tilt = fly_tilt
             flytime = fly_time
+            print "Simplificando: %d" % total_distance
             self.gxtour.do_flyto(lon, lat, ele, strtime, heading, tilt, crange, flytime)
             return
         if follow_path:
             list_points = self.follow_track(prev_lon, prev_lat, lon, lat)
         points_len = len(list_points)
+        print "%d -> LISTA de puntos: %s" % (total_distance, list_points)
         if points_len > 1:
             total_speed = total_distance / float(fly_time)
             position_counter = 1
             while position_counter < points_len:
-                prev = list_points[pos - 1]
-                current = list_points[pos]
+                prev = list_points[position_counter - 1]
+                current = list_points[position_counter]
                 distance = prev.distance(current)
                 flytime = distance / total_speed
                 heading = fly_bearing
                 if not fly_bearing:
-                    heading = pyGPX.bearingCoord(prev_lat, prev_lon, lat, lon)
+                    heading = pyGPX.bearingCoord(prev.lat, prev.lon, current.lat, current.lon)
                 crange = fly_crange
                 if fly_crange <= KmlTour_CRANGE_LIMIT:
                     crange = distance * fly_crange
                 tilt = fly_tilt
                 self.gxtour.do_flyto(current.lon, current.lat, current.ele, strtime, heading, tilt, crange, flytime)
+                print "VOLANDO -> ",current.lon, current.lat, current.ele
                 position_counter += 1
             return
         heading = fly_bearing
@@ -560,7 +589,9 @@ class KmlTour(Plugin):
         geophoto.attr[KmlTour_CONFKEY_FLYTIME] = self.options[KmlTour_CONFKEY_FLYTIME]
         geophoto.attr[KmlTour_CONFKEY_TILT] = self.options[KmlTour_CONFKEY_TILT]
         geophoto.attr[KmlTour_CONFKEY_RANGE] = self.options[KmlTour_CONFKEY_RANGE]
-        geophoto.attr[KmlTour_CONFKEY_FOLLOWPATH] = self.options[KmlTour_CONFKEY_FOLLOWPATH]
+        geophoto.attr[KmlTour_CONFKEY_FOLLOWPATH] = 0
+        if self.options[KmlTour_CONFKEY_FOLLOWPATH]:
+            geophoto.attr[KmlTour_CONFKEY_FOLLOWPATH] = 1
 
 
     @DRegister("MakeKML:end")
@@ -607,18 +638,18 @@ class KmlTour(Plugin):
             lon = geophoto.lon
             ele = geophoto.ele
             name = geophoto.name
-            wait = geophoto.attr.setdefault(KmlTour_CONFKEY_WAIT,
-                self.options[KmlTour_CONFKEY_WAIT])
+            wait = float(geophoto.attr.setdefault(KmlTour_CONFKEY_WAIT,
+                self.options[KmlTour_CONFKEY_WAIT]))
             bearing = geophoto.attr.setdefault(KmlTour_CONFKEY_HEADING,
                 self.options[KmlTour_CONFKEY_HEADING])
-            flytime = geophoto.attr.setdefault(KmlTour_CONFKEY_FLYTIME,
-                self.options[KmlTour_CONFKEY_FLYTIME])
-            tilt = geophoto.attr.setdefault(KmlTour_CONFKEY_TILT,
-                self.options[KmlTour_CONFKEY_TILT])
-            crange = geophoto.attr.setdefault(KmlTour_CONFKEY_RANGE,
-                self.options[KmlTour_CONFKEY_RANGE])
-            follow = geophoto.attr.setdefault(KmlTour_CONFKEY_FOLLOWPATH,
-                self.options[KmlTour_CONFKEY_FOLLOWPATH])
+            flytime = float(geophoto.attr.setdefault(KmlTour_CONFKEY_FLYTIME,
+                self.options[KmlTour_CONFKEY_FLYTIME]))
+            tilt = float(geophoto.attr.setdefault(KmlTour_CONFKEY_TILT,
+                self.options[KmlTour_CONFKEY_TILT]))
+            crange = float(geophoto.attr.setdefault(KmlTour_CONFKEY_RANGE,
+                self.options[KmlTour_CONFKEY_RANGE]))
+            follow = bool(geophoto.attr.setdefault(KmlTour_CONFKEY_FOLLOWPATH,
+                self.options[KmlTour_CONFKEY_FOLLOWPATH]))
             strtime = geophoto.time.strftime("%Y-%m-%dT%H:%M:%S") + str_tzdiff
             self.set_path(previous[1], previous[0], previous[2], lon, lat, ele, strtime,
                 flytime, tilt, crange, bearing, follow)
