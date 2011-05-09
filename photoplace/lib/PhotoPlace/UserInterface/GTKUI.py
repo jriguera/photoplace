@@ -308,6 +308,7 @@ class PhotoPlaceGUI(InterfaceUI):
         self["textview-templates"].connect( "key_press_event", self._key_press_wintemplate)
         settings = gtk.settings_get_default()
         settings.props.gtk_button_images = True
+        self.in_process = True
         self.window.show_all()
 
     def __getitem__(self, key):
@@ -317,10 +318,9 @@ class PhotoPlaceGUI(InterfaceUI):
         raise ValueError(_("Cannot set key!"))
 
     def init(self, userfacade):
+        gtk.gdk.threads_enter()
         self.userfacade = userfacade
         self.plugins = dict()
-        self.num_photos_process = 0
-        self.reloadtemplates = False
         # Observer for statusbar. INFO or ERROR loglevels
         self.userfacade.addlogObserver(self._log_to_statusbar_observer,
             [logging.INFO, logging.ERROR], self, self.statusbar_formatter)
@@ -330,27 +330,25 @@ class PhotoPlaceGUI(InterfaceUI):
         # Progress bar
         self.progressbar_fraction = 0.0
         self.progressbar_percent = 0.0
-        self.userfacade.addNotifier(self._set_progressbar_makekml_observer,
-            ["MakeKML:run"], self)
-        self.userfacade.addNotifier(self._set_progressbar_writeexif_observer,
-            ["WriteExif:run"], self)
-        self.userfacade.addNotifier(self._set_progressbar_copyfiles_observer,
-            ["CopyFiles:run"], self)
-        self.userfacade.addNotifier(self._set_progressbar_savefiles_observer,
-            ["SaveFiles:run"], self)
-        self.userfacade.addNotifier(self._update_progressbar_loadphoto_observer,
-            ["LoadPhotos:run"], self)
-        self.userfacade.addNotifier(self._update_progressbar_geolocate_observer,
-            ["Geolocate:run"], self)
-        self.userfacade.addNotifier(self._update_progressbar_makegpx_observer,
-            ["MakeGPX:run"], self)
         self.userfacade.addNotifier(
-            self._set_progressbar_end_observer, [
-                "LoadPhotos:end",
-                "Geolocate:end",
-                "MakeGPX:end",
-                "SaveFiles:end",
-            ], self)
+            self._set_progressbar_makekml_observer, ["MakeKML:run"], self)
+        self.userfacade.addNotifier(
+            self._set_progressbar_writeexif_observer, ["WriteExif:run"], self)
+        self.userfacade.addNotifier(
+            self._set_progressbar_copyfiles_observer, ["CopyFiles:run"], self)
+        self.userfacade.addNotifier(
+            self._set_progressbar_savefiles_observer, ["SaveFiles:run"], self)
+        self.userfacade.addNotifier(
+            self._update_progressbar_loadphoto_observer, ["LoadPhotos:run"], self)
+        self.userfacade.addNotifier(
+            self._update_progressbar_geolocate_observer, ["Geolocate:run"], self)
+        self.userfacade.addNotifier(
+            self._update_progressbar_makegpx_observer, ["MakeGPX:run"], self)
+        self.userfacade.addNotifier(
+            self._set_progressbar_end_observer, 
+            ["Geolocate:end", "MakeGPX:end", "SaveFiles:end",], self)
+        self.userfacade.addNotifier(
+            self._set_loadphotos_end_observer, ["LoadPhotos:end"], self)
         # Make a new state
         try:
             self.userfacade.init()
@@ -360,6 +358,7 @@ class PhotoPlaceGUI(InterfaceUI):
         # adjustments
         self['adjustment-jpgzoom'].set_value(self.userfacade.state['jpgzoom'])
         self['adjustment-tdelta'].set_value(self.userfacade.state['maxdeltaseconds'])
+        self['adjustment-toffset'].set_value(self.userfacade.state['timeoffsetseconds'])
         self['adjustment-quality'].set_value(self.userfacade.state['quality'])
         floatmin = minutes_to_timefloat(self.userfacade.state['utczoneminutes'])
         self['adjustment-utc'].set_value(floatmin)
@@ -371,11 +370,13 @@ class PhotoPlaceGUI(InterfaceUI):
         self.checkbutton_outgeo = self.builder.get_object("checkbutton-outgeo")
         self._choose_outfile(False)
         self.set_progressbar(None, 0.0)
-        # Variables
+        self.num_photos_process = 0
+        self.reloadtemplates = False
         self.variables_iterator = None
+        self.in_process = False
 
     def start(self, load_files=True):
-        gtk.gdk.threads_enter()
+        #gtk.gdk.threads_enter()
         if sys.platform.startswith('win'):
             sleeper = lambda: time.sleep(.001) or True
             gobject.timeout_add(400, sleeper)
@@ -414,6 +415,12 @@ class PhotoPlaceGUI(InterfaceUI):
                     "please consider making a donation ;-) See 'About' menu for "
                     "more information") % dgettext
                 gobject.idle_add(self.set_statusbar, msg)
+        # Plugins
+        for plugin in self.plugins:
+            (plgobj, menuitem, notebookindex, notebookframe) = self.plugins[plugin]
+            menuitem.connect('toggled', self._toggle_active_plugin, plugin)
+            notebookframe.show_all()
+            menuitem.show()
         # GTK signals
         self.signals = {
             "on_aboutdialog_close": self.dialog_close,
@@ -472,7 +479,7 @@ class PhotoPlaceGUI(InterfaceUI):
         gtk.gdk.threads_leave()
 
     def window_exit(self, widget, data=None):
-        for plg in self.plugins.keys():
+        for plg in self.plugins:
             (plgobj, menuitem, notebookindex, notebookframe) = self.plugins[plg]
             if menuitem.get_active():
                 menuitem.set_active(False)
@@ -515,25 +522,33 @@ class PhotoPlaceGUI(InterfaceUI):
     # #################
 
     def loadPlugins(self):
-        try:
-            errors = self.userfacade.load_plugins('*', self.builder)
-        except Error as e:
+        errors = self.userfacade.load_plugins()
+        for p, e in errors.iteritems():
             self.show_dialog(e.type, e.msg, e.tip)
-        else:
-            for e in errors:
-                self.show_dialog(e.type, e.msg, e.tip)
+        activation_errors = dict()
+        for p in self.userfacade.options["plugins"]:
+            if not p in errors:
+                try:
+                    error = self.userfacade.activate_plugin(p, self.builder)
+                except Error as e:
+                    activation_errors[p] = e
+                    self.show_dialog(e.type, e.msg, e.tip)
+                else:
+                    if error != None:
+                        activation_errors[p] = error
+                        self.show_dialog(error.type, error.msg, error.tip)
+            else:
+                activation_errors[p] = errors[p]
         # generate menu a menu entry for each plugin
         self.toggling_active_plugin = False
         dgettext = dict()
         for plg, plgobj in self.userfacade.list_plugins().iteritems():
-            if plg in self.plugins:
+            if plg in self.plugins or plg in activation_errors:
                 continue
-            menuitem = gtk.CheckMenuItem(str(plg))
             notebookindex = -1
             notebookframe = None
-            menuitem.set_active(False)
+            menuitem = gtk.CheckMenuItem(str(plg))
             self.menuitem_plugins.add(menuitem)
-            menuitem.connect('toggled', self._toggle_active_plugin, plg)
             dgettext['plugin_name'] = str(plg)
             dgettext['plugin_version'] = str(plgobj.version)
             dgettext['plugin_author'] = cgi.escape(plgobj.author)
@@ -548,7 +563,6 @@ class PhotoPlaceGUI(InterfaceUI):
                 "%(plugin_cpr)s %(plugin_date)s, License: %(plugin_lic)s\n"
                 "More info at: <b>%(plugin_url)s</b>\n\n<i>%(plugin_desc)s</i>")
             menuitem.set_tooltip_markup(markup % dgettext)
-            menuitem.show()
             if plgobj.capabilities['GUI'] == PLUGIN_GUI_GTK:
                 notebooklabel = gtk.Label()
                 notebooklabel.set_markup(str("   <b>%s</b>  " % plg))
@@ -559,11 +573,15 @@ class PhotoPlaceGUI(InterfaceUI):
                 notebookframe.set_label_widget(labelop)
                 notebookindex = self.notebook_plugins.append_page(
                     notebookframe, notebooklabel)
-                notebookframe.show_all()
+            try:
+                self.userfacade.init_plugin(plg, '*', notebookframe)
+                menuitem.set_active(True)
+            except Error as e:
+                menuitem.set_active(False)
+                self.show_dialog(e.type, e.msg, e.tip)
+                if plgobj.capabilities['GUI'] == PLUGIN_GUI_GTK:
+                    notebookframe.set_sensitive(False)
             self.plugins[plg] = (plgobj, menuitem, notebookindex, notebookframe)
-        # Active all plugins
-        self["toggletoolbutton-plugins"].set_active(True)
-        self._toggle_loadplugins()
 
     def unloadPlugins(self):
         self["toggletoolbutton-plugins"].set_active(False)
@@ -580,7 +598,7 @@ class PhotoPlaceGUI(InterfaceUI):
 
     def _toggle_loadplugins(self, widget=None, data=None):
         mode = self["toggletoolbutton-plugins"].get_active()
-        for plg in self.plugins.keys():
+        for plg in self.plugins:
             (plgobj, menuitem, notebookindex, notebookframe) = self.plugins[plg]
             if menuitem.get_active() != mode:
                 menuitem.set_active(mode)
@@ -699,6 +717,12 @@ class PhotoPlaceGUI(InterfaceUI):
     @DObserver
     def _set_progressbar_end_observer(self, *args):
         gobject.idle_add(self.set_progressbar, None, 0.0)
+
+    @DObserver
+    def _set_loadphotos_end_observer(self, *args):
+        gobject.idle_add(self.set_progressbar, None, 0.0)
+        # order by name
+        self["treeviewcolumn-geophotos-picture"].clicked()
 
 
     # ##############################################
@@ -893,17 +917,15 @@ class PhotoPlaceGUI(InterfaceUI):
     def _adjust_toffset(self, widget, data=None):
         value = widget.get_value()
         self.userfacade.state['timeoffsetseconds'] = int(value)
-        print "Cambiando"
+        self["treeview-geophotos"].get_model().clear()
+        self.num_photos_process = 0
         for geophoto in self.userfacade.state.geophotos:
             offset = geophoto.toffset + self.userfacade.state['timeoffsetseconds']
             geophoto.time = geophoto.time + datetime.timedelta(seconds=offset)
             geophoto.toffset = -self.userfacade.state['timeoffsetseconds']
-            print "-------",geophoto.time
-            #old_time_offset = datetime.timedelta(seconds=geophoto.toffset)
-            #orig_time_photo = geophoto.time - old_time_offset
-            #new_time_offset = datetime.timedelta(seconds=self.userfacade.state['timeoffsetseconds'])
-            #geophoto.time = orig_time_photo + new_time_offset
-        print "Cambiado"
+            self._load_geophoto(geophoto)
+            if geophoto.status > 0:
+                self.num_photos_process += 1
 
     def _adjust_quality(self, widget, data=None):
         value = widget.get_value()
@@ -957,6 +979,8 @@ class PhotoPlaceGUI(InterfaceUI):
         except:
             dgettext['description'] = ''
         information = _("<b>%(name)s</b>\nDate: %(date)s\nTime: %(time)s") % dgettext
+        if geophoto.toffset != 0:
+            information += " (%+ds)" % geophoto.toffset
         geodata = ''
         geovalue = _("Picture not geotagged!")
         if geophoto.isGeoLocated():
@@ -1443,7 +1467,7 @@ class PhotoPlaceGUI(InterfaceUI):
             value = self["entry-photoinfo-value"].get_text()
             self.current_geophoto.attr[key] = value.strip()
             self._show_photoinfo_attr(self.current_geophoto)
-            self["entry-photoinfo-value"].set_text('')
+            #self["entry-photoinfo-value"].set_text('')
 
     def _del_photoinfo_attr(self, widget):
         key = self["entry-photoinfo-key"].get_text().strip()
@@ -1474,7 +1498,7 @@ class PhotoPlaceGUI(InterfaceUI):
     def action_clear(self, widget=None):
         plugin_mode = self["toggletoolbutton-plugins"].get_active()
         if plugin_mode:
-            for plg in self.plugins.keys():
+            for plg in self.plugins:
                 (plgobj, menuitem, notebookindex, notebookframe) = self.plugins[plg]
                 if menuitem.get_active():
                     #menuitem.set_active(False)
@@ -1557,8 +1581,12 @@ class PhotoPlaceGUI(InterfaceUI):
         return True
 
     def action_process(self, widget, data=None):
+        if self.in_process:
+            return False
+        self.in_process = True
         if self.reloadtemplates:
             if not self.action_loadtemplates():
+                self.in_process = False
                 return False
         self._set_photouri()
         iter_mode = self['combobox-exif'].get_active_iter()
@@ -1566,6 +1594,7 @@ class PhotoPlaceGUI(InterfaceUI):
         self.userfacade.state["exifmode"] = mode
         if self.userfacade.state['gpxinputfile']:
             if not self.action_geolocate():
+                self.in_process = False
                 return False
         if self.num_photos_process < 1:
             for geophoto in self.userfacade.state.geophotos:
@@ -1576,6 +1605,7 @@ class PhotoPlaceGUI(InterfaceUI):
                 msg = _("No photos loaded, cannot do anything!.")
                 tip = _("Select a directory with photos.")
                 self.show_dialog(mtype, msg, tip, gtk.MESSAGE_INFO)
+                self.in_process = False
                 return False
         self.progressbar.set_fraction(0.0)
         self.progressbar_percent = 0.0
@@ -1588,8 +1618,10 @@ class PhotoPlaceGUI(InterfaceUI):
             self.userfacade.goprocess()
         except Error as e:
             self.show_dialog(e.type, e.msg, e.tip)
+            self.in_process = False
             return False
         self.reloadtemplates = True
+        self.in_process = False
         return True
 
 

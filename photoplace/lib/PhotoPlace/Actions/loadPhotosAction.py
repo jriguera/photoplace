@@ -32,6 +32,7 @@ __copyright__ ="(c) Jose Riguera, September 2010"
 
 import os.path
 import threading
+import datetime
 
 import Interface
 from PhotoPlace.DataTypes import geoPhotoData

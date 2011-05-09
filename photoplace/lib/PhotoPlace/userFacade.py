@@ -330,7 +330,7 @@ class UserFacade(object):
 
 
     def delEvent(self, event):
-        if event in self.observers:
+        if event in self.observers.keys():
             del self.observers[event]
             return True
         return False
@@ -356,8 +356,8 @@ class UserFacade(object):
     # Plugin Management Section
     # #########################
 
-    def load_plugins(self, capability='*', *args):
-        errors = []
+    def load_plugins(self):
+        errors = {}
         for plugin, path in self.options["plugins"].iteritems():
             path = os.path.expanduser(path)
             path = os.path.expandvars(path)
@@ -374,28 +374,46 @@ class UserFacade(object):
                 msg = str(pluginerror)
                 self.logger.error(msg)
                 tip = _("Check if plugin syntax is correct ... ")
-                errors.append(Error(msg, tip, "PluginManagerError"))
+                errors[plugin] = Error(msg, tip, "PluginManagerError")
             except ValueError as valueerror:
                 msg = str(valueerror)
                 self.logger.error(msg)
                 tip = _("Check if plugin path is correct ... ")
-                errors.append(Error(msg, tip, "ValueError"))
+                errors[plugin] = Error(msg, tip, "ValueError")
+        return errors
+
+
+    def activate_plugins(self, capability='*', *args):
+        errors = {}
         plugins = self.list_plugins(capability)
-        for plg in plugins.keys():
+        for plg in plugins:
             try:
                 self.pluginmanager.activate(plugins[plg], self.state, self.args, self.argfiles, *args)
             except Plugins.pluginManager.PluginManagerError as pluginerror:
                 msg = str(pluginerror)
                 self.logger.error(msg)
                 tip = _("Check Plugin base class ... ")
-                errors.append(Error(msg, tip, "PluginManagerError"))
+                errors[plg] = Error(msg, tip, "PluginManagerError")
         return errors
+
+
+    def activate_plugin(self, plugin, *args):
+        plugins = self.list_plugins(plugin=plugin)
+        if plugin in plugins:
+            try:
+                self.pluginmanager.activate(plugins[plugin], self.state, self.args, self.argfiles, *args)
+            except Plugins.pluginManager.PluginManagerError as pluginerror:
+                msg = str(pluginerror)
+                self.logger.error(msg)
+                tip = _("Check Plugin base class ... ")
+                return Error(msg, tip, "PluginManagerError")
+        return None
 
 
     def unload_plugins(self, capability='*', plugin=None):
         #self.end_plugin(plugin, capability)
         plugins = self.list_plugins(capability, plugin)
-        for plg in plugins.keys():
+        for plg in plugins:
             self.pluginmanager.deactivate(plugins[plg])
 
 

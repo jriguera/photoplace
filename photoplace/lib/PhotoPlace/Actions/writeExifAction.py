@@ -96,7 +96,7 @@ class WriteExif(Interface.Action, threading.Thread):
         self.dgettext['num_photos'] = self.num_photos
         self.dgettext['num_wexif'] = self.num_wexif
         msg = _("%(num_photos)s photos have been processed, "
-            "exif data of %(num_wexif)s were updated.")
+            "exif data of %(num_wexif)s updated.")
         self.logger.info(msg % self.dgettext)
         self._notify_end(self.num_photos, self.num_wexif)
         return rgo

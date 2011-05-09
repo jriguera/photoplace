@@ -113,7 +113,7 @@ class PluginManager(object):
                 raise PluginManagerError(msg % dgettext)
 
     def deactivate(self, plugin):
-        if plugin in self.instances:
+        if plugin in self.instances.keys():
             del self.instances[plugin]
 
     def active(self, plugin):

@@ -61,6 +61,7 @@ class PhotoPlaceCOM(InterfaceUI):
     def init(self, userfacade):
         self.userfacade = userfacade
         self.plugins = dict()
+        self.plugins_error = []
         self.num_photos_process = 0
         # Make a new state
         try:
@@ -71,13 +72,23 @@ class PhotoPlaceCOM(InterfaceUI):
 
 
     def loadPlugins(self):
-        try:
-            errors = self.userfacade.load_plugins('*', None)
-        except Error as e:
+        errors = self.userfacade.load_plugins()
+        for p, e in errors.iteritems():
             print(e)
-        else:
-            for e in errors:
-                print(e)
+        self.plugins_error = []
+        for p in self.userfacade.options["plugins"]:
+            if not p in errors:
+                try:
+                    error = self.userfacade.activate_plugin(p, None)
+                except Error as e:
+                    self.plugins_error.append(p)
+                    print(e)
+                else:
+                    if error != None:
+                        self.plugins_error.append(p)
+                        print(error)
+            else:
+                self.plugins_error.append(p)
 
 
     def unloadPlugins(self):
@@ -86,7 +97,7 @@ class PhotoPlaceCOM(InterfaceUI):
 
     def activate_plugins(self):
         for plg, plgobj in self.userfacade.list_plugins().iteritems():
-            if plg in self.plugins:
+            if plg in self.plugins or plg in self.plugins_error:
                 continue
             if not plgobj.capabilities['NeedGUI']:
                 # Active all plugins
