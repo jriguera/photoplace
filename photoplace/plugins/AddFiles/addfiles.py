@@ -3,7 +3,7 @@
 #
 #       addfiles.py
 #
-#       Copyright 2010 Jose Riguera Lopez <jriguera@gmail.com>
+#       Copyright 2011 Jose Riguera Lopez <jriguera@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ __copyright__ ="(c) Jose Riguera"
 import shutil
 import os.path
 import codecs
+import string
 import gettext
 import locale
 
@@ -62,7 +63,7 @@ AddFiles_CONFKEY = "addfiles"
 AddFiles_VARIABLES = 'defaults'
 
 # Default values
-AddFiles_PREFIX_NAME = "PhotoPlace."
+AddFiles_PREFIX_NAME = "Add"
 AddFiles_PREFIX_FILE = "File."
 
 
@@ -116,35 +117,43 @@ class KmlPaths(Plugin):
     def process_variables(self, options, opt):
         index = 0
         self.newfiles = dict()
+        safechars = "/\_-." + string.digits + string.ascii_letters
         for key, value in opt.iteritems():
-            filename = os.path.expandvars(value)
-            if os.path.isfile(filename):
+            filename = os.path.normpath(os.path.expandvars(os.path.expanduser(value)))
+            destination = os.path.normpath(key)
+            destination = ''.join(c for c in destination if c in safechars)
+            filekey = destination.replace('..','')
+            if os.path.isfile(filename) and len(filekey) >= 3:
                 index += 1
                 variable = AddFiles_PREFIX_NAME + AddFiles_PREFIX_FILE + str(index)
-                self.newfiles[variable] = (key, filename)
+                self.newfiles[variable] = (filekey, filename)
                 # add varible to state
-                options[AddFiles_VARIABLES][variable] = filename
+                options[AddFiles_VARIABLES][variable] = filekey
         self.options = options
 
 
     @DRegister("SaveFiles:ini")
-    def addfiles(self, *args, **kwargs):
+    def addfiles(self, fd, outputkml, outputkmz, photouri, outputdir, quality):
         if self.state.outputdir == None:
             return
+        counter = 0
+        outdir = os.path.dirname(outputkml)
         for variable in self.newfiles:
             dest, orig = self.newfiles[variable]
             try:
-                output = os.path.join(self.state.outputdir, dest)
+                output = os.path.join(outdir, dest)
                 dirs = os.path.dirname(output)
                 if not os.path.exists(dirs):
                     os.makedirs(dirs)
                 shutil.copy(orig, output)
+                counter += 1
             except Exception as e:
                 dgettext = dict()
                 dgettext['error'] = str(e)
                 dgettext['file'] = orig
                 msg = _("Cannot copy '%(file)s': %(error)s") % dgettext
                 self.logger.error(msg)
+        self.logger.info(_("%d files copied by 'addfiles'.") % counter)
 
 
     def end(self, options):
