@@ -120,6 +120,7 @@ class GeoPhoto(object):
         self.exif = None
         self.attr = {}
         self.loadexif = False
+        self.ptime = None
         self.time = _GeoPhoto_DEFAULT_TIME
         self.lat = _GeoPhoto_DEFAULT_LAT
         self.lon = _GeoPhoto_DEFAULT_LON
@@ -157,6 +158,7 @@ class GeoPhoto(object):
             "tilt",
             "status",
             "toffset"
+            "ptime"
         ]
         if k in keys:
             return getattr(self, key)
@@ -200,6 +202,8 @@ class GeoPhoto(object):
             self.status = value
         elif k == "toffset":
             self.toffset = value
+        elif k == "ptime":
+            self.ptime = value
         else:
             if self.loadexif and k in self.exif.exif_keys:
                 self.exif[k] = value
@@ -453,22 +457,24 @@ class GeoPhoto(object):
 
 
     def __cmp__(self, photo):
+        if photo == None:
+            return False
         if os.path.realpath(self.path) == os.path.realpath(photo.path):
             return True
         return False
 
 
     def __repr__(self):
-        return "(%s, %s),(%f, %f, %f, %f, %f, %s)" % \
+        return "(%s, %s),(%f, %f, %f, %f, %f, %s, %s)" % \
             (self.name, self.path,
-                self.lat, self.lon, self.ele, self.azi, self.tilt, self.time)
+                self.lat, self.lon, self.ele, self.azi, self.tilt, self.time, self.ptime)
 
 
     def __str__(self):
         s1 = "[(name= %s, path=%s, attr=%s)\
-            (lat=%f, lon=%f, ele=%f, azi=%f, tilt=%f, time=%s, toffset=%d)]\n" % \
+            (lat=%f, lon=%f, ele=%f, azi=%f, tilt=%f, time=%s, toffset=%d, ptime=%s)]\n" % \
             (self.name, self.path, self.attr,
-            self.lat, self.lon, self.ele, self.azi, self.tilt, self.time, self.toffset)
+            self.lat, self.lon, self.ele, self.azi, self.tilt, self.time, self.toffset, self.ptime)
         s2 = "EXIF => %s" % self.exif
         return s1 + s2
 
