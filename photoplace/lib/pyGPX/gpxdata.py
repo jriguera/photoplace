@@ -140,6 +140,28 @@ class GPXPoint(object):
         return geomath.distanceCoord(self.lat, self.lon, lat, lon)
 
 
+    def bearing(self, argv1, argv2=''):
+        if isinstance(argv1, GPXPoint):
+            lat = argv1.lat
+            lon = argv1.lon
+        else:
+            if not isinstance(argv1, float):
+                dgettext = {'type_expected': float.__name__, 'type_got': argv1.__class__.__name__}
+                msg = _("Latitude type excepted '%(type_expected)s', got '%(type_got)s' instead")
+                raise TypeError(msg % dgettext)
+            if not isinstance(argv2, float):
+                dgettext = {'type_expected': float.__name__, 'type_got': argv2.__class__.__name__}
+                msg = _("Longitude type excepted '%(type_expected)s', got '%(type_got)s' instead")
+                raise TypeError(msg % dgettext)
+            if argv1 < -90.0 or argv1 > 90.0:
+                raise ValueError(_("latitude = '%d', not in [-90.0..90.0] range") % (argv1))
+            if argv2 < -180.0 or argv2 > 180.0:
+                raise ValueError(_("longitude = '%d', not in [-180.0..180.0] range") % (argv2))
+            lat = argv1
+            lon = argv2
+        return geomath.bearingCoord(self.lat, self.lon, lat, lon)
+
+
 # ###############################
 # GPX Segment Type implementation
 # ###############################
@@ -185,7 +207,7 @@ class GPXSegment(object):
                 self.lwpts.append(wpt)
                 pos = num_points
             else:
-                for pos in range(0, num_points):
+                for pos in xrange(0, num_points):
                     if wpt.time < self.lwpts[pos].time:
                         self.lwpts.insert(pos, wpt)
                         break
@@ -205,7 +227,7 @@ class GPXSegment(object):
             msg = _("Point type excepted '%(type_expected)s', got '%(type_got)s' instead")
             raise TypeError(msg % dgettext)
         num_points = len(self.lwpts)
-        for pos in range(0, num_points - 1):
+        for pos in xrange(0, num_points - 1):
             point = self.lwpts[pos]
             if wpt == point:
                 return pos
@@ -220,7 +242,7 @@ class GPXSegment(object):
         if time > self.lwpts[last].time:
             return self.lwpts[last]
         pdiff = datetime.timedelta.max
-        for pos in range(0, last):
+        for pos in xrange(0, last):
             point = self.lwpts[pos]
             diff = abs(point.time - time)
             if diff > pdiff:
@@ -348,6 +370,7 @@ class GPXTrack(object):
         self.desc = desc
         self.attr = attr
         self.ltrkseg = []
+        self.status = 1
 
 
     def __repr__(self):
@@ -379,7 +402,7 @@ class GPXTrack(object):
                 pos = num_seg
             # find correct position
             else:
-                for pos in range(0, num_seg):
+                for pos in xrange(0, num_seg):
                     if datein < self.ltrkseg[pos].lwpts[0].time:
                         self.ltrkseg.insert(pos, trkseg)
                         break
@@ -399,7 +422,7 @@ class GPXTrack(object):
             msg = _("Segment type excepted '%(type_expected)s', got '%(type_got)s' instead")
             raise TypeError(msg % dgettext)
         num_seg = len(self.ltrkseg)
-        for pos in range(0, num_seg - 1):
+        for pos in xrange(0, num_seg - 1):
             if trkseg.name == self.ltrkseg[pos].name:
                 return pos
         return -1

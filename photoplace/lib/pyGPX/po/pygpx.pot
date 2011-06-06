@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-09 19:20+0100\n"
+"POT-Creation-Date: 2011-06-06 20:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,105 +17,105 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: exceptions.py:63
+#: ../exceptions.py:63
 #, python-format
 msgid "GPX Track error: '%s'."
 msgstr ""
 
-#: exceptions.py:71
+#: ../exceptions.py:71
 #, python-format
 msgid "GPX Segment error: '%s'."
 msgstr ""
 
-#: exceptions.py:79
+#: ../exceptions.py:79
 #, python-format
 msgid "GPX Point element error: '%s'."
 msgstr ""
 
-#: exceptions.py:87
+#: ../exceptions.py:87
 #, python-format
 msgid "Cannot parse GPX data: '%s'."
 msgstr ""
 
-#: gpxdata.py:76 gpxdata.py:135
+#: ../gpxdata.py:76 ../gpxdata.py:135 ../gpxdata.py:157
 #, python-format
 msgid "latitude = '%d', not in [-90.0..90.0] range"
 msgstr ""
 
-#: gpxdata.py:78 gpxdata.py:137
+#: ../gpxdata.py:78 ../gpxdata.py:137 ../gpxdata.py:159
 #, python-format
 msgid "longitude = '%d', not in [-180.0..180.0] range"
 msgstr ""
 
-#: gpxdata.py:83 gpxdata.py:511
+#: ../gpxdata.py:83 ../gpxdata.py:566
 #, python-format
 msgid "Time type excepted '%(type_expected)s', got '%(type_got)s' instead"
 msgstr ""
 
-#: gpxdata.py:128
+#: ../gpxdata.py:128 ../gpxdata.py:150
 #, python-format
 msgid "Latitude type excepted '%(type_expected)s', got '%(type_got)s' instead"
 msgstr ""
 
-#: gpxdata.py:132
+#: ../gpxdata.py:132 ../gpxdata.py:154
 #, python-format
 msgid "Longitude type excepted '%(type_expected)s', got '%(type_got)s' instead"
 msgstr ""
 
-#: gpxdata.py:177 gpxdata.py:205
+#: ../gpxdata.py:199 ../gpxdata.py:227
 #, python-format
 msgid "Point type excepted '%(type_expected)s', got '%(type_got)s' instead"
 msgstr ""
 
-#: gpxdata.py:199
+#: ../gpxdata.py:221
 #, python-format
 msgid "Cannot delete point at pos %s!"
 msgstr ""
 
-#: gpxdata.py:366 gpxdata.py:399
+#: ../gpxdata.py:389 ../gpxdata.py:422
 #, python-format
 msgid "Segment type excepted '%(type_expected)s', got '%(type_got)s' instead"
 msgstr ""
 
-#: gpxdata.py:369
-msgid "segment empty!"
+#: ../gpxdata.py:392
+msgid "Segment empty!"
 msgstr ""
 
-#: gpxdata.py:393
+#: ../gpxdata.py:416
 #, python-format
 msgid "Cannot delete segment at pos %s!"
 msgstr ""
 
-#: gpxparser.py:75
+#: ../gpxparser.py:75
 #, python-format
 msgid ""
 "Time delta type excepted '%(type_expected)s', got '%(type_got)s' instead"
 msgstr ""
 
-#: gpxparser.py:85
+#: ../gpxparser.py:85
 msgid "Cannot parse <time> node: "
 msgstr ""
 
-#: gpxparser.py:180
+#: ../gpxparser.py:180
 msgid "Cannot parse <wpt> node: "
 msgstr ""
 
-#: gpxparser.py:323
+#: ../gpxparser.py:323
 #, python-format
 msgid "Track number %(track_number)s (%(number)s)"
 msgstr ""
 
-#: gpxparser.py:328
+#: ../gpxparser.py:328
 #, python-format
 msgid "Track %(number)s %(type)s. %(src)s. %(link)s."
 msgstr ""
 
-#: gpxparser.py:366
+#: ../gpxparser.py:366
 #, python-format
 msgid "Route number %(route_number)s (of %(number)s)"
 msgstr ""
 
-#: gpxparser.py:371
+#: ../gpxparser.py:371
 #, python-format
 msgid "Route %(number)s %(type)s. %(src)s. %(link)s."
 msgstr ""

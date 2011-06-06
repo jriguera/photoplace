@@ -35,7 +35,7 @@ More information, see test code.
 import math
 
 
-EarthsRadius     = 6371000.0    # Earth's radius =~ 6371km
+EarthsRadius     = 6378137.0    # Earth's radius =~ 6371km
 MaxDistanceEarth = 22000000.0   # Max distance between two points
 
 
