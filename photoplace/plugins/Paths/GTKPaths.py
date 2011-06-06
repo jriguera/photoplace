@@ -33,6 +33,7 @@ __copyright__ ="(c) Jose Riguera"
 
 import os.path
 import sys
+import StringIO
 import codecs
 import warnings
 
@@ -51,10 +52,13 @@ warnings.resetwarnings()
 
 
 from paths import *
+from PhotoPlace.UserInterface.GTKUI import TextViewCompleter
 
 
 # columns
 (
+    _GTKPaths_COLUMN_ACT,
+    _GTKPaths_COLUMN_VIS,
     _GTKPaths_COLUMN_KEY,
     _GTKPaths_COLUMN_VKEY,
     _GTKPaths_COLUMN_VALUE,
@@ -63,10 +67,12 @@ from paths import *
     _GTKPaths_COLUMN_EDITKEY,
     _GTKPaths_COLUMN_EDITVAL,
     _GTKPaths_COLUMN_CLICK,
-) = range(8)
+    _GTKPaths_COLUMN_FAMILY,
+) = range(11)
 
-_GTKPaths_DESCRIPTION_LINES = 1
-_GTKPaths_DESCRIPTION_CHARS = 40
+_GTKPaths_DESCRIPTION_CHARS = 45
+_GTKPaths_DEFAULT_FAMILY = None
+_GTKPaths_DESC_FAMILY = "Monospace"
 
 
 
@@ -102,15 +108,17 @@ class GTKPaths(object):
     def __init__(self, gtkbuilder, state, logger):
         object.__init__(self)
         self.options = None
+        self.goptions = None
         self.tracksinfo = None
         self.tracknum = 0
         self.photopaths = 0
+        self.photodirlist = None
         self.state = state
         self.logger = logger
         self.plugin = gtk.VBox(False)
         # 1st line
         self.checkbutton_genpath = gtk.CheckButton(
-            _("Generate a path from previously geotagged photos"))
+            _("Generate a path from geotagged photos"))
         self.checkbutton_genpath.connect('toggled', self.photo_path)
         self.plugin.pack_start(self.checkbutton_genpath, False, False, 10)
         # Parameters
@@ -118,12 +126,20 @@ class GTKPaths(object):
         scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
         scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         # create model for parameters
-        self.treestore = gtk.TreeStore(str, str, str, str, str, bool, bool, bool)
+        self.treestore = gtk.TreeStore(
+            bool, bool, str, str, str, str, str, bool, bool, bool, str)
         treeview = gtk.TreeView(self.treestore)
         treeview.set_rules_hint(True)
         treeview.set_tooltip_text(_("Double click to edit these values ..."))
         treeview.get_selection().set_mode(gtk.SELECTION_SINGLE)
         # columns
+        renderer = gtk.CellRendererToggle()
+        renderer.set_radio(True)
+        renderer.connect('toggled', self._toggled_track)
+        column = gtk.TreeViewColumn(None, renderer, 
+            active=_GTKPaths_COLUMN_ACT,
+            visible=_GTKPaths_COLUMN_VIS)
+        treeview.append_column(column)
         renderer = gtk.CellRendererText()
         renderer.connect('edited', self._edit_cell, KmlPaths_CONFKEY_TRACKS_NAME)
         column = gtk.TreeViewColumn(_("Path Name/Parameter"), renderer,
@@ -131,13 +147,15 @@ class GTKPaths(object):
             editable=_GTKPaths_COLUMN_EDITKEY)
         column.set_resizable(True)
         treeview.append_column(column)
+        treeview.set_expander_column(column)
         renderer = CellRendererTextClick()
         renderer.connect('editing-started', self._edit_value)
         renderer.connect('edited', self._edit_cell, KmlPaths_CONFKEY_TRACKS_DESC)
         column = gtk.TreeViewColumn(_("Description/Value"), renderer,
             text=_GTKPaths_COLUMN_VALUE,
             editable=_GTKPaths_COLUMN_EDITVAL,
-            clickable=_GTKPaths_COLUMN_CLICK)
+            clickable=_GTKPaths_COLUMN_CLICK,
+            family=_GTKPaths_COLUMN_FAMILY)
         column.set_resizable(True)
         treeview.append_column(column)
         scroll.add(treeview)
@@ -145,11 +163,12 @@ class GTKPaths(object):
         self.window = gtkbuilder.get_object("window")
 
 
-    def show(self, widget=None, options=None, tracks=None):
+    def show(self, widget=None, options=None, tracks=None, goptions=None, photodirlist=[]):
         if widget:
             widget.add(self.plugin)
         if options:
-            self.setup(options, tracks)
+            self.setup(options, tracks, goptions)
+        self.photodirlist = photodirlist
         self.plugin.show_all()
 
 
@@ -187,19 +206,40 @@ class GTKPaths(object):
         self.tracknum = 0
 
 
-    def photo_path(self, widget=None):
+    def photo_path(self, widget=None, newtrackname=None):
         if self.state['photoinputdir'] and self.options:
             self.options[KmlPaths_CONFKEY_KMLPATH_GENTRACK] = \
                 self.checkbutton_genpath.get_active()
             if self.options[KmlPaths_CONFKEY_KMLPATH_GENTRACK]:
-                name = os.path.basename(self.state['photoinputdir'])
-                self.add_track(name, KmlPaths_KMLPATH_GENDESC, 0)
-                self.photopaths += 1
+                if newtrackname != None:
+                    self.add_track(newtrackname, KmlPaths_KMLPATH_GENDESC, 0)
+                    self.photopaths += 1
+                else:
+                    position = len(self.photodirlist) - 1
+                    while position >= 0:
+                        name = self.photodirlist[position][0]
+                        self.add_track(name, KmlPaths_KMLPATH_GENDESC, 0)
+                        self.photopaths += 1
+                        position -= 1
             else:
                 while self.photopaths != 0:
                     self.treestore.remove(self.treestore.get_iter_root())
                     self.tracknum -= 1
                     self.photopaths -= 1
+
+
+    def _toggled_track(self, widget, path_string):
+        treestore_iter = self.treestore.get_iter_from_string(path_string)
+        value = self.treestore.get_value(treestore_iter, _GTKPaths_COLUMN_ACT)
+        value = not value
+        self.treestore.set(treestore_iter, _GTKPaths_COLUMN_ACT, value)
+        position = int(path_string)
+        if position < self.photopaths:
+            name, active = self.photodirlist[position]
+            self.photodirlist[position] = (name, value)
+        else:
+            position -= self.photopaths
+            self.state.gpxdata.tracks[position].status = int(value)
 
 
     def _set_entry(self, widget, key):
@@ -223,16 +263,17 @@ class GTKPaths(object):
         return description
 
 
-    def setup(self, options, tracks):
+    def setup(self, options, tracks, goptions):
         self.treestore.clear()
         self.checkbutton_genpath.set_active(options[KmlPaths_CONFKEY_KMLPATH_GENTRACK])
         self.tracksinfo = tracks
         self.options = options
+        self.goptions = goptions
 
 
     def add_track(self, nam, des, pos=None):
         if pos == None:
-            number = divmod(self.tracknum, len(self.tracksinfo) - 1)[1]
+            number = divmod(self.tracknum, len(self.tracksinfo)-1)[1]
             trackinfo = self.tracksinfo[number + 1]
         else:
             trackinfo = self.tracksinfo[pos]
@@ -246,15 +287,8 @@ class GTKPaths(object):
             filename = trackinfo[KmlPaths_CONFKEY_TRACKS_DESC]
             if os.path.isfile(filename):
                 description = self.get_description(filename)
-                count = 0
-                desc = ''
-                for line in description.splitlines(True):
-                    if count == _GTKPaths_DESCRIPTION_LINES:
-                        break
-                    desc += line
-                    count += 1
-                desc = desc[0:_GTKPaths_DESCRIPTION_CHARS]
-                desc += " . . ."
+                filename = os.path.basename(filename)
+                desc = '\t[' + _('file: ') + filename + ']'
                 desc_file = filename
         color = KmlPaths_TRACKS_COLOR
         if trackinfo.has_key(KmlPaths_CONFKEY_TRACKS_COLOR):
@@ -263,19 +297,33 @@ class GTKPaths(object):
         if trackinfo.has_key(KmlPaths_CONFKEY_TRACKS_WIDTH):
             width = trackinfo[KmlPaths_CONFKEY_TRACKS_WIDTH]
         if pos != None:
+            active = True
+            # POS = 0 -> track from photos
+            if pos == 0:
+                i = 0
+                for phototrackname, phototrackactive in self.photodirlist:
+                    if phototrackname == nam:
+                        active = phototrackactive
+                        self.photodirlist[i] = (name, active)
+                        break
+                    i += 1
             ite = self.treestore.insert(None, pos,
-                [str(KmlPaths_CONFKEY_TRACKS_NAME),
-                    name, desc, description, desc_file, True, True, True])
+                [active, True, str(KmlPaths_CONFKEY_TRACKS_NAME),
+                    name, desc, description, desc_file, 
+                    True, True, True, _GTKPaths_DESC_FAMILY])
         else:
             ite = self.treestore.append(None,
-                [str(KmlPaths_CONFKEY_TRACKS_NAME),
-                    name, desc, description, desc_file, True, True, True])
+                [True, True, str(KmlPaths_CONFKEY_TRACKS_NAME),
+                    name, desc, description, desc_file, 
+                    True, True, True, _GTKPaths_DESC_FAMILY])
         self.treestore.append(ite,
-            [str(KmlPaths_CONFKEY_TRACKS_COLOR),
-                str(KmlPaths_CONFKEY_TRACKS_COLOR), color, None, None, False, True, True])
+            [None, False, str(KmlPaths_CONFKEY_TRACKS_COLOR),
+                str(KmlPaths_CONFKEY_TRACKS_COLOR), color, None, None, 
+                False, True, True, _GTKPaths_DEFAULT_FAMILY])
         self.treestore.append(ite,
-            [str(KmlPaths_CONFKEY_TRACKS_WIDTH),
-                str(KmlPaths_CONFKEY_TRACKS_WIDTH), width, None, None, False, True, False])
+            [None, False, str(KmlPaths_CONFKEY_TRACKS_WIDTH),
+                str(KmlPaths_CONFKEY_TRACKS_WIDTH), width, None, None, 
+                False, True, False, _GTKPaths_DEFAULT_FAMILY])
         self.tracknum += 1
 
 
@@ -289,7 +337,15 @@ class GTKPaths(object):
             except:
                 pass
         elif key == KmlPaths_CONFKEY_TRACKS_NAME and key == column:
-            self.treestore.set(treestore_iter, _GTKPaths_COLUMN_VKEY, str(new_text))
+            old_name = self.treestore.get_value(treestore_iter, _GTKPaths_COLUMN_VKEY)
+            pos = 0
+            for phototrackname, phototrackactive in self.photodirlist:
+                if phototrackname == old_name:
+                    active = phototrackactive
+                    self.photodirlist[pos] = (str(new_text), phototrackactive)
+                    break
+                pos += 1
+            self.treestore.set(treestore_iter, _GTKPaths_COLUMN_VKEY, new_text)
 
 
     def _edit_value(self, cellrenderer, editable, path_string):
@@ -327,7 +383,74 @@ class GTKPaths(object):
         dialog.destroy()
 
 
+    def _key_press_textiew(self, textview, event, dialog):
+        if self.popup != None:
+            if event.keyval == gtk.gdk.keyval_from_name("Up"):
+                self.popup.prev()
+                return True
+            elif event.keyval == gtk.gdk.keyval_from_name("Down"):
+                self.popup.next()
+                return True
+            elif event.keyval == gtk.gdk.keyval_from_name("Return"):
+                value = self.popup.confirm()
+                tbuffer = textview.get_buffer()
+                end = tbuffer.get_iter_at_mark(tbuffer.get_insert())
+                start = end.copy()
+                start.backward_char()
+                while start.get_char() not in " ,()[]<>|/\\\"\'\n\t":
+                    start.backward_char()
+                start.forward_char()
+                tbuffer.delete(start, end)
+                ite = tbuffer.get_iter_at_mark(tbuffer.get_insert())
+                key = re.match(r"%\(([a-zA-Z0-9_\.]+)\|?.*]*\).", value).group(1)
+                if key in self.goptions['defaults']:
+                    tbuffer.insert_with_tags_by_name(ite, value, 'defaults')
+                else:
+                    tbuffer.insert_with_tags_by_name(ite, value, 'attr')
+                self.popup = None
+                return True
+            else:
+                self.popup.destroy()
+                self.popup = None
+        else:
+            if event.keyval == gtk.gdk.keyval_from_name("space") \
+            and event.state & gtk.gdk.CONTROL_MASK:
+                return self.autocomplete_textview(textview.get_buffer(), textview, dialog)
+            elif gtk.gdk.keyval_from_name("percent") == event.keyval:
+                return self.autocomplete_textview(textview.get_buffer(), textview, dialog)
+        return False
+
+
+    def autocomplete_textview(self, textbuffer, textview, dialog):
+        autocompletions = [
+            PhotoPlace_PathNAME,
+            PhotoPlace_PathDESC,
+            PhotoPlace_PathTINI,
+            PhotoPlace_PathTEND,
+            PhotoPlace_PathDRTN,
+            PhotoPlace_PathLEN,
+            PhotoPlace_PathLENMIN,
+            PhotoPlace_PathLENMAX,
+            PhotoPlace_PathSPMIN,
+            PhotoPlace_PathSPMAX,
+            PhotoPlace_PathSPAVG,
+            PhotoPlace_PathNSEG,
+            PhotoPlace_PathNWPT,
+        ]
+        completions = []
+        for item in autocompletions:
+            completions.append("%(" + item + ")s")
+        for item in self.goptions['defaults'].iterkeys():
+            completions.append("%(" + item + "|)s")
+        if len(completions) > 0:
+            position = dialog.window.get_root_origin()
+            self.popup = TextViewCompleter(textview, position, completions)
+            return True
+        return False
+
+
     def _show_description(self, ite, height=500, width=400):
+        self.popup = None
         filename = _('[select a file]')
         prefilename = self.treestore.get_value(ite, _GTKPaths_COLUMN_FILE)
         if prefilename:
@@ -364,10 +487,16 @@ class GTKPaths(object):
             "<b>%(PhotoPlace.PathSPAVG)s</b> -> Average speed (m/s)\n"
             "<b>%(PhotoPlace.PathNSEG)s</b> -> Number of segments\n"
             "<b>%(PhotoPlace.PathNWPT)s</b> -> Number of waypoints\n"
-            "</span>\n You can also use the variables defined in the "
-            "<b>[defaults]</b> section of the configuration file"
-            "in the same way."))
+            "</span>\n You can also use the <b>[defaults]</b> variables defined"
+            " in the same way."))
+        textview.add_events(gtk.gdk.KEY_PRESS_MASK)
         textbuffer = textview.get_buffer()
+        tag = textbuffer.create_tag('attr')
+        tag.set_property('foreground', "green")
+        tag.set_property('family', "Monospace")
+        tag = textbuffer.create_tag('defaults')
+        tag.set_property('foreground', "red")
+        tag.set_property('family', "Monospace")
         sw.add(textview)
         frame.add(sw)
         vbox.pack_start(frame, True, True)
@@ -382,33 +511,98 @@ class GTKPaths(object):
         image.set_from_stock(gtk.STOCK_FILE, gtk.ICON_SIZE_BUTTON)
         filechooserbutton.set_image(image)
         filechooserbutton.set_label(filename)
-        filechooserbutton.connect('clicked',
-            self._load_file, textview, ite, prefilename)
+        filechooserbutton.connect('clicked', self._load_file, textview, ite, prefilename)
         hbox.pack_start(filechooserbutton, False, False, 5)
         alignment = gtk.Alignment(1.0, 0.5, 0.0, 0.0)
         alignment.add(hbox)
         vbox.pack_start(alignment, False, False, 10)
-        textbuffer.set_text(
-            self.treestore.get_value(ite, _GTKPaths_COLUMN_DESC))
+        value = self.treestore.get_value(ite, _GTKPaths_COLUMN_DESC)
+        fd = StringIO.StringIO(self.treestore.get_value(ite, _GTKPaths_COLUMN_DESC))
+        self._set_textbuffer(fd, textview)
+        fd.close()
         dialog.resize(height, width)
         dialog.show_all()
+        textview.connect("key_press_event", self._key_press_textiew, dialog)
         dialog.run()
+        # wait to close ...
         start, end = textbuffer.get_bounds()
-        line = textbuffer.get_iter_at_line(_GTKPaths_DESCRIPTION_LINES)
-        if line.is_start():
-            contents = textbuffer.get_text(start, end).strip()[0:_GTKPaths_DESCRIPTION_CHARS]
+        char_count = textbuffer.get_char_count()
+        char_limit = _GTKPaths_DESCRIPTION_CHARS
+        line_count = textbuffer.get_line_count()
+        if line_count > 1:
+            mid = textbuffer.get_iter_at_line(1)
+            contents = textbuffer.get_text(start, mid).strip()[0:char_limit]
         else:
-            contents = textbuffer.get_text(start, line).strip()[0:_GTKPaths_DESCRIPTION_CHARS]
-            contents += "\n . . ."
-        self.treestore.set(ite, _GTKPaths_COLUMN_DESC, textbuffer.get_text(start, end))
+            if char_count < char_limit:
+                char_limit = char_count
+            mid = textbuffer.get_iter_at_line_offset(0, char_limit)
+            contents = textbuffer.get_text(start, mid)
+        if line_count > 1 or char_count > char_limit:
+            space_counter = _GTKPaths_DESCRIPTION_CHARS - len(contents)
+            contents += "".join([' ' for num in xrange(space_counter)]) + "[... ->]"
+        all_template = "<div mode='cdata'>\n" + textbuffer.get_text(start, end) + "\n</div>"
+        self.treestore.set(ite, _GTKPaths_COLUMN_DESC, all_template)
         self.treestore.set(ite, _GTKPaths_COLUMN_VALUE, contents)
+        self.popup = None
         dialog.destroy()
+        dialog = None
 
 
-    def _load_file(self, widget, textview, ite,
-        prefilename=None, bytes=102400, wrap=gtk.WRAP_NONE):
+    def _set_textbuffer(self, fd, textview):
+        textview.set_wrap_mode(gtk.WRAP_NONE)
+        tbuffer = textview.get_buffer()
+        ite_end = tbuffer.get_iter_at_mark(tbuffer.get_insert())
+        begin = True
+        lines = 0
+        for line in fd:
+            for part in re.split(r"(%\([a-zA-Z0-9_\.]+\|?[a-zA-Z0-9 \?¿_.,:;=!@$&\-\+\*]*\).)", line):
+                if part.startswith('%('):
+                    key = re.match(r"%\(([a-zA-Z0-9_\.]+)\|?.*\).", part).group(1)
+                    if key in self.goptions['defaults']:
+                        tbuffer.insert_with_tags_by_name(ite_end, part, 'defaults')
+                    else:
+                        tbuffer.insert_with_tags_by_name(ite_end, part, 'attr')
+                else:
+                    tbuffer.insert(ite_end, part)
+            ite_end = tbuffer.get_iter_at_mark(tbuffer.get_insert())
+            lines += 1
+        # Delete last template div, if it exists!
+        nline = lines
+        while nline > 0:
+            ite_nline = tbuffer.get_iter_at_line(nline)
+            text = tbuffer.get_text(ite_nline, ite_end).strip()
+            if text.startswith('</div>'):
+                tbuffer.delete(ite_nline, ite_end)
+                break
+            elif len(text) > 1:
+                # Not a valid template
+                break
+            else:
+                tbuffer.delete(ite_nline, ite_end)
+            ite_end = ite_nline
+            nline -= 1
+        # Delete first template div, if it exists!
+        ite_start = tbuffer.get_start_iter()
+        nline = 0
+        while nline <= lines:
+            ite_nline = tbuffer.get_iter_at_line(nline)
+            text = tbuffer.get_text(ite_start, ite_nline).strip()
+            search = re.search(r'<div\s+mode=.(\w+).\s*>', text)
+            if search:
+                tbuffer.delete(ite_start, ite_nline)
+                mode = search.group(1)
+                break
+            elif len(text) > 1:
+                # Not a valid template
+                break
+            else:
+                tbuffer.delete(ite_start, ite_nline)
+            ite_start = ite_nline
+            nline += 1
 
-        dialog = gtk.FileChooserDialog(title=_("Select text file ..."),
+
+    def _load_file(self, widget, textview, ite,prefilename=None):
+        dialog = gtk.FileChooserDialog(title=_("Select file ..."),
             parent=self.window, action=gtk.FILE_CHOOSER_ACTION_OPEN,
             buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         ffilter = gtk.FileFilter()
@@ -425,9 +619,7 @@ class GTKPaths(object):
         fd = None
         try:
             fd = codecs.open(filename, "r", encoding="utf-8")
-            textview.set_wrap_mode(wrap)
-            textbuffer = textview.get_buffer()
-            textbuffer.set_text(fd.read(bytes))
+            self._set_textview(fd, textview)
         except:
             pass
         finally:
@@ -436,8 +628,8 @@ class GTKPaths(object):
         self.treestore.set(ite, _GTKPaths_COLUMN_FILE, filename)
 
 
-    def get_data(self, key, tracknum):
-        ite = self.treestore.get_iter_from_string(str(tracknum))
+    def get_data(self, key, index):
+        ite = self.treestore.get_iter_from_string(str(index))
         if key == KmlPaths_CONFKEY_TRACKS_COLOR:
             ite = self.treestore.iter_nth_child(ite, 0)
             return self.treestore.get_value(ite, _GTKPaths_COLUMN_VALUE)

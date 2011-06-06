@@ -24,7 +24,7 @@ A plugin for PhotoPlace to generate paths from GPX tracks to show them in the KM
 """
 __program__ = "photoplace.paths"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 __date__ = "December 2010"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
@@ -94,8 +94,9 @@ KmlPaths_KMLPATH_GENDESC = _("Generated path from geotagged photos")
 KmlPaths_KMLPATH_GENTRACK = False
 KmlPaths_TRACKS_COLOR = '20FFFF00'
 KmlPaths_TRACKS_WIDTH = '3'
-KmlPaths_GPX_GENNAME = _('Pictures')
+KmlPaths_GPX_GENNAME = _('Photos')
 KmlPaths_VARIABLES = 'defaults'
+
 
 
 import KmlPath
@@ -128,10 +129,10 @@ class KmlPaths(Plugin):
         self.tracksinfo = None
         self.defaultsinfo = None
         self.kmlpath = None
-        self.phototrack = None
         self.gengpx = None
         self.options = None
         self.track_num = 0
+        self.photodirlist = None
         if gtkbuilder:
             import GTKPaths
             self.gui = GTKPaths.GTKPaths(gtkbuilder, state, logger)
@@ -144,14 +145,14 @@ class KmlPaths(Plugin):
         opt = options[KmlPaths_CONFKEY]
         self.defaultsinfo = options[KmlPaths_VARIABLES]
         self.options = None
+        self.photodirlist = []
         self.process_variables(opt)
-        self.phototrack = dict()
         if self.gui:
             if self.ready == -1:
                 # 1st time
-                self.gui.show(widget, self.options, self.tracksinfo)
+                self.gui.show(widget, self.options, self.tracksinfo, options, self.photodirlist)
             else:
-                self.gui.show(None, self.options, self.tracksinfo)
+                self.gui.show(None, self.options, self.tracksinfo, options, self.photodirlist)
         self.ready = 1
         self.logger.debug(_("Starting plugin ..."))
 
@@ -162,12 +163,10 @@ class KmlPaths(Plugin):
             options[KmlPaths_CONFKEY_KMLPATH_NAME] = None
         gentrack = options.setdefault(KmlPaths_CONFKEY_KMLPATH_GENTRACK, KmlPaths_KMLPATH_GENTRACK)
         if not isinstance(gentrack, bool):
-            generate = gentrack.lower().strip() in ["yes", "true", "on", "si", "1"]
+            generate = gentrack.strip().lower() in ["yes", "true", "on", "si", "1"]
             options[KmlPaths_CONFKEY_KMLPATH_GENTRACK] = generate
         self.tracksinfo = {
         0:{
-            KmlPaths_CONFKEY_TRACKS_NAME : KmlPaths_KMLPATH_GENNAME,
-            KmlPaths_CONFKEY_TRACKS_DESC : '',
             KmlPaths_CONFKEY_TRACKS_COLOR : KmlPaths_TRACKS_COLOR,
             KmlPaths_CONFKEY_TRACKS_WIDTH : KmlPaths_TRACKS_WIDTH,
         },
@@ -208,7 +207,7 @@ class KmlPaths(Plugin):
         self.options = options
 
 
-    @DRegister("ReadGPX:finish")
+    @DRegister("ReadGPX:end")
     def update(self, *args, **kwargs):
         if self.gui:
             self.gui.clear_tracks()
@@ -216,17 +215,13 @@ class KmlPaths(Plugin):
                 self.gui.add_track(track.name, track.desc)
 
 
-    @DRegister("LoadPhotos:finish")
-    def loadphotos(self, *args, **kwargs):
-        name = os.path.basename(self.state['photoinputdir'])
-        self.phototrack[name] = list()
-        self.tracksinfo[0][KmlPaths_CONFKEY_TRACKS_NAME] = name
-        for photo in self.state.geophotos:
-            if photo.isGeoLocated():
-                geoinfo = (photo.path, photo.lon, photo.lat, photo.ele, photo.time)
-                self.phototrack[name].append(geoinfo)
-        if self.gui:
-            self.gui.photo_path()
+    @DRegister("LoadPhotos:end")
+    def loadphotos(self, num_photos):
+        if num_photos > 0:
+            name = os.path.basename(self.state['photoinputdir'])
+            self.photodirlist.insert(0, (name, True))
+            if self.gui:
+                self.gui.photo_path(newtrackname=name)
 
 
     @DRegister("MakeKML:finish")
@@ -236,6 +231,7 @@ class KmlPaths(Plugin):
             or not self.state.outputkml:
             self.ready = 0
             return None
+        self.track_num = 0
         kml = self.state.kmldata.getKml()
         self.gengpx = pyGPX.GPX(KmlPaths_GPX_GENNAME, datetime.datetime.utcnow())
         name = self.options[KmlPaths_CONFKEY_KMLPATH_NAME]
@@ -243,7 +239,7 @@ class KmlPaths(Plugin):
         num_tracks = 0
         self.logger.debug(_("Processing all tracks (paths) from GPX data ... "))
         if self.options[KmlPaths_CONFKEY_KMLPATH_GENTRACK]:
-            self.maketrack()
+            self.maketrack(self.state.geophotos)
             num_tracks += self.gentrack(self.gengpx.tracks)
         num_tracks += self.gentrack(self.state.gpxdata.tracks)
         self.logger.info(_("%s paths have been generated for KML data.") % num_tracks)
@@ -252,55 +248,66 @@ class KmlPaths(Plugin):
         self.kmlpath = None
 
 
-    def maketrack(self):
-        proc_photos = 0
+    def maketrack(self, geophotos):
         dgettext = dict()
-        num_tracks = 0
         time_zone = datetime.timedelta(minutes=self.state['utczoneminutes'])
-        for name, track in self.phototrack.iteritems():
-            gpxtrk = pyGPX.GPXTrack(name)
-            gpxtrkseg = pyGPX.GPXSegment(name)
-            for photo_path, photo_lon, photo_lat, photo_ele, photo_time in track:
-                found = None
-                for photo in self.state.geophotos:
-                    if photo.path == photo_path:
-                        found = photo
-                        break
-                if not found or found.status < 1:
-                    continue
-                photo_tutc = photo_time - time_zone
-                gpxwpt = pyGPX.GPXPoint(
-                    photo_lat, photo_lon, photo_ele, photo_tutc, found.name)
-                dgettext['photo'] = found.name
-                dgettext['photo_lon'] = photo_lon
-                dgettext['photo_lat'] = photo_lat
-                dgettext['photo_ele'] = photo_ele
-                dgettext['photo_time'] = photo_time
+        tracks = dict()
+        for photo in geophotos:
+            foto_path = os.path.dirname(photo.path)
+            foto_path = os.path.split(foto_path)[1]
+            if not tracks.has_key(foto_path):
+                gpxtrkseg = pyGPX.GPXSegment(foto_path)
+                tracks[foto_path] = gpxtrkseg
+            else:
+                gpxtrkseg = tracks[foto_path]
+            if photo.isGeoLocated():
+                dgettext['photo'] = photo.name
+                dgettext['photo_lon'] = photo.lon
+                dgettext['photo_lat'] = photo.lat
+                dgettext['photo_ele'] = photo.ele
+                dgettext['photo_time'] = photo.time
+                photo_tutc = photo.time - time_zone
                 dgettext['photo_tutc'] = photo_tutc
+                gpxwpt = pyGPX.GPXPoint(
+                    photo.lat, photo.lon, photo.ele, photo_tutc, photo.name)
                 self.logger.debug(_("Generated WayPoint from '%(photo)s' at %(photo_time)s "
                     "(UTC=%(photo_tutc)s) with coordinates (lon=%(photo_lon).8f, "
                     "lat=%(photo_lat).8f, ele=%(photo_ele).8f).") % dgettext)
                 gpxtrkseg.addPoint(gpxwpt)
-                proc_photos += 1
+        proc_photos = 0
+        for name, gpxtrkseg in tracks.iteritems():
+            dgettext['track_name'] = name
+            active = True
+            # See if that track is disabled by the user
+            for phototrackname, phototrackactive in self.photodirlist:
+                if phototrackname == name:
+                    active = phototrackactive
+                    break
+            gpxtrk = pyGPX.GPXTrack(name)
+            gpxtrk.status = active
+            self.gengpx.tracks.append(gpxtrk)
             try:
                 gpxtrk.addSegment(gpxtrkseg)
-                dgettext['track_name'] = name
-                dgettext['track_points'] = proc_photos
-                msg = _("Track '%(track_name)s' was generated from "
-                    "%(track_points)s geotagged photos.")
+                num_photos = len(gpxtrkseg.lwpts)
+                proc_photos += num_photos
+                dgettext['track_numphotos'] = num_photos
+                msg = _("Track '%(track_name)s' was generated from %(track_numphotos)s geotagged photos.")
                 self.logger.info(msg % dgettext)
             except pyGPX.GPXError:
                 # GPXError if len(gpxtrkseg) == 0
-                self.logger.warning(_("Cannot generate empty GPX Track!"))
-            self.gengpx.tracks.append(gpxtrk)
-            num_tracks += 1
-        return num_tracks
+                msg = _("Photo track '%(track_name)s' is empty due to no geotagged photos!")
+                self.logger.warning(msg % dgettext)
+                gpxtrk.status = False
+        return proc_photos
 
 
     def gentrack(self, tracklist):
         num_tracks = 0
         dgettext = dict()
         for track in tracklist:
+            if not track.status:
+                self.track_num += 1
+                continue
             pathdata = TemplateDict(track.attr)
             # Options from 'defaults' section of config file
             pathdata.update(self.defaultsinfo)
@@ -330,7 +337,7 @@ class KmlPaths(Plugin):
                     num_points = num_points + 1
                 pathdata[PhotoPlace_PathNWPT] = num_points
                 # Set data
-                self.settrack(pathdata, coordinates)
+                self.settrack(pathdata, coordinates, self.track_num)
                 # write all data to log
                 dgettext['path_npoints'] = num_points
                 dgettext['path_nsegments'] = len(track.ltrkseg)
@@ -347,19 +354,20 @@ class KmlPaths(Plugin):
                 msg = _("Error when track (path) '%(path)s' was being "
                     "processed: %(error)s.") % dgettext
                 self.logger.error(msg)
+            self.track_num += 1
         return num_tracks
 
 
-    def settrack(self, data, coordinates):
+    def settrack(self, data, coordinates, index):
         # Only a photo directory with text mode -> only one photo track
         styleid = KmlPaths_CONFKEY
         length = len(self.tracksinfo)
-        times, number = divmod(self.track_num, length - 1)
+        times, number = divmod(index, length - 1)
         trackid = 0
         createstyle = False
         # Calculate module, but 0 is reserved for style of first path
         # and cannot be repeated ...
-        if times == 0 and number == 0 and self.track_num == 0:
+        if times == 0 and number == 0 and index == 0:
             # Autogenerated track from photos
             styleid = styleid + '0'
             trackid = 0
@@ -380,10 +388,10 @@ class KmlPaths(Plugin):
             trackid = number
         trackinfo = self.tracksinfo[trackid]
         if self.gui:
-            name = self.gui.get_data(KmlPaths_CONFKEY_TRACKS_NAME, self.track_num)
-            description = self.gui.get_data(KmlPaths_CONFKEY_TRACKS_DESC, self.track_num)
-            color = self.gui.get_data(KmlPaths_CONFKEY_TRACKS_COLOR, self.track_num)
-            width = self.gui.get_data(KmlPaths_CONFKEY_TRACKS_WIDTH, self.track_num)
+            name = self.gui.get_data(KmlPaths_CONFKEY_TRACKS_NAME, index)
+            description = self.gui.get_data(KmlPaths_CONFKEY_TRACKS_DESC, index)
+            color = self.gui.get_data(KmlPaths_CONFKEY_TRACKS_COLOR, index)
+            width = self.gui.get_data(KmlPaths_CONFKEY_TRACKS_WIDTH, index)
         else:
             name = data[PhotoPlace_PathNAME]
             if trackinfo.has_key(KmlPaths_CONFKEY_TRACKS_NAME):
@@ -412,15 +420,13 @@ class KmlPaths(Plugin):
             self.kmlpath.new_style(styleid, color, width)
         styleid = '#' + styleid
         self.kmlpath.new_track(coordinates, name, description, styleid)
-        self.track_num += 1
 
 
     def reset(self):
         if self.ready:
             self.gengpx = None
             self.kmlpath = None
-            self.phototrack = dict()
-            self.track_num = 0
+            self.photodirlist = []
             if self.gui:
                 self.gui.clear_tracks()
                 self.gui.reset()
@@ -432,10 +438,9 @@ class KmlPaths(Plugin):
         self.tracksinfo = None
         self.defaultsinfo = None
         self.options = None
-        self.phototrack = None
         self.gengpx = None
         self.kmlpath = None
-        self.track_num = 0
+        self.photodirlist = None
         if self.gui:
             self.gui.hide(True)
         self.logger.debug(_("Ending plugin ..."))
