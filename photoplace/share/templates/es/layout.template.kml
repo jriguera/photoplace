@@ -80,8 +80,8 @@
 
     <LookAt>
         <TimeSpan>
-            <begin>%(MinTime|2000)s</begin>
-            <end>%(MaxTime|2020)s</end>
+            <begin>%(PhotoPlace.MinTime|2000)s</begin>
+            <end>%(PhotoPlace.MaxTime|2020)s</end>
         </TimeSpan>
         <longitude>%(inilongitude|0.0)s</longitude>
         <latitude>%(inilatitute|0.0)s</latitude>

@@ -184,6 +184,17 @@
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-saveconf_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-recoverconf">
+                        <property name="label">gtk-undelete</property>
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">Recover default configuration.</property>
+                        <property name="use_stock">True</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-recoverconf_activate"/>
                       </object>
                     </child>
                     <child>
@@ -367,6 +378,7 @@
                     <property name="tab_hborder">20</property>
                     <property name="tab_vborder">6</property>
                     <property name="homogeneous">True</property>
+                    <signal name="create_window" handler="on_notebook_create_window"/>
                     <child>
                       <object class="GtkFrame" id="frame-options">
                         <property name="visible">True</property>
@@ -402,6 +414,7 @@
                                     <property name="visible">True</property>
                                     <property name="model">liststore-exifmodes</property>
                                     <property name="active">0</property>
+                                    <signal name="changed" handler="on_combobox-exif_changed"/>
                                     <child>
                                       <object class="GtkCellRendererText" id="cellrenderertext-exif_name"/>
                                       <attributes>
