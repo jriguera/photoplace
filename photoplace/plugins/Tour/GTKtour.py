@@ -83,7 +83,28 @@ class GTKTour(object):
         self.entry_desc = gtk.Entry(max=1024)
         self.entry_desc.connect('changed', self._set_entry, KmlTour_CONFKEY_KMLTOUR_DESC)
         hbox_desc.pack_start(self.entry_desc, True, True)
-        hbox_name.pack_start(hbox_desc, True, True, 10)
+        #hbox_name.pack_start(hbox_desc, True, True, 10)
+        hbox_follow = gtk.HBox(False)
+        self.button_follow_path = gtk.CheckButton(_("Follow path with simpl. factor:"))
+        self.button_follow_path.set_tooltip_text(
+            _("If it is active, the tour will follow GPS tracks. "
+            "It does not change the current value in the photos. "
+            "If photos are loaded without 'follow path', the value "
+            "will not set up for those photos."))
+        self.button_follow_path.connect('toggled', self._set_follow)
+        hbox_follow.pack_start(self.button_follow_path, False, False, 5)
+        self.adjustment_epsilon = gtk.Adjustment(0, -1, 100000, 3.0, 2.0, 0.0)
+        self.spinbutton_epsilon = gtk.SpinButton(self.adjustment_epsilon, 0.0, 0)
+        self.spinbutton_epsilon.set_tooltip_text(
+            _("Maximum tolerance in meters to determine if a point of track will "
+            "be used in the tour. If it is 0, all waypoints of the original track "
+            "will be followed, with -1, the value will be automatically estimated."))
+        self.spinbutton_epsilon.set_numeric(True)
+        self.adjustment_epsilon.connect("value_changed", self._set_epsilon)
+        hbox_follow.pack_start(self.spinbutton_epsilon, False, False)
+        align = gtk.Alignment(0.5, 0.5, 0, 0)
+        align.add(hbox_follow)
+        hbox_name.pack_start(align, True, True)
         self.button_advanced = gtk.Button(_('Advanced'), gtk.STOCK_PROPERTIES)
         self.button_advanced.connect('clicked', self.show_properties)
         hbox_name.pack_start(self.button_advanced, False, False, 5)
@@ -94,7 +115,7 @@ class GTKTour(object):
             "like <span font_family='monospace' size='small'>"
             "<b>%(<i>variable</i>)s</b></span> "
             "where <i>variable</i> is a key defined in the "
-            "<b>[defaults]</b> section of the configuration file.")
+            "<b>Variables</b> section.")
         hbox_text = gtk.HBox(True)
         vbox_ini = gtk.VBox(False)
         label_ini = gtk.Label()
@@ -273,7 +294,11 @@ class GTKTour(object):
             self.combobox_mp3.set_active(0)
         self.button_music_mix.set_active(options[KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX])
         self.entry_uri.set_text(options[KmlTour_CONFKEY_KMLTOUR_MUSIC_URI])
+        follow_value = options[KmlTour_CONFKEY_FOLLOWPATH]
+        self.button_follow_path.set_active(follow_value)
+        self.spinbutton_epsilon.set_sensitive(follow_value)
         self.options = options
+        self.adjustment_epsilon.set_value(options[KmlTour_CONFKEY_KMLTOUR_SIMPL_DISTANCE])
 
 
     def _set_textview(self, textview, filename, bytes=102400, wrap=gtk.WRAP_NONE):
@@ -344,10 +369,23 @@ class GTKTour(object):
         self.combobox_mp3.set_active(0)
 
 
-    def _set_mix(self, widget, *args, **kwargs):
+    def _set_epsilon(self, widget):
+        value = self.adjustment_epsilon.get_value()
+        self.options[KmlTour_CONFKEY_KMLTOUR_SIMPL_DISTANCE] = float(value)
+
+
+    def _set_mix(self, widget, data):
         if self.options:
             value = widget.get_active()
             self.options[KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX] = value
+
+
+    def _set_follow(self, widget, data=None):
+        value = widget.get_active()
+        self.spinbutton_epsilon.set_sensitive(value)
+        if self.options:
+            self.options[KmlTour_CONFKEY_FOLLOWPATH] = value
+            # Hei!, it does not change the current value in the photos
 
 
     def show_properties(self, widget=None, height=500, width=300):
