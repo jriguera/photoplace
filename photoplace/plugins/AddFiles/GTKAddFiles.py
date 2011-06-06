@@ -75,8 +75,10 @@ class GTKAddFiles(object):
         self.state = state
         # 1st line
         label_name = gtk.Label()
+        align = gtk.Alignment(0.01, 0.5, 0, 0)
         label_name.set_markup(_("List of additional files to be included into KMZ"))
-        self.plugin.pack_start(label_name, False, False, 10)
+        align.add(label_name)
+        self.plugin.pack_start(align, False, False, 10)
         # Parameters
         scroll = gtk.ScrolledWindow()
         scroll.set_shadow_type(gtk.SHADOW_ETCHED_IN)
