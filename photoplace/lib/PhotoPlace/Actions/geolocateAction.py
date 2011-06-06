@@ -85,6 +85,8 @@ class Geolocate(Interface.Action, threading.Thread):
                 continue
             tracksegs = []
             for track in self.gpxdata.tracks:
+                if not track.status:
+                    continue
                 tracksegs += track.closest(photo_tutc, max_delta)
             if len(tracksegs) == 0:
                 self.logger.warning(_("It is impossible geotag '%(photo)s' "
@@ -111,6 +113,7 @@ class Geolocate(Interface.Action, threading.Thread):
                     photo.lat = closed_point.lat
                     photo.lon = closed_point.lon
                     photo.ele = closed_point.ele
+                    photo.ptime = closed_point.time
                     self.dgettext['photo_lon'] = photo.lon
                     self.dgettext['photo_lat'] = photo.lat
                     self.dgettext['photo_ele'] = photo.ele

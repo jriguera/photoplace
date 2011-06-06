@@ -60,7 +60,19 @@ class MakeKML(Interface.Action, threading.Thread):
         hours, remainder = divmod(utczoneminutes, 60)
         minutes, seconds = divmod(remainder, 60)
         self.str_tzdiff = self.str_tzdiff + "%.2d:%.2d" % (hours, minutes)
+        self.uri_mode = 0
         self.rootdata = dict(rootdata)
+
+
+    def _set_value(self, key, value):
+        if self.rootdata.has_key(key):
+            current = self.rootdata[key].strip()
+            try:
+                val = float(current)
+            except:
+                self.rootdata[key] = value
+        else:
+            self.rootdata[key] = value
 
 
     def ini(self, *args, **kwargs):
@@ -75,6 +87,8 @@ class MakeKML(Interface.Action, threading.Thread):
         min_lon = 180.0
         if self.state.gpxdata:
             for track in self.state.gpxdata.tracks:
+                if not track.status:
+                    continue
                 try:
                     (tmin, tmax, duration) = track.timeMinMaxDuration()
                     if tmin < min_time:
@@ -126,8 +140,6 @@ class MakeKML(Interface.Action, threading.Thread):
                     prev_lat = geophoto.lat
                     prev_lon = geophoto.lon
                     num_points += 1
-        center_lon = (max_lon + min_lon)/2.0
-        center_lat = (max_lat + min_lat)/2.0
         diff_time = abs(max_time - min_time)
         self.rootdata[PhotoPlace_NumPOINTS] = num_points
         self.rootdata[PhotoPlace_NumTRACKS] = num_tracks
@@ -140,8 +152,17 @@ class MakeKML(Interface.Action, threading.Thread):
         self.rootdata[PhotoPlace_MaxLAT] = max_lat
         self.rootdata[PhotoPlace_MinLON] = min_lon
         self.rootdata[PhotoPlace_MaxLON] = max_lon
-        self.rootdata.setdefault(PhotoPlace_MidLAT, center_lat)
-        self.rootdata.setdefault(PhotoPlace_MidLON, center_lon)
+        # Calculate the best values:
+        max_distance = pyGPX.distanceCoord(min_lat, min_lon, max_lat, max_lon)
+        altitude = max_distance * 2
+        self._set_value(PhotoPlace_IniALT, altitude)
+        self._set_value(PhotoPlace_IniRANGE, PhotoPlace_Cfg_default_inirange)
+        self._set_value(PhotoPlace_IniTILT, PhotoPlace_Cfg_default_initilt)
+        self._set_value(PhotoPlace_IniHEADING, PhotoPlace_Cfg_default_heading)
+        center_lat = (max_lat + min_lat)/2.0
+        self._set_value(PhotoPlace_MidLAT, center_lat)
+        center_lon = (max_lon + min_lon)/2.0
+        self._set_value(PhotoPlace_MidLON, center_lon)
         self.rootdata[PhotoPlace_ResourceURI] = self.photouri
         self._notify_ini(self.rootdata)
         self.dgettext['jpgsize'] = self.jpgsize
@@ -150,6 +171,13 @@ class MakeKML(Interface.Action, threading.Thread):
         self.dgettext['photouri'] = self.photouri
         self.dgettext['exifmode'] = self.state['exifmode']
         self.dgettext['outputdir'] = self.outputdir
+        # Photo URI
+        if '%(' in self.photouri:
+            self.uri_mode = 1
+        elif '%s' in self.photouri:
+            self.uri_mode = 2
+        else:
+            self.uri_mode = 0
         self.logger.info(_("Generating KML from photos' geodata ..."))
         msg = _("Generating KML from photos with options: <%s>.") % self.dgettext
         self.logger.debug(msg)
@@ -158,11 +186,6 @@ class MakeKML(Interface.Action, threading.Thread):
 
     def go(self, rini):
         photodata = dict()
-        mode = 0
-        if '%(' in self.photouri:
-            mode = 1
-        elif '%s' in self.photouri:
-            mode = 2
         for photo in self.state.geophotos:
             self._notify_run(photo, 0)
             if photo.status < self.state.status:
@@ -180,6 +203,7 @@ class MakeKML(Interface.Action, threading.Thread):
                 photodata[PhotoPlace_PhotoELE] = photo.ele
                 photodata[PhotoPlace_PhotoNAME] = photo.name
                 photodata[PhotoPlace_PhotoDATE] = photo.time
+                photodata[PhotoPlace_PhotoPTIME] = photo.ptime
                 photodata[PhotoPlace_PhotoWIDTH] = self.jpgsize[0]
                 photodata[PhotoPlace_PhotoHEIGHT] = self.jpgsize[1]
                 photodata[PhotoPlace_PhotoZOOM] = self.jpgzoom
@@ -191,9 +215,9 @@ class MakeKML(Interface.Action, threading.Thread):
                         photodata[k] = str(photo.exif[k].value)
                     except:
                         pass
-                if mode == 1:
+                if self.uri_mode == 1:
                     photodata[PhotoPlace_PhotoURI] = self.photouri % photodata
-                elif mode == 2:
+                elif self.uri_mode == 2:
                     photodata[PhotoPlace_PhotoURI] = self.photouri % photo.name
                 else:
                     photodata[PhotoPlace_PhotoURI] = self.photouri + photo.name

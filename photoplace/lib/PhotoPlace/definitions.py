@@ -53,6 +53,7 @@ PhotoPlace_PhotoURI = 'Photo.URI'
 PhotoPlace_PhotoLAT = 'Photo.LAT'
 PhotoPlace_PhotoLON = 'Photo.LON'
 PhotoPlace_PhotoELE = 'Photo.ELE'
+PhotoPlace_PhotoPTIME = 'Photo.PTIME'
 PhotoPlace_PhotoWIDTH = 'Photo.WIDTH'
 PhotoPlace_PhotoHEIGHT = 'Photo.HEIGHT'
 PhotoPlace_PhotoZOOM = 'Photo.ZOOM'
@@ -74,6 +75,7 @@ PhotoPlace_TEMPLATE_VARS = [
     PhotoPlace_PhotoLAT,
     PhotoPlace_PhotoLON,
     PhotoPlace_PhotoELE,
+    PhotoPlace_PhotoPTIME,
     PhotoPlace_PhotoWIDTH,
     PhotoPlace_PhotoHEIGHT,
     PhotoPlace_PhotoZOOM,
@@ -91,16 +93,17 @@ PhotoPlace_TEMPLATE_VARS = [
     PhotoPlace_MaxLON,
 ]
 
+# Values from default's section
 PhotoPlace_MidLAT = 'inilatitute'
 PhotoPlace_MidLON = 'inilongitude'
-PhotoPlace_IniHEADING = 'inialtitude'
+PhotoPlace_IniALT = 'inialtitude'
 PhotoPlace_IniRANGE = 'inirange'
 PhotoPlace_IniTILT = 'initilt'
 PhotoPlace_IniHEADING = 'iniheading'
 
 
 # Default values
-PhotoPlace_Cfg_main_exifmode = 0
+PhotoPlace_Cfg_main_exifmode = 1
 PhotoPlace_Cfg_main_jpgsize = (0, 0)
 PhotoPlace_Cfg_main_jpgzoom = 0.15
 PhotoPlace_Cfg_main_quality = 1
@@ -114,6 +117,9 @@ PhotoPlace_Cfg_main_templatedefaultvalue = " "
 PhotoPlace_Cfg_main_templateseparatornodes = '.'
 PhotoPlace_Cfg_main_templatedeltag = ""
 
+PhotoPlace_Cfg_default_inirange = 0.0
+PhotoPlace_Cfg_default_initilt = 10.0
+PhotoPlace_Cfg_default_heading =  0.0
 
 
 # #######################################
@@ -132,17 +138,20 @@ PhotoPlace_Cfg_DirMode = 0750
 PhotoPlace_Cfg_ExifModes = {
     0 : _('write'),
     1 : _('overwrite'),
-    -1: _('nowrite') }
+   -1 : _('nowrite') 
+}
 PhotoPlace_Cfg_LogModes = {
-    "info": logging.INFO,
-    "debug": logging.DEBUG,
+    "info"   : logging.INFO,
+    "debug"  : logging.DEBUG,
     "warning": logging.WARNING,
-    "error": logging.ERROR }
+    "error"  : logging.ERROR 
+}
 PhotoPlace_Cfg_default = {
-    'main' : {},
+    'main'      : {},
     'templates' : {},
-    'defaults' : {},
-    'plugins' : {} }
+    'defaults'  : {},
+    'plugins'   : {} 
+}
 PhotoPlace_Cfg_loglevel = logging.DEBUG
 PhotoPlace_Cfg_logformat = '%(asctime)s: %(levelname)-7s - %(name)-11s - %(message)s'
 PhotoPlace_Cfg_logtextviewformat = '%(asctime)s: %(levelname)-7s - %(name)-11s - %(message)s'
@@ -152,58 +161,34 @@ PhotoPlace_Cfg_quality = [
     {'img': Image.NEAREST, 'zip': zipfile.ZIP_DEFLATED },
     {'img': Image.BILINEAR, 'zip': zipfile.ZIP_DEFLATED },
     {'img': Image.BICUBIC, 'zip': zipfile.ZIP_STORED },
-    {'img': Image.ANTIALIAS, 'zip': zipfile.ZIP_STORED } ]
-
-
-# GTKUI Configuration
-PhotoPlace_Cfg_TreeViewColorGeo = "#8AE234"
-PhotoPlace_Cfg_TreeViewColorNormal = "#4634E3"
-PhotoPlace_Cfg_TreeViewColorChanged = "#D134E3"
-PhotoPlace_Cfg_TreeViewPhotoSize = (80, 60)
-(
-    TREEVIEWPHOTOS_COL_STATUS,
-    TREEVIEWPHOTOS_COL_NAME,
-    TREEVIEWPHOTOS_COL_PATH,
-    TREEVIEWPHOTOS_COL_DATE,
-    TREEVIEWPHOTOS_COL_ACTIVE,
-    TREEVIEWPHOTOS_COL_PIXBUF,
-    TREEVIEWPHOTOS_COL_MAIN_INFO,
-    TREEVIEWPHOTOS_COL_DATA,
-    TREEVIEWPHOTOS_COL_VALUE,
-    TREEVIEWPHOTOS_COL_BGCOLOR,
-    TREEVIEWPHOTOS_COL_PARENT,
-    TREEVIEWPHOTOS_COL_DATAEDIT,
-    TREEVIEWPHOTOS_COL_INFO,
-) = range(13)
-(
-    TREEVIEWPHOTOINFO_COL_DEL,
-    TREEVIEWPHOTOINFO_COL_EDIT,
-    TREEVIEWPHOTOINFO_COL_KEY,
-    TREEVIEWPHOTOINFO_COL_VALUE,
-    TREEVIEWPHOTOINFO_COL_BGCOLOR,
-) = range(5)
-TREEVIEWPHOTOINFO_GEOPHOTOINFO_COLOR = "red"
-TREEVIEWPHOTOINFO_GEOPHOTOATTR_COLOR = "green"
-TREEVIEWPHOTOINFO_GEOPHOTOEXIF_COLOR = "blue"
-
-VARIABLES_KEY = "defaults"
-(
-    VARIABLES_COLUMN_KEY,
-    VARIABLES_COLUMN_VALUE,
-    VARIABLES_COLUMN_EDITABLE,
-) = range(3)
-VARIABLES_OTHER = [
-    'normalplacemark',
-    'highlightplacemark',
-    'highlightplacemarkballoonbgcolor',
-    'highlightplacemarkballoontextcolor',
-    'inilatitute',
-    'inilongitude',
-    'inialtitude',
-    'inirange',
-    'initilt',
-    'iniheading',
+    {'img': Image.ANTIALIAS, 'zip': zipfile.ZIP_STORED } 
 ]
-TEMPLATES_KEY = "templates"
+
+# This settings wont be saved with configuration (by default)
+PhotoPlace_CONFIG_NOCLONE = {
+    'main'      : [
+        'photoinputdir', 
+        'gpxinputfile', 
+        'outputfile', 
+        'kmltemplate', 
+        'logfile', 
+        'loglevel', 
+        'utczoneminutes', 
+        'photouri',
+        ],
+    'defaults'  : [
+        'author', 
+        'date', 
+        'mailto',
+        'inilatitute',
+        'inilongitude',
+        'inialtitude',
+        'inirange',
+        'initilt',
+        'iniheading',
+    ],
+    'templates' : [],
+    'plugins'   : [],
+}
 
 # EOF

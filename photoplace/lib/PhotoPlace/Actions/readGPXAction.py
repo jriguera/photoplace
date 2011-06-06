@@ -49,7 +49,6 @@ class ReadGPX(Interface.Action, threading.Thread):
         threading.Thread.__init__(self)
         self.gpxinputfile = state['gpxinputfile']
         self.dgettext['gpxinputfile'] = self.gpxinputfile
-        #self.utczoneminutes = state['utczoneminutes']
         try:
             try:
                 self.fd = urllib.urlopen(self.gpxinputfile)
@@ -71,13 +70,10 @@ class ReadGPX(Interface.Action, threading.Thread):
             self.logger.error(msg)
             tip = _("Check file format. Maybe you need to export that file again.")
             raise Error(msg, tip, "ValueError")
-        #self.utc_time_delta = datetime.timedelta(minutes=self.utczoneminutes)
 
 
     def ini(self, *args, **kwargs):
-        #self._notify_ini(self.fd, self.utc_time_delta)
         self._notify_ini(self.fd)
-        #self.dgettext['utc_time_delta'] = self.utc_time_delta
         msg = _("Processing GPX data from '%(gpxinputfile)s' ...")
         self.logger.info(msg % self.dgettext)
         return self.state.gpxdata

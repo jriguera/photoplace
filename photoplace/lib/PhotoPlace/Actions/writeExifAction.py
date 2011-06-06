@@ -77,7 +77,7 @@ class WriteExif(Interface.Action, threading.Thread):
                 except Exception as exception:
                     self.dgettext['error'] = str(exception)
                     self.logger.error(_("Error while EXIF data was being written to "
-                        "'%(photo)s': '%(error)s'.") % self.dgettext)
+                        "'%(photo)s': %(error)s") % self.dgettext)
                     ok = False
                 else:
                     self._notify_run(photo, 1)

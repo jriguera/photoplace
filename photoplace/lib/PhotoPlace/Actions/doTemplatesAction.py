@@ -55,7 +55,8 @@ class DoTemplates(Interface.Action):
 
     def ini(self, *args, **kwargs):
         errors = []
-        for lpos, filename in self.options[TEMPLATES_KEY].iteritems():
+        templates_key = 'templates'
+        for lpos, filename in self.options[templates_key].iteritems():
             filename = os.path.expandvars(filename)
             file_exist = True
             if not os.path.isfile(filename):
@@ -63,12 +64,12 @@ class DoTemplates(Interface.Action):
                 filename = os.path.join(self.userresourcedir, filename)
                 if not os.path.isfile(filename):
                     language = locale.getdefaultlocale()[0]
-                    filename = os.path.join(self.resourcedir, TEMPLATES_KEY, language, orig_filename)
+                    filename = os.path.join(self.resourcedir, templates_key, language, orig_filename)
                     if not os.path.isfile(filename):
                         language = language.split('_')[0]
-                        filename = os.path.join(self.resourcedir, TEMPLATES_KEY, language, orig_filename)
+                        filename = os.path.join(self.resourcedir, templates_key, language, orig_filename)
                         if not os.path.isfile(filename):
-                            filename = os.path.join(self.resourcedir, TEMPLATES_KEY, orig_filename)
+                            filename = os.path.join(self.resourcedir, templates_key, orig_filename)
                     if not os.path.isfile(filename):
                         msg = _("Template file '%s' does not exist!.") % filename
                         self.logger.error(msg)

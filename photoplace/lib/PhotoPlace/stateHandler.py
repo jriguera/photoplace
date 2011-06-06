@@ -193,9 +193,12 @@ class State(object):
             "copyonlygeolocated",
         ]
         if k in keys:
-            return getattr(self, '_' + key)
+            return getattr(self, '_' + k)
         else:
-            raise AttributeError(key)
+            if k == 'logfile' or k == 'loglevel':
+                return self.options[k]
+            else:
+                raise AttributeError(k)
 
 
     def __setitem__(self, key, value):
@@ -226,8 +229,10 @@ class State(object):
             self.set_jpgzoom(value)
         elif k == "copyonlygeolocated":
             self.set_copyonlygeolocated(value)
+        elif k == 'logfile' or k == 'loglevel':
+            self.options[k] = value
         else:
-            raise AttributeError(key)
+            raise AttributeError(k)
 
 
     @DSynchronized()
@@ -633,14 +638,15 @@ class State(object):
         if not os.path.isfile(kmltemplate):
             kmltemplate_orig = kmltemplate
             kmltemplate = os.path.join(self.resourcedir_user, kmltemplate)
+            templates_key = 'templates'
             if not os.path.isfile(kmltemplate):
                 language = locale.getdefaultlocale()[0]
-                kmltemplate = os.path.join(self.resourcedir, TEMPLATES_KEY, language, kmltemplate_orig)
+                kmltemplate = os.path.join(self.resourcedir, templates_key, language, kmltemplate_orig)
                 if not os.path.isfile(kmltemplate):
                     language = language.split('_')[0]
-                    kmltemplate = os.path.join(self.resourcedir, TEMPLATES_KEY, language, kmltemplate_orig)
+                    kmltemplate = os.path.join(self.resourcedir, templates_key, language, kmltemplate_orig)
                     if not os.path.isfile(kmltemplate):
-                        kmltemplate = os.path.join(self.resourcedir, TEMPLATES_KEY, kmltemplate_orig)
+                        kmltemplate = os.path.join(self.resourcedir, templates_key, kmltemplate_orig)
                 if not os.path.isfile(kmltemplate):
                     msg = _("Main KML template file '%s' not found!.") % kmltemplate
                     self.__logger.error(msg)

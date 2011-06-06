@@ -60,10 +60,6 @@ except Exception as e:
     raise
 warnings.resetwarnings()
 
-__RESOURCES_GTK_PATH__ = "gtkui"
-__GUIXML_FILE__ = os.path.join(__RESOURCES_GTK_PATH__, "photoplace.ui")
-__GUIICON_FILE__ = os.path.join(__RESOURCES_GTK_PATH__, "photoplace.png")
-__PIXBUF_SIZE__ = (568,426)
 
 
 from PhotoPlace.definitions import *
@@ -72,6 +68,7 @@ from PhotoPlace.stateHandler import *
 from PhotoPlace.userFacade import *
 from PhotoPlace.Plugins.Interface import *
 from Interface import InterfaceUI
+from GTKUIdefinitions import *
 
 
 
@@ -79,7 +76,7 @@ from Interface import InterfaceUI
 # JPEG to pixbuf
 # ##############
 
-def get_pixbuf_from_geophoto(geophoto, size=__PIXBUF_SIZE__):
+def get_pixbuf_from_geophoto(geophoto, size=PIXBUFSIZE_GEOPHOTOINFO):
     im = Image.open(geophoto.path)
     (im_width, im_height) = im.size
     # Size transformations
@@ -130,7 +127,7 @@ def get_pixbuf_from_geophoto(geophoto, size=__PIXBUF_SIZE__):
 
 class TextViewCompleter(object):
 
-    def __init__(self, textview, position, completion, size=(400,100)):
+    def __init__(self, textview, position, completion, size=TEXVIEWCOMPLETER_SIZE):
         object.__init__(self)
         self.textview = textview
         self.completion = completion
@@ -222,11 +219,12 @@ class PhotoPlaceGUI(InterfaceUI):
 
     def __init__(self, resourcedir=None):
         InterfaceUI.__init__(self, resourcedir)
-        guifile = os.path.join(self.resourcedir, __GUIXML_FILE__)
+        guifile = os.path.join(self.resourcedir, GTKUI_RESOURCE_GUIXML)
         self.builder = gtk.Builder()
         self.builder.add_from_file(guifile)
         # Notebook and menuitem for plugins
         self.notebook = self.builder.get_object("notebook")
+        self.notebook.set_group_id(20680)
         self.notebook_plugins = self.builder.get_object("notebook-plugins")
         self.toggletoolbutton_plugins = self.builder.get_object("toggletoolbutton-plugins")
         imagemenuitem_plugins = self.builder.get_object("imagemenuitem-plugins")
@@ -291,10 +289,6 @@ class PhotoPlaceGUI(InterfaceUI):
         tag = textbuffer_templates.create_tag('photo')
         tag.set_property('foreground', "blue")
         tag.set_property('family', "Monospace")
-        tag = textbuffer_templates.create_tag('div')
-        tag.set_property('foreground', "brown")
-        tag.set_property('background', "yellow")
-        tag.set_property('editable', False)
         self["textview-templates"].set_tooltip_markup(_("You can use simple "
             "HTML tags like <i>list</i> (<i>li</i>, <i>ul</i>) or <i>table</i> "
             "and use expresions like <b>%(Variable|<i>DEFAULT</i>)s</b> to get values. "
@@ -429,10 +423,13 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_linkbutton-suggestion_clicked": self._open_link,
             "on_linkbutton-donate_clicked": self._open_link,
             "on_window_destroy": self.window_exit,
+            "on_notebook_create_window": self._create_notebookwindow,
             "on_imagemenuitem-opendir_activate": self._clicked_photodir,
             "on_imagemenuitem-opengpx_activate": self._clicked_gpx,
             "on_imagemenuitem-save_activate": self._clicked_outfile,
             "on_imagemenuitem-new_activate": self.action_clear,
+            "on_imagemenuitem-saveconf_activate": self.action_saveconfig,
+            "on_imagemenuitem-recoverconf_activate": self.action_recoverconfig,
             "on_imagemenuitem-exit_activate": self.window_exit,
             "on_imagemenuitem-about_activate": self.dialog_show,
             "on_imagemenuitem-onlinehelp_activate": self._click_onlinehelp,
@@ -442,6 +439,7 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_toolbutton-exit_clicked": self.window_exit,
             "on_togglebutton-outfile_toggled": self._toggle_outfile,
             "on_checkbutton-outgeo_toggled": self._toggle_geolocate_mode,
+            "on_combobox-exif_changed": self._toggle_exifmode,
             "on_adjustment-utc_value_changed": self._adjust_utctimezone,
             "on_adjustment-tdelta_value_changed": self._adjust_timedelta,
             "on_adjustment-toffset_value_changed": self._adjust_toffset,
@@ -515,6 +513,21 @@ class PhotoPlaceGUI(InterfaceUI):
 
     def _click_onlinehelp(self, widget=None, data=None):
         webbrowser.open(PhotoPlace_onlinehelp)
+
+    def _create_notebookwindow(self, notebook, page, drop_x, drop_y):
+        pages = notebook.get_n_pages()
+        if pages != 1:
+            new_window = gtk.Window()
+            title = notebook.get_tab_label_text(page)
+            label = notebook.get_tab_label(page)
+            new_window.set_title(PhotoPlace_name + ' [' + title + ']')
+            new_window.set_transient_for(self.window)
+            page_num = notebook.page_num(page)
+            notebook.remove_page(page_num)
+            #page.reparent(window)
+            new_window.add(page)
+            #new_window.connect("delete-event", self._destroy_notebookwindow, page, label)
+            new_window.show_all()
 
 
     # #################
@@ -746,7 +759,8 @@ class PhotoPlaceGUI(InterfaceUI):
         dialog.run()
         dialog.destroy()
 
-    def show_dialog_choose_photodir(self, select_dir=None, title=_("Select input GPX file ...")):
+    def show_dialog_choose_photodir(self, select_dir=None, 
+        title=_("Select a directory with photos ...")):
         dir_open_dlg = gtk.FileChooserDialog(title=title, parent=self.window,
             action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
             buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
@@ -868,6 +882,11 @@ class PhotoPlaceGUI(InterfaceUI):
         self['togglebutton-outfile'].set_active(False)
         self._choose_outfile(False)
 
+    def _toggle_exifmode(self, widget, data=None):
+        iter_mode = self['combobox-exif'].get_active_iter()
+        mode = self["combobox-exif"].get_model().get_value(iter_mode, 1)
+        self.userfacade.state["exifmode"] = mode
+
     def _toggle_geolocate_mode(self, widget=None, data=None):
         if self['checkbutton-outgeo'].get_active():
             self['combobox-exif'].set_sensitive(True)
@@ -950,11 +969,11 @@ class PhotoPlaceGUI(InterfaceUI):
             self.show_dialog(mtype, msg, tip, gtk.MESSAGE_INFO)
 
     def _load_geophoto(self, geophoto):
-        color = PhotoPlace_Cfg_TreeViewColorNormal
+        color = TREEVIEWPHOTO_NORMAL_COLOR
         previews = geophoto.exif.previews
         largest = previews[-1]
         loader = gtk.gdk.PixbufLoader('jpeg')
-        width, height = PhotoPlace_Cfg_TreeViewPhotoSize
+        width, height = TREEVIEWPHOTO_PHOTOSIZE
         loader.set_size(width, height)
         loader.write(largest.data)
         loader.close()
@@ -986,11 +1005,11 @@ class PhotoPlaceGUI(InterfaceUI):
         if geophoto.isGeoLocated():
             geodata = _("  Longitude :\n  Latitude :\n  Elevation :") % dgettext
             geovalue = "%(lon)f\n%(lat)f\n%(ele)f" % dgettext
-            color = PhotoPlace_Cfg_TreeViewColorGeo
+            color = TREEVIEWPHOTO_GEOLOCATED_COLOR
         tips = tips % dgettext
         if geophoto.status > 1:
             geophoto.status = 1
-            color = PhotoPlace_Cfg_TreeViewColorChanged
+            color = TREEVIEWPHOTO_CHANGED_COLOR
         if geophoto.attr:
             tips += _("# Attributes: \n")
             for k,v in geophoto.attr.iteritems():
@@ -1229,7 +1248,7 @@ class PhotoPlaceGUI(InterfaceUI):
             fd = codecs.open(filename, "w", encoding="utf-8")
             fd.write("<div mode='cdata'>\n")
             fd.write(template)
-            fd.write("</div>\n")
+            fd.write("\n</div>\n")
         except Exception as exception:
             self["statusbar-window-templates"].push(0, str(exception))
             error = True
@@ -1272,7 +1291,7 @@ class PhotoPlaceGUI(InterfaceUI):
                 end = tbuffer.get_iter_at_mark(tbuffer.get_insert())
                 start = end.copy()
                 start.backward_char()
-                while start.get_char() not in " ,()[]<>|/\\\"\'":
+                while start.get_char() not in " ,()[]<>|/\\\"\'\n\t":
                     start.backward_char()
                 start.forward_char()
                 tbuffer.delete(start, end)
@@ -1495,6 +1514,26 @@ class PhotoPlaceGUI(InterfaceUI):
     # User Actions Section
     # ####################
 
+    def action_saveconfig(self, widget=None):
+        try:
+            self.userfacade.save_config()
+        except Error as e:
+            self.show_dialog(e.type, e.msg, e.tip)
+
+    def action_recoverconfig(self, widget, data=None):
+        try:
+            self.userfacade.recover_config()
+        except Error as e:
+            self.show_dialog(e.type, e.msg, e.tip)
+        else:
+            dgettext = dict()
+            dgettext['file'] = self.userfacade.configfile
+            msg = _("The original configuration file was recovered to '%(file)s'.")
+            msg = msg % dgettext
+            tip = _("Restart the program in order to read the new configuration.")
+            mtype = _("Attention!")
+            self.show_dialog(mtype, msg, tip, gtk.MESSAGE_INFO)
+
     def action_clear(self, widget=None):
         plugin_mode = self["toggletoolbutton-plugins"].get_active()
         if plugin_mode:
@@ -1560,9 +1599,6 @@ class PhotoPlaceGUI(InterfaceUI):
             return False
 
     def action_geolocate(self):
-        iter_mode = self['combobox-exif'].get_active_iter()
-        mode = self["combobox-exif"].get_model().get_value(iter_mode, 1)
-        self.userfacade.state["exifmode"] = mode
         try:
             geolocate = self.userfacade.Geolocate()
             if geolocate:
@@ -1589,9 +1625,6 @@ class PhotoPlaceGUI(InterfaceUI):
                 self.in_process = False
                 return False
         self._set_photouri()
-        iter_mode = self['combobox-exif'].get_active_iter()
-        mode = self["combobox-exif"].get_model().get_value(iter_mode, 1)
-        self.userfacade.state["exifmode"] = mode
         if self.userfacade.state['gpxinputfile']:
             if not self.action_geolocate():
                 self.in_process = False
@@ -1610,9 +1643,9 @@ class PhotoPlaceGUI(InterfaceUI):
         self.progressbar.set_fraction(0.0)
         self.progressbar_percent = 0.0
         if self.userfacade.state.outputkmz != None:
-            factor = self.num_photos_process * 8
-        else:
             factor = self.num_photos_process * 7
+        else:
+            factor = self.num_photos_process * 6
         self.progressbar_fraction = 1.0/factor
         try:
             self.userfacade.goprocess()
