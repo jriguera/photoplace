@@ -192,6 +192,7 @@
                         <property name="label">gtk-undelete</property>
                         <property name="visible">True</property>
                         <property name="tooltip_text" translatable="yes">Recover default configuration.</property>
+                        <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <property name="always_show_image">True</property>
                         <signal name="activate" handler="on_imagemenuitem-recoverconf_activate"/>
@@ -226,7 +227,7 @@
                       <object class="GtkImageMenuItem" id="imagemenuitem-onlinehelp">
                         <property name="label">gtk-help</property>
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" context="photoplace">Open a web browser with online help</property>
+                        <property name="tooltip_text" translatable="yes">Open a web browser with online help</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <property name="always_show_image">True</property>
@@ -237,7 +238,7 @@
                       <object class="GtkImageMenuItem" id="imagemenuitem-about">
                         <property name="label">gtk-about</property>
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" context="photoplace">Additional info</property>
+                        <property name="tooltip_text" translatable="yes">Additional info</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <property name="always_show_image">True</property>
@@ -1017,7 +1018,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                       <object class="GtkLabel" id="label-templates">
                                         <property name="visible">True</property>
                                         <property name="xalign">1</property>
-                                        <property name="label" translatable="yes" context="photoplace">Select Template:</property>
+                                        <property name="label" translatable="yes">Select Template:</property>
                                         <property name="single_line_mode">True</property>
                                       </object>
                                       <packing>
@@ -1053,7 +1054,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
                                     <property name="xpad">4</property>
-                                    <property name="label" translatable="yes" context="photoplace">List of parameters to make KML:</property>
+                                    <property name="label" translatable="yes">List of parameters to make KML:</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1909,8 +1910,8 @@ This General Public License does not permit incorporating your program into prop
             <child>
               <object class="GtkToolButton" id="toolbutton-wintemplates-new">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes" context="photoplace">Create an empty template</property>
-                <property name="label" translatable="yes" context="photoplace">New</property>
+                <property name="tooltip_text" translatable="yes">Create an empty template</property>
+                <property name="label" translatable="yes" comments="toolbar templates, menu">New</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-new</property>
                 <signal name="clicked" handler="on_toolbutton-wintemplates-new_clicked"/>
@@ -1923,8 +1924,8 @@ This General Public License does not permit incorporating your program into prop
             <child>
               <object class="GtkToolButton" id="toolbutton-wintemplates-load">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes" context="photoplace">Load a template from file</property>
-                <property name="label" translatable="yes" context="photoplace">Load</property>
+                <property name="tooltip_text" translatable="yes">Load a template from file</property>
+                <property name="label" translatable="yes" comments="toolbar templates, menu">Load</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-refresh</property>
                 <signal name="clicked" handler="on_toolbutton-wintemplates-load_clicked"/>
@@ -1937,8 +1938,8 @@ This General Public License does not permit incorporating your program into prop
             <child>
               <object class="GtkToolButton" id="toolbutton-wintemplates-recover">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes" context="photoplace">Recover the default template</property>
-                <property name="label" translatable="yes" context="photoplace">Recover</property>
+                <property name="tooltip_text" translatable="yes">Recover the default template</property>
+                <property name="label" translatable="yes" comments="toolbar templates, menu">Recover</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-undelete</property>
                 <signal name="clicked" handler="on_toolbutton-wintemplates-recover_clicked"/>
@@ -1960,10 +1961,10 @@ This General Public License does not permit incorporating your program into prop
             <child>
               <object class="GtkToolButton" id="toolbutton-wintemplates-check">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes" context="photoplace">Checks if XML data is well formed, otherwise, the content will not be considered as XML data. 
+                <property name="tooltip_text" translatable="yes">Checks if XML data is well formed, otherwise, the content will not be considered as XML data. 
 Note that contents will be checked by place them into a &lt;div&gt; section.</property>
                 <property name="is_important">True</property>
-                <property name="label" translatable="yes">Validate</property>
+                <property name="label" translatable="yes" comments="toolbar templates, menu">Validate</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-execute</property>
                 <signal name="clicked" handler="on_toolbutton-wintemplates-check_clicked"/>
@@ -1976,9 +1977,9 @@ Note that contents will be checked by place them into a &lt;div&gt; section.</pr
             <child>
               <object class="GtkToolButton" id="toolbutton-wintemplates-save">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes" context="photoplace">Save document as template</property>
+                <property name="tooltip_text" translatable="yes">Save document as template</property>
                 <property name="is_important">True</property>
-                <property name="label" translatable="yes" context="photoplace">Save</property>
+                <property name="label" translatable="yes" comments="toolbar templates, menu">Save</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-save</property>
                 <signal name="clicked" handler="on_toolbutton-wintemplates-save_clicked"/>
@@ -2001,8 +2002,8 @@ Note that contents will be checked by place them into a &lt;div&gt; section.</pr
             <child>
               <object class="GtkToolButton" id="toolbutton-wintemplates-exit">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes" context="photoplace">Close this window</property>
-                <property name="label" translatable="yes" context="photoplace">Exit</property>
+                <property name="tooltip_text" translatable="yes">Close this window</property>
+                <property name="label" translatable="yes" comments="toolbar templates, menu">Exit</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-quit</property>
                 <signal name="clicked" handler="on_toolbutton-wintemplates-exit_clicked" object="window-templates"/>

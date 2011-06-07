@@ -171,7 +171,7 @@ def load_csv(fd, geophotos, options):
     photolatheader = options['csv']['photolatheader']
     photolonheader = options['csv']['photolonheader']
     photoeleheader = options['csv']['photoeleheader']
-    forcegeolocation = options['jpg']['exifmode'] != 1
+    forcegeolocation = options['jpg']['exivmode'] != 1
     l_headers = options['csv']['headers']
     l_encodings = options['csv']['encoding']
     n_lines = 0

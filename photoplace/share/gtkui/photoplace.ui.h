@@ -103,13 +103,21 @@ char *s = N_("A program for geotagging photos and generate a Google Earth layer"
 /* window title */
 char *s = N_("About ...");
 char *s = N_("Add, delete or modify key/value:");
+char *s = N_("Additional info");
 /* expander advanced. */
 char *s = N_("Advanced options. Default settings are safe and good for most of the users.");
+char *s = N_("Checks if XML data is well formed, otherwise, the content will not be considered as XML data. \n"
+             "Note that contents will be checked by place them into a <div> section.");
+char *s = N_("Close this window");
 char *s = N_("Compression");
+char *s = N_("Create an empty template");
+char *s = N_("Delta seconds for geotagging:");
 /* menuitem. */
 char *s = N_("Directory with photos for geotagging. All photos will be geotagged if <geotagged> mode is selected.");
 /* donations */
 char *s = N_("Donate via PayPal");
+/* toolbar templates, menu */
+char *s = N_("Exit");
 /* menuitem. */
 char *s = N_("Exit the program. I hope see you soon :-)");
 char *s = N_("I have a dream ... well I have a lot of dreams, but this is one of them ...");
@@ -123,11 +131,17 @@ char *s = N_("It simulates the geottaging process with the current GPX data and 
 char *s = N_("JPEG/ZIP Quality vs. Compression. The best quality will make big KMZ files with best JPEG quality and poor compression. This settings are also applicable to zip KMZ compression ratio.");
 /* menuitem. */
 char *s = N_("List of available plugins. To see information about each plugin, put the mouse over its name,");
+char *s = N_("List of parameters to make KML:");
+/* toolbar templates, menu */
+char *s = N_("Load");
+char *s = N_("Load a template from file");
 /* main label of notebook. */
 char *s = N_("Main");
-char *s = N_("Maximum geotagging delta seconds:");
+/* toolbar templates, menu */
+char *s = N_("New");
 char *s = N_("Open _Directory");
 char *s = N_("Open _GPX");
+char *s = N_("Open a web browser with online help");
 /* menuitem. */
 char *s = N_("Open an eXchange Format (GPX) in order to match the date of each photo with the position.");
 /* menuitem. */
@@ -141,19 +155,27 @@ char *s = N_("Picture path:");
 char *s = N_("Plugins");
 char *s = N_("Press this to start! The show must go on!");
 char *s = N_("Quality");
+/* toolbar templates, menu */
+char *s = N_("Recover");
+char *s = N_("Recover default configuration.");
+char *s = N_("Recover the default template");
 /* menuitem. */
 char *s = N_("Remove all loaded files/directories to start again.");
+/* toolbar templates, menu */
+char *s = N_("Save");
+char *s = N_("Save document as template");
 char *s = N_("Save the current preferences.");
+/* entry. */
+char *s = N_("Seconds (positive or negative) to add to the photos time in order to match them with GPS data.");
+char *s = N_("Select Template:");
 char *s = N_("Select a directory with photos for geotagging. All photos will be geotagged if <geotagged> mode is selected.");
 char *s = N_("Select an eXchange Format (GPX) in order to match the date of each photo with the position.");
 char *s = N_("Select input photo directory");
 char *s = N_("Simulate geotagging");
 /* I have a dream ... well I have a lot of dreams, but this is one of them ... */
 char *s = N_("The authors and developers hope you like this program. We would really appreciate it if you would consider making a small donation: half of the money will be donated to a local NGO Ecodesarrollo Gaia (http://gaiadiaadia.blogspot.com) that helps people in Senegal (Africa), with the other half, I would like to visit Australia and,  in connection with a geotagging  program, my antipodes in New Zeland, and your coins can help me to achieve this goals.");
-/* label. */
-char *s = N_("The maximum difference in seconds allowed between the time of a photo and the nearest point of GPX.");
 /* entry. */
-char *s = N_("The maximum time difference allowed between the time of a photo and the nearest point of GPX.");
+char *s = N_("The maximum time gap allowed between the time of a photo and the nearest point of GPS data.");
 /* entry. */
 char *s = N_("The time zone of the photos. It depends on the settings of time/date of the camera and the GPS (UTC time), it is the difference in hours between both.");
 /* URI label. */
@@ -161,8 +183,11 @@ char *s = N_("This entry defines the Uniform Resource Identifier for each geoloc
 /* entry URI. */
 char *s = N_("This entry defines the Uniform Resource Identifier for each geotagged photo. It is useful to generate a independent KML file where the photos will be linked into it.");
 /* label. */
+char *s = N_("Time offset:");
+/* label. */
 char *s = N_("Time zone of photos:");
 char *s = N_("URI for geotagging photos:");
+/* toolbar templates, menu */
 char *s = N_("Validate");
 char *s = N_("Variables");
 char *s = N_("Zoom percentaje. 1 means original size, 0.5 means half size and so on ...");
@@ -179,18 +204,3 @@ char *s = N_("_Reset");
 char *s = N_("_Save as");
 /* label separator between buttons in first page of notebook. */
 char *s = N_("and");
-char *s = C_("photoplace", "Additional info");
-char *s = C_("photoplace", "Checks if XML data is well formed, otherwise, the content will not be considered as XML data. ");
-char *s = C_("photoplace", "Close this window");
-char *s = C_("photoplace", "Create an empty template");
-char *s = C_("photoplace", "Exit");
-char *s = C_("photoplace", "List of parameters to make KML:");
-char *s = C_("photoplace", "Load");
-char *s = C_("photoplace", "Load a template from file");
-char *s = C_("photoplace", "New");
-char *s = C_("photoplace", "Open a web browser with online help");
-char *s = C_("photoplace", "Recover");
-char *s = C_("photoplace", "Recover the default template");
-char *s = C_("photoplace", "Save");
-char *s = C_("photoplace", "Save document as template");
-char *s = C_("photoplace", "Select Template:");

@@ -36,6 +36,7 @@ import os.path
 GTKUI_RESOURCES_PATH = "gtkui"
 GTKUI_RESOURCE_GUIXML = os.path.join(GTKUI_RESOURCES_PATH, "photoplace.ui")
 GTKUI_RESOURCE_GUIICON = os.path.join(GTKUI_RESOURCES_PATH, "photoplace.png")
+GTKUI_GETTEXT_DOMAIN = "photoplace"
 
 
 TEXVIEWCOMPLETER_SIZE = (400,100)

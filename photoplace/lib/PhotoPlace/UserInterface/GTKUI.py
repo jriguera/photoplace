@@ -221,6 +221,7 @@ class PhotoPlaceGUI(InterfaceUI):
         InterfaceUI.__init__(self, resourcedir)
         guifile = os.path.join(self.resourcedir, GTKUI_RESOURCE_GUIXML)
         self.builder = gtk.Builder()
+        self.builder.set_translation_domain(GTKUI_GETTEXT_DOMAIN)
         self.builder.add_from_file(guifile)
         # Notebook and menuitem for plugins
         self.notebook = self.builder.get_object("notebook")

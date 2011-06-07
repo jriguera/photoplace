@@ -115,10 +115,15 @@ if not os.path.isdir(locale_path):
 else:
     __LOCALE_PATH__ = locale_path
 try:
-    locale.setlocale(locale.LC_ALL,"")
+    locale.setlocale(locale.LC_ALL,'')
+    locale.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
+    gettext.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
+    gettext.textdomain(__GETTEXT_DOMAIN__)
     gettext.install(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
 except Exception as e:
-    _ = lambda s: s
+    #locale.setlocale(locale.LC_ALL, 'C') 
+    gettext.install(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
+    #_ = lambda s: s
     print("Error setting up the translations: %s" % (e))
 
 
