@@ -24,7 +24,7 @@ A plugin for PhotoPlace to add files to kmz
 """
 __program__ = "photoplace.addfiles"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __date__ = "May 2011"
 __license__ = "GPL v3"
 __copyright__ ="(c) Jose Riguera"
@@ -37,25 +37,26 @@ import string
 import gettext
 import locale
 
+from PhotoPlace.Plugins.Interface import *
+from PhotoPlace.definitions import *
+
 
 # I18N gettext support
 __GETTEXT_DOMAIN__ = __program__
-__PACKAGE_DIR__ = os.path.dirname(__file__)
+__PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
 __LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
-        print("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
+        print ("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
         __LOCALE_DIR__ = None
     locale.setlocale(locale.LC_ALL,"")
-    gettext.install(__GETTEXT_DOMAIN__, __LOCALE_DIR__)
+    #gettext.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_DIR__)
+    t = gettext.translation(__GETTEXT_DOMAIN__, __LOCALE_DIR__, fallback=False)
+    _ = t.ugettext
 except Exception as e:
-    _ = lambda s: s
-    print("Error setting up the translations: %s" % (e))
-
-
-from PhotoPlace.Plugins.Interface import *
-from PhotoPlace.definitions import *
+    print ("Error setting up the translations: %s" % (str(e)))
+    _ = lambda s: unicode(s)
 
 
 # Configuration keys
@@ -71,7 +72,7 @@ AddFiles_PREFIX_FILE = "File."
 class KmlPaths(Plugin):
 
     description = _(
-        "A plugin to add files to kmz"
+        "A plugin to add files to KMZ"
     )
     author = "Jose Riguera Lopez"
     email = "<jriguera@gmail.com>"

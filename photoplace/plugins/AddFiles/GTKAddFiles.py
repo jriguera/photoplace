@@ -24,7 +24,7 @@ A plugin for PhotoPlace to add files to kmz. GTK User Interface.
 """
 __program__ = "photoplace.addfiles"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __date__ = "May 2011"
 __license__ = "GPL v3"
 __copyright__ ="(c) Jose Riguera"
@@ -35,6 +35,8 @@ import string
 import sys
 import codecs
 import warnings
+import gettext
+import locale
 
 warnings.filterwarnings('ignore', module='gtk')
 try:
@@ -49,8 +51,25 @@ except Exception as e:
     raise
 warnings.resetwarnings()
 
-
 from addfiles import *
+
+
+# I18N gettext support
+__GETTEXT_DOMAIN__ = __program__
+__PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
+__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
+
+try:
+    if not os.path.isdir(__LOCALE_DIR__):
+        print ("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
+        __LOCALE_DIR__ = None
+    locale.setlocale(locale.LC_ALL,"")
+    #gettext.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_DIR__)
+    t = gettext.translation(__GETTEXT_DOMAIN__, __LOCALE_DIR__, fallback=False)
+    _ = t.ugettext
+except Exception as e:
+    print ("Error setting up the translations: %s" % (str(e)))
+    _ = lambda s: unicode(s)
 
 
 # columns
@@ -61,7 +80,7 @@ from addfiles import *
     _GTKAddFiles_COLUMN_INFO
 ) = range(4)
 
-GTKAddFiles_COLUMN_TOOLTIP = _("Type %%(%s)s to get value of destination variable")
+GTKAddFiles_COLUMN_TOOLTIP = _("Type %%(%s)s to get value of each variable")
 
 
 
@@ -104,14 +123,14 @@ class GTKAddFiles(object):
         column.set_resizable(True)
         self.treeview.append_column(column)
         renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Original File"), renderer,
+        column = gtk.TreeViewColumn(_("Original file"), renderer,
             text=_GTKAddFiles_COLUMN_VALUE)
         column.set_resizable(True)
         self.treeview.append_column(column)
         scroll.add(self.treeview)
         self.plugin.pack_start(scroll, True, True)
         hbox = gtk.HBox(False)
-        button_addfile = gtk.Button(_("Add File"), gtk.STOCK_ADD)
+        button_addfile = gtk.Button(_("Add file"), gtk.STOCK_ADD)
         button_addfile.connect('clicked', self._click_add)
         hbox.pack_start(button_addfile, False, False, 5)
         button_del = gtk.Button(_("Delete"), gtk.STOCK_REMOVE)

@@ -20,11 +20,11 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 """
-This plugin makes a visual tour with all pictures ....
+This plugin makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.1.1"
+__version__ = "0.2.1"
 __date__ = "December 2010"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
@@ -47,8 +47,25 @@ except Exception as e:
     raise
 warnings.resetwarnings()
 
-
 from tour import *
+
+
+# I18N gettext support
+__GETTEXT_DOMAIN__ = __program__
+__PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
+__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
+
+try:
+    if not os.path.isdir(__LOCALE_DIR__):
+        print ("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
+        __LOCALE_DIR__ = None
+    locale.setlocale(locale.LC_ALL,"")
+    #gettext.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_DIR__)
+    t = gettext.translation(__GETTEXT_DOMAIN__, __LOCALE_DIR__, fallback=False)
+    _ = t.ugettext
+except Exception as e:
+    print ("Error setting up the translations: %s" % (str(e)))
+    _ = lambda s: unicode(s)
 
 
 # columns
@@ -88,9 +105,9 @@ class GTKTour(object):
         self.button_follow_path = gtk.CheckButton(_("Follow path with simpl. factor:"))
         self.button_follow_path.set_tooltip_text(
             _("If it is active, the tour will follow GPS tracks. "
-            "It does not change the current value in the photos. "
-            "If photos are loaded without 'follow path', the value "
-            "will not set up for those photos."))
+            "It does not change the current value in the photos: "
+            "if photos are loaded without 'follow path', the parameter "
+            "will not be setted up for those photos."))
         self.button_follow_path.connect('toggled', self._set_follow)
         hbox_follow.pack_start(self.button_follow_path, False, False, 5)
         self.adjustment_epsilon = gtk.Adjustment(0, -1, 100000, 3.0, 2.0, 0.0)
@@ -206,8 +223,8 @@ class GTKTour(object):
         label_uri.set_markup(_("URI:"))
         hbox_music_uri.pack_start(label_uri, False, False, 5)
         self.entry_uri = gtk.Entry(max=256)
-        self.entry_uri.set_tooltip_text(_("URI to reference all mp3's."
-            "If you generate a KML for a web, this parameter will set the "
+        self.entry_uri.set_tooltip_text(_("URI to reference all mp3's. "
+            "If you generate a KML for the web, this parameter will set the "
             "path where the files are."))
         self.entry_uri.connect('changed', self._set_entry, KmlTour_CONFKEY_KMLTOUR_MUSIC_URI)
         hbox_music_uri.pack_start(self.entry_uri, False, False)

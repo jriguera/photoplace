@@ -25,13 +25,35 @@ KML Implementation.
 """
 __program__ = "photoplace.paths"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.2.0"
+__version__ = "0.3.1"
 __date__ = "December 2010"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
 
 
 import xml.dom.minidom
+import os.path
+import gettext
+import locale
+
+
+# I18N gettext support
+__GETTEXT_DOMAIN__ = __program__
+__PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
+__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
+
+try:
+    if not os.path.isdir(__LOCALE_DIR__):
+        print ("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
+        __LOCALE_DIR__ = None
+    locale.setlocale(locale.LC_ALL,"")
+    #gettext.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_DIR__)
+    t = gettext.translation(__GETTEXT_DOMAIN__, __LOCALE_DIR__, fallback=False)
+    _ = t.ugettext
+except Exception as e:
+    print ("Error setting up the translations: %s" % (str(e)))
+    _ = lambda s: unicode(s)
+
 
 
 class KmlPath(object):

@@ -20,11 +20,11 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 """
-This plugin makes a visual tour with all pictures ....
+This plugin makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __date__ = "December 2010"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
@@ -49,23 +49,25 @@ from PhotoPlace.definitions import *
 
 # I18N gettext support
 __GETTEXT_DOMAIN__ = __program__
-__PACKAGE_DIR__ = os.path.dirname(__file__)
+__PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
 __LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
-        print("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
+        print ("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
         __LOCALE_DIR__ = None
     locale.setlocale(locale.LC_ALL,"")
-    gettext.install(__GETTEXT_DOMAIN__, __LOCALE_DIR__)
+    #gettext.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_DIR__)
+    t = gettext.translation(__GETTEXT_DOMAIN__, __LOCALE_DIR__, fallback=False)
+    _ = t.ugettext
 except Exception as e:
-    _ = lambda s: s
-    print("Error setting up the translations: %s" % (e))
+    print ("Error setting up the translations: %s" % (str(e)))
+    _ = lambda s: unicode(s)
 
 
 # Default values
 KmlTour_SPLIT_CHAR = ";"
-KmlTour_NAME = _("Play me")
+KmlTour_NAME = _("Play Tour!")
 KmlTour_FOLDER = _("Tour")
 KmlTour_DESC = ''
 KmlTour_MUSIC_MIX = False

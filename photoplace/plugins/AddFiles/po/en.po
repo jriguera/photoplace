@@ -1,0 +1,74 @@
+# Englis translations for photoplace.addfiles plugin
+# Copyright (C) 2011 José Riguera López
+# This file is distributed under the same license as the photoplace.addfiles plugin
+# José Riguera López <jriguera@gmail.com>, 2011.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: photoplace.addfiles 0.1.1\n"
+"Report-Msgid-Bugs-To: <photoplace-project@googlegroups.com>\n"
+"POT-Creation-Date: 2011-06-12 21:38+0200\n"
+"PO-Revision-Date: 2011-06-11 16:51+0200\n"
+"Last-Translator: José Riguera López <jriguera@gmail.com>\n"
+"Language-Team: English <photoplace-project@googlegroups.com>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: addfiles.py:75
+msgid "A plugin to add files to KMZ"
+msgstr "A plugin to add files to KMZ"
+
+#: addfiles.py:115
+msgid "Starting plugin ..."
+msgstr "Starting plugin ..."
+
+#: addfiles.py:155
+#, python-format
+msgid "Cannot copy '%(file)s': %(error)s"
+msgstr "Cannot copy '%(file)s': %(error)s"
+
+#: addfiles.py:157
+#, python-format
+msgid "%d files copied by 'addfiles'."
+msgstr "%d files copied by 'addfiles'."
+
+#: addfiles.py:167
+msgid "Ending plugin ..."
+msgstr "Ending plugin ..."
+
+#: GTKAddFiles.py:83
+#, python-format
+msgid "Type %%(%s)s to get value of each variable"
+msgstr "Type %%(%s)s to get value of each variable"
+
+#: GTKAddFiles.py:98
+msgid "List of additional files to be included into KMZ"
+msgstr "List of additional files to be included into KMZ"
+
+#: GTKAddFiles.py:113
+msgid "Variable"
+msgstr "Variable"
+
+#: GTKAddFiles.py:120
+msgid "Value (Destination)"
+msgstr "Value (Destination)"
+
+#: GTKAddFiles.py:126
+msgid "Original file"
+msgstr "Original file"
+
+#: GTKAddFiles.py:133
+#, fuzzy
+msgid "Add file"
+msgstr "Add File"
+
+#: GTKAddFiles.py:136
+msgid "Delete"
+msgstr "Delete"
+
+#: GTKAddFiles.py:199
+msgid "Select a file ..."
+msgstr "Select a file ..."

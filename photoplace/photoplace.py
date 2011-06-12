@@ -116,10 +116,17 @@ else:
     __LOCALE_PATH__ = locale_path
 try:
     locale.setlocale(locale.LC_ALL,'')
-    locale.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
+    #locale.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
     gettext.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
     gettext.textdomain(__GETTEXT_DOMAIN__)
     gettext.install(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
+    if sys.platform.startswith('win'):
+        try: 
+            import ctypes
+            libintl = ctypes.cdll.LoadLibrary("intl.dll") 
+            libintl.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
+        except: 
+            print("Error Loading translations into gtk.builder files")
 except Exception as e:
     #locale.setlocale(locale.LC_ALL, 'C') 
     gettext.install(__GETTEXT_DOMAIN__, __LOCALE_PATH__)

@@ -1,0 +1,256 @@
+# Galician Translations for photoplace.tour plugin
+# Copyright (C) 2011 José Riguera López
+# This file is distributed under the same license as the photoplace.tour plugin
+# José Riguera López <jriguera@gmail.com>, 2011.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: photoplace.tour 0.2.1\n"
+"Report-Msgid-Bugs-To: <photoplace-project@googlegroups.com>\n"
+"POT-Creation-Date: 2011-06-12 22:23+0200\n"
+"PO-Revision-Date: 2011-06-12 22:40+0200\n"
+"Last-Translator: José Riguera López <jriguera@gmail.com>\n"
+"Language-Team: Galician <photoplace-project@googlegroups.com>\n"
+"Language: gl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: GTKtour.py:89
+msgid "Name:"
+msgstr "Nome:"
+
+#: GTKtour.py:90
+msgid "Name of the tour"
+msgstr "Nome do tour"
+
+#: GTKtour.py:97
+msgid "Description:"
+msgstr "Descripción"
+
+#: GTKtour.py:98
+msgid "A short description"
+msgstr "Descripción curta"
+
+#: GTKtour.py:105
+msgid "Follow path with simpl. factor:"
+msgstr "Seguir camiño co factor simpl:"
+
+#: GTKtour.py:107
+msgid ""
+"If it is active, the tour will follow GPS tracks. It does not change the "
+"current value in the photos: if photos are loaded without 'follow path', the "
+"parameter will not be setted up for those photos."
+msgstr ""
+"Se está activo, o tour visual seguirá os camiños do GPS. Non cambia o valor actual nas fotos, "
+"se éstas foron cargadas sen 'seguir camiño' activado, o parámetro non estará activado para esas fotos."
+
+#: GTKtour.py:116
+msgid ""
+"Maximum tolerance in meters to determine if a point of track will be used in "
+"the tour. If it is 0, all waypoints of the original track will be followed, "
+"with -1, the value will be automatically estimated."
+msgstr ""
+"Tolerancia máxima en metros para determinar se un punto do camiño será usado no tour visual. "
+"Se é 0, tódolos puntos do camiño orixinal serán seguidos visualmente, "
+"con -1, o valor será estimado automáticamente."
+
+#: GTKtour.py:125
+msgid "Advanced"
+msgstr "Avanzado"
+
+#: GTKtour.py:130
+#, python-format
+msgid ""
+"You can use simple HTML tags like list (<i>li</i>, <i>ul</i>) or <i>table</"
+"i> and use expresions like <span font_family='monospace' size='small'><b>"
+"%(<i>variable</i>)s</b></span> where <i>variable</i> is a key defined in the "
+"<b>Variables</b> section."
+msgstr ""
+"Pódense usar etiquetas HTML simples como listas (<i>li</i>, <i>ul</i>) ou <i>tablas</i> "
+"e usar expresións como <span font_family='monospace' size='small'><b>"
+"%(<i>variable</i>)s</b></span> onde <i>variable</i> é un parámetro definido na sección "
+"<b>Variables</b>."
+
+#: GTKtour.py:139
+msgid "Type the presentation text ... "
+msgstr "Escribir texto de presentación ..."
+
+#: GTKtour.py:154 GTKtour.py:185
+msgid "... or load it from"
+msgstr "... ou cargarlo dende"
+
+#: GTKtour.py:161 GTKtour.py:192
+msgid "[select a file]"
+msgstr "[seleccionar ficheiro]"
+
+#: GTKtour.py:170
+msgid "Ending text ... "
+msgstr "Texto de finalización ..."
+
+#: GTKtour.py:202
+msgid "Music:"
+msgstr "Música:"
+
+#: GTKtour.py:208
+msgid "Add a mp3 file to list"
+msgstr "Engadir un MP3 a lista"
+
+#: GTKtour.py:213
+msgid "Delete the mp3 file selected in the combobox"
+msgstr "Borrar o ficheiro MP3 seleccionado"
+
+#: GTKtour.py:216
+msgid "Mix"
+msgstr "Misturar"
+
+#: GTKtour.py:218
+msgid "Mix all mp3? If yes, it will sound all mp3's at the same time"
+msgstr "Misturar tódolos MP3. Se está activo, soarán todos o mesmo tempo"
+
+#: GTKtour.py:223
+msgid "URI:"
+msgstr "URI:"
+
+#: GTKtour.py:226
+msgid ""
+"URI to reference all mp3's. If you generate a KML for the web, this parameter "
+"will set the path where the files are."
+msgstr ""
+"URI para referenciar tódolos ficheiros MP3. Se o KML é xerado para a web, este parámetro "
+"establecerá o path onde están os ficheiros."
+
+#: GTKtour.py:265
+msgid "Select text file ..."
+msgstr "Seleccionar ficheiro de texto ..."
+
+#: GTKtour.py:269 GTKtour.py:359
+msgid "All files"
+msgstr "Tódolos ficheiros"
+
+#: GTKtour.py:330
+#, python-format
+msgid "Cannot read file '%(file)s': %(error)s."
+msgstr "Imposible leer ficheiro '%(file)s': %(error)s."
+
+#: GTKtour.py:350
+msgid "Select MP3 files ..."
+msgstr "Seleccionar ficheiros MP3 ..."
+
+#: GTKtour.py:354
+msgid "MP3 files"
+msgstr "Ficheiros MP3"
+
+#: GTKtour.py:409
+msgid "PhotoPlace: Tour parameters"
+msgstr "PhotoPlace: Parámetros do tour"
+
+#: GTKtour.py:423
+msgid "Name"
+msgstr "Nome"
+
+#: GTKtour.py:429
+msgid "Value"
+msgstr "Valor"
+
+#: GTKtour.py:438
+msgid "Start Camera Parameters"
+msgstr "Parámetros iniciais para a Cámara"
+
+#: GTKtour.py:453
+msgid "Default Camera Parameters"
+msgstr "Parámetros por defecto para a Cámara"
+
+#: GTKtour.py:464
+msgid "End Camera Parameters"
+msgstr "Parámetros finais para a Cámara"
+
+#: KmlgxTour.py:115
+#, python-format
+msgid "Cannot process '%(mp3file)s': %(error)s."
+msgstr "Imposible procesar '%(mp3file)s': %(error)s."
+
+#: KmlgxTour.py:139
+msgid "KML not correct. Cannot found 'Document' tag!"
+msgstr "KML incorrecto. Non se pode atopar a etiqueta 'Document'!"
+
+#: tour.py:70
+msgid "Play Tour!"
+msgstr "Lanzar Tour!"
+
+#: tour.py:71
+msgid "Tour"
+msgstr "Tour"
+
+#: tour.py:75
+msgid "Start"
+msgstr "Inicio"
+
+#: tour.py:78
+msgid "End"
+msgstr "Fin"
+
+#: tour.py:145
+msgid "A plugin to generate a visual tour with your photos."
+msgstr "Unha extensión para xerar un tour visual cas fotos."
+
+#: tour.py:185 tour.py:212
+#, python-format
+msgid "Incorrect value for '%(key)s', setting default value '%(value)s'."
+msgstr "Valor incorrecto para '%(key)s', establecendo valor por defecto '%(value)s'."
+
+#: tour.py:190 tour.py:217
+#, python-format
+msgid "'%(key)s' not defined, setting default value '%(value)s'."
+msgstr "'%(key)s' non definido, establecendo valor por defecto '%(value)s'."
+
+#: tour.py:245
+#, python-format
+msgid "Cannot read mp3 file '%s'."
+msgstr "Imposible leer ficheiro MP3 '%s'."
+
+#: tour.py:247
+#, python-format
+msgid "Incorrect value for '%s'."
+msgstr "Valor incorrecto para '%s'."
+
+#: tour.py:301
+msgid "Starting plugin ..."
+msgstr "Iniciando extensión ..."
+
+#: tour.py:315
+#, python-format
+msgid "Cannot set mp3 sound files: %s."
+msgstr "Imposible poñer son cos ficheiros MP3: %s."
+
+#: tour.py:331
+#, python-format
+msgid "Cannot read file: '%s'."
+msgstr "Imposible leer ficheiro '%s'."
+
+#: tour.py:720
+msgid "No KML output! Cowardly refusing to create a tour!"
+msgstr "Non hai saida KML: negándose cobardemente a crear un tour!"
+
+#: tour.py:734
+msgid "No data! Cowardly refusing to create a tour!"
+msgstr "Sen datos: negándose cobardemente a crear un tour!"
+
+#: tour.py:746
+#, python-format
+msgid "Warning processing %(name)s . %(attr)s: attribute type not valid!"
+msgstr "Aviso procesando %(name)s . %(attr)s: tipo de atributo non válido"
+
+#: tour.py:845
+#, python-format
+msgid "Cannot create '%(outputfile)s' for writing: %(error)s."
+msgstr "Imposible crear '%(outputfile)s' para escribir: %(error)s."
+
+#: tour.py:856
+msgid "Resetting plugin ..."
+msgstr "Reseteando extensión ..."
+
+#: tour.py:868
+msgid "Ending plugin ..."
+msgstr "Finalizando extensión ..."

@@ -1,0 +1,210 @@
+# Galician translations for photoplace.paths plugin
+# Copyright (C) 2011 José Riguera López
+# This file is distributed under the same license as the photoplace.paths plugin
+# José Riguera López <jriguera@gmail.com>, 2011.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: photoplace.paths 0.3.1\n"
+"Report-Msgid-Bugs-To: <photoplace-project@googlegroups.com>\n"
+"POT-Creation-Date: 2011-06-12 21:47+0200\n"
+"PO-Revision-Date: 2011-06-12 22:00+0200\n"
+"Last-Translator: José Riguera López <jriguera@gmail.com>\n"
+"Language-Team: Galician <photoplace-project@googlegroups.com>\n"
+"Language: gl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: GTKPaths.py:140
+msgid "Generate a path from geotagged photos"
+msgstr "Xerar un camiño cas fotos xeoetiquetadas"
+
+#: GTKPaths.py:152
+msgid "Double click to edit these values ..."
+msgstr "Dobre click para editar estes valores ..."
+
+#: GTKPaths.py:164
+msgid "Path Name/Parameter"
+msgstr "Camiño Nome/Parámetro"
+
+#: GTKPaths.py:173
+msgid "Description/Value"
+msgstr "Descripción/Valor"
+
+#: GTKPaths.py:278 paths.py:409
+#, python-format
+msgid "Cannot read file '%s'."
+msgstr "Imposible leer ficheiro '%s'."
+
+#: GTKPaths.py:310
+msgid "file: "
+msgstr "ficheiro: "
+
+#: GTKPaths.py:379
+msgid "Select a color for path ..."
+msgstr "Seleccionar unha cor para o camiño ..."
+
+#: GTKPaths.py:473
+msgid "[select a file]"
+msgstr "[seleccionar ficheiro]"
+
+#: GTKPaths.py:477
+msgid "PhotoPlace: Path Description Template"
+msgstr "PhotoPlace: Prantilla Descripción de Camiño"
+
+#: GTKPaths.py:484
+msgid "Type the presentation text ... "
+msgstr "Escribir texto de presentación ..."
+
+#: GTKPaths.py:492
+#, python-format
+msgid ""
+"You can use simple HTML tags like list (<i>li</i>, <i>ul</i>) or <i>table</"
+"i>and use these expresions to get some interesting values: \n"
+"\n"
+"<span font_family='monospace' size='small'><b>%(PhotoPlace.PathNAME)s</b> -> "
+"Path name\n"
+"<b>%(PhotoPlace.PathDESC)s</b> -> Path description\n"
+"<b>%(PhotoPlace.PathTINI)s</b> -> Initial time (first point)\n"
+"<b>%(PhotoPlace.PathTEND)s</b> -> End time (last point)\n"
+"<b>%(PhotoPlace.PathDRTN)s</b> -> Duration\n"
+"<b>%(PhotoPlace.PathLEN)s</b> -> Length (in meters)\n"
+"<b>%(PhotoPlace.PathLENMIN)s</b> -> Minimum length\n"
+"<b>%(PhotoPlace.PathLENMAX)s</b> -> Maximum length\n"
+"<b>%(PhotoPlace.PathSPMIN)s</b> -> Minimum speed (m/s)\n"
+"<b>%(PhotoPlace.PathSPMAX)s</b> -> Maximum speed (m/s)\n"
+"<b>%(PhotoPlace.PathSPAVG)s</b> -> Average speed (m/s)\n"
+"<b>%(PhotoPlace.PathNSEG)s</b> -> Number of segments\n"
+"<b>%(PhotoPlace.PathNWPT)s</b> -> Number of waypoints\n"
+"</span>\n"
+" You can also use the <b>[defaults]</b> variables defined in the same way."
+msgstr ""
+"Pódense usar etiquetas HTML simples como listas (<i>li</i>, <i>ul</i>) ou "
+"<i>tablas</i> e usar as seguintes expresións para dispor de valores "
+"interesantes: \n"
+"\n"
+"<span font_family='monospace' size='small'><b>%(PhotoPlace.PathNAME)s</b> -> Nome\n"
+"<b>%(PhotoPlace.PathDESC)s</b> -> Descripción do camiño\n"
+"<b>%(PhotoPlace.PathTINI)s</b> -> Tempo inicial (primeiro punto)\n"
+"<b>%(PhotoPlace.PathTEND)s</b> -> Tempo final (derradeiro punto)\n"
+"<b>%(PhotoPlace.PathDRTN)s</b> -> Duración total\n"
+"<b>%(PhotoPlace.PathLEN)s</b> -> Lonxitude (en metros)\n"
+"<b>%(PhotoPlace.PathLENMIN)s</b> -> Lonxitude mínima\n"
+"<b>%(PhotoPlace.PathLENMAX)s</b> -> Lonxitude máxima\n"
+"<b>%(PhotoPlace.PathSPMIN)s</b> -> Velocidade mínima (m/s)\n"
+"<b>%(PhotoPlace.PathSPMAX)s</b> -> Velocidade máxima (m/s)\n"
+"<b>%(PhotoPlace.PathSPAVG)s</b> -> Velocidade media (m/s)\n"
+"<b>%(PhotoPlace.PathNSEG)s</b> -> Número de segmentos\n"
+"<b>%(PhotoPlace.PathNWPT)s</b> -> Número de puntos\n"
+"</span>\n"
+" Tamén se poden usar do mesmo modo as variables definidas na sección "
+"<i>Variables</i>."
+
+#: GTKPaths.py:524
+msgid "... or load it from"
+msgstr " ... ou cargarlo dende"
+
+#: GTKPaths.py:624
+msgid "Select file ..."
+msgstr "Seleccionar ficheiro ..."
+
+#: GTKPaths.py:628
+msgid "All files"
+msgstr "Tódolos ficheiros"
+
+#: KmlPath.py:74
+msgid "KML not correct. Cannot found 'Document' tag!"
+msgstr "KML incorrecto. Non se pode atopar a etiqueta 'Document'!"
+
+#: paths.py:92
+msgid "Paths"
+msgstr "Camiños"
+
+#: paths.py:93
+msgid "Photo path"
+msgstr "Camiño das fotos"
+
+#: paths.py:94
+msgid "Generated path from geotagged photos"
+msgstr "Camiño xerado dende as fotos xeoetiquetadas"
+
+#: paths.py:98
+msgid "Photos"
+msgstr "Fotos"
+
+#: paths.py:110
+msgid ""
+"A plugin to generate paths from GPX tracks to show them in the KML layer."
+msgstr ""
+"Unha extensión para xerar camiños dende os datos GPX e mostralos na capa KML."
+
+#: paths.py:158
+msgid "Starting plugin ..."
+msgstr "Iniciando extensión ..."
+
+#: paths.py:202
+#, python-format
+msgid "Cannot understand the key '%s' in config file."
+msgstr "Imposible procesar a entrada '%s' no ficheiro de configuración."
+
+#: paths.py:241
+msgid "Processing all tracks (paths) from GPX data ... "
+msgstr "Procesando tódolos camiños (tracks) dende os datos GPX ..."
+
+#: paths.py:246
+#, python-format
+msgid "%s paths have been generated for KML data."
+msgstr "%s camiños foron xerados para os datos KML."
+
+#: paths.py:274
+#, python-format
+msgid ""
+"Generated WayPoint from '%(photo)s' at %(photo_time)s (UTC=%(photo_tutc)s) "
+"with coordinates (lon=%(photo_lon).8f, lat=%(photo_lat).8f, ele="
+"%(photo_ele).8f)."
+msgstr ""
+"Xerando un XeoPunto dende '%(photo)s' en %(photo_time)s (UTC="
+"%(photo_tutc)s) cas coordenadas (lon=%(photo_lon).8f, lat="
+"%(photo_lat).8f, alt=%(photo_ele).8f)."
+
+#: paths.py:295
+#, python-format
+msgid ""
+"Track '%(track_name)s' was generated from %(track_numphotos)s geotagged "
+"photos."
+msgstr ""
+"Camiño '%(track_name)s' xerado a partir de %(track_numphotos)s fotos xeoetiquetadas."
+
+#: paths.py:299
+#, python-format
+msgid "Photo track '%(track_name)s' is empty due to no geotagged photos!"
+msgstr ""
+"Camiño '%(track_name)s' vacío posto que non ten fotos xeoetiquetadas!"
+
+#: paths.py:348
+#, python-format
+msgid ""
+"Path '%(path)s', ('%(path_desc)s'): points=%(path_npoints)d, segments="
+"%(path_nsegments)d, length=%(path_len)s, avgspeed=%(path_avgsp).3f, "
+"time='%(path_time)s'"
+msgstr ""
+"Camiño '%(path)s', ('%(path_desc)s'): puntos=%(path_npoints)d, segmentos="
+"%(path_nsegments)d, lonxitude=%(path_len)s, velmedia=%(path_avgsp).3f, "
+"tempo='%(path_time)s'"
+
+#: paths.py:355
+#, python-format
+msgid "Error when track (path) '%(path)s' was being processed: %(error)s."
+msgstr ""
+"Houbo un erro mentras se procesaba o camiño (track) '%(path)s': "
+"%(error)s."
+
+#: paths.py:434
+msgid "Resetting plugin ..."
+msgstr "Reseteando extensión ..."
+
+#: paths.py:447
+msgid "Ending plugin ..."
+msgstr "Finalizando extensión ..."
