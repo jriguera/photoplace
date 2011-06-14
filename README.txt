@@ -65,7 +65,7 @@ Happy coding!
 Thanks to
 =========
 
-* Noela Sanchez for the idea of this program.
+* Noela Sanchez for the idea of this program and translations.
 * Vivake Gupta (vivakeATlab49.com) for MP3Info.py (in plugin <tour>)
 * Juan Amores, jamores (at) hotmail (dot) com for the suggestions and 
   tests on Windows.

@@ -139,6 +139,7 @@ char *s = N_("Load a template from file");
 char *s = N_("Main");
 /* toolbar templates, menu */
 char *s = N_("New");
+char *s = N_("Noela Sánchez Carnero <noelas@gmail.com>");
 char *s = N_("Open _Directory");
 char *s = N_("Open _GPX");
 char *s = N_("Open a web browser with online help");

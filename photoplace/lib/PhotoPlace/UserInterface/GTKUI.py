@@ -293,11 +293,10 @@ class PhotoPlaceGUI(InterfaceUI):
         self["textview-templates"].set_tooltip_markup(_("You can use simple "
             "HTML tags like <i>list</i> (<i>li</i>, <i>ul</i>) or <i>table</i> "
             "and use expresions like <b>%(Variable|<i>DEFAULT</i>)s</b> to get values. "
-            "<i>DEFAULT</i> is the value to set when <i>Variable</i> has no value, if "
+            "<i>DEFAULT</i> is the value to set up when <i>Variable</i> has no value, if "
             "<i>DEFAULT</i> is none (not a character, even space) <i>Variable</i> "
             "will not be shown."
-            "You can use the variables defined in the <b>[defaults]</b> "
-            "section of the configuration file in the same way.\n"
+            "You can use the variables defined in the tab <i>VARIABLES</i> in the same way.\n"
             "To get all supported variables press <b>&lt;ctl&gt;&lt;space&gt;</b>"))
         self["textview-templates"].add_events( gtk.gdk.KEY_PRESS_MASK )
         self["textview-templates"].connect( "key_press_event", self._key_press_wintemplate)

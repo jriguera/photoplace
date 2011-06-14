@@ -1,1 +1,2 @@
 usr/share/photoplace/conf/photoplace.cfg etc/photoplace/photoplace.cfg
+usr/share/pyshared/PhotoPlace/_plugins_  usr/share/photoplace/plugins

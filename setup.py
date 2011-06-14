@@ -43,6 +43,11 @@ PhotoPlace Setup Script
  * Create an installer (for windows)
     - python setup.py bdist_wininst
 
+ * Install
+     - python setup.py install
+     # and plugins!
+     - python setup.py install_plugins
+
  @summary: Used for building the photoplace distribution files and installations
 """
 __program__ = "photoplace"
@@ -68,8 +73,8 @@ from distutils import cmd
 from distutils import log
 from distutils.spawn import spawn
 from distutils.errors import DistutilsError
-from distutils.util import byte_compile as _byte_compile
 from distutils.dir_util import remove_tree as _remove_tree
+from distutils.dir_util import copy_tree as _copy_tree
 from distutils.command.install_data import install_data as _install_data
 from distutils.command.install import install as _install
 from distutils.command.install_lib import install_lib as _install_lib
@@ -83,8 +88,8 @@ try:
     from py2exe.build_exe import py2exe as _py2exe 
     __WIN_PLATFORM__ = True
 except ImportError:
-    if os.sys.platform == "win32":
-        print "\n!! You dont have py2exe installed. !!\n"
+    if sys.platform.startswith('win'):
+        print "\n!! You do not have py2exe installed. !!\n"
 
 
 PLATFORM = os.sys.platform
@@ -92,7 +97,6 @@ SRC_DIR = 'photoplace'
 PROGRAM = 'photoplace/photoplace.py'
 VERSION = '0.5.0'
 DATE = datetime.datetime.now().strftime("%B %Y")
-LANGUAGES = ['en_GB', 'es', 'pt'] 
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',
     'Environment :: Console',
@@ -115,6 +119,7 @@ ICON = {
     'win32' : os.path.join("logos", "photoplace.ico"),
     'other' : os.path.join("logos", "photoplace.png"),
 }
+PLUGINSDIR = '_plugins_'
 
 
 # ########################
@@ -211,55 +216,6 @@ def get_packages(base, directory):
 #  Custom distutils classes
 # #########################
 
-class build_plugins(cmd.Command):
-    description = 'create core plugins'
-    user_options = [
-        ('plugin-base=', 'b', "base directory of plugins"),
-        ('plugin-dir=', None, "base directory of plugins"),
-        ('plugin-dist=', 'd', "base directory for build plugins"),
-    ]
-
-    def initialize_options(self):
-        self.optimize = 0
-        self.verbose = 0
-        self.force = 0
-        self.plugin_base = None
-        self.plugin_dir = None
-        self.plugin_dist = None
-    
-    def finalize_options(self):
-        if self.plugin_base == None:
-            self.plugin_base = '.'
-        if self.plugin_dist == None:
-            self.plugin_dist = 'build'
-        if self.plugin_dir == None:
-            self.plugin_dir = 'plugins'
-    
-    def run(self):
-        plugins = get_plugins(self.plugin_base, self.plugin_dir)
-        compile_names = list()
-        for k, v in plugins.iteritems():
-            src, pfiles, pdata = v
-            compile_names = []
-            for f in pfiles:
-                dest = os.path.join(self.plugin_dist, self.plugin_dir, f)
-                dest_dir = os.path.dirname(dest)
-                f = os.path.join(self.plugin_base, self.plugin_dir, f)
-                if not os.path.exists(dest_dir):
-                    os.makedirs(dest_dir)
-                self.copy_file(f, dest, preserve_mode=0)
-                compile_names.append(dest)
-            _byte_compile(compile_names, self.optimize, self.force, None, None, self.verbose)
-            for f in compile_names:
-                os.remove(f)
-            for f in pdata:
-                dest_dir = os.path.dirname(os.path.join(self.plugin_dist, self.plugin_dir, f))
-                f = os.path.join(self.plugin_base, self.plugin_dir, f)
-                if not os.path.exists(dest_dir):
-                    os.makedirs(dest_dir)
-                self.copy_file(f, dest_dir)
-
-
 class build_trans(cmd.Command):
     description = 'compile .po files into .mo files'
     user_options = [
@@ -277,9 +233,9 @@ class build_trans(cmd.Command):
     
     def finalize_options(self):
         if self.trans_base == None:
-            self.trans_base = '.'
+            self.trans_base = ''
         if self.trans_dist == None:
-            self.trans_dist = os.path.join('build', 'locale')
+            self.trans_dist = 'locale'
         if self.trans_domain == None:
             self.trans_domain = 'domain.mo'
         if self.trans_dir == None:
@@ -293,105 +249,77 @@ class build_trans(cmd.Command):
                     lang = f[:len(f) - 3]
                     src = os.path.join(path, f)
                     dest_path = os.path.join(self.trans_dist, lang, 'LC_MESSAGES')
-                    dest = os.path.join(dest_path, self.domain)
+                    dest = os.path.join(dest_path, self.trans_domain)
                     if not os.path.exists(dest_path):
                         os.makedirs(dest_path)
                     if not os.path.exists(dest):
-                        print 'Compiling %s' % src
+                        print 'Compiling locale %s to %s' % (src, dest)
                         msgfmt.make(src, dest)
                     else:
                         src_mtime = os.stat(src)[8]
                         dest_mtime = os.stat(dest)[8]
                         if src_mtime > dest_mtime:
-                            print 'Compiling %s' % src
+                            print 'Compiling locale %s to %s' % (src, dest)
                             msgfmt.make(src, dest)
 
 
+
 class build(_build):
-
-    def has_trans(self):
-        if self.trans_dir == None or not os.path.exists(self.trans_dir):
-            return False
-        return True
-
-    sub_commands = _build.sub_commands + [('build_plugins', None), ('build_trans', has_trans)]
-    user_options = _build.user_options + [
-        ('plugin-base=', None, "base directory of plugins"),
-        ('plugin-dir=', None, "base directory of plugins"),
-        ('plugin-dist=', None, "base directory for build plugins"),
-        ('trans-base=', None, "base directory of locales"),
-        ('trans-dir=', None, "base directory of locales"),
-        ('trans-dist=', None, "base directory for build locales"),
-        ('trans-domain=', None, "base directory for build locales"),
-    ]
+    sub_commands = _build.sub_commands + [('build_trans', None)]
 
     def initialize_options(self):
         _build.initialize_options(self)
-        self.trans_base = None
-        self.trans_dist = None
-        self.trans_domain = None
-        self.trans_dir = None
-        self.plugin_base = None
-        self.plugin_dir = None
-        self.plugin_dist = None
 
     def finalize_options(self):
-        if self.trans_base == None:
-            self.trans_base = '.'
-        if self.trans_dist == None:
-            self.trans_dist = os.path.join('build', 'locale')
-        if self.trans_domain == None:
-            self.trans_domain = 'domain.mo'
-        if self.trans_dir == None:
-            self.trans_dir = 'po'
-        if self.plugin_base == None:
-            self.plugin_base = '.'
-        if self.plugin_dist == None:
-            self.plugin_dist = 'build'
-        if self.plugin_dir == None:
-            self.plugin_dir = 'plugins'
         _build.finalize_options(self)
 
     def run(self):
-        b_plugins = self.get_finalized_command('build_plugins')
-        b_plugins.plugin_base = SRC_DIR
-        b_plugins.plugin_dir = 'plugins'
-        b_plugins.plugin_dist = os.path.join(self.build_base, 'share', 'photoplace')
-        b_trans = self.get_finalized_command('build_trans')
-        b_trans.trans_base = SRC_DIR
-        b_trans.trans_dist = os.path.join(self.build_base, 'share', 'locale')
-        b_trans.trans_domain = "photoplace.mo"
-        b_trans.trans_dir = os.path.join(SRC_DIR, 'po')
-        _build.run(self)
+        return _build.run(self)
 
 
 
 class install(_install):
-
+    #sub_commands = _install.sub_commands + [('install_plugins', None)]
+    
     def initialize_options(self):
-        self.install_share = None
-        self.install_root = None
         _install.initialize_options(self)
 
     def finalize_options(self):
-        if self.install_share == None:
-            self.install_share = 'share'
-        if self.install_root == None:
-            self.install_root = 'usr'
         _install.finalize_options(self)
 
     def run(self):
-        _install.run(self)
-        root = self.install_root
-        if self.root != None:
-            if os.path.isabs(self.prefix):
-                self.prefix = self.prefix.strip()[1:]
-            root = self.root
-        root = os.path.join(root, self.prefix, self.install_share)
-        build = self.get_finalized_command('build')
-        from_dir = os.path.join(build.build_base, self.install_share)
-        if os.path.isdir(from_dir):
-            outfiles = self.copy_tree(from_dir, root)
+        return _install.run(self)
+
+
+
+class install_plugins(cmd.Command):
+    description = 'install plugins'
+    user_options = [
+        ('plugins-dir=', None, "base directory of plugins"),
+        ('plugins-dist=', 'd', "base directory to install plugins"),
+    ]
+
+    def initialize_options(self):
+        self.plugins_dist = None
+        self.plugins_dir = None
+    
+    def finalize_options(self):
+        if self.plugins_dist == None:
+            install = self.get_finalized_command('install')
+            self.plugins_dist = os.path.join(install.install_data,'share', 'photoplace')
+        if self.plugins_dir == None:
+            install = self.get_finalized_command('install')
+            self.plugins_dir = os.path.join(install.install_lib, 'PhotoPlace', PLUGINSDIR)
+    
+    def run(self):
+        destination = os.path.join(self.plugins_dist, 'plugins')
+        try:
+            print "Creating symlink " + destination
+            os.symlink(self.plugins_dir, destination)
+        except:
+            print "Cannot create symlink, copying plugins to " + destination
+            _copy_tree(self.plugins_dir, destination, preserve_symlinks=1, update=1, verbose=1)
+
 
 
 class clean(_clean):
@@ -405,10 +333,12 @@ class clean(_clean):
                 _remove_tree(dist, dry_run=self.dry_run)
 
 
+
 if __WIN_PLATFORM__:
     # Extend the py2exe command, to also include data files required by gtk+ and
     # enable the "MS-Windows" theme. In order to make gtk+ find the data files
     # we also ensure that the gtk+ libraries are not bundled.
+    
     class py2exe(_py2exe):
         description = "make a windows executable"
         keyfile = 'libgtk-win32-2.0-0.dll'
@@ -416,16 +346,15 @@ if __WIN_PLATFORM__:
         gtktheme = None
         gtkdata = True
         gtkdir = None
-        copysharebuild = True
+        plugins = None
+        plugindir = ''
+        languages = ['en', 'en_GB', 'es', 'gl']
         
         def initialize_options(self):
             _py2exe.initialize_options(self)
-            build_plg = self.get_finalized_command('build_plugins')
-            # Optimize plugins
-            build_plg.optimize = 1
-
+        
         def create_binaries(self, py_files, extensions, dlls):
-            if not self.gtkdir:
+            if self.gtkdir == None:
                 gtkdir = None
                 # Fetchs gtk2 path from registry
                 import _winreg
@@ -453,7 +382,7 @@ if __WIN_PLATFORM__:
                         os.makedirs(dest_dir)
                     self.copy_file(os.path.join(gtkdir, f), os.path.join(self.exe_dir, f), preserve_mode=0)
                 # GTK locales
-                for lang in LANGUAGES:
+                for lang in self.languages:
                     glob_dir = os.path.join(gtkdir, 'share\\locale', lang, 'LC_MESSAGES\\*.mo')
                     for f in glob.glob(glob_dir):
                         for llang in glob.glob(os.path.join(gtkdir, 'share\\locale', lang)):
@@ -470,8 +399,8 @@ if __WIN_PLATFORM__:
                     if not os.path.exists(dest_dir):
                         os.makedirs(dest_dir)
                     self.copy_file(os.path.join(gtkdir, f), os.path.join(self.exe_dir, f), preserve_mode=0)
-            if self.gtktheme:
-                print "*** Enabling additional themes for gtk+ ***"
+            if self.gtktheme != None:
+                print("*** Enabling additional themes for gtk+ ***")
                 for f in find_files(self.gtkthemes, 'share\\themes', ['*.*~']):
                     dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
                     if not os.path.exists(dest_dir):
@@ -489,15 +418,16 @@ if __WIN_PLATFORM__:
                 file.write("# Generated from setup.py\n")
                 file.write('gtk-theme-name = "%s"\n' % self.gtktheme)
                 file.close()
-            # Share
-            if self.copysharebuild:
+            # Plugins
+            if self.plugins != None:
+                print("*** Copying core plugins ***")
                 build = self.get_finalized_command('build')
-                share_dir = os.path.join(build.build_base, 'share')
-                for f in find_files(build.build_base, 'share', ['*.*~']):
-                    dest_dir = os.path.dirname(os.path.join(self.exe_dir, f))
+                orig_plugin_dir = os.path.join(build.build_base, self.plugins)
+                for f in find_files(orig_plugin_dir, ''):
+                    dest_dir = os.path.dirname(os.path.join(self.exe_dir, self.plugindir, f))
                     if not os.path.exists(dest_dir):
                         os.makedirs(dest_dir)
-                    self.copy_file(os.path.join(build.build_base, f), os.path.join(self.exe_dir, f), preserve_mode=0)
+                    self.copy_file(os.path.join(orig_plugin_dir, f), dest_dir, preserve_mode=0)
 
 
     class bdist_win(cmd.Command):
@@ -539,6 +469,7 @@ if __WIN_PLATFORM__:
                 print ("Execution failed: %s" % str(e))
 else:
     # Not a windows platform
+    
     class bdist_deb(_sdist):
         description = "make an instalable for debian/ubuntu platforms"
         user_options =  _sdist.user_options +  [
@@ -573,7 +504,7 @@ else:
             if os.path.isdir(base_dir):
                 _remove_tree(base_dir, dry_run=self.dry_run)
             _sdist.make_release_tree(self, base_dir, files)
-
+        
         def make_distribution(self):
             full_name = self.distribution.get_fullname()
             base_dir = os.path.join(self.dist_dir, full_name)
@@ -603,15 +534,17 @@ else:
             return name + '_' + version + '-1_all.deb'
 
 
+
 # ######################
 # setup helper functions
 # ######################
 
-def get_program_libs(base=SRC_DIR, directory='lib'):
+def get_program_libs(base, directory='lib', plugin_dir=PLUGINSDIR):
     """
     Generate the list of packages in lib directory
     """
     libs = get_packages(base, directory)
+    
     libs_photoplace = get_packages(os.path.join(base, directory), 'PhotoPlace')
     for lib in libs_photoplace['packages']:
         libs['packages'].append('PhotoPlace.' + lib)
@@ -619,31 +552,16 @@ def get_program_libs(base=SRC_DIR, directory='lib'):
             libs['package_data']['PhotoPlace.' + key] = data
         for key, data in libs_photoplace['package_dir'].iteritems():
             libs['package_dir']['PhotoPlace.' + key] = data
+    
+    plugins_photoplace = get_packages(base, 'plugins')
+    for lib in plugins_photoplace['packages']:
+        libs['packages'].append('PhotoPlace.' + plugin_dir + '.' + lib)
+        for key, data in plugins_photoplace['package_data'].iteritems():
+            libs['package_data']['PhotoPlace.' + plugin_dir + '.' + key] = data
+        for key, data in plugins_photoplace['package_dir'].iteritems():
+            libs['package_dir']['PhotoPlace.' + plugin_dir + '.' + key] = data
+    
     return libs
-
-def get_program_plugins(base=SRC_DIR, directory='plugins'):
-    """
-    Generate the list of plugins
-    """
-    kwargs = get_packages(base, directory)
-    return kwargs
-
-def get_data_files(base=SRC_DIR, directory='share', dst=os.path.join('share', 'photoplace')):
-    """
-    Generate the list of files for package
-    """
-    includes = [('.', glob.glob(os.path.join(base, "*.txt")))]
-    includes += get_files(base, directory, dst)
-    locales = get_files(base, 'locale', os.path.join('share', 'locale'))
-    return includes + locales
-
-def get_bin_files(base='', dirs=['include']):
-    includes = []
-    for directory in dirs:
-        extra_dir = os.path.join(base, directory, os.sys.platform)
-        if os.path.exists(extra_dir):
-            includes += get_files(os.path.join(directory, os.sys.platform), '', '')
-    return includes
 
 
 # #####
@@ -659,10 +577,13 @@ if __name__ == '__main__':
     if PLATFORM == "win32":
         if '--full' in sys.argv:
             sys.argv.remove('--full')
-            data_files += get_bin_files()
-        py2exe.gtkdata = True
-        py2exe.gtktheme = "Human"
+            extra_dir = os.path.join('include', os.sys.platform)
+            if os.path.exists(extra_dir):
+                data_files += get_files(os.path.join('include', os.sys.platform), '', '')
+        py2exe.gtktheme = 'Human'
         py2exe.gtkthemes = "include\\GTKThemes\\"
+        py2exe.plugins = os.path.join('lib', 'PhotoPlace', PLUGINSDIR)
+        py2exe.plugindir = os.path.join('share', 'photoplace', 'plugins')
         kwargs['windows'] = [{
             'script':PROGRAM, 
             'icon_resources':[(1, ICON['win32'])]
@@ -690,12 +611,17 @@ if __name__ == '__main__':
         data_files += get_files(SRC_DIR, 'locale', os.path.join('share', 'locale'), goodfiles=['*.mo'])
         data_files += [(os.path.join('share','doc','photoplace'), glob.glob(os.path.join(SRC_DIR, "*.txt")))]
         kwargs['cmdclass']['bdist_deb'] = bdist_deb
-    kwargs.update(get_program_libs())
+    kwargs.update(get_program_libs(SRC_DIR))
     kwargs['cmdclass']['build'] = build
     kwargs['cmdclass']['clean'] = clean
-    kwargs['cmdclass']['build_plugins'] = build_plugins
     kwargs['cmdclass']['install'] = install
+    kwargs['cmdclass']['install_plugins'] = install_plugins
     kwargs['cmdclass']['build_trans'] = build_trans
+    kwargs['options']['build_trans'] = { 
+        'trans_base': SRC_DIR, 
+        'trans_dist': os.path.join(SRC_DIR, 'locale'),
+        'trans_domain': "photoplace.mo",
+    }
     setup(name='photoplace',
         version=VERSION,
         license='GNU General Public License v3',
@@ -704,7 +630,7 @@ if __name__ == '__main__':
         author='Jose Riguera Lopez',
         author_email='jriguera@gmail.com',
         classifiers=CLASSIFIERS,
-        platforms="Python 2.x, 2.6 and later",
+        platforms="Python 2.6 and superior",
         url='http://code.google.com/p/photoplace/',
         scripts=[PROGRAM],
         data_files=data_files,

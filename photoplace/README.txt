@@ -37,7 +37,7 @@ Changes of this version: 0.5.0 (Q1 2011)
 ========================================
 * New GTK User interface with theme support.
 * Intelligent templates for descriptions.
-* Plugins support.
+* Support for plugins.
 * Multi-language.
 
 

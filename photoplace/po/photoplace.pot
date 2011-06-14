@@ -1,20 +1,20 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Translations for photoplace.
+# Copyright (C) 2011, José Riguera Lopez <jriguera@gmail.com>
+# This file is distributed under the same license as the photoplace package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: photoplace 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-07 20:36+0200\n"
+"POT-Creation-Date: 2011-06-15 00:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../share/gtkui/photoplace.ui.h:2
@@ -309,7 +309,7 @@ msgid "<b>Loaded photos</b>"
 msgstr ""
 
 #: ../share/gtkui/photoplace.ui.h:99
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:584
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:583
 msgid "<b>Options</b>"
 msgstr ""
 
@@ -405,7 +405,7 @@ msgid ""
 msgstr ""
 
 #: ../share/gtkui/photoplace.ui.h:129
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1555
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1554
 msgid "Input GPX file"
 msgstr ""
 
@@ -449,121 +449,125 @@ msgid "New"
 msgstr ""
 
 #: ../share/gtkui/photoplace.ui.h:142
-msgid "Open _Directory"
+msgid "Noela Sánchez Carnero <noelas@gmail.com>"
 msgstr ""
 
 #: ../share/gtkui/photoplace.ui.h:143
-msgid "Open _GPX"
+msgid "Open _Directory"
 msgstr ""
 
 #: ../share/gtkui/photoplace.ui.h:144
+msgid "Open _GPX"
+msgstr ""
+
+#: ../share/gtkui/photoplace.ui.h:145
 msgid "Open a web browser with online help"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:146
+#: ../share/gtkui/photoplace.ui.h:147
 msgid ""
 "Open an eXchange Format (GPX) in order to match the date of each photo with "
 "the position."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:148
+#: ../share/gtkui/photoplace.ui.h:149
 msgid "Output file to save the KML data."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:149
+#: ../share/gtkui/photoplace.ui.h:150
 msgid ""
 "Output photo zoom percentage. 1.00 means original size, 0.50 means half size "
 "and so on ..."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:150
+#: ../share/gtkui/photoplace.ui.h:151
 msgid "Photo size:"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:151
+#: ../share/gtkui/photoplace.ui.h:152
 msgid "PhotoPlace"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:153
+#: ../share/gtkui/photoplace.ui.h:154
 msgid "Photos"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:154
+#: ../share/gtkui/photoplace.ui.h:155
 msgid "Picture path:"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:155
+#: ../share/gtkui/photoplace.ui.h:156
 msgid "Plugins"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:156
+#: ../share/gtkui/photoplace.ui.h:157
 msgid "Press this to start! The show must go on!"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:157
+#: ../share/gtkui/photoplace.ui.h:158
 msgid "Quality"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:159
+#: ../share/gtkui/photoplace.ui.h:160
 msgid "Recover"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:160
+#: ../share/gtkui/photoplace.ui.h:161
 msgid "Recover default configuration."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:161
+#: ../share/gtkui/photoplace.ui.h:162
 msgid "Recover the default template"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:163
+#: ../share/gtkui/photoplace.ui.h:164
 msgid "Remove all loaded files/directories to start again."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:165
+#: ../share/gtkui/photoplace.ui.h:166
 msgid "Save"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:166
+#: ../share/gtkui/photoplace.ui.h:167
 msgid "Save document as template"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:167
+#: ../share/gtkui/photoplace.ui.h:168
 msgid "Save the current preferences."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:169
+#: ../share/gtkui/photoplace.ui.h:170
 msgid ""
 "Seconds (positive or negative) to add to the photos time in order to match "
 "them with GPS data."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:170
+#: ../share/gtkui/photoplace.ui.h:171
 msgid "Select Template:"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:171
+#: ../share/gtkui/photoplace.ui.h:172
 msgid ""
 "Select a directory with photos for geotagging. All photos will be geotagged "
 "if <geotagged> mode is selected."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:172
+#: ../share/gtkui/photoplace.ui.h:173
 msgid ""
 "Select an eXchange Format (GPX) in order to match the date of each photo "
 "with the position."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:173
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1554
+#: ../share/gtkui/photoplace.ui.h:174
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1553
 msgid "Select input photo directory"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:174
+#: ../share/gtkui/photoplace.ui.h:175
 msgid "Simulate geotagging"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:176
+#: ../share/gtkui/photoplace.ui.h:177
 msgid ""
 "The authors and developers hope you like this program. We would really "
 "appreciate it if you would consider making a small donation: half of the "
@@ -574,95 +578,95 @@ msgid ""
 "this goals."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:178
+#: ../share/gtkui/photoplace.ui.h:179
 msgid ""
 "The maximum time gap allowed between the time of a photo and the nearest "
 "point of GPS data."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:180
+#: ../share/gtkui/photoplace.ui.h:181
 msgid ""
 "The time zone of the photos. It depends on the settings of time/date of the "
 "camera and the GPS (UTC time), it is the difference in hours between both."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:182
+#: ../share/gtkui/photoplace.ui.h:183
 msgid ""
 "This entry defines the Uniform Resource Identifier for each geolocated "
 "photo. It is useful to generate a independent KML file where the photos will "
 "be linked into it."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:184
+#: ../share/gtkui/photoplace.ui.h:185
 msgid ""
 "This entry defines the Uniform Resource Identifier for each geotagged photo. "
 "It is useful to generate a independent KML file where the photos will be "
 "linked into it."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:186
+#: ../share/gtkui/photoplace.ui.h:187
 msgid "Time offset:"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:188
+#: ../share/gtkui/photoplace.ui.h:189
 msgid "Time zone of photos:"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:189
+#: ../share/gtkui/photoplace.ui.h:190
 msgid "URI for geotagging photos:"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:191
+#: ../share/gtkui/photoplace.ui.h:192
 msgid "Validate"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:192
+#: ../share/gtkui/photoplace.ui.h:193
 msgid "Variables"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:193
+#: ../share/gtkui/photoplace.ui.h:194
 msgid ""
 "Zoom percentaje. 1 means original size, 0.5 means half size and so on ..."
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:195
+#: ../share/gtkui/photoplace.ui.h:196
 msgid "_Exit"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:197
+#: ../share/gtkui/photoplace.ui.h:198
 msgid "_File"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:199
+#: ../share/gtkui/photoplace.ui.h:200
 msgid "_Help"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:200
+#: ../share/gtkui/photoplace.ui.h:201
 msgid "_Plugins"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:202
+#: ../share/gtkui/photoplace.ui.h:203
 msgid "_Preferences"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:203
+#: ../share/gtkui/photoplace.ui.h:204
 msgid "_Reset"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:204
+#: ../share/gtkui/photoplace.ui.h:205
 msgid "_Save as"
 msgstr ""
 
-#: ../share/gtkui/photoplace.ui.h:206
+#: ../share/gtkui/photoplace.ui.h:207
 msgid "and"
 msgstr ""
 
-#: ../photoplace.py:144
+#: ../photoplace.py:151
 msgid ""
 "usage: %prog [options] <photodir> <file.gpx> [<output.kml>|<output.kmz>]"
 msgstr ""
 
-#: ../photoplace.py:146
+#: ../photoplace.py:153
 msgid ""
 "This is a python program to geolocate photos from a GPX data. Besides, it "
 "can generate a KMZ layer for Google Earth with all geolocated photos. By "
@@ -670,7 +674,7 @@ msgid ""
 "options must be supplied by command line."
 msgstr ""
 
-#: ../photoplace.py:152
+#: ../photoplace.py:159
 #, python-format
 msgid ""
 "By default, the program searchs the configuration file "
@@ -678,75 +682,75 @@ msgid ""
 "under '%(defaultconfigdir)s'.  "
 msgstr ""
 
-#: ../photoplace.py:155
+#: ../photoplace.py:162
 msgid ""
 "This program is able to create a virtual flux capacitor and, with the right "
 "settings, it can be used to time travels ... "
 msgstr ""
 
-#: ../photoplace.py:167
+#: ../photoplace.py:174
 msgid "Read the configuration from <configfile.cfg>"
 msgstr ""
 
-#: ../photoplace.py:170
+#: ../photoplace.py:177
 msgid ""
 "Only do geolocating the photos of input directory, not generating any output "
 "file"
 msgstr ""
 
-#: ../photoplace.py:174
+#: ../photoplace.py:181
 msgid ""
 "Other options like they are defined in the config file. This argument can be "
 "supplied as many times as it was necessary for all options. The format is '-"
 "o \"section:key=value\"'"
 msgstr ""
 
-#: ../photoplace.py:179
+#: ../photoplace.py:186
 msgid "Launch the batch mode, with command line args."
-msgstr ""
-
-#: ../photoplace.py:193
-#, python-format
-msgid "Cannot create files in '%s'.\n"
-msgstr ""
-
-#: ../photoplace.py:198
-#, python-format
-msgid "Cannot create default configfile in '%s'.\n"
 msgstr ""
 
 #: ../photoplace.py:200
 #, python-format
-msgid "Cannot find configuration file '%s'.\n"
-msgstr ""
-
-#: ../photoplace.py:203
-#, python-format
-msgid "Reading default config file '%s'.\n"
+msgid "Cannot create files in '%s'.\n"
 msgstr ""
 
 #: ../photoplace.py:205
 #, python-format
+msgid "Cannot create default configfile in '%s'.\n"
+msgstr ""
+
+#: ../photoplace.py:207
+#, python-format
+msgid "Cannot find configuration file '%s'.\n"
+msgstr ""
+
+#: ../photoplace.py:210
+#, python-format
+msgid "Reading default config file '%s'.\n"
+msgstr ""
+
+#: ../photoplace.py:212
+#, python-format
 msgid "Default config file '%s' not found.\n"
 msgstr ""
 
-#: ../photoplace.py:206
+#: ../photoplace.py:213
 msgid "Using internal settings ...\n"
 msgstr ""
 
-#: ../photoplace.py:214
+#: ../photoplace.py:221
 #, python-format
 msgid "Cannot understand the format of config file '%s'. Ignoring it!."
 msgstr ""
 
-#: ../photoplace.py:230
+#: ../photoplace.py:237
 #, python-format
 msgid ""
 "Error: Cannot launch GUI: %s.\n"
 "Trying batch mode ...\n"
 msgstr ""
 
-#: ../photoplace.py:241
+#: ../photoplace.py:248
 #, python-format
 msgid "Fatal error: Cannot launch program: %s.\n"
 msgstr ""
@@ -1386,8 +1390,8 @@ msgid "Cannot create backup of configfile '%(file)s': %(error)s."
 msgstr ""
 
 #: ../lib/PhotoPlace/userFacade.py:372 ../lib/PhotoPlace/userFacade.py:387
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:967
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1638
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:966
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1637
 msgid "OOps ..."
 msgstr ""
 
@@ -1494,25 +1498,25 @@ msgstr ""
 msgid ""
 "You can use simple HTML tags like <i>list</i> (<i>li</i>, <i>ul</i>) or "
 "<i>table</i> and use expresions like <b>%(Variable|<i>DEFAULT</i>)s</b> to "
-"get values. <i>DEFAULT</i> is the value to set when <i>Variable</i> has no "
-"value, if <i>DEFAULT</i> is none (not a character, even space) <i>Variable</"
-"i> will not be shown.You can use the variables defined in the <b>[defaults]</"
-"b> section of the configuration file in the same way.\n"
+"get values. <i>DEFAULT</i> is the value to set up when <i>Variable</i> has "
+"no value, if <i>DEFAULT</i> is none (not a character, even space) "
+"<i>Variable</i> will not be shown.You can use the variables defined in the "
+"tab <i>VARIABLES</i> in the same way.\n"
 "To get all supported variables press <b>&lt;ctl&gt;&lt;space&gt;</b>"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:313
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:312
 msgid "Cannot set key!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:409
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:408
 #, python-format
 msgid ""
 "Welcome to %(program)s v %(version)s. If you like it, please consider making "
 "a donation ;-) See 'About' menu for more information"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:575
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:574
 #, python-format
 msgid ""
 "Plugin <b>%(plugin_name)s</b> version %(plugin_version)s\n"
@@ -1523,128 +1527,128 @@ msgid ""
 "<i>%(plugin_desc)s</i>"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:681
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:680
 #, python-format
 msgid "Loading photo %s ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:687
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:686
 #, python-format
 msgid "Geotagging photo %s ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:692
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:691
 #, python-format
 msgid "Processing photo %s ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:703
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:702
 msgid "Let's Go!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:713
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:712
 #, python-format
 msgid "Adding to KML info of %s ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:718
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:717
 #, python-format
 msgid "Writing EXIF info of %s ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:723
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:722
 #, python-format
 msgid "Copying photo %s ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:728
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:727
 #, python-format
 msgid "Saving file %s ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:752
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:751
 msgid "Info"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:754
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:753
 msgid "Warning"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:756
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:755
 msgid "Error"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:764
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:763
 msgid "Select a directory with photos ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:777
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:776
 msgid "Select input GPX file ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:782
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:781
 msgid "GPS eXchange Format GPX"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:787
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:814
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1164
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:786
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:813
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1163
 msgid "All files"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:799
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:798
 msgid "Choose output file ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:804
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:803
 msgid "Keyhole Markup Language (Google Earth Layer) KMZ"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:809
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:808
 msgid "Keyhole Markup Language (Google Earth Layer) KML"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:863
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:862
 msgid "Generate: "
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:869
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:868
 msgid " No generate output file!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:905
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:904
 msgid "Geolocate photos in mode:"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:908
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:907
 msgid "No geolocate photos"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:968
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:967
 msgid "Cannot geolocate!. No GPX data file loaded!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:969
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:968
 msgid "Load a GPX file to do that."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:993
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:992
 #, python-format
 msgid "# Author: %(author)s\n"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:995
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:994
 msgid "Unknown"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:998
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:997
 #, python-format
 msgid ""
 "# Description:\n"
 " %(description)s\n"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1001
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1000
 #, python-format
 msgid ""
 "<b>%(name)s</b>\n"
@@ -1652,118 +1656,118 @@ msgid ""
 "Time: %(time)s"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1005
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1004
 msgid "Picture not geotagged!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1007
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1006
 msgid ""
 "  Longitude :\n"
 "  Latitude :\n"
 "  Elevation :"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1015
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1014
 msgid "# Attributes: \n"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1039
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1038
 msgid "Variable from template"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1095
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1094
 msgid "Main Parameters"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1096
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1095
 msgid "Other Parameters"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1160
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1159
 msgid "Select file to load ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1229
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1228
 #, python-format
 msgid "Template from file '%s' loaded"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1276
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1275
 msgid "Template saved and reloaded without problems"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1279
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1278
 msgid "Error processing template"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1346
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1345
 #, python-format
 msgid "Line %(line)d, column %(column)d (%(chars)d chars in document)"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1352
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1351
 msgid "New empty template"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1372
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1371
 msgid "Cannot find system template!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1392
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1391
 #, python-format
 msgid "XML error: %s"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1394
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1393
 msgid "Perfect! template is well formed!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1455
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1454
 msgid "Image name"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1456
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1455
 msgid "Date/Time"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1458
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1457
 msgid "Longitude"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1459
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1458
 msgid "Latitude"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1460
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1459
 msgid "Elevation"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1463
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1462
 msgid "Image Attributes"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1467
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1466
 msgid "Image EXIF Values"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1532
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1531
 #, python-format
 msgid "The original configuration file was recovered to '%(file)s'."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1534
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1533
 msgid "Restart the program in order to read the new configuration."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1535
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1534
 msgid "Attention!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1639
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1638
 msgid "No photos loaded, cannot do anything!."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1640
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1639
 msgid "Select a directory with photos."
 msgstr ""
 
