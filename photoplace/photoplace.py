@@ -102,7 +102,7 @@ else:
         # windows install
         __RESOURCES_PATH__ = new_resources_path
 
-# Gettext
+# Gettext paths
 locale_path = os.path.join(__PROGRAM_PATH__, __LOCALE_PATH__)
 if not os.path.isdir(locale_path):
     # installed
@@ -114,6 +114,27 @@ if not os.path.isdir(locale_path):
         __LOCALE_PATH__ = locale_path
 else:
     __LOCALE_PATH__ = locale_path
+
+# hack for I18N in windows. Idea and code was taken from: 
+# https://launchpad.net/gettext-py-windows by Alexander Belchenko.
+if sys.platform.startswith('win'):
+    if not os.environ.get('LANGUAGE'):
+        language = None
+        try:
+            import ctypes
+        except ImportError:
+            language = [locale.getdefaultlocale()[0]]
+        else:
+            # get all locales using windows API
+            lcid_user = ctypes.windll.kernel32.GetUserDefaultLCID()
+            lcid_system = ctypes.windll.kernel32.GetSystemDefaultLCID()
+            if lcid_user != lcid_system:
+                lcids = [lcid_user, lcid_system]
+            else:
+                lcids = [lcid_user]
+            language = filter(None, [locale.windows_locale.get(i) for i in lcids]) or None
+        # Set up environment variable
+        os.environ['LANGUAGE'] = ':'.join(language)
 try:
     locale.setlocale(locale.LC_ALL,'')
     #locale.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
