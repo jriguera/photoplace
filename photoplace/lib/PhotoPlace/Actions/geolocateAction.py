@@ -33,6 +33,7 @@ import threading
 import datetime
 
 import Interface
+from PhotoPlace.definitions import *
 
 
 
@@ -69,7 +70,7 @@ class Geolocate(Interface.Action, threading.Thread):
             self._notify_run(photo, 0)
             if photo.status < 1:
                 continue
-            self.dgettext['photo'] = photo.name
+            self.dgettext['photo'] = photo.name.encode(PLATFORMENCODING)
             self.dgettext['photo_time'] = photo.time
             photo_tutc = photo.time - self.time_zone
             self.dgettext['photo_tutc'] = photo_tutc

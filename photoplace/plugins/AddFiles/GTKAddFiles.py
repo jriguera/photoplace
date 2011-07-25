@@ -57,7 +57,7 @@ from addfiles import *
 # I18N gettext support
 __GETTEXT_DOMAIN__ = __program__
 __PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
-__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
+__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, u"locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
@@ -184,6 +184,11 @@ class GTKAddFiles(object):
         ite = self.treestore.get_iter_from_string(path_string)
         safechars = "/\_-." + string.digits + string.ascii_letters
         destination = os.path.normpath(new_text.strip())
+        if not isinstance(destination, unicode):
+            try:
+                destination = unicode(destination, 'UTF-8')
+            except:
+                pass
         destination = ''.join(c for c in destination if c in safechars)
         filekey = destination.replace('..','')
         if len(filekey) >= 3:
@@ -203,6 +208,11 @@ class GTKAddFiles(object):
             filename = dialog.get_filename()
         dialog.destroy()
         if filename != None:
+            if not isinstance(filename, unicode):
+                try:
+                    filename = unicode(filename, 'UTF-8')
+                except:
+                    pass
             self.counter_file += 1
             variable = AddFiles_PREFIX_NAME + AddFiles_PREFIX_FILE + str(self.counter_file)
             value = os.path.basename(filename)

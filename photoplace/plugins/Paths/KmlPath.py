@@ -25,7 +25,7 @@ KML Implementation.
 """
 __program__ = "photoplace.paths"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.3.1"
+__version__ = "0.3.3"
 __date__ = "December 2010"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
@@ -40,7 +40,7 @@ import locale
 # I18N gettext support
 __GETTEXT_DOMAIN__ = __program__
 __PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
-__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
+__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, u"locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):

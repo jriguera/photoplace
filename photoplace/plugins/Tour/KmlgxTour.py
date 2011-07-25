@@ -40,7 +40,7 @@ from tour import *
 # I18N gettext support
 __GETTEXT_DOMAIN__ = __program__
 __PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
-__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
+__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, u"locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
@@ -81,7 +81,7 @@ class gxTour(object):
         self.tour = None
         self.sound_mix = False
         self.sound_index = 0
-        self.sound_uri = ''
+        self.sound_uri = u''
         self.music_time = 0
         self.total_time = 0
         self.sounds = []

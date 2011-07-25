@@ -48,14 +48,14 @@ class SaveFiles(Interface.Action, threading.Thread):
         Interface.Action.__init__(self, state)
         threading.Thread.__init__(self)
         self.outputkmz = state.outputkmz
-        self.dgettext['outputkmz'] = self.outputkmz
+        self.dgettext['outputkmz'] = self.outputkmz  #.encode(PLATFORMENCODING)
         self.outputkml = state.outputkml
-        self.dgettext['outputkml'] = self.outputkml
+        self.dgettext['outputkml'] = self.outputkml  #.encode(PLATFORMENCODING)
         self.photouri = state["photouri"]
         self.outputdir = state.outputdir
-        self.dgettext['outputdir'] = self.outputdir
+        self.dgettext['outputdir'] = self.outputdir.encode(PLATFORMENCODING)
         self.tmpdir = state.tmpdir
-        self.dgettext['tmpdir'] = self.tmpdir
+        self.dgettext['tmpdir'] = self.tmpdir.encode(PLATFORMENCODING)
         self.quality = state.quality['zip']
         self.outputkmldir = os.path.dirname(self.outputkml)
         self.fd = None
@@ -77,7 +77,7 @@ class SaveFiles(Interface.Action, threading.Thread):
             self.photouri, self.outputdir, self.quality)
         try:
             kmldom = self.state.kmldata.getKml()
-            kmldom.writexml(self.fd, "", "   ","\n", "utf-8")
+            kmldom.writexml(self.fd, u"", u"   ", u"\n", "utf-8")
             self.num_files += 1
         except Exception as e:
             self.dgettext['error'] = str(e)
@@ -104,12 +104,13 @@ class SaveFiles(Interface.Action, threading.Thread):
         return kmz_out
 
 
-    def rzip(self, zipf, folder, base=""): 
+    def rzip(self, zipf, folder, base=u''): 
         for f in os.listdir(folder):
             full_path = os.path.join(folder, f)
             if os.path.isfile(full_path):
                 base_path = os.path.join(base, f)
-                self.logger.debug(_("Adding file '%s' to KMZ ...") % base_path)
+                self.logger.debug(_("Adding file '%s' to KMZ ...") % \
+                    base_path.encode(PLATFORMENCODING))
                 self._notify_run(base_path)
                 zipf.write(full_path, base_path, self.quality)
                 self.num_files += 1

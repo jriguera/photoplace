@@ -34,9 +34,11 @@ import zipfile
 import Image
 import logging
 import os.path
+import locale
 import logging
 import logging.handlers
 
+PLATFORMENCODING = locale.getpreferredencoding()
 
 
 PhotoPlace_name = "PhotoPlace"
@@ -109,9 +111,9 @@ PhotoPlace_Cfg_main_jpgzoom = 0.15
 PhotoPlace_Cfg_main_quality = 1
 PhotoPlace_Cfg_main_maxdeltaseconds = 300
 PhotoPlace_Cfg_main_timeoffsetseconds = 0
-PhotoPlace_Cfg_main_photouri = ""
+PhotoPlace_Cfg_main_photouri = u""
 PhotoPlace_Cfg_main_copyonlygeolocated = True
-PhotoPlace_Cfg_main_kmltemplate = os.path.join("templates", "layout.template.kml")
+PhotoPlace_Cfg_main_kmltemplate = os.path.join(u"templates", u"layout.template.kml")
 PhotoPlace_Cfg_main_templateseparatorkey = '|'
 PhotoPlace_Cfg_main_templatedefaultvalue = " "
 PhotoPlace_Cfg_main_templateseparatornodes = '.'
@@ -126,10 +128,15 @@ PhotoPlace_Cfg_default_heading =  0.0
 # Interal Configuration. Do not touch !!!
 # #######################################
 
+PhotoPlace_Cfg_version = 050
 Photoplace_Cfg_mode_command = 0
 Photoplace_Cfg_mode_gui = 1
-PhotoPlace_Cfg_dir = os.path.join(os.path.expanduser("~"), ".photoplace")
-PhotoPlace_Cfg_file = "photoplace.cfg"
+PhotoPlace_Cfg_dir = os.path.join(
+    unicode(os.path.expanduser("~"), PLATFORMENCODING, 'ignore'), 
+    u".photoplace")
+PhotoPlace_Cfg_file = u"photoplace.cfg"
+PhotoPlace_Cfg_fileextold = u".old"
+PhotoPlace_Cfg_altdir = u"conf"
 PhotoPlace_Cfg_optionsep = "="
 PhotoPlace_Cfg_sectionsep = ":"
 PhotoPlace_Cfg_PhotoRegExp = re.compile(r"\.jpg$", re.I)
@@ -152,6 +159,7 @@ PhotoPlace_Cfg_default = {
     'defaults'  : {},
     'plugins'   : {} 
 }
+PhotoPlace_Cfg_timeformat = _("%A %d. %B %Y")
 PhotoPlace_Cfg_loglevel = logging.DEBUG
 PhotoPlace_Cfg_logformat = '%(asctime)s: %(levelname)-7s - %(name)-11s - %(message)s'
 PhotoPlace_Cfg_logtextviewformat = '%(asctime)s: %(levelname)-7s - %(name)-11s - %(message)s'
@@ -167,6 +175,7 @@ PhotoPlace_Cfg_quality = [
 # This settings wont be saved with configuration (by default)
 PhotoPlace_CONFIG_NOCLONE = {
     'main'      : [
+        'version',
         'photoinputdir', 
         'gpxinputfile', 
         'outputfile', 
@@ -190,5 +199,6 @@ PhotoPlace_CONFIG_NOCLONE = {
     'templates' : [],
     'plugins'   : [],
 }
+
 
 # EOF

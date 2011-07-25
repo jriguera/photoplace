@@ -55,7 +55,7 @@ class CopyFiles(Interface.Action, threading.Thread):
         self.num_copies = 0
         self.num_photos = 0
         if self.outputdir != None:
-            self.dgettext['outputdir'] = self.outputdir
+            self.dgettext['outputdir'] = self.outputdir.encode(PLATFORMENCODING)
             msg = _("Generating copy of JPEG files in '%(outputdir)s' ...")
             self.logger.info(msg % self.dgettext)
             return True
@@ -71,14 +71,14 @@ class CopyFiles(Interface.Action, threading.Thread):
             self._notify_run(photo, 0)
             if photo.status < self.state.status:
                 continue
-            self.dgettext['photo'] = photo.name
+            self.dgettext['photo'] = photo.name.encode(PLATFORMENCODING)
             self.dgettext['photo_lon'] = photo.lon
             self.dgettext['photo_lat'] = photo.lat
             self.dgettext['photo_ele'] = photo.ele
             self.dgettext['photo_time'] = photo.time
             if (not self.onlygeolocated) or photo.isGeoLocated():
                 new_file = os.path.join(self.outputdir, photo.name)
-                self.dgettext['new_path'] = new_file
+                self.dgettext['new_path'] = new_file.encode(PLATFORMENCODING)
                 try:
                     if photo.isGeoLocated():
                         photo.attrToExif()
@@ -86,20 +86,17 @@ class CopyFiles(Interface.Action, threading.Thread):
                     self.num_copies += 1
                 except Exception as e:
                     self.dgettext['error'] = str(e)
-                    self.logger.error(
-                        _("Cannot copy '%(photo)s' to '%(new_path)s': %(error)s.") \
-                        % self.dgettext)
+                    msg = _("Cannot copy '%(photo)s' to '%(new_path)s': %(error)s.")
+                    self.logger.error(msg % self.dgettext)
                     ok = False
                 else:
                     self._notify_run(photo, 1)
-                    self.logger.debug(
-                        _("Photo '%(photo)s' has been copied to '%(new_path)s'.") \
-                        % self.dgettext)
+                    msg = _("Photo '%(photo)s' has been copied to '%(new_path)s'.") 
+                    self.logger.debug(msg % self.dgettext)
                 self.num_photos += 1
             else:
-                self.logger.warning(
-                    _("Ignoring not geolocated photo '%(photo)s' (%(photo_time)s).") \
-                    % self.dgettext)
+                msg = _("Ignoring not geolocated photo '%(photo)s' (%(photo_time)s).")
+                self.logger.warning(msg % self.dgettext)
                 self._notify_run(photo, -1)
         return ok
 

@@ -81,7 +81,7 @@ class PluginManager(object):
         dgettext = dict(path='sys.path')
         if path != None and not path in sys.path:
             sys.path.insert(0, path)
-            dgettext['path'] = path
+            dgettext['path'] = path.encode('UTF-8')
         dgettext['module'] = module
         fd = None
         #__import__(module, None, None, [''])

@@ -117,6 +117,11 @@ class UserFacade(object):
         self.argfiles = []
         self.args = args
         self.resourcedir = resources
+        if not isinstance(resources, unicode):
+            try:
+                self.resourcedir = unicode(resources, PLATFORMENCODING)
+            except:
+                pass
         defaultconfig = dict(PhotoPlace_Cfg_default)
         if cfgopt.options:
             for opt in cfgopt.options:
@@ -132,6 +137,11 @@ class UserFacade(object):
                     defaultconfig[sec] = dict()
                 defaultconfig[sec][key] = value
         for argfile in fargs:
+            if not isinstance(argile, unicode):
+                try:
+                    argfile = unicode(argfile, PLATFORMENCODING)
+                except:
+                    pass
             inputext = os.path.splitext(argfile)[1].lower()
             if os.path.isdir(argfile):
                 defaultconfig['main']['photoinputdir'] = argfile
@@ -146,26 +156,40 @@ class UserFacade(object):
                     self.argfiles.append(argfile)
             else:
                 pass
-        self.configfile = configfile
-        self.options = defaultconfig
-        if configfile != None:
-            dgettext = dict()
-            dgettext['configfile'] = configfile
+        self.configfile = configfile 
+        if not isinstance(configfile, unicode):
             try:
-                self.options = self.load_config(defaultconfig)
-            except NameError as nameerror:
-                dgettext['section'] = str(nameerror)
-                msg = _("Configuration file '%(configfile)s' is incomplete: "
-                    "cannot find section '[%(section)s]'. Ignoring it!\n")
+                self.configfile = unicode(configfile, PLATFORMENCODING)
+            except:
+                pass
+        self.options = defaultconfig
+        if not self._load_config(self.configfile, defaultconfig):
+            dgettext = dict()
+            if self.configfile != None and os.path.exists(self.configfile):
+                path = os.path.dirname(self.configfile)
+                old_configfile = self.configfile + PhotoPlace_Cfg_fileextold
+                try:
+                    shutil.copyfile(self.configfile, old_configfile)
+                except Exception as exception:
+                    dgettext['error'] = str(exception)
+                    dgettext['file'] = old_configfile.encode(PLATFORMENCODING)
+                    msg = _("Cannot create backup of configfile '%(file)s': %(error)s.\n")
+                    sys.stderr.write(msg % dgettext)
+            source_path = os.path.join(self.resourcedir, PhotoPlace_Cfg_altdir)
+            source_path = os.path.join(source_path, PhotoPlace_Cfg_file)
+            dgettext['fromfile'] = source_path.encode(PLATFORMENCODING)
+            dgettext['tofile'] = self.configfile.encode(PLATFORMENCODING)
+            try:
+                shutil.copyfile(source_path, self.configfile)
+            except Exception as exception:
+                dgettext['error'] = str(exception)
+                msg = _("Cannot overwrite '%(tofile)s': %(error)s.\n")
                 sys.stderr.write(msg % dgettext)
-            except ValueError as valueerror:
-                dgettext['error'] = str(valueerror)
-                msg = _("Cannot parse the configuration file '%(configfile)s': "
-                    "%(error)s. Ignoring it!\n") % dgettext
-                sys.stderr.write(msg)
-        else:
-            # Make configuration file
-            pass
+            else:
+                msg = _("Configuration recovered to '%(tofile)s'.\n")
+                sys.stderr.write(msg % dgettext)
+                # Try again
+                self._load_config(self.configfile, defaultconfig)
         self.logfile = self.options['main'].setdefault('logfile')
         self.loglevel = self.options['main'].setdefault('loglevel','')
         self.finalize = False
@@ -179,6 +203,11 @@ class UserFacade(object):
         self.mainloghandler.setFormatter(consoleformatter)
         self.logger.addHandler(self.mainloghandler)
         if self.logfile != None:
+            if not isinstance(self.logfile, unicode):
+                try:
+                    self.logfile = unicode(self.logfile, PLATFORMENCODING)
+                except:
+                    pass
             l = PhotoPlace_Cfg_loglevel
             try:
                 level = self.loglevel.lower()
@@ -194,7 +223,7 @@ class UserFacade(object):
                 self.logger.addHandler(loghandler)
                 self.logger.debug("# ---")
             except Exception as e:
-                msg = _("Cannot set logfile '%s'.") % str(e)
+                msg = _("Cannot set up logfile: %s.") % str(e)
                 self.logger.error(msg)
         self.logger.setLevel(PhotoPlace_Cfg_loglevel)
         self.pluginmanager = Plugins.pluginManager.PluginManager()
@@ -202,8 +231,49 @@ class UserFacade(object):
         self.logger.debug(
             "# Launched with command line args %s, files: %s" %
             (self.args, self.argfiles))
-        self.logger.debug(_("# with configuration file '%s'.") % self.configfile)
+        self.logger.debug(_("# with configuration file '%s'.") % \
+            self.configfile.encode(PLATFORMENCODING))
         self.logger.debug(_("# main options: %s") % self.options['main'])
+
+
+    def _load_config(self, configfile, defaultconfig):
+        if configfile != None:
+            dgettext = dict()
+            dgettext['configfile'] = configfile.encode(PLATFORMENCODING)
+            if not os.path.exists(configfile):
+                msg = _("Cannot find config file '%(configfile)s'.\n")
+                sys.stderr.write(msg % dgettext)
+            else:
+                configuration = ConfigParser.ConfigParser()
+                try:
+                    # Try to read the configuration file
+                    configuration.read(configfile)
+                except:
+                    msg = _("Cannot understand the format of config file '%(configfile)s'.\n")
+                    sys.stderr.write(msg % dgettext)
+                else:
+                    try:
+                        self.options = self.load_config(defaultconfig)
+                    except NameError as nameerror:
+                        dgettext['section'] = str(nameerror)
+                        msg = _("Configuration file '%(configfile)s' is incomplete: "
+                            "cannot find section '[%(section)s]'. Ignoring it!\n")
+                        sys.stderr.write(msg % dgettext)
+                    except ValueError as valueerror:
+                        dgettext['error'] = str(valueerror)
+                        msg = _("Cannot parse the configuration file '%(configfile)s': %(error)s.\n")
+                        sys.stderr.write(msg % dgettext)
+                    if self.options['main'].has_key('version'):
+                        try:
+                            version = int(self.options['main']['version'])
+                            if version >= PhotoPlace_Cfg_version:
+                                return True
+                        except:
+                            pass
+            return False
+        else:
+            # Make configuration file
+            return False
 
 
     def load_config(self, defaults):
@@ -277,15 +347,15 @@ class UserFacade(object):
     def save_config(self, nosections=PhotoPlace_CONFIG_NOCLONE):
         if self.configfile != None:
             dgettext = dict()
-            dgettext['file'] = self.configfile
+            dgettext['file'] = self.configfile.encode(PLATFORMENCODING)
             path = os.path.dirname(self.configfile)
-            dgettext['path'] = path
-            old_configfile = self.configfile + '.old'
+            dgettext['path'] = path.encode(PLATFORMENCODING)
+            old_configfile = self.configfile + PhotoPlace_Cfg_fileextold
             try:
                 shutil.copyfile(self.configfile, old_configfile)
             except Exception as exception:
                 dgettext['error'] = str(exception)
-                dgettext['file'] = old_configfile
+                dgettext['file'] = old_configfile.encode(PLATFORMENCODING)
                 msg = _("Cannot create backup of configfile to '%(file)s': %(error)s.")
                 msg = msg % dgettext
                 self.logger.error(msg)
@@ -338,7 +408,10 @@ class UserFacade(object):
                             fd_new.write(line)
                         else:
                             if section == 'main':
-                                current_value = self.state[item]
+                                try:
+                                    current_value = self.state[item]
+                                except:
+                                    current_value = old_value
                             else:
                                 try:
                                     current_value = self.options[section][item]
@@ -356,28 +429,28 @@ class UserFacade(object):
             self.logger.debug(_("No configuration file loaded. Nothing to do!"))
 
 
-    def recover_config(self):
+    def recover_config(self, directory=PhotoPlace_Cfg_altdir):
         dgettext = dict()
         if self.configfile != None:
             path = os.path.dirname(self.configfile)
-            old_configfile = self.configfile + '.old'
+            old_configfile = self.configfile + PhotoPlace_Cfg_fileextold
             try:
                 shutil.copyfile(self.configfile, old_configfile)
             except Exception as exception:
                 dgettext['error'] = str(exception)
-                dgettext['file'] = old_configfile
-                dgettext['path'] = path
+                dgettext['file'] = old_configfile.encode(PLATFORMENCODING)
+                dgettext['path'] = path.encode(PLATFORMENCODING)
                 msg = _("Cannot create backup of configfile '%(file)s': %(error)s.")
                 msg = msg % dgettext
                 mtype = _("OOps ...")
                 tip = _("Check if '%(path)s' exists or is writable.") % dgettext
                 self.logger.error(msg)
                 raise Error(msg, tip, exception.__class__.__name__)
-        source_path = os.path.join(self.state.resourcedir, 'conf')
+        source_path = os.path.join(self.state.resourcedir, directory)
         source_path = os.path.join(source_path, PhotoPlace_Cfg_file)
         dest_path = os.path.join(self.state.resourcedir_user, PhotoPlace_Cfg_file)
-        dgettext['fromfile'] = source_path
-        dgettext['tofile'] = dest_path
+        dgettext['fromfile'] = source_path.encode(PLATFORMENCODING)
+        dgettext['tofile'] = dest_path.encode(PLATFORMENCODING)
         try:
             shutil.copyfile(source_path, dest_path)
         except Exception as exception:
@@ -393,8 +466,13 @@ class UserFacade(object):
         self.logger.info(msg)
 
 
-    def get_filepath(self, filepath, subdir='templates'):
+    def get_filepath(self, filepath, subdir=u"templates"):
         filename = os.path.expandvars(filepath)
+        if  not isinstance(filename, unicode):
+            try:
+                filename = unicode(filename, PLATFORMENCODING)
+            except:
+                pass
         if not os.path.isfile(filename):
             orig = filename
             filename = os.path.join(self.state.resourcedir_user, filename)
@@ -516,6 +594,11 @@ class UserFacade(object):
             path = os.path.expanduser(path)
             path = os.path.expandvars(path)
             path = os.path.normpath(path)
+            if not isinstance(path, unicode):
+                try:
+                    path = unicode(path, PLATFORMENCODING)
+                except:
+                    pass
             if not os.path.isdir(path):
                 new_path = os.path.join(self.state.resourcedir_user, path)
                 if not os.path.isdir(new_path):
@@ -575,7 +658,7 @@ class UserFacade(object):
         if not capability == '*':
             cap = capability
         for plg in self.pluginmanager.get_plugins(cap):
-            if plugin:
+            if plugin != None:
                 if plg.__module__ == plugin:
                     plugins[plg.__module__] = plg
             else:
@@ -664,7 +747,7 @@ class UserFacade(object):
         return dotemplates
 
 
-    def LoadPhotos(self, directory=''):
+    def LoadPhotos(self, directory=u''):
         if self.finalize:
             return None
         if directory != self.state['photoinputdir']:
@@ -675,7 +758,7 @@ class UserFacade(object):
         return None
 
 
-    def ReadGPX(self, filename=''):
+    def ReadGPX(self, filename=u''):
         if filename != self.state['gpxinputfile']:
             self.state['gpxinputfile'] = filename
             readgpx = Actions.readGPXAction.ReadGPX(self.state)
@@ -764,10 +847,10 @@ class UserFacade(object):
             except Exception as exception:
                 dgettext = dict()
                 dgettext['error'] = str(exception)
-                dgettext['outputkml'] = self.state.outputdir
+                dgettext['outputkml'] = self.state.outputdir.encode(PLATFORMENCODING)
                 msg = _("Cannot make dir '%(outputkml)s': %(error)s.") % dgettext
                 self.logger.error(msg)
-                tip = _("Check if dir '%s' exists or is writable.") % self.state.outputdir
+                tip = _("Check if that dir exists or is writable.")
                 raise Error(msg, tip, e.__class__.__name__)
         if wait:
             self.MakeKML().run()

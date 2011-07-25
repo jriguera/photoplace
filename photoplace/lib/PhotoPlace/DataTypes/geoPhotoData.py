@@ -88,7 +88,7 @@ class GeoPhoto(object):
     implementacion. Moreover, it does not touch jpeg data so, the quality of photos
     is the original. More info about pyexiv2: http://tilloy.net/dev/pyexiv2/
     """
-    def __init__(self, path, name='-',
+    def __init__(self, path, name=u"--",
         lat = _GeoPhoto_DEFAULT_LAT,
         lon = _GeoPhoto_DEFAULT_LON,
         ele = _GeoPhoto_DEFAULT_ELE,
@@ -115,7 +115,7 @@ class GeoPhoto(object):
         self.name = name
         self.status = 0
         self.toffset = 0
-        if name == "-":
+        if name == u"--":
             self.name = os.path.basename(self.path)
         self.exif = None
         self.attr = {}
@@ -127,8 +127,8 @@ class GeoPhoto(object):
         self.ele = _GeoPhoto_DEFAULT_ELE
         self.azi = _GeoPhoto_DEFAULT_AZI
         self.tilt = _GeoPhoto_DEFAULT_TILT
-        self.dgettext = dict(image = self.name)
-        self.dgettext['image_path'] = self.path
+        self.dgettext = dict(image=self.name)
+        self.dgettext['image_path'] = self.path.encode('UTF-8')
         if loadexif :
             self.readExif()
         # Args take preference over exif
@@ -426,7 +426,7 @@ class GeoPhoto(object):
             mirror.save(dst)
         except Exception as e:
             self.dgettext['error'] = str(e)
-            self.dgettext['image_dst'] = dst
+            self.dgettext['image_dst'] = dst.encode('UTF-8')
             msg = _("Cannot copy '%(image_path)s' to '%(image_dst)s': %(error)s.")
             raise GeoPhotoError(msg % self.dgettext)
         if copyexif :
@@ -438,7 +438,7 @@ class GeoPhoto(object):
                 imexiv2.write()
             except Exception as e:
                 self.dgettext['error'] = str(e)
-                self.dgettext['image_dst'] = dst
+                self.dgettext['image_dst'] = dst.encode('UTF-8')
                 msg = _("Cannot copy image metadata from '%(image_path)s' "
                     "to '%(image_dst)s': %(error)s.")
                 raise GeoPhotoError(msg % self.dgettext)
@@ -466,14 +466,14 @@ class GeoPhoto(object):
 
     def __repr__(self):
         return "(%s, %s),(%f, %f, %f, %f, %f, %s, %s)" % \
-            (self.name, self.path,
+            (self.name.encode('UTF-8'), self.path.encode('UTF-8'),
                 self.lat, self.lon, self.ele, self.azi, self.tilt, self.time, self.ptime)
 
 
     def __str__(self):
         s1 = "[(name= %s, path=%s, attr=%s)\
             (lat=%f, lon=%f, ele=%f, azi=%f, tilt=%f, time=%s, toffset=%d, ptime=%s)]\n" % \
-            (self.name, self.path, self.attr,
+            (self.name.encode('UTF-8'), self.path.encode('UTF-8'), self.attr,
             self.lat, self.lon, self.ele, self.azi, self.tilt, self.time, self.toffset, self.ptime)
         s2 = "EXIF => %s" % self.exif
         return s1 + s2

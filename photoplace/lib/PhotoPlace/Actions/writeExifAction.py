@@ -29,7 +29,6 @@ __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera, September 2010"
 
 
-import os.path
 import threading
 import datetime
 
@@ -65,7 +64,7 @@ class WriteExif(Interface.Action, threading.Thread):
             self._notify_run(photo, 0)
             if photo.status < self.state.status:
                 continue
-            self.dgettext['photo'] = photo.name
+            self.dgettext['photo'] = photo.name.encode(PLATFORMENCODING)
             self.dgettext['photo_lon'] = photo.lon
             self.dgettext['photo_lat'] = photo.lat
             self.dgettext['photo_ele'] = photo.ele

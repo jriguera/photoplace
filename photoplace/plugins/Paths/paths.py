@@ -24,7 +24,7 @@ A plugin for PhotoPlace to generate paths from GPX tracks to show them in the KM
 """
 __program__ = "photoplace.paths"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.3.1"
+__version__ = "0.3.3"
 __date__ = "December 2010"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
@@ -48,7 +48,7 @@ from PhotoPlace.definitions import *
 # I18N gettext support
 __GETTEXT_DOMAIN__ = __program__
 __PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
-__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
+__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, u"locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
@@ -192,6 +192,10 @@ class KmlPaths(Plugin):
                         tmp_val = int(value)
                     elif tkey == KmlPaths_CONFKEY_TRACKS_DESC:
                         value = os.path.normpath(value)
+                        try:
+                            value = unicode(value, 'UTF-8')
+                        except:
+                            pass
                         if not os.path.isfile(value):
                             tmp_val = os.path.join(self.state.resourcedir, value)
                             if not os.path.isfile(tmp_val):
@@ -212,8 +216,32 @@ class KmlPaths(Plugin):
     def update(self, *args, **kwargs):
         if self.gui:
             self.gui.clear_tracks()
+            dgettext = dict()
+            num_tracks = 0
             for track in self.state.gpxdata.tracks:
-                self.gui.add_track(track.name, track.desc)
+                num_tracks += 1
+                dgettext['path_name'] = track.name
+                dgettext['path_desc'] = track.desc
+                dgettext['path_number'] = num_tracks
+                tip = _("Track #%(path_number)s, original name: %(path_name)s\n%(path_desc)s\n")
+                try:
+                    (tmin, tmax, duration) = track.timeMinMaxDuration()
+                    (lmin, lmax, length) = track.lengthMinMaxTotal()
+                    dgettext['path_npoints'] = len(track.listpoints())
+                    dgettext['path_len'] = length
+                    dgettext['path_time'] = duration
+                    dgettext['path_end'] = tmax
+                    dgettext['path_begin'] = tmin
+                    tip = tip + _("Points: %(path_npoints)s, length: %(path_len).3f m.\n")
+                    tip = tip + _("Duration: %(path_time)s\n")
+                    tip = tip + _("Begin time: %(path_begin)s\n")
+                    tip = tip + _("Final time: %(path_end)s\n")
+                except Exception as e:
+                    dgettext["error"] = str(e)
+                    msg = _("Error processing track #%(path_number)s '%(path_name)s': %(error)s.")
+                    self.logger.error(msg % dgettext)
+                tip = tip % dgettext
+                self.gui.add_track(track.name, track.desc, tip)
 
 
     @DRegister("LoadPhotos:end")
@@ -222,7 +250,13 @@ class KmlPaths(Plugin):
             name = os.path.basename(self.state['photoinputdir'])
             self.photodirlist.insert(0, (name, True))
             if self.gui:
-                self.gui.photo_path(newtrackname=name)
+                dgettext = dict()
+                dgettext['path_name'] = name
+                dgettext['path_desc'] = KmlPaths_KMLPATH_GENDESC
+                dgettext['path_npoints'] = num_photos
+                tip = _("Track '%(path_name)s'\n%(path_desc)s\nNumber of photos: %(path_npoints)s")
+                tip = tip % dgettext
+                self.gui.photo_path(newtrackname=name, tooltip=tip)
 
 
     @DRegister("MakeKML:finish")
@@ -312,8 +346,8 @@ class KmlPaths(Plugin):
             pathdata = TemplateDict(track.attr)
             # Options from 'defaults' section of config file
             pathdata.update(self.defaultsinfo)
-            pathdata[PhotoPlace_PathNAME] = str(track.name)
-            pathdata[PhotoPlace_PathDESC] = str(track.desc)
+            pathdata[PhotoPlace_PathNAME] = track.name
+            pathdata[PhotoPlace_PathDESC] = track.desc
             dgettext['path'] = track.name
             dgettext['path_desc'] = track.desc
             try:
@@ -352,9 +386,8 @@ class KmlPaths(Plugin):
                 num_tracks += 1
             except Exception as e:
                 dgettext["error"] = str(e)
-                msg = _("Error when track (path) '%(path)s' was being "
-                    "processed: %(error)s.") % dgettext
-                self.logger.error(msg)
+                msg = _("Error while processing track '%(path_name)s': %(error)s.")
+                self.logger.error(msg % dgettext)
             self.track_num += 1
         return num_tracks
 

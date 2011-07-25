@@ -44,7 +44,7 @@ from PhotoPlace.definitions import *
 # I18N gettext support
 __GETTEXT_DOMAIN__ = __program__
 __PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
-__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
+__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, u"locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
@@ -121,7 +121,17 @@ class KmlPaths(Plugin):
         safechars = "/\_-." + string.digits + string.ascii_letters
         for key, value in opt.iteritems():
             filename = os.path.normpath(os.path.expandvars(os.path.expanduser(value)))
+            if not isinstance(filename, unicode):
+                try:
+                    filename = unicode(filename, PLATFORMENCODING)
+                except:
+                    pass
             destination = os.path.normpath(key)
+            if not isinstance(destination, unicode):
+                try:
+                    destination = unicode(destination, PLATFORMENCODING)
+                except:
+                    pass
             destination = ''.join(c for c in destination if c in safechars)
             filekey = destination.replace('..','')
             if os.path.isfile(filename) and len(filekey) >= 3:
@@ -151,7 +161,7 @@ class KmlPaths(Plugin):
             except Exception as e:
                 dgettext = dict()
                 dgettext['error'] = str(e)
-                dgettext['file'] = orig
+                dgettext['file'] = orig.encode(PLATFORMENCODING)
                 msg = _("Cannot copy '%(file)s': %(error)s") % dgettext
                 self.logger.error(msg)
         self.logger.info(_("%d files copied by 'addfiles'.") % counter)

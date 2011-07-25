@@ -39,6 +39,7 @@ import pyGPX
 
 import Interface
 from PhotoPlace.userFacade import Error
+from PhotoPlace.definitions import *
 
 
 
@@ -48,7 +49,7 @@ class ReadGPX(Interface.Action, threading.Thread):
         Interface.Action.__init__(self, state, [state.lock_gpxdata])
         threading.Thread.__init__(self)
         self.gpxinputfile = state['gpxinputfile']
-        self.dgettext['gpxinputfile'] = self.gpxinputfile
+        self.dgettext['gpxinputfile'] = self.gpxinputfile  #.encode(PLATFORMENCODING)
         try:
             try:
                 self.fd = urllib.urlopen(self.gpxinputfile)
@@ -101,8 +102,7 @@ class ReadGPX(Interface.Action, threading.Thread):
         self.dgettext['num_trks'] = len(rgo.gpx.tracks)
         self._notify_end(rgo.gpx)
         msg = _("'%(gpxinputfile)s': %(num_trks)s tracks and %(num_wpts)s waypoints.")
-        msg = msg % self.dgettext
-        self.logger.info(msg)
+        self.logger.info(msg % self.dgettext)
         return self.state.gpxdata
 
 

@@ -48,7 +48,7 @@ class LoadPhotos(Interface.Action, threading.Thread):
         threading.Thread.__init__(self)
         self.append = append
         self.photoinputdir = state['photoinputdir']
-        self.dgettext['photoinputdir'] = self.photoinputdir
+        self.dgettext['photoinputdir'] = self.photoinputdir  #.encode(PLATFORMENCODING)
         self.allowed_names = PhotoPlace_Cfg_PhotoRegExp.search
         self.toffset = state['timeoffsetseconds']
         self.num_photos = 0
@@ -57,7 +57,8 @@ class LoadPhotos(Interface.Action, threading.Thread):
         except OSError as oserror:
             self.dgettext['error'] = str(oserror)
             msg = _("Cannot read '%(photoinputdir)s' directory: %(error)s.")
-            self.logger.error(msg % self.dgettext)
+            msg = msg % self.dgettext
+            self.logger.error(msg)
             tip = _("Check directory permissions")
             raise Error(msg, tip, "OSError")
 
@@ -76,7 +77,7 @@ class LoadPhotos(Interface.Action, threading.Thread):
         for fname in self.listphotoinputdir:
             if self.allowed_names(fname):
                 filename = os.path.join(self.photoinputdir, fname)
-                self.dgettext['photo'] = filename
+                self.dgettext['photo'] = filename  #.encode(PLATFORMENCODING)
                 try:
                     geophoto = geoPhotoData.GeoPhoto(filename)
                 except Exception as e:

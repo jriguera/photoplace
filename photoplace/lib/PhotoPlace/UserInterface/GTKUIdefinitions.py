@@ -33,9 +33,9 @@ import os.path
 
 
 
-GTKUI_RESOURCES_PATH = "gtkui"
-GTKUI_RESOURCE_GUIXML = os.path.join(GTKUI_RESOURCES_PATH, "photoplace.ui")
-GTKUI_RESOURCE_GUIICON = os.path.join(GTKUI_RESOURCES_PATH, "photoplace.png")
+GTKUI_RESOURCES_PATH = u"gtkui"
+GTKUI_RESOURCE_GUIXML = os.path.join(GTKUI_RESOURCES_PATH, u"photoplace.ui")
+GTKUI_RESOURCE_GUIICON = os.path.join(GTKUI_RESOURCES_PATH, u"photoplace.png")
 GTKUI_GETTEXT_DOMAIN = "photoplace"
 
 
@@ -73,8 +73,8 @@ TREEVIEWPHOTOINFO_GEOPHOTOEXIF_COLOR = "blue"
     TREEVIEWPHOTOINFO_COL_BGCOLOR,
 ) = range(5)
 
-TEMPLATES_KEY = 'templates'
-VARIABLES_KEY = "defaults"
+TEMPLATES_KEY = u"templates"
+VARIABLES_KEY = u"defaults"
 (
     VARIABLES_COLUMN_KEY,
     VARIABLES_COLUMN_VALUE,

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: photoplace.paths 0.3.1\n"
 "Report-Msgid-Bugs-To: <photoplace-project@googlegroups.com>\n"
-"POT-Creation-Date: 2011-06-12 21:47+0200\n"
+"POT-Creation-Date: 2011-07-25 20:39+0200\n"
 "PO-Revision-Date: 2011-06-12 22:00+0200\n"
 "Last-Translator: José Riguera López <jriguera@gmail.com>\n"
 "Language-Team: Spanish <photoplace-project@googlegroups.com>\n"
@@ -17,48 +17,49 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: GTKPaths.py:140
+#: ../GTKPaths.py:141
 msgid "Generate a path from geotagged photos"
 msgstr "Generar un camino con las fotos geoetiquetadas"
 
-#: GTKPaths.py:152
-msgid "Double click to edit these values ..."
-msgstr "Doble click para editar estos valores ..."
-
-#: GTKPaths.py:164
+#: ../GTKPaths.py:165
 msgid "Path Name/Parameter"
 msgstr "Camino Nombre/Parámetro"
 
-#: GTKPaths.py:173
+#: ../GTKPaths.py:174
 msgid "Description/Value"
 msgstr "Descripción/Valor"
 
-#: GTKPaths.py:278 paths.py:409
+#: ../GTKPaths.py:279 ../paths.py:442
 #, python-format
 msgid "Cannot read file '%s'."
 msgstr "Imposible leer fichero '%s'."
 
-#: GTKPaths.py:310
-msgid "file: "
-msgstr "fichero: "
+#: ../GTKPaths.py:311
+msgid "template: "
+msgstr "plantilla: "
 
-#: GTKPaths.py:379
+#: ../GTKPaths.py:319
+#, fuzzy
+msgid "Double click to edit values ..."
+msgstr "Doble click para editar estos valores ..."
+
+#: ../GTKPaths.py:382
 msgid "Select a color for path ..."
 msgstr "Seleccionar un color para el camino ..."
 
-#: GTKPaths.py:473
+#: ../GTKPaths.py:476
 msgid "[select a file]"
 msgstr "[seleccionar fichero]"
 
-#: GTKPaths.py:477
+#: ../GTKPaths.py:480
 msgid "PhotoPlace: Path Description Template"
 msgstr "PhotoPlace: Plantilla Descripción de Camino"
 
-#: GTKPaths.py:484
+#: ../GTKPaths.py:487
 msgid "Type the presentation text ... "
 msgstr "Escribir texto de presentación ..."
 
-#: GTKPaths.py:492
+#: ../GTKPaths.py:495
 #, python-format
 msgid ""
 "You can use simple HTML tags like list (<i>li</i>, <i>ul</i>) or <i>table</"
@@ -103,64 +104,111 @@ msgstr ""
 " También se pueden usar del mismo modo las variables definidas en la sección "
 "<i>Variables</i>."
 
-#: GTKPaths.py:524
+#: ../GTKPaths.py:527
 msgid "... or load it from"
 msgstr " ... o cargarlo desde"
 
-#: GTKPaths.py:624
+#: ../GTKPaths.py:627
 msgid "Select file ..."
 msgstr "Seleccionar fichero ..."
 
-#: GTKPaths.py:628
+#: ../GTKPaths.py:631
 msgid "All files"
 msgstr "Todos los ficheros"
 
-#: KmlPath.py:74
+#: ../KmlPath.py:74
 msgid "KML not correct. Cannot found 'Document' tag!"
 msgstr "KML incorrecto. No se puede hallar la etiqueta 'Document'!"
 
-#: paths.py:92
+#: ../paths.py:92
 msgid "Paths"
 msgstr "Caminos"
 
-#: paths.py:93
+#: ../paths.py:93
 msgid "Photo path"
 msgstr "Camino de las fotos"
 
-#: paths.py:94
+#: ../paths.py:94
 msgid "Generated path from geotagged photos"
 msgstr "Camino generado desde las fotos geoetiquetadas"
 
-#: paths.py:98
+#: ../paths.py:98
 msgid "Photos"
 msgstr "Fotos"
 
-#: paths.py:110
+#: ../paths.py:110
 msgid ""
 "A plugin to generate paths from GPX tracks to show them in the KML layer."
 msgstr ""
 "Una extensión para generar caminos desde los datos GPX y mostrarlos en la "
 "capa KML."
 
-#: paths.py:158
+#: ../paths.py:158
 msgid "Starting plugin ..."
 msgstr "Iniciando extensión ..."
 
-#: paths.py:202
+#: ../paths.py:206
 #, python-format
 msgid "Cannot understand the key '%s' in config file."
 msgstr "Imposible procesar la entrada '%s' en el fichero de configuración."
 
-#: paths.py:241
+#: ../paths.py:226
+#, python-format
+msgid ""
+"Track #%(path_number)s, original name: %(path_name)s\n"
+"%(path_desc)s\n"
+msgstr ""
+"Camino #%(path_number)s, nombre original: %(path_name)s\n"
+"%(path_desc)s\n"
+
+#: ../paths.py:235
+#, python-format
+msgid "Points: %(path_npoints)s, length: %(path_len).3f m.\n"
+msgstr "Puntos: %(path_npoints)s, longitud: %(path_len).3f m.\n"
+
+#: ../paths.py:236
+#, python-format
+msgid "Duration: %(path_time)s\n"
+msgstr "Duración: %(path_time)s\n"
+
+#: ../paths.py:237
+#, python-format
+msgid "Begin time: %(path_begin)s\n"
+msgstr "Tiempo inicial: %(path_begin)s\n"
+
+#: ../paths.py:238
+#, python-format
+msgid "Final time: %(path_end)s\n"
+msgstr "Tiempo final: %(path_end)s\n"
+
+#: ../paths.py:241
+#, fuzzy, python-format
+msgid "Error processing track #%(path_number)s '%(path_name)s': %(error)s."
+msgstr ""
+"Ocurrió un error mientras se procesaba el camino (track) '%(path)s': "
+"%(error)s."
+
+#: ../paths.py:257
+#, python-format
+msgid ""
+"Track '%(path_name)s'\n"
+"%(path_desc)s\n"
+"Number of photos: %(path_npoints)s"
+msgstr ""
+"Camino '%(path_name)s'\n"
+"%(path_desc)s\n"
+"Número de fotos: %(path_npoints)s"
+
+#: ../paths.py:275
 msgid "Processing all tracks (paths) from GPX data ... "
 msgstr "Procesando todos los caminos (tracks) desde los datos GPX ..."
 
-#: paths.py:246
+#: ../paths.py:280
 #, python-format
 msgid "%s paths have been generated for KML data."
 msgstr "%s caminos han sido generados para los datos KML."
 
-#: paths.py:274
+#: ../paths.py:308
 #, python-format
 msgid ""
 "Generated WayPoint from '%(photo)s' at %(photo_time)s (UTC=%(photo_tutc)s) "
@@ -171,7 +219,7 @@ msgstr ""
 "%(photo_tutc)s) con las coordenadas (lon=%(photo_lon).8f, lat="
 "%(photo_lat).8f, alt=%(photo_ele).8f)."
 
-#: paths.py:295
+#: ../paths.py:329
 #, python-format
 msgid ""
 "Track '%(track_name)s' was generated from %(track_numphotos)s geotagged "
@@ -180,13 +228,13 @@ msgstr ""
 "Camino '%(track_name)s' generado a partir de %(track_numphotos)s fotos "
 "geoetiquetadas."
 
-#: paths.py:299
+#: ../paths.py:333
 #, python-format
 msgid "Photo track '%(track_name)s' is empty due to no geotagged photos!"
 msgstr ""
 "Camino '%(track_name)s' vacío debido a que no tiene fotos geoetiquetadas!"
 
-#: paths.py:348
+#: ../paths.py:382
 #, python-format
 msgid ""
 "Path '%(path)s', ('%(path_desc)s'): points=%(path_npoints)d, segments="
@@ -197,17 +245,20 @@ msgstr ""
 "%(path_nsegments)d, longitud=%(path_len)s, velmedia=%(path_avgsp).3f, "
 "tiempo='%(path_time)s'"
 
-#: paths.py:355
-#, python-format
-msgid "Error when track (path) '%(path)s' was being processed: %(error)s."
+#: ../paths.py:389
+#, fuzzy, python-format
+msgid "Error while processing track '%(path_name)s': %(error)s."
 msgstr ""
 "Ocurrió un error mientras se procesaba el camino (track) '%(path)s': "
 "%(error)s."
 
-#: paths.py:434
+#: ../paths.py:467
 msgid "Resetting plugin ..."
 msgstr "Reseteando extensión ..."
 
-#: paths.py:447
+#: ../paths.py:480
 msgid "Ending plugin ..."
 msgstr "Finalizando extensión ..."
+
+#~ msgid "file: "
+#~ msgstr "fichero: "

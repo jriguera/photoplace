@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: photoplace.addfiles 0.1.1\n"
 "Report-Msgid-Bugs-To: <photoplace-project@googlegroups.com>\n"
-"POT-Creation-Date: 2011-06-12 21:38+0200\n"
+"POT-Creation-Date: 2011-07-25 20:31+0200\n"
 "PO-Revision-Date: 2011-06-12 21:31+0200\n"
 "Last-Translator: José Riguera López <jriguera@gmail.com>\n"
 "Language-Team: Spanish <photoplace-project@googlegroups.com>\n"
@@ -17,58 +17,58 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: addfiles.py:75
+#: ../addfiles.py:75
 msgid "A plugin to add files to KMZ"
 msgstr "Una extensión para añadir ficheros al KMZ"
 
-#: addfiles.py:115
+#: ../addfiles.py:115
 msgid "Starting plugin ..."
 msgstr "Iniciando extensión ..."
 
-#: addfiles.py:155
+#: ../addfiles.py:165
 #, python-format
 msgid "Cannot copy '%(file)s': %(error)s"
 msgstr "Imposible copiar '%(file)s': %(error)s"
 
-#: addfiles.py:157
+#: ../addfiles.py:167
 #, python-format
 msgid "%d files copied by 'addfiles'."
 msgstr "%d ficheros copiados por 'addfiles'."
 
-#: addfiles.py:167
+#: ../addfiles.py:177
 msgid "Ending plugin ..."
 msgstr "Finalizando extensión ..."
 
-#: GTKAddFiles.py:83
+#: ../GTKAddFiles.py:83
 #, python-format
 msgid "Type %%(%s)s to get value of each variable"
 msgstr "Escribir %%(%s)s para acceder al valor de cada variable"
 
-#: GTKAddFiles.py:98
+#: ../GTKAddFiles.py:98
 msgid "List of additional files to be included into KMZ"
 msgstr "Lista de ficheros adicionales para ser incluidos en el KMZ"
 
-#: GTKAddFiles.py:113
+#: ../GTKAddFiles.py:113
 msgid "Variable"
 msgstr "Variable"
 
-#: GTKAddFiles.py:120
+#: ../GTKAddFiles.py:120
 msgid "Value (Destination)"
 msgstr "Valor (Destino)"
 
-#: GTKAddFiles.py:126
+#: ../GTKAddFiles.py:126
 msgid "Original file"
 msgstr "Fichero original"
 
-#: GTKAddFiles.py:133
+#: ../GTKAddFiles.py:133
 #, fuzzy
 msgid "Add file"
 msgstr "Añadir fichero"
 
-#: GTKAddFiles.py:136
+#: ../GTKAddFiles.py:136
 msgid "Delete"
 msgstr "Eliminar"
 
-#: GTKAddFiles.py:199
+#: ../GTKAddFiles.py:204
 msgid "Select a file ..."
 msgstr "Seleccionar un fichero ..."

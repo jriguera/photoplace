@@ -25,7 +25,7 @@ GTK User Interface.
 """
 __program__ = "photoplace.paths"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.3.1"
+__version__ = "0.3.3"
 __date__ = "December 2010"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
@@ -59,7 +59,7 @@ from PhotoPlace.UserInterface.GTKUI import TextViewCompleter
 # I18N gettext support
 __GETTEXT_DOMAIN__ = __program__
 __PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
-__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
+__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, u"locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
@@ -86,8 +86,9 @@ except Exception as e:
     _GTKPaths_COLUMN_EDITKEY,
     _GTKPaths_COLUMN_EDITVAL,
     _GTKPaths_COLUMN_CLICK,
+    _GTKPaths_COLUMN_TOOLTIP,
     _GTKPaths_COLUMN_FAMILY,
-) = range(11)
+) = range(12)
 
 _GTKPaths_DESCRIPTION_CHARS = 45
 _GTKPaths_DEFAULT_FAMILY = None
@@ -146,10 +147,10 @@ class GTKPaths(object):
         scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         # create model for parameters
         self.treestore = gtk.TreeStore(
-            bool, bool, str, str, str, str, str, bool, bool, bool, str)
+            bool, bool, str, str, str, str, str, bool, bool, bool, str, str)
         treeview = gtk.TreeView(self.treestore)
         treeview.set_rules_hint(True)
-        treeview.set_tooltip_text(_("Double click to edit these values ..."))
+        treeview.set_tooltip_column(_GTKPaths_COLUMN_TOOLTIP)
         treeview.get_selection().set_mode(gtk.SELECTION_SINGLE)
         # columns
         renderer = gtk.CellRendererToggle()
@@ -225,19 +226,19 @@ class GTKPaths(object):
         self.tracknum = 0
 
 
-    def photo_path(self, widget=None, newtrackname=None):
+    def photo_path(self, widget=None, newtrackname=None, tooltip=''):
         if self.state['photoinputdir'] and self.options:
             self.options[KmlPaths_CONFKEY_KMLPATH_GENTRACK] = \
                 self.checkbutton_genpath.get_active()
             if self.options[KmlPaths_CONFKEY_KMLPATH_GENTRACK]:
                 if newtrackname != None:
-                    self.add_track(newtrackname, KmlPaths_KMLPATH_GENDESC, 0)
+                    self.add_track(newtrackname, KmlPaths_KMLPATH_GENDESC, tooltip, 0)
                     self.photopaths += 1
                 else:
                     position = len(self.photodirlist) - 1
                     while position >= 0:
                         name = self.photodirlist[position][0]
-                        self.add_track(name, KmlPaths_KMLPATH_GENDESC, 0)
+                        self.add_track(name, KmlPaths_KMLPATH_GENDESC, tooltip, 0)
                         self.photopaths += 1
                         position -= 1
             else:
@@ -290,7 +291,7 @@ class GTKPaths(object):
         self.goptions = goptions
 
 
-    def add_track(self, nam, des, pos=None):
+    def add_track(self, nam, des, tooltip='', pos=None):
         if pos == None:
             number = divmod(self.tracknum, len(self.tracksinfo)-1)[1]
             trackinfo = self.tracksinfo[number + 1]
@@ -307,7 +308,7 @@ class GTKPaths(object):
             if os.path.isfile(filename):
                 description = self.get_description(filename)
                 filename = os.path.basename(filename)
-                desc = '\t[' + _('file: ') + filename + ']'
+                desc = '\t[' + _('template: ') + filename + ']'
                 desc_file = filename
         color = KmlPaths_TRACKS_COLOR
         if trackinfo.has_key(KmlPaths_CONFKEY_TRACKS_COLOR):
@@ -315,6 +316,8 @@ class GTKPaths(object):
         width = KmlPaths_TRACKS_WIDTH
         if trackinfo.has_key(KmlPaths_CONFKEY_TRACKS_WIDTH):
             width = trackinfo[KmlPaths_CONFKEY_TRACKS_WIDTH]
+        default_tip = _("Double click to edit values ...")
+        tip = tooltip + '\n' + default_tip
         if pos != None:
             active = True
             # POS = 0 -> track from photos
@@ -329,20 +332,20 @@ class GTKPaths(object):
             ite = self.treestore.insert(None, pos,
                 [active, True, str(KmlPaths_CONFKEY_TRACKS_NAME),
                     name, desc, description, desc_file, 
-                    True, True, True, _GTKPaths_DESC_FAMILY])
+                    True, True, True, tip, _GTKPaths_DESC_FAMILY])
         else:
             ite = self.treestore.append(None,
                 [True, True, str(KmlPaths_CONFKEY_TRACKS_NAME),
                     name, desc, description, desc_file, 
-                    True, True, True, _GTKPaths_DESC_FAMILY])
+                    True, True, True, tip, _GTKPaths_DESC_FAMILY])
         self.treestore.append(ite,
             [None, False, str(KmlPaths_CONFKEY_TRACKS_COLOR),
                 str(KmlPaths_CONFKEY_TRACKS_COLOR), color, None, None, 
-                False, True, True, _GTKPaths_DEFAULT_FAMILY])
+                False, True, True, default_tip, _GTKPaths_DEFAULT_FAMILY])
         self.treestore.append(ite,
             [None, False, str(KmlPaths_CONFKEY_TRACKS_WIDTH),
                 str(KmlPaths_CONFKEY_TRACKS_WIDTH), width, None, None, 
-                False, True, False, _GTKPaths_DEFAULT_FAMILY])
+                False, True, False, default_tip, _GTKPaths_DEFAULT_FAMILY])
         self.tracknum += 1
 
 
@@ -472,7 +475,7 @@ class GTKPaths(object):
         self.popup = None
         filename = _('[select a file]')
         prefilename = self.treestore.get_value(ite, _GTKPaths_COLUMN_FILE)
-        if prefilename:
+        if prefilename :
             filename = os.path.basename(prefilename)
         dialog = gtk.Dialog(_('PhotoPlace: Path Description Template'), self.window,
             gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
@@ -620,7 +623,7 @@ class GTKPaths(object):
             nline += 1
 
 
-    def _load_file(self, widget, textview, ite,prefilename=None):
+    def _load_file(self, widget, textview, ite, prefilename=None):
         dialog = gtk.FileChooserDialog(title=_("Select file ..."),
             parent=self.window, action=gtk.FILE_CHOOSER_ACTION_OPEN,
             buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
@@ -628,7 +631,7 @@ class GTKPaths(object):
         ffilter.set_name(_("All files"))
         ffilter.add_pattern("*")
         dialog.add_filter(ffilter)
-        if prefilename:
+        if prefilename :
             dialog.set_current_folder(os.path.dirname(prefilename))
         filename = None
         if dialog.run() == gtk.RESPONSE_OK:

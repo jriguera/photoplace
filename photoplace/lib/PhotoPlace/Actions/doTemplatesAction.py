@@ -44,9 +44,9 @@ class DoTemplates(Interface.Action):
 
     def __init__(self, state, options):
         Interface.Action.__init__(self, state, [state.lock_kmldata])
-        self.templates = {}
+        self.templates = dict()
         self.kmltemplate = state["kmltemplate"]
-        self.dgettext['kmltemplate'] = self.kmltemplate
+        self.dgettext['kmltemplate'] = self.kmltemplate.encode(PLATFORMENCODING)
         self.resourcedir = state.resourcedir
         self.userresourcedir = state.resourcedir_user
         self.options = options
@@ -55,9 +55,14 @@ class DoTemplates(Interface.Action):
 
     def ini(self, *args, **kwargs):
         errors = []
-        templates_key = 'templates'
+        templates_key = u'templates'
         for lpos, filename in self.options[templates_key].iteritems():
             filename = os.path.expandvars(filename)
+            if not isinstance(filename, unicode):
+                try:
+                    filename = unicode(filename, PLATFORMENCODING)
+                except:
+                    pass
             file_exist = True
             if not os.path.isfile(filename):
                 orig_filename = filename
@@ -71,13 +76,13 @@ class DoTemplates(Interface.Action):
                         if not os.path.isfile(filename):
                             filename = os.path.join(self.resourcedir, templates_key, orig_filename)
                     if not os.path.isfile(filename):
-                        msg = _("Template file '%s' does not exist!.") % filename
+                        msg = _("Template file '%s' does not exist!.") % filename.encode(PLATFORMENCODING)
                         self.logger.error(msg)
                         file_exist = False
             if file_exist:
                 self.templates[lpos] = filename
             else:
-                errors.append(filename)
+                errors.append(filename.encode(PLATFORMENCODING))
         if errors:
             msg = _("Those templates do not exist! : %s.") % errors
             tip = _("Check file path and permissions of templates "
@@ -98,7 +103,7 @@ class DoTemplates(Interface.Action):
             tip = _("Check file path and permissions of 'KmlTemplate' value "
                 "defined in the configuration file")
             raise Error(msg, tip, "KmlDataError")
-        self.dgettext['templates'] = str(self.templates)
+        self.dgettext['templates'] = ''.join(i.encode(PLATFORMENCODING) + ' ' for i in self.templates)
         msg = _("Setting up main template '%(kmltemplate)s'")
         self.logger.info(msg % self.dgettext)
         try:

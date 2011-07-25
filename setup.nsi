@@ -21,9 +21,12 @@
 !define PRODUCT_EXEC "photoplace.exe"
 !define PRODUCT_VERSION "0.5.0"
 !define PRODUCT_PUBLISHER "Jose Riguera"
+!define PRODUCT_AUTHOR "Jose Riguera"
 !define PRODUCT_WEB_SITE "http://code.google.com/p/photoplace/"
 !define PRODUCT_DONATIONS "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=N6XRW9DLPFSRN"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\photoplace.exe"
+!define PRODUCT_CFG_REGKEY "Software\PhotoPlace"
+!define PRODUCT_CFG_FILE "share\photoplace\conf\photoplace.cfg"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_STARTMENU_REGVAL "NSIS:StartMenuDir"
@@ -156,7 +159,7 @@ Section -AdditionalIcons
   SetShellVarContext all
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
   WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
-  WriteIniStr "$SMPROGRAMS\$ICONS_GROUP\Go to the Homepage.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
+  WriteIniStr "$SMPROGRAMS\$ICONS_GROUP\Website.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
   WriteIniStr "$SMPROGRAMS\$ICONS_GROUP\Donate.url" "InternetShortcut" "URL" "${PRODUCT_DONATIONS}"
   CreateShortCut "$SMPROGRAMS\$ICONS_GROUP\Uninstall.lnk" "$INSTDIR\uninst.exe" "" "" ""
   !insertmacro MUI_STARTMENU_WRITE_END
@@ -170,6 +173,10 @@ Section -Post
   WriteUninstaller "$INSTDIR\uninst.exe"
   SetShellVarContext all
   WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\${PRODUCT_EXEC}"
+  WriteRegStr HKLM "${PRODUCT_CFG_REGKEY}" "cfgfile" "$INSTDIR\${PRODUCT_CFG_FILE}"
+  WriteRegStr HKLM "${PRODUCT_CFG_REGKEY}" "author" "${PRODUCT_AUTHOR}"
+  WriteRegStr HKLM "${PRODUCT_CFG_REGKEY}" "version" "${PRODUCT_VERSION}"  
+  WriteRegStr HKLM "${PRODUCT_CFG_REGKEY}" "url" "${PRODUCT_WEB_SITE}"    
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninst.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\${PRODUCT_EXEC}"

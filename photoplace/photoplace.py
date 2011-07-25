@@ -65,11 +65,11 @@ except:
 __PROGRAM__ = 'photoplace'
 __PROGRAM_PATH__ = None
 __GETTEXT_DOMAIN__ = __PROGRAM__
-__RESOURCES_PATH__ = 'share'
-__LOCALE_PATH__ = 'locale'
-__LIB_PATH__ = 'lib'
-__RESOURCES_CONF_PATH__ = 'conf'
-__SHARE_DIR__ = os.path.join('share', 'photoplace')
+__RESOURCES_PATH__ = u'share'
+__LOCALE_PATH__ = u'locale'
+__LIB_PATH__ = u'lib'
+__RESOURCES_CONF_PATH__ = u'conf'
+__SHARE_DIR__ = os.path.join(u'share', u'photoplace')
 
 
 # hasattr(sys, "frozen") -> new py2exe
@@ -78,9 +78,9 @@ __SHARE_DIR__ = os.path.join('share', 'photoplace')
 if hasattr(sys, "frozen") or \
     hasattr(sys, "importers") or \
     imp.is_frozen("__main__"):
-    __PROGRAM_PATH__ = os.path.dirname(sys.executable)
+    __PROGRAM_PATH__ = os.path.dirname(unicode(sys.executable, locale.getpreferredencoding()))
 else:
-    __PROGRAM_PATH__ = os.path.dirname(os.path.realpath(__file__))
+    __PROGRAM_PATH__ = os.path.dirname(unicode(os.path.realpath(__file__), locale.getpreferredencoding()))
 
 lib_path = os.path.join(__PROGRAM_PATH__, __LIB_PATH__)
 if os.path.isdir(lib_path):
@@ -93,7 +93,7 @@ resources_path = os.path.join(__PROGRAM_PATH__, __RESOURCES_PATH__)
 if not os.path.isdir(resources_path):
     # installed
     __RESOURCES_PATH__ = os.path.realpath(
-        os.path.join(__PROGRAM_PATH__, '..', __RESOURCES_PATH__, __PROGRAM__))
+        os.path.join(__PROGRAM_PATH__, u'..', __RESOURCES_PATH__, __PROGRAM__))
 else:
     new_resources_path = os.path.join(resources_path, __PROGRAM__)
     if not os.path.isdir(new_resources_path):
@@ -107,7 +107,7 @@ locale_path = os.path.join(__PROGRAM_PATH__, __LOCALE_PATH__)
 if not os.path.isdir(locale_path):
     # installed
     locale_path = os.path.realpath(
-        os.path.join('..', __SHARE_DIR__, __LOCALE_PATH__))
+        os.path.join(u'..', __SHARE_DIR__, __LOCALE_PATH__))
     if not os.path.isdir(locale_path):
         __LOCALE_PATH__ = None
     else:
@@ -163,8 +163,8 @@ import PhotoPlace.userFacade as userFacade
 def program(args=sys.argv):
     configfile = None
     dgettext = dict()
-    dgettext['defaultconfigfile'] = PhotoPlace_Cfg_file
-    dgettext['defaultconfigdir'] = PhotoPlace_Cfg_dir
+    dgettext['defaultconfigfile'] = PhotoPlace_Cfg_file.encode(PLATFORMENCODING)
+    dgettext['defaultconfigdir'] = PhotoPlace_Cfg_dir.encode(PLATFORMENCODING)
     dgettext['program'] = PhotoPlace_name
     dgettext['version'] = PhotoPlace_version
     dgettext['url'] = PhotoPlace_url
@@ -207,43 +207,27 @@ def program(args=sys.argv):
         help=_("Launch the batch mode, with command line args."))
     options_parser.add_option("--fluzo", help=optparse.SUPPRESS_HELP)
     (options, oargs) = options_parser.parse_args()
+    # Parse command line
     if options.configfile :
         configfile = os.path.expandvars(os.path.expanduser(options.configfile))
+        try:
+            configfile = unicode(configfile, PLATFORMENCODING)
+        except:
+            pass
     else:
         configfile = PhotoPlace_Cfg_file
         if not os.path.isfile(configfile):
             configfile = os.path.join(PhotoPlace_Cfg_dir, configfile)
-        if not os.path.isfile(configfile):
-            if not os.path.exists(PhotoPlace_Cfg_dir):
-                try:
-                    os.makedirs(PhotoPlace_Cfg_dir)
-                except Exception as e:
-                    sys.stderr.write(_("Cannot create files in '%s'.\n") % PhotoPlace_Cfg_dir)
-            orig_cfg = os.path.join(__RESOURCES_PATH__, __RESOURCES_CONF_PATH__)
-            try:
-                shutil.copy(os.path.join(orig_cfg, PhotoPlace_Cfg_file), PhotoPlace_Cfg_dir)
-            except Exception as e:
-                sys.stderr.write(_("Cannot create default configfile in '%s'.\n") % PhotoPlace_Cfg_dir)
-    if not os.path.isfile(configfile):
-        sys.stderr.write(_("Cannot find configuration file '%s'.\n") % configfile)
-        configfile = os.path.join(__RESOURCES_PATH__, __RESOURCES_CONF_PATH__, PhotoPlace_Cfg_file)
-        if os.path.isfile(configfile):
-            sys.stderr.write(_("Reading default config file '%s'.\n") % configfile)
-        else:
-            sys.stderr.write(_("Default config file '%s' not found.\n") % configfile)
-            sys.stderr.write(_("Using internal settings ...\n"))
-            configfile = None
-    if configfile != None:
-        configuration = ConfigParser.ConfigParser()
+    cfg_dir = os.path.dirname(os.path.realpath(configfile))
+    if not os.path.exists(cfg_dir):
         try:
-            # Try to read the configuration file
-            configuration.read(configfile)
+            os.makedirs(cfg_dir)
         except:
-            msg = _("Cannot understand the format of config file '%s'. Ignoring it!.")
-            sys.stderr.write(msg % configfile)
-            configfile = None
-        finally:
-            configuration = None
+            cfg_dir = u'.'
+    # redirect standard I/O to files
+    if hasattr(sys, "frozen") or hasattr(sys, "importers") or imp.is_frozen("__main__"):
+        sys.stdout = open(os.path.join(cfg_dir, u"stdout.log"), 'w+')
+        sys.stderr = open(os.path.join(cfg_dir, u"stderr.log"), 'w+')
     userfacade = userFacade.UserFacade(__RESOURCES_PATH__, configfile, args, options, oargs)
     if not options.batch:
         try:

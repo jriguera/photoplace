@@ -20,6 +20,7 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 """
+A GTK+ implementation for a user interface.
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
@@ -366,6 +367,7 @@ class PhotoPlaceGUI(InterfaceUI):
         self.set_progressbar(None, 0.0)
         self.num_photos_process = 0
         self.reloadtemplates = False
+        self.firstloadedphotos = False
         self.variables_iterator = None
         self.in_process = False
 
@@ -374,12 +376,6 @@ class PhotoPlaceGUI(InterfaceUI):
         if sys.platform.startswith('win'):
             sleeper = lambda: time.sleep(.001) or True
             gobject.timeout_add(400, sleeper)
-            # redirect standard I/O to files
-            cfg_dir = '.'
-            if self.userfacade.configfile != None:
-                cfg_dir = os.path.dirname(self.userfacade.configfile)
-            sys.stdout = open(os.path.join(cfg_dir, 'stdout.log'), 'w+')
-            sys.stderr = open(os.path.join(cfg_dir, 'stderr.log'), 'w+')
         loaded_templates = self.action_loadtemplates()
         self._show_variables()
         if load_files and loaded_templates:
@@ -562,8 +558,8 @@ class PhotoPlaceGUI(InterfaceUI):
             notebookframe = None
             menuitem = gtk.CheckMenuItem(str(plg))
             self.menuitem_plugins.add(menuitem)
-            dgettext['plugin_name'] = str(plg)
-            dgettext['plugin_version'] = str(plgobj.version)
+            dgettext['plugin_name'] = plg
+            dgettext['plugin_version'] = plgobj.version
             dgettext['plugin_author'] = cgi.escape(plgobj.author)
             dgettext['plugin_mail'] = cgi.escape(plgobj.email)
             dgettext['plugin_cpr'] = cgi.escape(plgobj.copyright)
@@ -578,9 +574,9 @@ class PhotoPlaceGUI(InterfaceUI):
             menuitem.set_tooltip_markup(markup % dgettext)
             if plgobj.capabilities['GUI'] == PLUGIN_GUI_GTK:
                 notebooklabel = gtk.Label()
-                notebooklabel.set_markup(str("   <b>%s</b>  " % plg))
+                notebooklabel.set_markup("   <b>%s</b>  " % plg)
                 labelop = gtk.Label()
-                labelop.set_markup(str(_("<b>Options</b>")))
+                labelop.set_markup(_("<b>Options</b>"))
                 labelop.set_padding(2, 8)
                 notebookframe = gtk.Frame()
                 notebookframe.set_label_widget(labelop)
@@ -656,6 +652,11 @@ class PhotoPlaceGUI(InterfaceUI):
     @DObserver
     def _log_to_textview_observer(self, formatter, record):
         msg = formatter.format(record)
+        if not isinstance(msg, unicode):
+            try:
+                msg = unicode(msg, PLATFORMENCODING)
+            except:
+                pass
         level = "error"
         if record.levelno == logging.DEBUG:
             level = "debug"
@@ -700,11 +701,14 @@ class PhotoPlaceGUI(InterfaceUI):
             self.progressbar_percent = 1.0
         if percent == 0.0:
             msg = _("Let's Go!")
+            tip = _("Click me to start!")
         else:
             msg = "[" + str(int(self.progressbar_percent * 100)) + "%]"
-            if text:
+            tip = _("I am working! Please, wait a moment ...")
+            if text != None:
                 msg = msg + "  " + text
         self.progressbar.set_text(msg)
+        self.progressbar.set_tooltip_markup(tip)
         self.progressbar.set_fraction(self.progressbar_percent)
 
     @DObserver
@@ -734,8 +738,10 @@ class PhotoPlaceGUI(InterfaceUI):
     @DObserver
     def _set_loadphotos_end_observer(self, *args):
         gobject.idle_add(self.set_progressbar, None, 0.0)
-        # order by name
-        self["treeviewcolumn-geophotos-picture"].clicked()
+        if not self.firstloadedphotos:
+            # order by name (only first time)
+            self["treeviewcolumn-geophotos-picture"].clicked()
+            self.firstloadedphotos = True
 
 
     # ##############################################
@@ -821,7 +827,7 @@ class PhotoPlaceGUI(InterfaceUI):
         kmz_save_dlg.destroy()
         if filename != None:
             try:
-                self.userfacade.state['outputfile'] = filename
+                self.userfacade.state['outputfile'] = unicode(filename, 'UTF-8')
                 return True
             except Error as e:
                 self.show_dialog(e.type, e.msg, e.tip)
@@ -858,7 +864,7 @@ class PhotoPlaceGUI(InterfaceUI):
         if mode:
             filename = self.userfacade.state['outputfile']
             if len(filename) > 34:
-                filename = os.path.basename(filename)
+                filename = " ... " + os.path.basename(filename)
             self['togglebutton-outfile'].set_label(_("Generate: ") + filename)
             self['hscale-quality'].set_sensitive(True)
             self['hscale-zoom'].set_sensitive(True)
@@ -910,14 +916,21 @@ class PhotoPlaceGUI(InterfaceUI):
 
     def _set_photouri(self, name=None):
         if name != None:
-            self.userfacade.state['photouri'] = name
-            self["entry-photouri"].set_text(name)
+            photouri = name
+            if not isinstance(name, unicode):
+                try:
+                    photouri = unicode(name, 'UTF-8')
+                except:
+                    pass
+            self.userfacade.state['photouri'] = photouri
+            self["entry-photouri"].set_text(photouri)
         else:
             photouri = self["entry-photouri"].get_text().strip()
             if not photouri:
                 photouri = self.userfacade.state['photouri']
                 self["entry-photouri"].set_text(photouri)
             else:
+                photouri = unicode(photouri, 'UTF-8')
                 self.userfacade.state['photouri'] = photouri
                 photouri = self.userfacade.state['photouri']
                 self["entry-photouri"].set_text(photouri)
@@ -981,7 +994,7 @@ class PhotoPlaceGUI(InterfaceUI):
         dgettext = dict()
         dgettext['name'] = geophoto.name
         dgettext['path'] = geophoto.path
-        dgettext['date'] = geophoto.time.strftime("%A, %d. %B %Y")
+        dgettext['date'] = geophoto.time.strftime(PhotoPlace_Cfg_timeformat)
         dgettext['time'] = geophoto.time.strftime("%H:%M:%S")
         dgettext['lon'] = geophoto.lon
         dgettext['lat'] = geophoto.lat
@@ -1091,19 +1104,28 @@ class PhotoPlaceGUI(InterfaceUI):
     def _show_variables(self, *args, **kwargs):
         model = self["treeview-variables"].get_model()
         model.clear()
-        self.variables_iterator = model.append(None, [str(_("Main Parameters")), None, False])
-        iterator_other = model.append(None, [str(_("Other Parameters")), None, False])
+        self.variables_iterator = model.append(None, [_("Main Parameters"), None, False])
+        iterator_other = model.append(None, [_("Other Parameters"), None, False])
         for k, v in self.userfacade.options[VARIABLES_KEY].iteritems():
+            if not isinstance(k, unicode):
+                try:
+                    k = unicode(k, PLATFORMENCODING)
+                except:
+                    pass
             if k in VARIABLES_OTHER:
-                model.append(iterator_other, [str(k), str(v), True])
+                model.append(iterator_other, [k, v, True])
             else:
                 if k == 'author' and not v:
-                    v = getpass.getuser()
-                    self.userfacade.options[VARIABLES_KEY][k] = v
+                    try:
+                        v = unicode(getpass.getuser(), PLATFORMENCODING)
+                        self.userfacade.options[VARIABLES_KEY][k] = v
+                    except:
+                        pass
                 elif k == 'date' and not v:
-                    v = datetime.date.today().strftime("%A %d. %B %Y")
+                    v = datetime.date.today().strftime(PhotoPlace_Cfg_timeformat)
+                    v = unicode(v, PLATFORMENCODING)
                     self.userfacade.options[VARIABLES_KEY][k] = v
-                model.append(self.variables_iterator, [str(k), str(v), True])
+                model.append(self.variables_iterator, [k, v, True])
         # Templates
         self["treeview-variables"].expand_to_path((0))
         model = self["combobox-templates"].get_model()
@@ -1116,10 +1138,15 @@ class PhotoPlaceGUI(InterfaceUI):
             lkey = key
         else:
             lkey = self['entry-variables-add'].get_text().strip()
+            if not isinstance(lkey, unicode):
+                try:
+                    lkey = unicode(lkey, 'UTF-8')
+                except:
+                    pass
         if lkey and not self.userfacade.options[VARIABLES_KEY].has_key(lkey):
             model = self["treeview-variables"].get_model()
-            iterator = model.append(self.variables_iterator, [str(lkey), str(value), True])
-            self.userfacade.options[VARIABLES_KEY][str(lkey)] = str(value)
+            iterator = model.append(self.variables_iterator, [lkey, value, True])
+            self.userfacade.options[VARIABLES_KEY][lkey] = unicode(value, 'UTF-8')
             self['entry-variables-add'].set_text('')
             path = model.get_path(iterator)
             self["treeview-variables"].scroll_to_cell(path)
@@ -1131,6 +1158,11 @@ class PhotoPlaceGUI(InterfaceUI):
         model, ite = selection.get_selected()
         if ite != None and model.get_value(ite, VARIABLES_COLUMN_EDITABLE):
             key = model.get_value(ite, VARIABLES_COLUMN_KEY)
+            if not isinstance(key, unicode):
+                try:
+                    key = unicode(key, 'UTF-8')
+                except:
+                    pass
             model.remove(ite)
             try:
                 del self.userfacade.options[VARIABLES_KEY][key]
@@ -1141,9 +1173,14 @@ class PhotoPlaceGUI(InterfaceUI):
         model = self["treeview-variables"].get_model()
         treestore_iter = model.get_iter_from_string(path_string)
         key = model.get_value(treestore_iter, VARIABLES_COLUMN_KEY)
+        if not isinstance(key, unicode):
+            try:
+                key = unicode(key, 'UTF-8')
+            except:
+                pass
         if model.get_value(treestore_iter, VARIABLES_COLUMN_EDITABLE):
-            self.userfacade.options[VARIABLES_KEY][key] = str(new_text)
-            model.set(treestore_iter, VARIABLES_COLUMN_VALUE, str(new_text))
+            self.userfacade.options[VARIABLES_KEY][key] = new_text
+            model.set(treestore_iter, VARIABLES_COLUMN_VALUE, new_text)
 
     def _clicked_template_edit(self, widget=None, data=None):
         ite = self['combobox-templates'].get_active_iter()
@@ -1500,7 +1537,7 @@ class PhotoPlaceGUI(InterfaceUI):
         model = self["treeview-photoinfo"].get_model()
         treestore_iter = model.get_iter_from_string(path_string)
         key = model.get_value(treestore_iter, TREEVIEWPHOTOINFO_COL_KEY)
-        self.current_geophoto.attr[key] = str(new_text.strip())
+        self.current_geophoto.attr[key] = new_text.strip()
         model.set(treestore_iter, TREEVIEWPHOTOINFO_COL_VALUE, new_text)
 
     def _close_winphotoinfo(self, window, event=None):
@@ -1561,6 +1598,8 @@ class PhotoPlaceGUI(InterfaceUI):
             self["treeview-geophotos"].get_model().clear()
             self.userfacade.DoTemplates().run()
             self.num_photos_process = 0
+            self.firstloadedphotos = False
+            self.reloadtemplates = False
 
     def action_loadtemplates(self):
         try:
@@ -1576,7 +1615,13 @@ class PhotoPlaceGUI(InterfaceUI):
 
     def action_loadphotos(self, directory=None):
         try:
-            loadphotos = self.userfacade.LoadPhotos(directory)
+            photoinputdir = directory
+            if directory != None and not isinstance(directory, unicode):
+                try:
+                    photoinputdir = unicode(directory, 'UTF-8')
+                except:
+                    pass
+            loadphotos = self.userfacade.LoadPhotos(photoinputdir)
             if loadphotos:
                 loadphotos.start()
                 return True
@@ -1588,7 +1633,13 @@ class PhotoPlaceGUI(InterfaceUI):
 
     def action_readgpx(self, filename=None):
         try:
-            readgpx = self.userfacade.ReadGPX(filename)
+            gpxinputfile = filename
+            if filename != None and not isinstance(filename, unicode):
+                try:
+                    gpxinputfile = unicode(filename, 'UTF-8')
+                except:
+                    pass
+            readgpx = self.userfacade.ReadGPX(gpxinputfile)
             if readgpx:
                 readgpx.run()
                 return True

@@ -29,7 +29,6 @@ __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera, September 2010"
 
 
-import os.path
 import threading
 import datetime
 
@@ -111,8 +110,8 @@ class MakeKML(Interface.Action, threading.Thread):
                     points = None
                     num_tracks += 1
                 except Exception as e:
-                    self.dgettext["error"] = str(e)
-                    self.dgettext['path'] = track.name
+                    self.dgettext['error'] = str(e)
+                    self.dgettext['path'] = track.name #.encode(PLATFORMENCODING)
                     msg = _("Cannot process '%(path)s': %(error)s.") % self.dgettext
                     self.logger.error(msg)
             min_time = min_time + self.time_zone
@@ -126,7 +125,8 @@ class MakeKML(Interface.Action, threading.Thread):
                     if num_points == 0:
                         min_time = geophoto.time
                     else:
-                        total_length += pyGPX.distanceCoord(prev_lat, prev_lon, 
+                        total_length += pyGPX.distanceCoord(
+                            prev_lat, prev_lon, 
                             geophoto.lat, geophoto.lon)
                     max_time = geophoto.time
                     if max_lat < geophoto.lat:
@@ -163,14 +163,14 @@ class MakeKML(Interface.Action, threading.Thread):
         self._set_value(PhotoPlace_MidLAT, center_lat)
         center_lon = (max_lon + min_lon)/2.0
         self._set_value(PhotoPlace_MidLON, center_lon)
-        self.rootdata[PhotoPlace_ResourceURI] = self.photouri
+        self.rootdata[PhotoPlace_ResourceURI] = self.photouri  #.encode(PLATFORMENCODING)
         self._notify_ini(self.rootdata)
         self.dgettext['jpgsize'] = self.jpgsize
         self.dgettext['jpgzoom'] = self.jpgzoom
         self.dgettext['quality'] = self.quality
-        self.dgettext['photouri'] = self.photouri
+        self.dgettext['photouri'] = self.photouri  #.encode(PLATFORMENCODING)
         self.dgettext['exifmode'] = self.state['exifmode']
-        self.dgettext['outputdir'] = self.outputdir
+        self.dgettext['outputdir'] = self.outputdir.encode(PLATFORMENCODING)
         # Photo URI
         if '%(' in self.photouri:
             self.uri_mode = 1
@@ -191,7 +191,7 @@ class MakeKML(Interface.Action, threading.Thread):
             if photo.status < self.state.status:
                 continue
             photodata.clear()
-            self.dgettext['photo'] = photo.name
+            self.dgettext['photo'] = photo.name.encode(PLATFORMENCODING)
             self.dgettext['photo_lon'] = photo.lon
             self.dgettext['photo_lat'] = photo.lat
             self.dgettext['photo_ele'] = photo.ele
@@ -201,13 +201,13 @@ class MakeKML(Interface.Action, threading.Thread):
                 photodata[PhotoPlace_PhotoLAT] = photo.lat
                 photodata[PhotoPlace_PhotoLON] = photo.lon
                 photodata[PhotoPlace_PhotoELE] = photo.ele
-                photodata[PhotoPlace_PhotoNAME] = photo.name
+                photodata[PhotoPlace_PhotoNAME] = photo.name.encode(PLATFORMENCODING)
                 photodata[PhotoPlace_PhotoDATE] = photo.time
                 photodata[PhotoPlace_PhotoPTIME] = photo.ptime
                 photodata[PhotoPlace_PhotoWIDTH] = self.jpgsize[0]
                 photodata[PhotoPlace_PhotoHEIGHT] = self.jpgsize[1]
                 photodata[PhotoPlace_PhotoZOOM] = self.jpgzoom
-                photodata[PhotoPlace_ResourceURI] = self.photouri
+                photodata[PhotoPlace_ResourceURI] = self.photouri  #.encode(PLATFORMENCODING)
                 str_utctime = photo.time.strftime("%Y-%m-%dT%H:%M:%S")
                 photodata[PhotoPlace_PhotoUTCDATE] = str_utctime + self.str_tzdiff
                 for k in photo.exif.exif_keys:
@@ -218,19 +218,20 @@ class MakeKML(Interface.Action, threading.Thread):
                 if self.uri_mode == 1:
                     photodata[PhotoPlace_PhotoURI] = self.photouri % photodata
                 elif self.uri_mode == 2:
-                    photodata[PhotoPlace_PhotoURI] = self.photouri % photo.name
+                    photodata[PhotoPlace_PhotoURI] = \
+                        self.photouri % photo.name.encode(PLATFORMENCODING)
                 else:
-                    photodata[PhotoPlace_PhotoURI] = self.photouri + photo.name
+                    photodata[PhotoPlace_PhotoURI] = \
+                        self.photouri + photo.name.encode(PLATFORMENCODING)
                 # data to template.
                 self.state.kmldata.setData(photodata)
                 self._notify_run(photo, 1)
-                self.logger.debug(
-                    _("Photo '%(photo)s' was processed for KML data") % self.dgettext)
+                msg = _("Photo '%(photo)s' was processed for KML data")
+                self.logger.debug(msg % self.dgettext)
                 self.num_photos += 1
             else:
-                self.logger.warning(
-                    _("Ignoring not geolocated photo '%(photo)s' (%(photo_time)s).") \
-                    % self.dgettext)
+                msg = _("Ignoring not geolocated photo '%(photo)s' (%(photo_time)s).")
+                self.logger.warning(msg % self.dgettext)
                 self._notify_run(photo, -1)
         return self.state.kmldata
 

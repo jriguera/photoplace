@@ -1,64 +1,64 @@
-# Translations for photoplace.paths plugin
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the photoplace.paths plugin
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: photoplace.paths 0.3.1\n"
-"Report-Msgid-Bugs-To: <photoplace-project@googlegroups.com>\n"
-"POT-Creation-Date: 2011-06-12 21:47+0200\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-25 20:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: GTKPaths.py:140
+#: ../GTKPaths.py:141
 msgid "Generate a path from geotagged photos"
 msgstr ""
 
-#: GTKPaths.py:152
-msgid "Double click to edit these values ..."
-msgstr ""
-
-#: GTKPaths.py:164
+#: ../GTKPaths.py:165
 msgid "Path Name/Parameter"
 msgstr ""
 
-#: GTKPaths.py:173
+#: ../GTKPaths.py:174
 msgid "Description/Value"
 msgstr ""
 
-#: GTKPaths.py:278 paths.py:409
+#: ../GTKPaths.py:279 ../paths.py:442
 #, python-format
 msgid "Cannot read file '%s'."
 msgstr ""
 
-#: GTKPaths.py:310
-msgid "file: "
+#: ../GTKPaths.py:311
+msgid "template: "
 msgstr ""
 
-#: GTKPaths.py:379
+#: ../GTKPaths.py:319
+msgid "Double click to edit values ..."
+msgstr ""
+
+#: ../GTKPaths.py:382
 msgid "Select a color for path ..."
 msgstr ""
 
-#: GTKPaths.py:473
+#: ../GTKPaths.py:476
 msgid "[select a file]"
 msgstr ""
 
-#: GTKPaths.py:477
+#: ../GTKPaths.py:480
 msgid "PhotoPlace: Path Description Template"
 msgstr ""
 
-#: GTKPaths.py:484
+#: ../GTKPaths.py:487
 msgid "Type the presentation text ... "
 msgstr ""
 
-#: GTKPaths.py:492
+#: ../GTKPaths.py:495
 #, python-format
 msgid ""
 "You can use simple HTML tags like list (<i>li</i>, <i>ul</i>) or <i>table</"
@@ -82,62 +82,102 @@ msgid ""
 " You can also use the <b>[defaults]</b> variables defined in the same way."
 msgstr ""
 
-#: GTKPaths.py:524
+#: ../GTKPaths.py:527
 msgid "... or load it from"
 msgstr ""
 
-#: GTKPaths.py:624
+#: ../GTKPaths.py:627
 msgid "Select file ..."
 msgstr ""
 
-#: GTKPaths.py:628
+#: ../GTKPaths.py:631
 msgid "All files"
 msgstr ""
 
-#: KmlPath.py:74
+#: ../KmlPath.py:74
 msgid "KML not correct. Cannot found 'Document' tag!"
 msgstr ""
 
-#: paths.py:92
+#: ../paths.py:92
 msgid "Paths"
 msgstr ""
 
-#: paths.py:93
+#: ../paths.py:93
 msgid "Photo path"
 msgstr ""
 
-#: paths.py:94
+#: ../paths.py:94
 msgid "Generated path from geotagged photos"
 msgstr ""
 
-#: paths.py:98
+#: ../paths.py:98
 msgid "Photos"
 msgstr ""
 
-#: paths.py:110
+#: ../paths.py:110
 msgid ""
 "A plugin to generate paths from GPX tracks to show them in the KML layer."
 msgstr ""
 
-#: paths.py:158
+#: ../paths.py:158
 msgid "Starting plugin ..."
 msgstr ""
 
-#: paths.py:202
+#: ../paths.py:206
 #, python-format
 msgid "Cannot understand the key '%s' in config file."
 msgstr ""
 
-#: paths.py:241
+#: ../paths.py:226
+#, python-format
+msgid ""
+"Track #%(path_number)s, original name: %(path_name)s\n"
+"%(path_desc)s\n"
+msgstr ""
+
+#: ../paths.py:235
+#, python-format
+msgid "Points: %(path_npoints)s, length: %(path_len).3f m.\n"
+msgstr ""
+
+#: ../paths.py:236
+#, python-format
+msgid "Duration: %(path_time)s\n"
+msgstr ""
+
+#: ../paths.py:237
+#, python-format
+msgid "Begin time: %(path_begin)s\n"
+msgstr ""
+
+#: ../paths.py:238
+#, python-format
+msgid "Final time: %(path_end)s\n"
+msgstr ""
+
+#: ../paths.py:241
+#, python-format
+msgid "Error processing track #%(path_number)s '%(path_name)s': %(error)s."
+msgstr ""
+
+#: ../paths.py:257
+#, python-format
+msgid ""
+"Track '%(path_name)s'\n"
+"%(path_desc)s\n"
+"Number of photos: %(path_npoints)s"
+msgstr ""
+
+#: ../paths.py:275
 msgid "Processing all tracks (paths) from GPX data ... "
 msgstr ""
 
-#: paths.py:246
+#: ../paths.py:280
 #, python-format
 msgid "%s paths have been generated for KML data."
 msgstr ""
 
-#: paths.py:274
+#: ../paths.py:308
 #, python-format
 msgid ""
 "Generated WayPoint from '%(photo)s' at %(photo_time)s (UTC=%(photo_tutc)s) "
@@ -145,19 +185,19 @@ msgid ""
 "%(photo_ele).8f)."
 msgstr ""
 
-#: paths.py:295
+#: ../paths.py:329
 #, python-format
 msgid ""
 "Track '%(track_name)s' was generated from %(track_numphotos)s geotagged "
 "photos."
 msgstr ""
 
-#: paths.py:299
+#: ../paths.py:333
 #, python-format
 msgid "Photo track '%(track_name)s' is empty due to no geotagged photos!"
 msgstr ""
 
-#: paths.py:348
+#: ../paths.py:382
 #, python-format
 msgid ""
 "Path '%(path)s', ('%(path_desc)s'): points=%(path_npoints)d, segments="
@@ -165,15 +205,15 @@ msgid ""
 "time='%(path_time)s'"
 msgstr ""
 
-#: paths.py:355
+#: ../paths.py:389
 #, python-format
-msgid "Error when track (path) '%(path)s' was being processed: %(error)s."
+msgid "Error while processing track '%(path_name)s': %(error)s."
 msgstr ""
 
-#: paths.py:434
+#: ../paths.py:467
 msgid "Resetting plugin ..."
 msgstr ""
 
-#: paths.py:447
+#: ../paths.py:480
 msgid "Ending plugin ..."
 msgstr ""

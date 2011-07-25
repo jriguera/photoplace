@@ -50,7 +50,7 @@ from PhotoPlace.definitions import *
 # I18N gettext support
 __GETTEXT_DOMAIN__ = __program__
 __PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
-__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
+__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, u"locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
@@ -239,6 +239,10 @@ class KmlTour(Plugin):
             try:
                 for mp3 in mp3s.split(KmlTour_SPLIT_CHAR):
                     mp3 = mp3.strip()
+                    try:
+                        mp3 = unicode(mp3, 'UTF-8')
+                    except:
+                        pass
                     if os.path.isfile(mp3):
                         mp3list.append(mp3)
                     else:
@@ -250,7 +254,12 @@ class KmlTour(Plugin):
         options.setdefault(KmlTour_CONFKEY_BEGIN_NAME, KmlTour_BEGIN_NAME)
         filename = options.setdefault(KmlTour_CONFKEY_BEGIN_DESC)
         if filename != None:
-            options[KmlTour_CONFKEY_BEGIN_DESC] = os.path.expandvars(os.path.expanduser(filename))
+            filename = os.path.expandvars(os.path.expanduser(filename))
+            try:
+                filename = unicode(filename, PLATFORMENCODING)
+            except:
+                pass
+            options[KmlTour_CONFKEY_BEGIN_DESC] = filename
         options.setdefault(KmlTour_CONFKEY_BEGIN_STYLE, KmlTour_BEGIN_STYLE)
         self._set_option_float_none(options, KmlTour_CONFKEY_KMLTOUR_SIMPL_DISTANCE,
             KmlTour_SIMPL_DISTANCE, (0, 1000000))
@@ -274,7 +283,12 @@ class KmlTour(Plugin):
         options.setdefault(KmlTour_CONFKEY_END_NAME, KmlTour_END_NAME)
         filename = options.setdefault(KmlTour_CONFKEY_END_DESC)
         if filename != None:
-            options[KmlTour_CONFKEY_END_DESC] = os.path.expandvars(os.path.expanduser(filename))
+            filename = os.path.expandvars(os.path.expanduser(filename))
+            try:
+                filename = unicode(filename, PLATFORMENCODING)
+            except:
+                pass
+            options[KmlTour_CONFKEY_END_DESC] = filename
         options.setdefault(KmlTour_CONFKEY_END_STYLE, KmlTour_END_STYLE)
         self._set_option_float_none(options, KmlTour_CONFKEY_END_HEADING,
             KmlTour_END_HEADING, (0,360))
@@ -743,7 +757,7 @@ class KmlTour(Plugin):
         previous = (self.first_lon, self.first_lat, self.first_ele, first_time)
         geophoto = None
         dgettext = dict()
-        msg_warning = _("Warning processing %(name)s . %(attr)s: attribute type not valid!")
+        msg_warning = _("Warning processing '%(name)s.%(attr)s': attribute type not valid!")
         for geophoto in self.state.geophotos:
             if geophoto.status < 1 or not geophoto.isGeoLocated():
                 # not selected
@@ -805,10 +819,10 @@ class KmlTour(Plugin):
         # track to last point
         if geophoto:
             dgettext['name'] = 'last'
+            bearing = self.options[KmlTour_CONFKEY_END_HEADING]
             try:
-                bearing = self.options[KmlTour_CONFKEY_END_HEADING].strip()
-                if bearing:
-                    bearing = float(bearing)
+                if bearing != None and len(bearing) > 0:
+                    bearing = float(bearing.strip())
                 else:
                     bearing = None
             except:

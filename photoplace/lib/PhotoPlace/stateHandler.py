@@ -46,7 +46,7 @@ from definitions import *
 
 def local_utc():
     """
-    Try to calcultate delta minutes between local and utc time.
+    Try to calcultate delta minutes between local and utc time for current moment.
     """
     same_min = False
     dt_dif = None
@@ -150,10 +150,11 @@ class State(object):
         self._timeoffsetseconds = PhotoPlace_Cfg_main_timeoffsetseconds
         self._exifmode = PhotoPlace_Cfg_main_exifmode
         self._copyonlygeolocated = PhotoPlace_Cfg_main_copyonlygeolocated
-        self._photoinputdir = ''
-        self._gpxinputfile = ''
-        self._outputfile = ''
-        self._photouri = ''
+        self._version = PhotoPlace_Cfg_version
+        self._photoinputdir = u''
+        self._gpxinputfile = u''
+        self._outputfile = u''
+        self._photouri = u''
         #
         self.status = 1
         #
@@ -178,6 +179,7 @@ class State(object):
     def __getitem__(self, key):
         k = str(key)
         keys = [
+            "version",
             "kmltemplate",
             "exifmode",
             "utczoneminutes",
@@ -203,7 +205,9 @@ class State(object):
 
     def __setitem__(self, key, value):
         k = str(key)
-        if k == "kmltemplate":
+        if k == "version":
+            pass
+        elif k == "kmltemplate":
             self.set_kmltemplate(value)
         elif k == "exifmode":
             self.set_exifmode(value)
@@ -242,10 +246,10 @@ class State(object):
         self.lock_geophotos.acquire()
         self.lock_gpxdata.acquire()
         self.lock_kmldata.acquire()
-        self._photoinputdir = ''
-        self._gpxinputfile = ''
-        self._outputfile = ''
-        self._photouri = ''
+        self._photoinputdir = u''
+        self._gpxinputfile = u''
+        self._outputfile = u''
+        self._photouri = u''
         self.geophotos = []
         self.gpxdata = None
         self.kmldata = None
@@ -260,10 +264,10 @@ class State(object):
 
 
     def initial(self):
-        self._photoinputdir = ''
-        self._gpxinputfile = ''
-        self._outputfile = ''
-        self._photouri = ''
+        self._photoinputdir = u''
+        self._gpxinputfile = u''
+        self._outputfile = u''
+        self._photouri = u''
         self.geophotos = []
         self.gpxdata = None
         self.kmldata = None
@@ -366,10 +370,10 @@ class State(object):
         else:
             if not self.options.has_key('outputfile'):
                 if self._photoinputdir:
-                    outputfile = self._photoinputdir + ".kmz"
+                    outputfile = self._photoinputdir + u".kmz"
                 else:
                     try:
-                        outputfile = self.options['photoinputdir'] + ".kmz"
+                        outputfile = self.options['photoinputdir'] + u".kmz"
                         outputfile = os.path.expandvars(outputfile)
                     except:
                         msg = _("Output file not selected!")
@@ -380,16 +384,21 @@ class State(object):
             else:
                 outputfile = os.path.expandvars(self.options['outputfile'])
         self._outputfile = os.path.normpath(outputfile)
+        if not isinstance(self._outputfile, unicode):
+            try:
+                self._outputfile = unicode(self._outputfile, PLATFORMENCODING)
+            except:
+                pass
         self.tmpdir = None
         self.outputkmz = None
         self.outputkml = None
         self.outputdir = os.path.dirname(self._outputfile)
         outputfile = os.path.basename(self._outputfile)
         (outputfilebase, outpufileext) = os.path.splitext(outputfile)
-        dgettext['output_dir'] = self.outputdir
+        dgettext['output_dir'] = self.outputdir.encode(PLATFORMENCODING)
         if outpufileext == '.kmz':
             try:
-                deletedir = tempfile.mkdtemp('_tmp', PhotoPlace_name + "-", self.outputdir)
+                deletedir = tempfile.mkdtemp(u"_tmp", PhotoPlace_name + u"-", self.outputdir)
                 shutil.rmtree(deletedir)
             except Exception as e:
                 self._outputfile = None
@@ -403,7 +412,7 @@ class State(object):
             self.outputdir = deletedir
             self.tmpdir = deletedir
             self.outputkmz = self._outputfile
-            self.outputkml = os.path.join(deletedir, outputfilebase + ".kml")
+            self.outputkml = os.path.join(deletedir, outputfilebase + u".kml")
         elif outpufileext == '.kml':
             try:
                 # Write test
@@ -442,19 +451,24 @@ class State(object):
                     photouri = os.path.split(self._photoinputdir)[1]
                     if not photouri:
                         photouri = os.path.split(os.path.split(self._photoinputdir)[0])[1]
-                    photouri = photouri + '/'
+                    photouri = photouri + u'/'
                 else:
                     try:
                         photouri = os.path.split(self.options['photoinputdir'])[1]
                         if not photouri:
                             photouri = os.path.split(self.options['photoinputdir'])[0]
                             photouri = os.path.split(photouri)[1]
-                        photouri = photouri + '/'
+                        photouri = photouri + u'/'
                     except:
                         photouri = PhotoPlace_Cfg_main_photouri
             else:
                 photouri = self.options['photouri']
         self._photouri = photouri
+        if not isinstance(self._photouri, unicode):
+            try:
+                self._photouri = unicode(self._photouri, PLATFORMENCODING)
+            except:
+                pass
         if self._outputfile != None:
             outputfile = os.path.basename(self._outputfile)
             if self.tmpdir:
@@ -476,7 +490,7 @@ class State(object):
     @DSynchronized()
     def set_photoinputdir(self, value=None, log=True):
         if value != None:
-            photoinputdir = os.path.expandvars(value)
+            photoinputdir = os.path.normpath(os.path.expandvars(value))
         else:
             if self.options.has_key('photoinputdir'):
                 photoinputdir = os.path.expandvars(self.options['photoinputdir'])
@@ -486,19 +500,25 @@ class State(object):
                     self.__logger.error(msg)
                 tip = _("Select a input photos directory to continue!")
                 raise Error(msg, tip)
+        if not isinstance(photoinputdir, unicode):
+            try:
+                photoinputdir = unicode(photoinputdir, PLATFORMENCODING)
+            except:
+                pass
         if not os.path.isdir(photoinputdir):
-            msg = _("Photo input directory '%s' not found!.") % photoinputdir
+            msg = _("Photo input directory '%s' not found!.") % \
+                photoinputdir.encode(PLATFORMENCODING)
             self.__logger.error(msg)
             tip = _("Check if the selected directory exist.")
             raise Error(msg, tip)
-        self._photoinputdir = os.path.normpath(photoinputdir)
+        self._photoinputdir = photoinputdir
         self._set_photouri()
 
 
     @DSynchronized()
     def set_gpxinputfile(self, value=None, log=True):
         if value != None:
-            gpxinputfile = os.path.expandvars(value)
+            gpxinputfile = os.path.normpath(os.path.expandvars(value))
         else:
             if self.options.has_key('gpxinputfile'):
                 gpxinputfile = os.path.expandvars(self.options['gpxinputfile'])
@@ -508,12 +528,18 @@ class State(object):
                     self.__logger.error(msg)
                 tip = _("Select a GPX input file to continue!")
                 raise Error(msg, tip)
+        if not isinstance(gpxinputfile, unicode):
+            try:
+                gpxinputfile = unicode(gpxinputfile, PLATFORMENCODING)
+            except:
+                pass
         if not os.path.isfile(gpxinputfile):
-            msg = _("GPX input file '%s' not found!.") % gpxinputfile
+            msg = _("GPX input file '%s' not found!.") % \
+                gpxinputfile.encode(PLATFORMENCODING)
             self.__logger.error(msg)
             tip = _("Check the selected GPX input file to continue.")
             raise Error(msg, tip)
-        self._gpxinputfile = os.path.normpath(gpxinputfile)
+        self._gpxinputfile = gpxinputfile
 
 
     @DSynchronized()
@@ -595,50 +621,60 @@ class State(object):
     @DSynchronized()
     def _set_kmltemplate(self):
         if self.options.has_key('kmltemplate'):
-            self.set_kmltemplate(self.options['kmltemplate'])
+            templatedir = self.options['kmltemplate']
+            if not isinstance(templatedir, unicode):
+                try:
+                    templatedir = unicode(templatedir, PLATFORMENCODING)
+                except:
+                    pass
         else:
             msg = _("Main KML template not defined. Setting default KML template file '%s'.")
             self.__logger.warning(msg % PhotoPlace_Cfg_main_kmltemplate)
             templatedir = os.path.join(self.resourcedir, PhotoPlace_Cfg_main_kmltemplate)
-            self.set_kmltemplate(templatedir)
+        self.set_kmltemplate(templatedir)
         msg = _("Value of '%(key)s' incorrect. Setting to default value '%(value)s'.")
         templateseparatorkey = PhotoPlace_Cfg_main_templateseparatorkey
         try:
             templateseparatorkey = self.options['templateseparatorkey']
         except:
-            d = {'key': 'templateseparatorkey', 'value': templateseparatorkey }
-            self.__logger.warning(msg % d)
+            dgettext = {'key': 'templateseparatorkey', 'value': templateseparatorkey }
+            self.__logger.warning(msg % dgettext)
         self._templateseparatorkey = templateseparatorkey
         templatedefaultvalue = self._templatedefaultvalue
         try:
             templatedefaultvalue = self.options['templatedefaultvalue']
         except:
-            d = {'key': 'templatedefaultvalue', 'value': templatedefaultvalue }
-            self.__logger.warning(msg % d)
+            dgettext = {'key': 'templatedefaultvalue', 'value': templatedefaultvalue }
+            self.__logger.warning(msg % dgettext)
         self._templatedefaultvalue = templatedefaultvalue
         templateseparatornodes = self._templateseparatornodes
         try:
             templateseparatornodes = self.options['templateseparatornodes']
         except:
-            d = {'key': 'templateseparatornodes', 'value': templateseparatornodes }
-            self.__logger.warning(msg % d)
+            dgettext = {'key': 'templateseparatornodes', 'value': templateseparatornodes }
+            self.__logger.warning(msg % dgettext)
         self._templateseparatornodes = templateseparatornodes
         templatedeltag = self._templatedeltag
         try:
             templatedeltag = self.options['templatedeltag']
         except:
-            d = {'key': 'templatedeltag', 'value': templatedeltag }
-            self.__logger.warning(msg % d)
+            dgettext = {'key': 'templatedeltag', 'value': templatedeltag }
+            self.__logger.warning(msg % dgettext)
         self._templatedeltag = templatedeltag
 
 
     @DSynchronized()
     def set_kmltemplate(self, value):
-        kmltemplate = os.path.expandvars(value)
+        kmltemplate = os.path.normpath(os.path.expandvars(value))
+        if not isinstance(kmltemplate, unicode):
+            try:
+                kmltemplate = unicode(kmltemplate, PLATFORMENCODING)
+            except:
+                pass
         if not os.path.isfile(kmltemplate):
             kmltemplate_orig = kmltemplate
             kmltemplate = os.path.join(self.resourcedir_user, kmltemplate)
-            templates_key = 'templates'
+            templates_key = u'templates'
             if not os.path.isfile(kmltemplate):
                 language = locale.getdefaultlocale()[0]
                 kmltemplate = os.path.join(self.resourcedir, templates_key, language, kmltemplate_orig)
@@ -648,8 +684,8 @@ class State(object):
                     if not os.path.isfile(kmltemplate):
                         kmltemplate = os.path.join(self.resourcedir, templates_key, kmltemplate_orig)
                 if not os.path.isfile(kmltemplate):
-                    msg = _("Main KML template file '%s' not found!.") % kmltemplate
-                    self.__logger.error(msg)
+                    msg = _("Main KML template file '%s' not found!.")
+                    self.__logger.error(msg % kmltemplate.encode(PLATFORMENCODING))
                     tip = _("Check if it is defined properly in the configuration file.")
                     raise Error(msg, tip)
         self._kmltemplate = kmltemplate

@@ -53,7 +53,7 @@ from tour import *
 # I18N gettext support
 __GETTEXT_DOMAIN__ = __program__
 __PACKAGE_DIR__ = os.path.abspath(os.path.dirname(__file__))
-__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, "locale")
+__LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, u"locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
@@ -273,13 +273,13 @@ class GTKTour(object):
         if dialog.run() == gtk.RESPONSE_OK:
             filename = dialog.get_filename()
         dialog.destroy()
-        if filename and os.path.isfile(filename):
+        if filename != None and os.path.isfile(filename):
             try:
                 self._set_textview(textview, filename)
             except:
                 pass
             else:
-                self.options[key] = str(filename)
+                self.options[key] = filename
                 widget.set_label(os.path.basename(filename))
 
 
@@ -364,7 +364,7 @@ class GTKTour(object):
             filename = dialog.get_filename()
         dialog.destroy()
         if filename != None and os.path.isfile(filename):
-            self.options[KmlTour_CONFKEY_KMLTOUR_MUSIC].append(str(filename))
+            self.options[KmlTour_CONFKEY_KMLTOUR_MUSIC].append(filename)
             self.combobox_mp3.append_text(os.path.basename(filename))
             self.combobox_mp3.set_active(0)
 

@@ -29,8 +29,7 @@ __date__ = "September 2010"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera, September 2010"
 
-import os
-import os.path
+
 import xml.dom.minidom
 import urllib
 import codecs
@@ -126,7 +125,7 @@ class KmlData(object):
             sXMLTemplate.SXMLTemplate.separatorXml = self.sep_xmlnodes
             self.kml = sXMLTemplate.SXMLTemplate(self.layout.toxml())
         except sXMLTemplate.SXMLTemplateError as xmlterror:
-            dgettext = dict(layout_file = self.layout_file)
+            dgettext = dict(layout_file=self.layout_file)
             dgettext['error'] = str(xmlterror)
             msg = _("Cannot set up main KML template from file '%(layout_file)s' "
                 "due to: %(error)s.") 
@@ -168,7 +167,7 @@ class KmlData(object):
         dgettext = dict()
         template_variables = dict()
         for lpos, filename in templates.iteritems():
-            dgettext['template_file'] = filename
+            dgettext['template_file'] = filename.encode('UTF-8')
             fd = None
             format = 0
             try:
