@@ -137,7 +137,7 @@ class UserFacade(object):
                     defaultconfig[sec] = dict()
                 defaultconfig[sec][key] = value
         for argfile in fargs:
-            if not isinstance(argile, unicode):
+            if not isinstance(argfile, unicode):
                 try:
                     argfile = unicode(argfile, PLATFORMENCODING)
                 except:

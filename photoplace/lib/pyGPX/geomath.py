@@ -67,11 +67,9 @@ def NtoDMS (coordinate):
     """
     Get degrees, minutes and seconds from a decimal number.
     """
-    coord = float(coordinate)
-    d = int(coord)
-    m = (abs(coord) % abs(d)) * 60
-    s = (m % int(m)) * 60
-    return (d, int(m), s)
+    (m, s) = divmod(coordinate * 3600, 60)
+    (d, m) = divmod(m, 60)
+    return (d, m, s)
 
 
 def DMStoN (degrees, minutes, seconds):

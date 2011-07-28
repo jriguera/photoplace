@@ -334,18 +334,18 @@ class GeoPhoto(object):
                 [pyexiv2.utils.Rational(int(ele * 100.0), 100)]
             self.exif['Exif.GPSInfo.GPSAltitudeRef'] = eleRef
             (d, m, s) = geomath.NtoDMS(lat)
-            fr_d = fractions.Fraction.from_float(float(d))
+            fr_d = fractions.Fraction.from_float(d)
             Rd = pyexiv2.utils.Rational(int(fr_d.numerator),int(fr_d.denominator))
-            fr_m = fractions.Fraction.from_float(float(m))
+            fr_m = fractions.Fraction.from_float(m)
             Rm = pyexiv2.utils.Rational(int(fr_m.numerator),int(fr_m.denominator))
             fr_s = fractions.Fraction("%.2f" % s)
             Rs = pyexiv2.utils.Rational(int(fr_s.numerator),int(fr_s.denominator))
             self.exif['Exif.GPSInfo.GPSLatitude'] = [Rd, Rm, Rs]
             self.exif['Exif.GPSInfo.GPSLatitudeRef'] = latRef
             (d, m, s) = geomath.NtoDMS(lon)
-            fr_d = fractions.Fraction.from_float(float(d))
+            fr_d = fractions.Fraction.from_float(d)
             Rd = pyexiv2.utils.Rational(int(fr_d.numerator),int(fr_d.denominator))
-            fr_m = fractions.Fraction.from_float(float(m))
+            fr_m = fractions.Fraction.from_float(m)
             Rm = pyexiv2.utils.Rational(int(fr_m.numerator),int(fr_m.denominator))
             fr_s = fractions.Fraction("%.2f" % s)
             Rs = pyexiv2.utils.Rational(int(fr_s.numerator),int(fr_s.denominator))

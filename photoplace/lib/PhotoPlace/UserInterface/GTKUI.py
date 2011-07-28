@@ -740,7 +740,27 @@ class PhotoPlaceGUI(InterfaceUI):
         gobject.idle_add(self.set_progressbar, None, 0.0)
         if not self.firstloadedphotos:
             # order by name (only first time)
-            self["treeviewcolumn-geophotos-picture"].clicked()
+            gobject.idle_add(self["treeviewcolumn-geophotos-picture"].clicked)
+            variables_key = 'name'
+            value = os.path.basename(self.userfacade.state['photoinputdir'])
+            if not self.userfacade.options[VARIABLES_KEY].has_key(variables_key):
+                self.userfacade.options[VARIABLES_KEY][variables_key] = ''
+            if len(self.userfacade.options[VARIABLES_KEY][variables_key]) < 1:
+                model = self["treeview-variables"].get_model()
+                iterator = model.iter_children(self.variables_iterator)
+                parent = model.get_string_from_iter(self.variables_iterator)
+                found = False
+                while iterator != None:
+                    if model.get_value(iterator, VARIABLES_COLUMN_KEY) == variables_key:
+                        model.set(iterator, VARIABLES_COLUMN_VALUE, value)
+                        found = True
+                        break
+                    iterator = model.iter_next(iterator)
+                    if parent != model.get_string_from_iter(model.iter_parent(iterator)):
+                        break
+                if not found:
+                    model.append(self.variables_iterator, [variables_key, value, True])
+                self.userfacade.options[VARIABLES_KEY][variables_key] = value
             self.firstloadedphotos = True
 
 

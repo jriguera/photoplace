@@ -156,7 +156,11 @@ PhotoPlace_Cfg_LogModes = {
 PhotoPlace_Cfg_default = {
     'main'      : {},
     'templates' : {},
-    'defaults'  : {},
+    'defaults'  : {
+        'name'        : '',
+        'photofolder' : _("Photos"),
+        'defaultvalue': "-",
+    },
     'plugins'   : {} 
 }
 PhotoPlace_Cfg_timeformat = _("%A %d. %B %Y")
@@ -180,15 +184,12 @@ PhotoPlace_CONFIG_NOCLONE = {
         'gpxinputfile', 
         'outputfile', 
         'kmltemplate', 
-        'logfile', 
-        'loglevel', 
         'utczoneminutes', 
         'photouri',
         ],
     'defaults'  : [
-        'author', 
+        'name', 
         'date', 
-        'mailto',
         'inilatitute',
         'inilongitude',
         'inialtitude',
