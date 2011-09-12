@@ -66,10 +66,11 @@ class Plugin(object):
         'NeedGUI' : False,
     }
 
-    def __init__(self, logger, state, args, argfiles=[], gtkbuilder=None):
+    def __init__(self, logger, userfacade, args, argfiles=[], gtkbuilder=None):
         object.__init__(self)
         self.logger = logger
-        self.state = state
+        self.state = userfacade.state
+        self.userfacade = userfacade
         self.argfiles = argfiles
         self.args = args
         self.gtkbuilder = gtkbuilder

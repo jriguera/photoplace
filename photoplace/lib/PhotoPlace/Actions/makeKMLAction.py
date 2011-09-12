@@ -223,8 +223,11 @@ class MakeKML(Interface.Action, threading.Thread):
                 else:
                     photodata[PhotoPlace_PhotoURI] = \
                         self.photouri + photo.name.encode(PLATFORMENCODING)
+                tmptemplates = None
+                if photo.path in self.state.geophotostyle:
+                    tmptemplates = self.state.geophotostyle[photo.path]
                 # data to template.
-                self.state.kmldata.setData(photodata)
+                self.state.kmldata.setData(photodata, tmptemplates)
                 self._notify_run(photo, 1)
                 msg = _("Photo '%(photo)s' was processed for KML data")
                 self.logger.debug(msg % self.dgettext)

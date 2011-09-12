@@ -466,29 +466,6 @@ class UserFacade(object):
         self.logger.info(msg)
 
 
-    def get_filepath(self, filepath, subdir=u"templates"):
-        filename = os.path.expandvars(filepath)
-        if  not isinstance(filename, unicode):
-            try:
-                filename = unicode(filename, PLATFORMENCODING)
-            except:
-                pass
-        if not os.path.isfile(filename):
-            orig = filename
-            filename = os.path.join(self.state.resourcedir_user, filename)
-            if not os.path.isfile(filename):
-                language = locale.getdefaultlocale()[0]
-                filename = os.path.join(self.state.resourcedir, subdir, language, orig)
-                if not os.path.isfile(filename):
-                    language = language.split('_')[0]
-                    filename = os.path.join(self.state.resourcedir, subdir, language, orig)
-                    if not os.path.isfile(filename):
-                        filename = os.path.join(self.state.resourcedir, subdir, orig)
-                if not os.path.isfile(filename):
-                    return None
-        return filename
-
-
     def init(self, defaults=False):
         if defaults:
             self.options = PhotoPlace_Cfg_default
@@ -623,7 +600,7 @@ class UserFacade(object):
         plugins = self.list_plugins(capability)
         for plg in plugins:
             try:
-                self.pluginmanager.activate(plugins[plg], self.state, self.args, self.argfiles, *args)
+                self.pluginmanager.activate(plugins[plg], self, self.args, self.argfiles, *args)
             except Plugins.pluginManager.PluginManagerError as pluginerror:
                 msg = str(pluginerror)
                 self.logger.error(msg)
@@ -636,7 +613,7 @@ class UserFacade(object):
         plugins = self.list_plugins(plugin=plugin)
         if plugin in plugins:
             try:
-                self.pluginmanager.activate(plugins[plugin], self.state, self.args, self.argfiles, *args)
+                self.pluginmanager.activate(plugins[plugin], self, self.args, self.argfiles, *args)
             except Plugins.pluginManager.PluginManagerError as pluginerror:
                 msg = str(pluginerror)
                 self.logger.error(msg)
@@ -735,7 +712,8 @@ class UserFacade(object):
             tip = _("Wait a moment ... ")
             raise Error(msg, tip, "Error")
         else:
-            self.state.clear()
+            if self.state:
+                self.state.clear()
         return None
 
 

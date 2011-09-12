@@ -93,7 +93,6 @@ def minutes_to_timefloat(value):
     return minutes + hours
 
 
-
 class DSynchronized(object):
     """
     Class enapsulating a lock and a function allowing it to be used as a synchronizing
@@ -172,6 +171,7 @@ class State(object):
         self.geophotos = []
         self.gpxdata = None
         self.kmldata = None
+        self.geophotostyle = {}
         #
         self.initial()
 
@@ -253,6 +253,7 @@ class State(object):
         self.geophotos = []
         self.gpxdata = None
         self.kmldata = None
+        self.geophotostyle = {}
         self.tmpdir = None
         self.outputdir = None
         self.outputkmz = None
@@ -271,6 +272,7 @@ class State(object):
         self.geophotos = []
         self.gpxdata = None
         self.kmldata = None
+        self.geophotostyle = {}
         self.tmpdir = None
         self.outputdir = None
         self.outputkmz = None
@@ -297,6 +299,58 @@ class State(object):
             pass
 
 
+    def get_template(self, filepath, subdir=u"templates"):
+        filename = os.path.normpath(os.path.expandvars(filepath))
+        if  not isinstance(filename, unicode):
+            try:
+                filename = unicode(filename, PLATFORMENCODING)
+            except:
+                pass
+        if not os.path.isfile(filename):
+            orig = filename
+            filename = os.path.join(self.resourcedir_user, subdir, orig)
+            if not os.path.isfile(filename):
+                language = locale.getdefaultlocale()[0]
+                filename = os.path.join(self.resourcedir, subdir, language, orig)
+                if not os.path.isfile(filename):
+                    language = language.split('_')[0]
+                    filename = os.path.join(self.resourcedir, subdir, language, orig)
+                    if not os.path.isfile(filename):
+                        filename = os.path.join(self.resourcedir, subdir, orig)
+                        if not os.path.isfile(filename):
+                            return None
+        return filename
+
+
+    def get_savepath(self, filepath, subdir=u"templates"):
+        filename = os.path.normpath(os.path.expandvars(filepath))
+        if not isinstance(filename, unicode):
+            try:
+                filename = unicode(filename, PLATFORMENCODING)
+            except:
+                pass
+        folder = self.resourcedir_user
+        return os.path.join(folder, subdir, filename)
+
+
+    def get_recoverpath(self, filepath, subdir=u"templates"):
+        filename = os.path.normpath(os.path.expandvars(filepath))
+        if not isinstance(filename, unicode):
+            try:
+                filename = unicode(filename, PLATFORMENCODING)
+            except:
+                pass
+        language = locale.getdefaultlocale()[0]
+        orig = filename
+        filename = os.path.join(self.resourcedir, subdir, language, orig)
+        if not os.path.isfile(filename):
+            language = language.split('_')[0]
+            filename = os.path.join(self.resourcedir, subdir, language, orig)
+            if not os.path.isfile(filename):
+                filename = os.path.join(self.resourcedir, subdir, orig)
+        return filename
+
+
     @DSynchronized()
     def set_quality(self, value=None):
         quality = PhotoPlace_Cfg_main_quality
@@ -310,7 +364,7 @@ class State(object):
                 raise ValueError("0 <= quality < %" % len(PhotoPlace_Cfg_quality))
         except KeyError:
             quality = PhotoPlace_Cfg_main_quality
-            self.__logger.warning(_("Value of 'quality' not defined "
+            self.__logger.debug(_("Value of 'quality' not defined "
             "in the configuration file. Setting default value '%s'.") % quality)
         except ValueError as valueerror:
             msg = _("Value of 'quality' incorrect: %s. ") % str(valueerror)
@@ -330,7 +384,7 @@ class State(object):
                 jpgzoom = float(self.options["jpgzoom"])
         except KeyError:
             jpgzoom = PhotoPlace_Cfg_main_jpgzoom
-            self.__logger.warning(_("Value of 'jpgzoom' not defined "
+            self.__logger.debug(_("Value of 'jpgzoom' not defined "
             "in the configuration file. Setting default value '%s'.") % jpgzoom)
         except ValueError as valueerror:
             msg = _("Value of 'JPGZoom' incorrect: %s. ") % str(valueerror)
@@ -352,7 +406,7 @@ class State(object):
                     int(s) for s in self.options["jpgsize"][1:-1].split(','))
         except KeyError:
             (w, h) = PhotoPlace_Cfg_main_jpgsize
-            self.__logger.warning(_("Value of 'jpgwidth' and/or 'jpgheight' not defined "
+            self.__logger.debug(_("Value of 'jpgwidth' and/or 'jpgheight' not defined "
             "in the configuration file. Setting default value '%s'.") % str((w,h)))
         except (TypeError, ValueError) as error:
             msg = _("Value of 'JPGWidth' and/or 'JPGHeight' incorrect: %s. ") % str(error)
@@ -447,7 +501,7 @@ class State(object):
             photouri = value
         else:
             if not self.options.has_key('photouri'):
-                if self._photoinputdir != None:
+                if self._photoinputdir:
                     photouri = os.path.split(self._photoinputdir)[1]
                     if not photouri:
                         photouri = os.path.split(os.path.split(self._photoinputdir)[0])[1]
@@ -469,7 +523,7 @@ class State(object):
                 self._photouri = unicode(self._photouri, PLATFORMENCODING)
             except:
                 pass
-        if self._outputfile != None:
+        if self._outputfile:
             outputfile = os.path.basename(self._outputfile)
             if self.tmpdir:
                 outputdir = self.tmpdir
@@ -551,7 +605,7 @@ class State(object):
             else:
                 utczoneminutes = int(self.options["utczoneminutes"])
         except KeyError:
-            self.__logger.warning(_("Value of 'utczoneminutes' not defined in the "
+            self.__logger.debug(_("Value of 'utczoneminutes' not defined in the "
             "configuration file. Estimated local value is '%s'.") % utczoneminutes)
         except ValueError as valueerror:
             dgettext = {'error': str(valueerror), 'value': utczoneminutes }
@@ -573,7 +627,7 @@ class State(object):
             else:
                 maxdeltaseconds = int(self.options["maxdeltaseconds"])
         except KeyError:
-            self.__logger.warning(_("Value of 'maxdeltaseconds' not defined in the "
+            self.__logger.debug(_("Value of 'maxdeltaseconds' not defined in the "
             "configuration file. Setting default value '%s'.") % maxdeltaseconds)
         except ValueError as valueerror:
             dgettext = {'error': str(valueerror), 'value': maxdeltaseconds }
@@ -591,7 +645,7 @@ class State(object):
             else:
                 timeoffsetseconds = int(self.options["timeoffsetseconds"])
         except KeyError:
-            self.__logger.warning(_("Value of 'timeoffsetseconds' not defined in the "
+            self.__logger.debug(_("Value of 'timeoffsetseconds' not defined in the "
             "configuration file. Setting default value '%s'.") % timeoffsetseconds)
         except ValueError as valueerror:
             dgettext = {'error': str(valueerror), 'value': timeoffsetseconds }
@@ -609,7 +663,7 @@ class State(object):
             else:
                 exifmode = int(self.options["exifmode"])
         except KeyError:
-            self.__logger.warning(_("Value of 'exifmode' not defined in the "
+            self.__logger.debug(_("Value of 'exifmode' not defined in the "
             "configuration file. Setting default value '%s'.") % exifmode)
         except ValueError as valueerror:
             dgettext = {'error': str(valueerror), 'value': exifmode }
@@ -621,74 +675,53 @@ class State(object):
     @DSynchronized()
     def _set_kmltemplate(self):
         if self.options.has_key('kmltemplate'):
-            templatedir = self.options['kmltemplate']
-            if not isinstance(templatedir, unicode):
-                try:
-                    templatedir = unicode(templatedir, PLATFORMENCODING)
-                except:
-                    pass
+            template = self.options['kmltemplate']
         else:
             msg = _("Main KML template not defined. Setting default KML template file '%s'.")
-            self.__logger.warning(msg % PhotoPlace_Cfg_main_kmltemplate)
-            templatedir = os.path.join(self.resourcedir, PhotoPlace_Cfg_main_kmltemplate)
-        self.set_kmltemplate(templatedir)
+            self.__logger.debug(msg % PhotoPlace_Cfg_main_kmltemplate)
+            template = PhotoPlace_Cfg_main_kmltemplate
+        self.set_kmltemplate(template)
         msg = _("Value of '%(key)s' incorrect. Setting to default value '%(value)s'.")
         templateseparatorkey = PhotoPlace_Cfg_main_templateseparatorkey
         try:
             templateseparatorkey = self.options['templateseparatorkey']
         except:
             dgettext = {'key': 'templateseparatorkey', 'value': templateseparatorkey }
-            self.__logger.warning(msg % dgettext)
+            self.__logger.debug(msg % dgettext)
         self._templateseparatorkey = templateseparatorkey
         templatedefaultvalue = self._templatedefaultvalue
         try:
             templatedefaultvalue = self.options['templatedefaultvalue']
         except:
             dgettext = {'key': 'templatedefaultvalue', 'value': templatedefaultvalue }
-            self.__logger.warning(msg % dgettext)
+            self.__logger.debug(msg % dgettext)
         self._templatedefaultvalue = templatedefaultvalue
         templateseparatornodes = self._templateseparatornodes
         try:
             templateseparatornodes = self.options['templateseparatornodes']
         except:
             dgettext = {'key': 'templateseparatornodes', 'value': templateseparatornodes }
-            self.__logger.warning(msg % dgettext)
+            self.__logger.debug(msg % dgettext)
         self._templateseparatornodes = templateseparatornodes
         templatedeltag = self._templatedeltag
         try:
             templatedeltag = self.options['templatedeltag']
         except:
             dgettext = {'key': 'templatedeltag', 'value': templatedeltag }
-            self.__logger.warning(msg % dgettext)
+            self.__logger.debug(msg % dgettext)
         self._templatedeltag = templatedeltag
 
 
     @DSynchronized()
-    def set_kmltemplate(self, value):
-        kmltemplate = os.path.normpath(os.path.expandvars(value))
-        if not isinstance(kmltemplate, unicode):
-            try:
-                kmltemplate = unicode(kmltemplate, PLATFORMENCODING)
-            except:
-                pass
-        if not os.path.isfile(kmltemplate):
-            kmltemplate_orig = kmltemplate
-            kmltemplate = os.path.join(self.resourcedir_user, kmltemplate)
-            templates_key = u'templates'
-            if not os.path.isfile(kmltemplate):
-                language = locale.getdefaultlocale()[0]
-                kmltemplate = os.path.join(self.resourcedir, templates_key, language, kmltemplate_orig)
-                if not os.path.isfile(kmltemplate):
-                    language = language.split('_')[0]
-                    kmltemplate = os.path.join(self.resourcedir, templates_key, language, kmltemplate_orig)
-                    if not os.path.isfile(kmltemplate):
-                        kmltemplate = os.path.join(self.resourcedir, templates_key, kmltemplate_orig)
-                if not os.path.isfile(kmltemplate):
-                    msg = _("Main KML template file '%s' not found!.")
-                    self.__logger.error(msg % kmltemplate.encode(PLATFORMENCODING))
-                    tip = _("Check if it is defined properly in the configuration file.")
-                    raise Error(msg, tip)
-        self._kmltemplate = kmltemplate
+    def set_kmltemplate(self, value, dirtemplates=u'templates'):
+        filename = self.get_template(value, dirtemplates)
+        if filename != None and os.path.isfile(filename):
+            self._kmltemplate = filename
+        else:
+            msg = _("Main KML template file '%s' not found!.")
+            self.__logger.error(msg % value.encode(PLATFORMENCODING))
+            tip = _("Check if it is defined properly in the configuration file.")
+            raise Error(msg, tip)
 
 
     @DSynchronized()
@@ -700,7 +733,7 @@ class State(object):
             else:
                 copyonlygeolocated = bool(int(self.options["copyonlygeolocated"]))
         except KeyError:
-            self.__logger.warning(_("Value of 'copyonlygeolocated' not defined in the "
+            self.__logger.debug(_("Value of 'copyonlygeolocated' not defined in the "
             "configuration file. Setting default value '%s'.") % copyonlygeolocated)
         except ValueError as valueerror:
             dgettext = {'error': str(valueerror), 'value': copyonlygeolocated }

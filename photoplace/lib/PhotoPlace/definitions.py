@@ -26,7 +26,7 @@ __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
 __version__ = "0.5.0"
 __date__ = "September 2010"
 __license__ = "GPL (v2 or later)"
-__copyright__ ="(c) Jose Riguera, September 2010"
+__copyright__ ="(c) Jose Riguera"
 
 
 import re
@@ -113,7 +113,7 @@ PhotoPlace_Cfg_main_maxdeltaseconds = 300
 PhotoPlace_Cfg_main_timeoffsetseconds = 0
 PhotoPlace_Cfg_main_photouri = u""
 PhotoPlace_Cfg_main_copyonlygeolocated = True
-PhotoPlace_Cfg_main_kmltemplate = os.path.join(u"templates", u"layout.template.kml")
+PhotoPlace_Cfg_main_kmltemplate = u"layout.template.kml"
 PhotoPlace_Cfg_main_templateseparatorkey = '|'
 PhotoPlace_Cfg_main_templatedefaultvalue = " "
 PhotoPlace_Cfg_main_templateseparatornodes = '.'
@@ -128,19 +128,20 @@ PhotoPlace_Cfg_default_heading =  0.0
 # Interal Configuration. Do not touch !!!
 # #######################################
 
-PhotoPlace_Cfg_version = 050
+PhotoPlace_Cfg_version = 05003
 Photoplace_Cfg_mode_command = 0
 Photoplace_Cfg_mode_gui = 1
 PhotoPlace_Cfg_dir = os.path.join(
-    unicode(os.path.expanduser("~"), PLATFORMENCODING, 'ignore'), 
-    u".photoplace")
+    unicode(os.path.expanduser("~"), PLATFORMENCODING, 'ignore'), u".photoplace")
 PhotoPlace_Cfg_file = u"photoplace.cfg"
 PhotoPlace_Cfg_fileextold = u".old"
 PhotoPlace_Cfg_altdir = u"conf"
 PhotoPlace_Cfg_optionsep = "="
 PhotoPlace_Cfg_sectionsep = ":"
 PhotoPlace_Cfg_PhotoRegExp = re.compile(r"\.jpg$", re.I)
-PhotoPlace_Cfg_KmlTemplatePhotoPath = ['kml.Document.Folder.Placemark']
+PhotoPlace_Cfg_KmlTemplatePhoto_Path = ['kml.Document.Folder.Placemark']
+PhotoPlace_Cfg_KmlTemplateDescriptionPhoto_Path = "kml.document.folder.placemark.description"
+PhotoPlace_Cfg_TemplateDescriptionPhoto_File = u"PhotoDescription.xhtml"
 PhotoPlace_Cfg_DirMode = 0750
 PhotoPlace_Cfg_ExifModes = {
     0 : _('write'),
@@ -155,7 +156,10 @@ PhotoPlace_Cfg_LogModes = {
 }
 PhotoPlace_Cfg_default = {
     'main'      : {},
-    'templates' : {},
+    'templates' : {
+        PhotoPlace_Cfg_KmlTemplateDescriptionPhoto_Path :
+            PhotoPlace_Cfg_TemplateDescriptionPhoto_File,
+    },
     'defaults'  : {
         'name'        : '',
         'photofolder' : _("Photos"),
@@ -200,6 +204,28 @@ PhotoPlace_CONFIG_NOCLONE = {
     'templates' : [],
     'plugins'   : [],
 }
+
+
+VARIABLES_OTHER = [
+    'normalplacemark',
+    'normalplacemarkscale',
+    'normalplacemarkcolor',
+    'normalplacemarklabelscale',
+    'normalplacemarklabelcolor',
+    'highlightplacemark',
+    'highlightplacemarkscale',
+    'highlightplacemarkcolor',
+    'highlightplacemarklabelscale',
+    'highlightplacemarklabelcolor',
+    'highlightplacemarkballoonbgcolor',
+    'highlightplacemarkballoontextcolor',
+    'inilatitute',
+    'inilongitude',
+    'inialtitude',
+    'inirange',
+    'initilt',
+    'iniheading',
+]
 
 
 # EOF

@@ -238,15 +238,15 @@ class KmlData(object):
                     parent = parent.parentNode
                 else:
                     # element exists, replace the node with template
-                    mode, div, content = self.templates[lpos]
+                    mode, xmldom, content = self.templates[lpos]
                     if mode < 3:
                         # TEXT or CDATA
                         new_node_data = ''
                         if lpos in self.phototemplates:
                             new_node_data = " %%(%s|)s " % lpos
                         else:
-                            if div != None:
-                                div_element = div.documentElement
+                            if xmldom != None:
+                                div_element = xmldom.documentElement
                                 for child in div_element.childNodes:
                                     new_node_data += child.toxml()
                             else:
@@ -258,9 +258,9 @@ class KmlData(object):
                             # TEXT
                             newnode = self.layout.createTextNode(new_node_data)
                         node.appendChild(newnode)
-                    elif div_mode == 3: 
+                    elif mode == 3: 
                         # XML
-                        div_element = div.documentElement
+                        div_element = xmldom.documentElement
                         for child in div_element.childNodes:
                             node.appendChild(child.cloneNode(True))
                     break
@@ -271,23 +271,28 @@ class KmlData(object):
         self.kml.setTemplates(self.photo_path)
 
 
-    def setData(self, data):
+    def setData(self, data, tmptemplates={}):
         sXMLTemplate.SXMLTemplate.deletetag = self.delete_tag
         sXMLTemplate.SXMLTemplate.separatorKey = self.separator_key
         sXMLTemplate.SXMLTemplate.defaultValue = self.default_value
         sXMLTemplate.SXMLTemplate.separatorXml = self.sep_xmlnodes
-        photodata = dict(data)
+        #photodata = dict(data)
+        photodata = data
         for phototemkey, phototem in self.phototemplates.iteritems():
-            mode, div, content = phototem
-            node_data = ''
-            if div != None:
-                pdestemplate = sXMLTemplate.SXMLTemplate(div.toxml())
-                pdestemplate.setRootInfo(photodata)
-                div_element = pdestemplate.getDom().documentElement
-                for child in div_element.childNodes:
-                    node_data += child.toxml()
-            else:
-                node_data = content
+            node_data = None
+            if tmptemplates and phototemkey in tmptemplates:
+                node_data = tmptemplates[phototemkey]
+            if node_data == None:
+                node_data = ''
+                mode, xmldom, content = phototem
+                if xmldom != None:
+                    pdestemplate = sXMLTemplate.SXMLTemplate(xmldom.toxml())
+                    pdestemplate.setRootInfo(photodata)
+                    div_element = pdestemplate.getDom().documentElement
+                    for child in div_element.childNodes:
+                        node_data += child.toxml()
+                else:
+                    node_data = content
             photodata[phototemkey] = node_data
         # data to template.
         self.kml.setData(photodata)

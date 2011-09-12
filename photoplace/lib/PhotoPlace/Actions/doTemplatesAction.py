@@ -49,39 +49,20 @@ class DoTemplates(Interface.Action):
         self.dgettext['kmltemplate'] = self.kmltemplate.encode(PLATFORMENCODING)
         self.resourcedir = state.resourcedir
         self.userresourcedir = state.resourcedir_user
+        self.key = 'templates'
         self.options = options
         self.kmldata = None
 
 
     def ini(self, *args, **kwargs):
         errors = []
-        templates_key = u'templates'
-        for lpos, filename in self.options[templates_key].iteritems():
-            filename = os.path.expandvars(filename)
-            if not isinstance(filename, unicode):
-                try:
-                    filename = unicode(filename, PLATFORMENCODING)
-                except:
-                    pass
-            file_exist = True
-            if not os.path.isfile(filename):
-                orig_filename = filename
-                filename = os.path.join(self.userresourcedir, filename)
-                if not os.path.isfile(filename):
-                    language = locale.getdefaultlocale()[0]
-                    filename = os.path.join(self.resourcedir, templates_key, language, orig_filename)
-                    if not os.path.isfile(filename):
-                        language = language.split('_')[0]
-                        filename = os.path.join(self.resourcedir, templates_key, language, orig_filename)
-                        if not os.path.isfile(filename):
-                            filename = os.path.join(self.resourcedir, templates_key, orig_filename)
-                    if not os.path.isfile(filename):
-                        msg = _("Template file '%s' does not exist!.") % filename.encode(PLATFORMENCODING)
-                        self.logger.error(msg)
-                        file_exist = False
-            if file_exist:
-                self.templates[lpos] = filename
+        for lpos, filename in self.options[self.key].iteritems():
+            template = self.state.get_template(filename)
+            if template != None and os.path.isfile(template):
+                self.templates[lpos] = template
             else:
+                msg = _("Template file '%s' does not exist!.") % filename.encode(PLATFORMENCODING)
+                self.logger.error(msg)
                 errors.append(filename.encode(PLATFORMENCODING))
         if errors:
             msg = _("Those templates do not exist! : %s.") % errors
@@ -92,7 +73,7 @@ class DoTemplates(Interface.Action):
         xmlinfo = " XML generated with %s on %s" % (PhotoPlace_name, time.asctime())
         try:
             self.kmldata = kmlData.KmlData(
-                self.kmltemplate, PhotoPlace_Cfg_KmlTemplatePhotoPath, xmlinfo,
+                self.kmltemplate, PhotoPlace_Cfg_KmlTemplatePhoto_Path, xmlinfo,
                 self.state._templateseparatornodes,
                 self.state._templatedefaultvalue,
                 self.state._templateseparatorkey,

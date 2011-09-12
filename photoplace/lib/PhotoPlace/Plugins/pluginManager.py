@@ -66,7 +66,7 @@ class PluginManager(object):
     # Singleton
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
-            cls._instance = super(PluginManager, cls).__new__(cls, *args, **kwargs)
+            cls._instance = super(PluginManager, cls).__new__(cls)
         return cls._instance
 
     def __init__(self):
