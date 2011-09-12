@@ -87,6 +87,7 @@ class GPXPoint(object):
         self.lon = lon
         self.ele = ele
         self.attr = attr
+        self.status = 1
 
 
     def __cmp__(self, wpt):
@@ -104,8 +105,7 @@ class GPXPoint(object):
 
 
     def equals(self, wpt, samele=True, ontime=False):
-        same_ele = True
-        same_time = True
+        same_time = same_ele = True
         if self.lat == wpt.lat:
             if self.lon == wpt.lon:
                 if samele:

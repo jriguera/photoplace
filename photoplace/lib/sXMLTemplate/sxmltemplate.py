@@ -209,10 +209,10 @@ class SXMLTemplate:
             -`data`: dictionary with data for new XML nodes.
             -`lwhere`: list of nodes which will be filled with data.
         """
-        if len(lwhere) < 1:
+        if not lwhere:
             lwhere = list(self.templates)
         dictionary = self.TemplateDict(data)
-        for counter in range(0, self.templatecounter):
+        for counter in xrange(0, self.templatecounter):
             if self.templates[counter] not in lwhere:
                 continue
             newnode = self.templates[counter].cloneNode(True)
