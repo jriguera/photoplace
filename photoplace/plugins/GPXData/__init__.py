@@ -3,7 +3,7 @@
 #
 #       __init__.py
 #
-#       Copyright 2010 Jose Riguera Lopez <jriguera@gmail.com>
+#       Copyright 2011 Jose Riguera Lopez <jriguera@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -20,11 +20,12 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 """
+Add-on for PhotoPlace to generate paths and waypoints from GPX tracks to show them in the KML layer.
 """
-__program__ = "photoplace.paths"
+__program__ = "photoplace.gpxdata"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.3.1"
-__date__ = "December 2010"
+__version__ = "0.1.0"
+__date__ = "August 2011"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
 
