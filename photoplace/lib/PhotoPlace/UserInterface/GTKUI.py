@@ -25,9 +25,9 @@ A GTK+ implementation for a user interface.
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
 __version__ = "0.5.0"
-__date__ = "September 2010"
+__date__ = "September 2011"
 __license__ = "GPL (v2 or later)"
-__copyright__ ="(c) Jose Riguera, September 2010"
+__copyright__ ="(c) Jose Riguera, September 2011"
 
 
 import os
@@ -41,6 +41,7 @@ import xml.dom.minidom
 import getpass
 import cgi
 import warnings
+
 warnings.filterwarnings('error', module='gtk')
 try:
     import pygtk
@@ -62,7 +63,6 @@ except Exception as e:
 warnings.resetwarnings()
 
 
-
 from PhotoPlace.definitions import *
 from PhotoPlace.observerHandler import *
 from PhotoPlace.stateHandler import *
@@ -70,136 +70,41 @@ from PhotoPlace.userFacade import *
 from PhotoPlace.Plugins.Interface import *
 from Interface import InterfaceUI
 from GTKUIdefinitions import *
+from GTKPhotoInfo import *
+from GTKTemplateEditor import *
 
 
 
-# ##############
-# JPEG to pixbuf
-# ##############
+# #####################################################
+# Cell text renderer (for treeviews) with click support
+# #####################################################
 
-def get_pixbuf_from_geophoto(geophoto, size=PIXBUFSIZE_GEOPHOTOINFO):
-    im = Image.open(geophoto.path)
-    (im_width, im_height) = im.size
-    # Size transformations
-    (width, height) = size
-    mirror = im.resize((width, height), Image.ANTIALIAS)
-    if 'Exif.Image.Orientation' in geophoto.exif.exif_keys:
-        orientation = geophoto.exif['Exif.Image.Orientation'].value
-        if orientation == 1:
-            pass
-        elif orientation == 2:
-            # Vertical Mirror
-            mirror = mirror.transpose(Image.FLIP_LEFT_RIGHT)
-        elif orientation == 3:
-            # Rotation 180
-            mirror = mirror.transpose(Image.ROTATE_180)
-        elif orientation == 4:
-            # Horizontal Mirror
-            mirror = mirror.transpose(Image.FLIP_TOP_BOTTOM)
-        elif orientation == 5:
-            # Horizontal Mirror + Rotation 270
-            mirror = mirror.transpose(Image.FLIP_TOP_BOTTOM). \
-                transpose(Image.ROTATE_270)
-        elif orientation == 6:
-            # Rotation 270
-            mirror = mirror.transpose(Image.ROTATE_270)
-        elif orientation == 7:
-            # Vertical Mirror + Rotation 270
-            mirror = mirror.transpose(Image.FLIP_LEFT_RIGHT). \
-                transpose(Image.ROTATE_270)
-        elif orientation == 8:
-            # Rotation 90
-            mirror = mirror.transpose(Image.ROTATE_90)
-    filein = StringIO.StringIO()
-    mirror.save(filein, 'ppm')
-    contents = filein.getvalue()
-    filein.close()
-    loader = gtk.gdk.PixbufLoader("pnm")
-    loader.write(contents, len(contents))
-    loader.close()
-    pixbuf = loader.get_pixbuf()
-    return pixbuf
+class CellRendererTextClick(gtk.CellRendererText):
 
+    __gproperties__ = {
+        'clickable': 
+            (gobject.TYPE_BOOLEAN, 'clickable', 'is clickable?', False, gobject.PARAM_READWRITE)
+    }
 
+    def __init__(self):
+        #gtk.CellRendererText.__init__(self)
+        gobject.GObject.__init__(self)
+        self.clickable = False
 
-# ############################
-# Autocompletion for textviews
-# ############################
+    def do_get_property(self, pspec):
+        return getattr(self, pspec.name)
 
-class TextViewCompleter(object):
+    def do_set_property(self, pspec, value):
+        setattr(self, pspec.name, value)
 
-    def __init__(self, textview, position, completion, size=TEXVIEWCOMPLETER_SIZE):
-        object.__init__(self)
-        self.textview = textview
-        self.completion = completion
-        self.position = position
-        self.popup = gtk.Window(gtk.WINDOW_POPUP)
-        parent = textview.get_toplevel()
-        self.popup.set_transient_for(parent)
-        self.popup.set_destroy_with_parent(True)
-        frame = gtk.Frame()
-        sw = gtk.ScrolledWindow()
-        sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        model = gtk.ListStore(gobject.TYPE_STRING)
-        for item in self.completion:
-            ite = model.append()
-            model.set(ite, 0, item)
-        self.list_view = gtk.TreeView(model)
-        self.list_view.set_property("headers-visible", False)
-        selection = self.list_view.get_selection()
-        selection.select_path((0,))
-        column = gtk.TreeViewColumn("", gtk.CellRendererText(), text=0)
-        self.list_view.append_column(column)
-        sw.add(self.list_view)
-        frame.add(sw)
-        self.popup.add(frame)
-        self.popup.set_size_request(size[0], size[1])
-        self.show_popup()
+    def do_start_editing(self, event, treeview, path, background_area, cell_area, flags):
+        if not self.clickable:
+            return gtk.CellRendererText.do_start_editing(self,
+                event, treeview, path, background_area, cell_area, flags)
+        self.emit('edited', path, '')
 
-    def hide_popup(self, *args, **kwargs):
-        self.popup.hide()
+gobject.type_register(CellRendererTextClick)
 
-    def show_popup(self):
-        tbuffer = self.textview.get_buffer()
-        ite = tbuffer.get_iter_at_mark(tbuffer.get_insert())
-        rectangle = self.textview.get_iter_location(ite)
-        absX, absY = self.textview.buffer_to_window_coords(gtk.TEXT_WINDOW_TEXT,
-            rectangle.x + rectangle.width + 0 ,
-            rectangle.y + rectangle.height + 70)
-        parent = self.textview.get_parent()
-        self.popup.move(self.position[0] + absX, self.position[1] + absY)
-        self.popup.show_all()
-
-    def prev(self):
-        sel = self.list_view.get_selection()
-        model, ite = sel.get_selected()
-        mite = model.get_path(ite)
-        if mite != None and mite[0] > 0:
-            path = (mite[0] - 1,)
-            self.list_view.set_cursor(path)
-
-    def next(self):
-        sel = self.list_view.get_selection()
-        model, ite = sel.get_selected()
-        mite = model.iter_next(ite)
-        if mite != None:
-            path = model.get_path(mite)
-            self.list_view.set_cursor(path)
-
-    def confirm(self):
-        sel = self.list_view.get_selection()
-        selection = self.select(sel)
-        self.destroy()
-        return selection
-
-    def select(self, selection):
-        model, ite = selection.get_selected()
-        name = model.get_value(ite, 0)
-        return name
-
-    def destroy(self):
-        self.popup.hide()
-        self.popup.destroy()
 
 
 # ############################
@@ -219,98 +124,75 @@ class PhotoPlaceGUI(InterfaceUI):
         return cls._instance
 
     def __init__(self, resourcedir=None):
-        InterfaceUI.__init__(self, resourcedir)
-        guifile = os.path.join(self.resourcedir, GTKUI_RESOURCE_GUIXML)
-        self.builder = gtk.Builder()
-        self.builder.set_translation_domain(GTKUI_GETTEXT_DOMAIN)
-        self.builder.add_from_file(guifile)
-        # Notebook and menuitem for plugins
-        self.notebook = self.builder.get_object("notebook")
-        self.notebook.set_group_id(20680)
-        self.notebook_plugins = self.builder.get_object("notebook-plugins")
-        self.toggletoolbutton_plugins = self.builder.get_object("toggletoolbutton-plugins")
-        imagemenuitem_plugins = self.builder.get_object("imagemenuitem-plugins")
-        self.menuitem_plugins = gtk.Menu()
-        imagemenuitem_plugins.set_submenu(self.menuitem_plugins)
-        self.progressbar = self.builder.get_object("progressbar-go")
-        # textview log and observer defaults
-        self.textview = self.builder.get_object("textview-output")
-        self.textbuffer = self.textview.get_buffer()
-        tag_debug = self.textbuffer.create_tag('debug')
-        tag_debug.set_property("font", "Courier")
-        tag_debug.set_property("size-points", 8)
-        tag_info = self.textbuffer.create_tag('info')
-        tag_info.set_property("font", "Courier")
-        tag_info.set_property("foreground", "green")
-        tag_info.set_property("size-points", 8)
-        tag_info.set_property("weight", 700)
-        tag_warning = self.textbuffer.create_tag('warning')
-        tag_warning.set_property("font", "Courier")
-        tag_warning.set_property("foreground", "orange")
-        tag_warning.set_property("size-points", 8)
-        tag_warning.set_property("weight", 800)
-        tag_error = self.textbuffer.create_tag('error')
-        tag_error.set_property("font", "Courier")
-        tag_error.set_property("foreground", "red")
-        tag_error.set_property("size-points", 8)
-        tag_error.set_property("weight", 900)
-        self.textview_formatter = \
-            logging.Formatter(PhotoPlace_Cfg_logtextviewformat + '\n')
-        self.statusbar = self.builder.get_object("statusbar")
-        self.statusbar_formatter = logging.Formatter(' %(message)s')
-        msg = PhotoPlace_name + " v" + PhotoPlace_version
-        self.statusbar_context = self.statusbar.get_context_id(msg)
-        self.statusbar.push(self.statusbar_context, msg)
-        # make dialogs
-        self.window = self.builder.get_object("window")
-        self.photoinfo_win = self.builder.get_object("window-photoinfo")
-        self.templates_win = self.builder.get_object("window-templates")
-        # show window
-        self["treeviewcolumn-photoinfo-key"].set_title(_("Property"))
-        self["treeviewcolumn-photoinfo-value"].set_title(_("Value"))
-        self["treeview-photoinfo"].set_model(gtk.TreeStore(bool, bool, str, str, str))
-        self["treeview-photoinfo"].set_rules_hint(True)
-        self["treeviewcolumn-geophotos-data"].set_title(_("Name"))
-        self["treeviewcolumn-geophotos-value"].set_title(_("Value"))
-        self["treeviewcolumn-geophotos-picture"].set_title(_("Picture"))
-        self["treeviewcolumn-geophotos-info"].set_title(_("Information"))
-        self["treeview-geophotos"].set_model(gtk.TreeStore(
-            int, str, str, str, bool, gtk.gdk.Pixbuf, str, str, str, str, bool, bool, str))
-        self["treeview-geophotos"].set_rules_hint(True)
-        self["treeviewcolumn-variables-name"].set_title(_("Name"))
-        self["treeviewcolumn-variables-value"].set_title(_("Value"))
-        self["treeview-variables"].set_model(gtk.TreeStore(str, str, bool))
-        self["treeview-variables"].set_rules_hint(True)
-        textbuffer_templates = self["textbuffer-templates"]
-        tag = textbuffer_templates.create_tag('attr')
-        tag.set_property('foreground', "green")
-        tag.set_property('family', "Monospace")
-        tag = textbuffer_templates.create_tag('defaults')
-        tag.set_property('foreground', "red")
-        tag.set_property('family', "Monospace")
-        tag = textbuffer_templates.create_tag('photo')
-        tag.set_property('foreground', "blue")
-        tag.set_property('family', "Monospace")
-        self["textview-templates"].set_tooltip_markup(_("You can use simple "
-            "HTML tags like <i>list</i> (<i>li</i>, <i>ul</i>) or <i>table</i> "
-            "and use expresions like <b>%(Variable|<i>DEFAULT</i>)s</b> to get values. "
-            "<i>DEFAULT</i> is the value to set up when <i>Variable</i> has no value, if "
-            "<i>DEFAULT</i> is none (not a character, even space) <i>Variable</i> "
-            "will not be shown."
-            "You can use the variables defined in the tab <i>VARIABLES</i> in the same way.\n"
-            "To get all supported variables press <b>&lt;ctl&gt;&lt;space&gt;</b>"))
-        self["textview-templates"].add_events( gtk.gdk.KEY_PRESS_MASK )
-        self["textview-templates"].connect( "key_press_event", self._key_press_wintemplate)
-        settings = gtk.settings_get_default()
-        settings.props.gtk_button_images = True
-        self.in_process = True
-        self.window.show_all()
+        if resourcedir:
+            InterfaceUI.__init__(self, resourcedir)
+            guifile = os.path.join(self.resourcedir, GTKUI_RESOURCE_GUIXML)
+            self.builder = gtk.Builder()
+            self.builder.set_translation_domain(GTKUI_GETTEXT_DOMAIN)
+            self.builder.add_from_file(guifile)
+            # Notebook and menuitem for plugins
+            self.notebook = self.builder.get_object("notebook")
+            self.notebook.set_group_id(20680)
+            self.notebook_plugins = self.builder.get_object("notebook-plugins")
+            self.toggletoolbutton_plugins = self.builder.get_object("toggletoolbutton-plugins")
+            imagemenuitem_plugins = self.builder.get_object("imagemenuitem-plugins")
+            self.menuitem_plugins = gtk.Menu()
+            imagemenuitem_plugins.set_submenu(self.menuitem_plugins)
+            self.progressbar = self.builder.get_object("progressbar-go")
+            # textview log and observer defaults
+            self.textview = self.builder.get_object("textview-output")
+            self.textbuffer = self.textview.get_buffer()
+            tag_debug = self.textbuffer.create_tag('debug')
+            tag_debug.set_property("font", "Courier")
+            tag_debug.set_property("size-points", 8)
+            tag_info = self.textbuffer.create_tag('info')
+            tag_info.set_property("font", "Courier")
+            tag_info.set_property("foreground", "green")
+            tag_info.set_property("size-points", 8)
+            tag_info.set_property("weight", 700)
+            tag_warning = self.textbuffer.create_tag('warning')
+            tag_warning.set_property("font", "Courier")
+            tag_warning.set_property("foreground", "orange")
+            tag_warning.set_property("size-points", 8)
+            tag_warning.set_property("weight", 800)
+            tag_error = self.textbuffer.create_tag('error')
+            tag_error.set_property("font", "Courier")
+            tag_error.set_property("foreground", "red")
+            tag_error.set_property("size-points", 8)
+            tag_error.set_property("weight", 900)
+            self.textview_formatter = \
+                logging.Formatter(PhotoPlace_Cfg_logtextviewformat + '\n')
+            self.statusbar = self.builder.get_object("statusbar")
+            self.statusbar_formatter = logging.Formatter(' %(message)s')
+            msg = PhotoPlace_name + " v" + PhotoPlace_version
+            self.statusbar_context = self.statusbar.get_context_id(msg)
+            self.statusbar.push(self.statusbar_context, msg)
+            # make dialogs
+            self.window = self.builder.get_object("window")
+            # show window
+            self["treeviewcolumn-geophotos-data"].set_title(_("Name"))
+            self["treeviewcolumn-geophotos-value"].set_title(_("Value"))
+            self["treeviewcolumn-geophotos-picture"].set_title(_("Picture"))
+            self["treeviewcolumn-geophotos-info"].set_title(_("Information"))
+            self["treeview-geophotos"].set_model(gtk.TreeStore(
+                int, str, str, str, bool, gtk.gdk.Pixbuf, str, str, str, str, bool, bool, str))
+            self["treeview-geophotos"].set_rules_hint(True)
+            self["treeviewcolumn-variables-name"].set_title(_("Name"))
+            self["treeviewcolumn-variables-value"].set_title(_("Value"))
+            self["treeview-variables"].set_model(gtk.TreeStore(str, str, bool))
+            self["treeview-variables"].set_rules_hint(True)
+            settings = gtk.settings_get_default()
+            settings.props.gtk_button_images = True
+            self.in_process = True
+            self.windowteditor = TemplateEditorGUI(resourcedir, self.window)
+            self.windowphotoinfo = PhotoInfoGUI(resourcedir, self.window)
+            self.window.show_all()
 
     def __getitem__(self, key):
         return self.builder.get_object(key)
 
     def __setitem__(self, key, value):
-        raise ValueError(_("Cannot set key!"))
+        raise ValueError("Cannot set key!")
 
     def init(self, userfacade):
         gtk.gdk.threads_enter()
@@ -370,6 +252,9 @@ class PhotoPlaceGUI(InterfaceUI):
         self.firstloadedphotos = False
         self.variables_iterator = None
         self.in_process = False
+        self.windowteditor.init(self.userfacade)
+        model = self["treeview-geophotos"].get_model()
+        self.windowphotoinfo.init(self.userfacade, model)
 
     def start(self, load_files=True):
         #gtk.gdk.threads_enter()
@@ -418,7 +303,7 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_aboutdialog_delete_event": self.dialog_close,
             "on_linkbutton-suggestion_clicked": self._open_link,
             "on_linkbutton-donate_clicked": self._open_link,
-            "on_window_destroy": self.window_exit,
+            "on_window_destroy": self.end,
             "on_notebook_create_window": self._create_notebookwindow,
             "on_imagemenuitem-opendir_activate": self._clicked_photodir,
             "on_imagemenuitem-opengpx_activate": self._clicked_gpx,
@@ -426,13 +311,13 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_imagemenuitem-new_activate": self.action_clear,
             "on_imagemenuitem-saveconf_activate": self.action_saveconfig,
             "on_imagemenuitem-recoverconf_activate": self.action_recoverconfig,
-            "on_imagemenuitem-exit_activate": self.window_exit,
+            "on_imagemenuitem-exit_activate": self.end,
             "on_imagemenuitem-about_activate": self.dialog_show,
             "on_imagemenuitem-onlinehelp_activate": self._click_onlinehelp,
             "on_button-openphotos_clicked": self._clicked_photodir,
             "on_button-opengpx_clicked": self._clicked_gpx,
             "on_toggletoolbutton-plugins_toggled": self._toggle_loadplugins,
-            "on_toolbutton-exit_clicked": self.window_exit,
+            "on_toolbutton-exit_clicked": self.end,
             "on_togglebutton-outfile_toggled": self._toggle_outfile,
             "on_checkbutton-outgeo_toggled": self._toggle_geolocate_mode,
             "on_combobox-exif_changed": self._toggle_exifmode,
@@ -445,40 +330,27 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_button-geolocate_clicked": self._clicked_geolocate,
             "on_cellgeophotos_toggled": self._toggle_geophoto,
             "on_treeview-geophotos_row_activated": self._clicked_geophoto,
-            "on_window-photoinfo_delete_event": self._close_winphotoinfo,
-            "on_button-photoinfo-close_clicked": self._close_winphotoinfo,
-            "on_button-photoinfo-add_clicked": self._add_photoinfo_attr,
-            "on_button-photoinfo-del_clicked": self._del_photoinfo_attr,
-            "on_button-photoinfo-next_clicked": self._clicked_next_photoinfo,
-            "on_button-photoinfo-prev_clicked": self._clicked_prev_photoinfo,
-            "on_cellrenderertext-photoinfo-value_edited": self._edit_cell_photoinfo,
-            "on_treeview-photoinfo_row_activated": self._clicked_photoinfo_att,
+            "on_treeview-geophotos_button_press_event": self._lclicked_geophoto,
             "on_button-variables-add_clicked": self._add_variable,
             "on_button-variables-del_clicked": self._del_variable,
             "on_cellrenderertext-variables-value_edited": self._edit_cell_variable,
             "on_cellrenderertext-geophotos-value_edited": self._edit_cell_geophoto,
             "on_button-templates-edit_clicked": self._clicked_template_edit,
-            "on_window-templates_delete_event": self._close_wintemplate,
-            "on_toolbutton-wintemplates-exit_clicked": self._close_wintemplate,
-            "on_toolbutton-wintemplates-load_clicked": self._load_template_file,
-            "on_toolbutton-wintemplates-save_clicked": self._save_wintemplate,
-            "on_textbuffer-templates_mark_set": self._update_wintemplate_statusbar,
-            "on_textbuffer-templates_changed": self._update_wintemplate_statusbar,
-            "on_toolbutton-wintemplates-new_clicked": self._new_wintemplate,
-            "on_toolbutton-wintemplates-recover_clicked": self._recover_wintemplate,
-            "on_toolbutton-wintemplates-check_clicked": self._validate_wintemplate,
         }
         self.builder.connect_signals(self.signals)
+        self.windowteditor.connect('_save', self._reload_templates_cb)
+        self.windowphotoinfo.connect('_save', self._set_geophoto_variables_cb)
         gtk.main()
         gtk.gdk.threads_leave()
 
-    def window_exit(self, widget, data=None):
+    def end(self, widget, data=None):
         for plg in self.plugins:
             (plgobj, menuitem, notebookindex, notebookframe) = self.plugins[plg]
             if menuitem.get_active():
                 menuitem.set_active(False)
         try:
-            self.end()
+            #super(InterfaceUI, self).end()
+            InterfaceUI.end(self)
         except Error as e:
             self.show_dialog(e.type, e.msg, e.tip)
         gtk.main_quit()
@@ -664,9 +536,9 @@ class PhotoPlaceGUI(InterfaceUI):
             level = "warning"
         elif record.levelno == logging.INFO:
             level = "info"
-        gobject.idle_add(self.set_textview, msg, level)
+        gobject.idle_add(self.set_output, msg, level)
 
-    def set_textview(self, msg, level="info"):
+    def set_output(self, msg, level="info"):
         iterator = self.textbuffer.get_end_iter()
         self.textbuffer.place_cursor(iterator)
         self.textbuffer.insert_with_tags_by_name(iterator, msg, level)
@@ -908,10 +780,11 @@ class PhotoPlaceGUI(InterfaceUI):
         self['togglebutton-outfile'].set_active(False)
         self._choose_outfile(False)
 
-    def _toggle_exifmode(self, widget, data=None):
+    def _toggle_exifmode(self, widget=None, data=None):
         iter_mode = self['combobox-exif'].get_active_iter()
-        mode = self["combobox-exif"].get_model().get_value(iter_mode, 1)
-        self.userfacade.state["exifmode"] = mode
+        if iter_mode != None:
+            mode = self["combobox-exif"].get_model().get_value(iter_mode, 1)
+            self.userfacade.state["exifmode"] = mode
 
     def _toggle_geolocate_mode(self, widget=None, data=None):
         if self['checkbutton-outgeo'].get_active():
@@ -955,19 +828,19 @@ class PhotoPlaceGUI(InterfaceUI):
                 photouri = self.userfacade.state['photouri']
                 self["entry-photouri"].set_text(photouri)
 
-    def _adjust_utctimezone(self, widget, data=None):
-        value = widget.get_value()
+    def _adjust_utctimezone(self, widget=None, data=None):
+        value = self['adjustment-utc'].get_value()
         new_value = float_to_timefloat(value)
         if new_value != value:
-            widget.set_value(new_value)
+            self['adjustment-utc'].set_value(new_value)
         self.userfacade.state['utczoneminutes'] = timefloat_to_minutes(new_value)
 
-    def _adjust_timedelta(self, widget, data=None):
-        value = widget.get_value()
+    def _adjust_timedelta(self, widget=None, data=None):
+        value = self['adjustment-tdelta'].get_value()
         self.userfacade.state['maxdeltaseconds'] = int(value)
 
-    def _adjust_toffset(self, widget, data=None):
-        value = widget.get_value()
+    def _adjust_toffset(self, widget=None, data=None):
+        value = self['adjustment-toffset'].get_value()
         self.userfacade.state['timeoffsetseconds'] = int(value)
         self["treeview-geophotos"].get_model().clear()
         self.num_photos_process = 0
@@ -979,12 +852,12 @@ class PhotoPlaceGUI(InterfaceUI):
             if geophoto.status > 0:
                 self.num_photos_process += 1
 
-    def _adjust_quality(self, widget, data=None):
-        value = widget.get_value()
+    def _adjust_quality(self, widget=None, data=None):
+        value = self['adjustment-quality'].get_value()
         self.userfacade.state['quality'] = int(value)
 
-    def _adjust_jpgzoom(self, widget, data=None):
-        value = widget.get_value()
+    def _adjust_jpgzoom(self, widget=None, data=None):
+        value = self['adjustment-jpgzoom'].get_value()
         self.userfacade.state['jpgzoom'] = value
 
 
@@ -1051,10 +924,11 @@ class PhotoPlaceGUI(InterfaceUI):
         iterator = model.append(None, [
             geophoto.status, geophoto.name, geophoto.path, geophoto.time,
             bool(geophoto.status), pixbuf, information, geodata, geovalue, color, True, False, tips])
-        self._set_geophoto_variables(model, iterator, geophoto)
+        self.set_geophoto_variables(iterator, geophoto)
         self["treeview-geophotos"].expand_row(model.get_path(iterator), True)
 
-    def _set_geophoto_variables(self, model, iterator, geophoto):
+    def set_geophoto_variables(self, iterator, geophoto):
+        model = self["treeview-geophotos"].get_model()
         child_iter = model.iter_children(iterator)
         while child_iter != None:
             model.remove(child_iter)
@@ -1069,6 +943,11 @@ class PhotoPlaceGUI(InterfaceUI):
                 model.append(iterator, [
                     geophoto.status, variable, geophoto.path, None, bool(geophoto.status), None, None,
                     "<tt><b>%s</b></tt> :" % variable, value, None, False, True, _("Variable from template")])
+
+    def _set_geophoto_variables_cb(self, obj, iterator, geophoto, *args, **kwargs):
+        self.set_geophoto_variables(iterator, geophoto)
+        model = self["treeview-geophotos"].get_model()
+        self["treeview-geophotos"].expand_row(model.get_path(iterator), True)
 
     def _toggle_geophoto(self, cell, path, data=None):
         model = self["treeview-geophotos"].get_model()
@@ -1098,10 +977,7 @@ class PhotoPlaceGUI(InterfaceUI):
         geophoto_path = model.get_value(ite, TREEVIEWPHOTOS_COL_PATH)
         for geophoto in self.userfacade.state.geophotos:
             if geophoto.path == geophoto_path:
-                self.treeview_iterator = ite
-                self.show_window_photoinfo(geophoto)
-                #self.photoinfo_win.resize(1, 1)
-                #self.photoinfo_win.show()
+                self.windowphotoinfo.show(geophoto, ite)
                 return True
         return False
 
@@ -1115,6 +991,82 @@ class PhotoPlaceGUI(InterfaceUI):
                 geophoto.attr[variable] = str(new_text.strip())
                 model.set(ite, TREEVIEWPHOTOS_COL_VALUE, new_text.strip())
                 return
+
+    def _lclicked_geophoto(self, widget, event):
+        if event.button == 3:
+            paths_ite = widget.get_path_at_pos(int(event.x), int(event.y))
+            if paths_ite == None:
+                # invalid path
+                pass
+            elif len(paths_ite) > 0:
+                model = self["treeview-geophotos"].get_model()
+                ite = model.get_iter(paths_ite[0])
+                geophoto_path = model.get_value(ite, TREEVIEWPHOTOS_COL_PATH)
+                active = True
+                if geophoto_path in self.userfacade.state.geophotostyle:
+                    style = self.userfacade.state.geophotostyle[geophoto_path]
+                    try:
+                        active = style[PhotoPlace_Cfg_KmlTemplateDescriptionPhoto_Path] == None
+                    except:
+                        pass
+                menu = gtk.Menu()
+                menu_view = gtk.MenuItem(_("View EXIF and Variables"))
+                menu_edit = gtk.MenuItem(_("Edit Template/Description"))
+                menu_default = gtk.CheckMenuItem(_("Default Template"))
+                menu_default.set_active(active)
+                menu.append(menu_view)
+                menu.append(menu_edit)
+                menu.append(menu_default)
+                menu.show_all()
+                menu.popup(None, None, None, event.button, event.time)
+                for geophoto in self.userfacade.state.geophotos:
+                    if geophoto.path == geophoto_path:
+                        menu_view.connect("activate", self._activate_viewgeophoto, geophoto, ite)
+                        menu_default.connect("activate", self._activate_setdesc, geophoto)
+                        menu_edit.connect("activate", self._activate_menuedit, geophoto, ite)
+                        break
+
+    def _activate_viewgeophoto(self, widget, geophoto, ite):
+        self.windowphotoinfo.show(geophoto, ite)
+
+    def _activate_setdesc(self, widget, geophoto):
+        key = geophoto.path
+        if key in self.userfacade.state.geophotostyle:
+            self.userfacade.state.geophotostyle[key] = None
+            del self.userfacade.state.geophotostyle[key]
+
+
+
+
+    def _activate_menuedit(self, widget, geophoto, ite):
+        key = geophoto.path
+        text = None
+        if key in self.userfacade.state.geophotostyle:
+            style = self.userfacade.state.geophotostyle[key]
+            if PhotoPlace_Cfg_KmlTemplateDescriptionPhoto_Path in style:
+                text = style[PhotoPlace_Cfg_KmlTemplateDescriptionPhoto_Path]
+        completions = list()
+        for item in PhotoPlace_TEMPLATE_VARS:
+            completions.append("%(" + item + ")s")
+        filename = None
+        try:
+            templates = self.userfacade.options[TEMPLATES_KEY]
+            filename = templates[PhotoPlace_Cfg_KmlTemplateDescriptionPhoto_Path]
+        except:
+            pass
+        tooltip = "hola"
+        self.windowteditor.show(text=text, template=filename, recover=filename, 
+            completions=completions, tooltip=tooltip, cansave=False)
+        self.windowteditor.connect('close', self._editor_setdesc, geophoto, ite)
+
+    def _editor_setdesc(self, obj, text, filename, geophoto, ite):
+        key = geophoto.path
+        if key in self.userfacade.state.geophotostyle:
+            style = self.userfacade.state.geophotostyle[key]
+        else:
+            style = dict()
+            self.userfacade.state.geophotostyle[key] = style
+        style[PhotoPlace_Cfg_KmlTemplateDescriptionPhoto_Path] = text
 
 
     # ######################################
@@ -1204,367 +1156,40 @@ class PhotoPlaceGUI(InterfaceUI):
 
     def _clicked_template_edit(self, widget=None, data=None):
         ite = self['combobox-templates'].get_active_iter()
-        template = self["combobox-templates"].get_model().get_value(ite, 2)
-        self._load_template_file(None, template)
-        dgettext = {'program': PhotoPlace_name, 'template': os.path.basename(template)}
-        self.templates_win.set_title('%(program)s: Editing template <%(template)s>' % dgettext)
-        self.templates_win.show()
-
-    def _load_template_file(self, widget=None, template_file=None):
-        self.popup = None
-        if template_file == None:
-            dialog = gtk.FileChooserDialog(title=_("Select file to load ..."),
-                parent=self.window, action=gtk.FILE_CHOOSER_ACTION_OPEN,
-                buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
-            ffilter = gtk.FileFilter()
-            ffilter.set_name(_("All files"))
-            ffilter.add_pattern("*")
-            dialog.add_filter(ffilter)
-            filename = None
-            if dialog.run() == gtk.RESPONSE_OK:
-                filename = dialog.get_filename()
-            dialog.destroy()
-        else:
-            filename = self.userfacade.get_filepath(template_file)
-        self["statusbar-window-templates"].pop(0)
-        fd = None
-        try:
-            fd = codecs.open(filename, "r", encoding="utf-8")
-            tbuffer = self["textbuffer-templates"]
-            ite_end = tbuffer.get_iter_at_mark(tbuffer.get_insert())
-            begin = True
-            lines = 0
-            for line in fd:
-                for part in re.split(r"(%\([a-zA-Z0-9_\.]+\|?[a-zA-Z0-9 \?¿_.,:;=!@$&\-\+\*]*\).)", line):
-                    if part.startswith('%('):
-                        key = re.match(r"%\(([a-zA-Z0-9_\.]+)\|?.*\).", part).group(1)
-                        if key in self.userfacade.options['defaults']:
-                            tbuffer.insert_with_tags_by_name(ite_end, part, 'defaults')
-                        elif key in PhotoPlace_TEMPLATE_VARS:
-                            tbuffer.insert_with_tags_by_name(ite_end, part, 'photo')
-                        else:
-                            tbuffer.insert_with_tags_by_name(ite_end, part, 'attr')
-                    else:
-                        tbuffer.insert(ite_end, part)
-                ite_end = tbuffer.get_iter_at_mark(tbuffer.get_insert())
-                lines += 1
-            # Delete last template div, if it exists!
-            nline = lines
-            while nline > 0:
-                ite_nline = tbuffer.get_iter_at_line(nline)
-                text = tbuffer.get_text(ite_nline, ite_end).strip()
-                if text.startswith('</div>'):
-                    tbuffer.delete(ite_nline, ite_end)
-                    break
-                elif len(text) > 1:
-                    # Not a valid template
-                    break
-                else:
-                    tbuffer.delete(ite_nline, ite_end)
-                ite_end = ite_nline
-                nline -= 1
-            # Delete first template div, if it exists!
-            ite_start = tbuffer.get_start_iter()
-            nline = 0
-            while nline <= lines:
-                ite_nline = tbuffer.get_iter_at_line(nline)
-                text = tbuffer.get_text(ite_start, ite_nline).strip()
-                search = re.search(r'<div\s+mode=.(\w+).\s*>', text)
-                if search:
-                    tbuffer.delete(ite_start, ite_nline)
-                    mode = search.group(1)
-                    break
-                elif len(text) > 1:
-                    # Not a valid template
-                    break
-                else:
-                    tbuffer.delete(ite_start, ite_nline)
-                ite_start = ite_nline
-                nline += 1
-            self["statusbar-window-templates"].push(0,
-                _("Template from file '%s' loaded") % os.path.basename(filename))
-        except Exception as exception:
-            self["statusbar-window-templates"].push(0, str(exception))
-            return False
-        finally:
-            if fd != None:
-                fd.close()
-        return True
-
-    def _save_wintemplate(self, widget=None):
-        self["statusbar-window-templates"].pop(0)
-        ite = self['combobox-templates'].get_active_iter()
-        filename = self["combobox-templates"].get_model().get_value(ite, 2)
-        start, end = self["textbuffer-templates"].get_bounds()
-        filename = self["combobox-templates"].get_model().get_value(ite, 0)
-        filename = os.path.join(self.userfacade.state.resourcedir_user, filename)
-        template = self["textbuffer-templates"].get_text(start, end)
-        fd = None
-        error = False
-        try:
-            fd = codecs.open(filename, "w", encoding="utf-8")
-            fd.write("<div mode='cdata'>\n")
-            fd.write(template)
-            fd.write("\n</div>\n")
-        except Exception as exception:
-            self["statusbar-window-templates"].push(0, str(exception))
-            error = True
-        finally:
-            if fd != None:
-                fd.close()
-        if not error:
-            # outside because loadtemplates open the file!
-            if self.action_loadtemplates():
-                model = self["treeview-geophotos"].get_model()
-                iterator = model.get_iter_root()
-                while iterator != None:
-                    geophoto_path = model.get_value(iterator, TREEVIEWPHOTOS_COL_PATH)
-                    for geophoto in self.userfacade.state.geophotos:
-                        if geophoto.path == geophoto_path:
-                            self._set_geophoto_variables(model, iterator, geophoto)
-                            break
-                    next = model.iter_next(iterator)
-                    while next != None and  model.iter_parent(next) == iterator:
-                        next = model.iter_next(next)
-                    iterator = next
-                self["treeview-geophotos"].expand_all()
-                self["statusbar-window-templates"].push(0,
-                    _('Template saved and reloaded without problems'))
-            else:
-                self["statusbar-window-templates"].push(0,
-                    _('Error processing template'))
-
-    def _key_press_wintemplate(self, textview, event):
-        if self.popup != None:
-            if event.keyval == gtk.gdk.keyval_from_name("Up"):
-                self.popup.prev()
-                return True
-            elif event.keyval == gtk.gdk.keyval_from_name("Down"):
-                self.popup.next()
-                return True
-            elif event.keyval == gtk.gdk.keyval_from_name("Return"):
-                value = self.popup.confirm()
-                tbuffer = self["textbuffer-templates"]
-                end = tbuffer.get_iter_at_mark(tbuffer.get_insert())
-                start = end.copy()
-                start.backward_char()
-                while start.get_char() not in " ,()[]<>|/\\\"\'\n\t":
-                    start.backward_char()
-                start.forward_char()
-                tbuffer.delete(start, end)
-                ite = tbuffer.get_iter_at_mark(tbuffer.get_insert())
-                key = re.match(r"%\(([a-zA-Z0-9_\.]+)\|?.*]*\).", value).group(1)
-                if key in self.userfacade.options['defaults']:
-                    tbuffer.insert_with_tags_by_name(ite, value, 'defaults')
-                elif key in PhotoPlace_TEMPLATE_VARS:
-                    tbuffer.insert_with_tags_by_name(ite, value, 'photo')
-                else:
-                    tbuffer.insert_with_tags_by_name(ite, value, 'attr')
-                self.popup = None
-                return True
-            else:
-                self.popup.destroy()
-                self.popup = None
-        else:
-            if event.keyval == gtk.gdk.keyval_from_name("space") \
-            and event.state & gtk.gdk.CONTROL_MASK:
-                return self.autocomplete_template_var(self["textbuffer-templates"])
-            elif gtk.gdk.keyval_from_name("percent") == event.keyval:
-                return self.autocomplete_template_var(self["textbuffer-templates"])
-        return False
-
-    def autocomplete_template_var(self, textbuffer):
-        completions = []
-        ite = self['combobox-templates'].get_active_iter()
+        template = self["combobox-templates"].get_model().get_value(ite, 0)
         key = self["combobox-templates"].get_model().get_value(ite, 1)
-        if key == 'kml.document.folder.placemark.description':
+        completions = list()
+        if key == PhotoPlace_Cfg_KmlTemplateDescriptionPhoto:
             for item in PhotoPlace_TEMPLATE_VARS:
                 completions.append("%(" + item + ")s")
-        for item in self.userfacade.options['defaults'].iterkeys():
-            completions.append("%(" + item + "|)s")
-        if len(completions) > 0:
-            position = self.templates_win.window.get_root_origin()
-            self.popup = TextViewCompleter(self["textview-templates"], position, completions)
-            return True
-        return False
-
-    def _update_wintemplate_statusbar(self, textbuffer, *args, **kwargs):
-        self["statusbar-window-templates"].pop(0)
-        count = textbuffer.get_char_count()
-        ite = textbuffer.get_iter_at_mark(textbuffer.get_insert())
-        row = ite.get_line()
-        col = ite.get_line_offset()
-        dgettext = {}
-        dgettext['line'] = row + 1
-        dgettext['column'] = col
-        dgettext['chars'] = count
-        self["statusbar-window-templates"].push(0,
-            _('Line %(line)d, column %(column)d (%(chars)d chars in document)') % dgettext)
-
-    def _new_wintemplate(self, widget=None):
-        self["statusbar-window-templates"].pop(0)
-        start, end = self["textbuffer-templates"].get_bounds()
-        self["textbuffer-templates"].delete(start, end)
-        self["statusbar-window-templates"].push(0, _('New empty template'))
-
-    def _recover_wintemplate(self, widget=None):
-        self._new_wintemplate()
-        ite = self['combobox-templates'].get_active_iter()
-        filename = self["combobox-templates"].get_model().get_value(ite, 0)
-        orig = filename
-        resourcedir = self.userfacade.state.resourcedir
-        language = locale.getdefaultlocale()[0]
-        filename = os.path.join(resourcedir, TEMPLATES_KEY, language, orig)
-        if not os.path.isfile(filename):
-            language = language.split('_')[0]
-            filename = os.path.join(resourcedir, TEMPLATES_KEY, language, orig)
-            if not os.path.isfile(filename):
-                filename = os.path.join(resourcedir, TEMPLATES_KEY, orig)
-        if os.path.isfile(filename):
-            if self._load_template_file(None, filename):
-                self._save_wintemplate()
-        else:
-            self["statusbar-window-templates"].pop(0)
-            self["statusbar-window-templates"].push(0, _('Cannot find system template!'))
-
-    def _validate_wintemplate(self, widget=None):
-        start, end = self["textbuffer-templates"].get_bounds()
-        template = self["textbuffer-templates"].get_text(start, end)
-        template = "<div mode='cdata'>\n" + template + "\n</div>"
-        self["statusbar-window-templates"].pop(0)
-        try:
-            tdom = xml.dom.minidom.parseString(template)
-            tdom.normalize()
-        except Exception as exception:
-            text = str(exception)
-            line = re.search(r'line\s+(\d+)', text, re.IGNORECASE)
-            if line:
-                # correct line numbers ...
-                pos = int(line.group(1)) - 1
-                text = re.sub(r'(.+line )(\d+)(.+)', r"\1 %s\3" % pos, text)
-                ins = self["textbuffer-templates"].get_iter_at_line(pos - 1)
-                bound = self["textbuffer-templates"].get_iter_at_line(pos)
-                self["textbuffer-templates"].select_range(ins, bound)
-            self["statusbar-window-templates"].push(0, _('XML error: %s') % text)
-        else:
-            self["statusbar-window-templates"].push(0, _('Perfect! template is well formed!'))
-
-    def _close_wintemplate(self, window, event=None):
-        if self.popup != None:
-            self.popup.destroy()
-            self.popup = None
-        self["textbuffer-templates"].set_text('')
-        window.hide()
-        return True
+        self.windowteditor.show(template=template, completions=completions)
 
 
-    # #################################
-    # Photo Extended information window
-    # #################################
 
-    def show_window_photoinfo(self, geophoto):
-        photoinfo_path = self["label-photoinfo-geophotopath"]
-        photoinfo_path.set_text(geophoto.path)
-        photoinfo_image = self["image-photoinfo"]
-        scaled = get_pixbuf_from_geophoto(geophoto)
-        photoinfo_image.set_from_pixbuf(scaled)
-        self._show_photoinfo_attr(geophoto)
-        self.photoinfo_win.resize(1, 1)
-        self.current_geophoto = geophoto
-        self.photoinfo_win.show()
 
-    def _clicked_next_photoinfo(self, widget=None, data=None):
-        model = self["treeview-geophotos"].get_model()
-        self._set_geophoto_variables(model, self.treeview_iterator, self.current_geophoto)
-        next = model.iter_next(self.treeview_iterator)
-        while next != None and  model.iter_parent(next) == self.treeview_iterator:
-            next = model.iter_next(next)
-        if next != None:
-            geophoto_path = model.get_value(next, TREEVIEWPHOTOS_COL_PATH)
-            for geophoto in self.userfacade.state.geophotos:
-                if geophoto.path == geophoto_path:
-                    self.treeview_iterator = next
-                    self.show_window_photoinfo(geophoto)
-                    return
 
-    def _clicked_prev_photoinfo(self, widget=None, data=None):
-        model = self["treeview-geophotos"].get_model()
-        self._set_geophoto_variables(model, self.treeview_iterator, self.current_geophoto)
-        path = model.get_path(self.treeview_iterator)
-        position = path[0]
-        if position != 0:
-            prev_path = position - 1
-            prev = model.get_iter(str(prev_path))
-            geophoto_path = model.get_value(prev, TREEVIEWPHOTOS_COL_PATH)
-            for geophoto in self.userfacade.state.geophotos:
-                if geophoto.path == geophoto_path:
-                    self.treeview_iterator = prev
-                    self.show_window_photoinfo(geophoto)
-                    return
+    def reload_templates(self):
+        if self.action_loadtemplates():
+            model = self["treeview-geophotos"].get_model()
+            iterator = model.get_iter_root()
+            while iterator != None:
+                geophoto_path = model.get_value(iterator, TREEVIEWPHOTOS_COL_PATH)
+                for geophoto in self.userfacade.state.geophotos:
+                    if geophoto.path == geophoto_path:
+                        self.set_geophoto_variables(iterator, geophoto)
+                        break
+                next = model.iter_next(iterator)
+                while next != None and  model.iter_parent(next) == iterator:
+                    next = model.iter_next(next)
+                iterator = next
+            self["treeview-geophotos"].expand_all()
 
-    def _show_photoinfo_attr(self, geophoto):
-        model = self["treeview-photoinfo"].get_model()
-        model.clear()
-        dgettext = {'program': PhotoPlace_name, 'photo': geophoto['name']}
-        self.photoinfo_win.set_title('%(program)s: Exif info of <%(photo)s>' % dgettext)
-        color = TREEVIEWPHOTOINFO_GEOPHOTOINFO_COLOR
-        model.append(None,[False, False, str(_("Image name")), str(geophoto['name']), color])
-        model.append(None,[False, False, str(_("Date/Time")), str(geophoto['time']), color])
-        if geophoto.isGeoLocated():
-            model.append(None,[False, False, str(_("Longitude")), str("%f" % geophoto['lon']), color])
-            model.append(None,[False, False, str(_("Latitude")), str("%f" % geophoto['lat']), color])
-            model.append(None,[False, False, str(_("Elevation")), str("%f" % geophoto['ele']), color])
-        color = TREEVIEWPHOTOINFO_GEOPHOTOATTR_COLOR
-        if geophoto.attr:
-            ite = model.append(None, [False, False, _("Image Attributes"), None, color])
-            for k, v in geophoto.attr.iteritems():
-                model.append(ite, [ True, True, str(k), str(v), color])
-        color = TREEVIEWPHOTOINFO_GEOPHOTOEXIF_COLOR
-        ite = model.append(None, [ False, False, _("Image EXIF Values"), None, color])
-        for k in geophoto.exif.exif_keys:
-            try:
-                model.append(ite, [ False, False, str(k), str(geophoto[k]), color])
-            except:
-                pass
-        self["treeview-photoinfo"].expand_all()
-
-    def _clicked_photoinfo_att(self, treeview, path, column, data=None):
-        model = treeview.get_model()
-        ite = model.get_iter(path)
-        if model.get_value(ite, TREEVIEWPHOTOINFO_COL_EDIT):
-            key = model.get_value(ite, TREEVIEWPHOTOINFO_COL_KEY)
-            value = model.get_value(ite, TREEVIEWPHOTOINFO_COL_VALUE)
-            self["entry-photoinfo-key"].set_text(key)
-            self["entry-photoinfo-value"].set_text(value)
-
-    def _add_photoinfo_attr(self, widget):
-        key = self["entry-photoinfo-key"].get_text().strip()
-        if key:
-            value = self["entry-photoinfo-value"].get_text()
-            self.current_geophoto.attr[key] = value.strip()
-            self._show_photoinfo_attr(self.current_geophoto)
-            #self["entry-photoinfo-value"].set_text('')
-
-    def _del_photoinfo_attr(self, widget):
-        key = self["entry-photoinfo-key"].get_text().strip()
-        if self.current_geophoto.attr.has_key(key):
-            del  self.current_geophoto.attr[key]
-            self._show_photoinfo_attr(self.current_geophoto)
-        self["entry-photoinfo-key"].set_text('')
-        self["entry-photoinfo-value"].set_text('')
-
-    def _edit_cell_photoinfo(self, cell, path_string, new_text):
-        model = self["treeview-photoinfo"].get_model()
-        treestore_iter = model.get_iter_from_string(path_string)
-        key = model.get_value(treestore_iter, TREEVIEWPHOTOINFO_COL_KEY)
-        self.current_geophoto.attr[key] = new_text.strip()
-        model.set(treestore_iter, TREEVIEWPHOTOINFO_COL_VALUE, new_text)
-
-    def _close_winphotoinfo(self, window, event=None):
-        model = self["treeview-geophotos"].get_model()
-        self._set_geophoto_variables(model, self.treeview_iterator, self.current_geophoto)
-        window.hide()
-        return True
+    def _reload_templates_cb(self, obj, text, filename, *args, **kwargs):
+        for k, v in self.userfacade.options[TEMPLATES_KEY].iteritems():
+            if os.path.basename(v) == os.path.basename(filename):
+                # Only reload templates ir are main (in the config file)
+                self.reload_templates()
+                return
 
 
     # ####################
@@ -1613,8 +1238,6 @@ class PhotoPlaceGUI(InterfaceUI):
             self._toggle_geolocate_mode()
             self["togglebutton-outfile"].set_active(False)
             self._toggle_outfile()
-            self.current_geophoto = None
-            self.treeview_iterator = None
             self["treeview-geophotos"].get_model().clear()
             self.userfacade.DoTemplates().run()
             self.num_photos_process = 0

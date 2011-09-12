@@ -25,9 +25,10 @@ GTKUI Configuration and default values.
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
 __version__ = "0.5.0"
-__date__ = "September 2010"
+__date__ = "September 2011"
 __license__ = "GPL (v2 or later)"
-__copyright__ ="(c) Jose Riguera, September 2010"
+__copyright__ ="(c) Jose Riguera, September 2011"
+
 
 import os.path
 
@@ -36,6 +37,8 @@ import os.path
 GTKUI_RESOURCES_PATH = u"gtkui"
 GTKUI_RESOURCE_GUIXML = os.path.join(GTKUI_RESOURCES_PATH, u"photoplace.ui")
 GTKUI_RESOURCE_GUIICON = os.path.join(GTKUI_RESOURCES_PATH, u"photoplace.png")
+GTKUI_RESOURCE_TemplateEditorGUIXML = os.path.join(GTKUI_RESOURCES_PATH, u"templateeditor.ui")
+GTKUI_RESOURCE_PhotoInfoGUIXML = os.path.join(GTKUI_RESOURCES_PATH, u"photoinfo.ui")
 GTKUI_GETTEXT_DOMAIN = "photoplace"
 
 
@@ -46,7 +49,7 @@ TREEVIEWPHOTO_NORMAL_COLOR = "#4634E3"
 TREEVIEWPHOTO_CHANGED_COLOR = "#D134E3"
 TREEVIEWPHOTO_PHOTOSIZE = (80, 60)
 
-PIXBUFSIZE_GEOPHOTOINFO = (568,426)
+PIXBUFSIZE_GEOPHOTOINFO = (1136, 852) # (568,426)
 TREEVIEWPHOTOINFO_GEOPHOTOINFO_COLOR = "red"
 TREEVIEWPHOTOINFO_GEOPHOTOATTR_COLOR = "green"
 TREEVIEWPHOTOINFO_GEOPHOTOEXIF_COLOR = "blue"
@@ -81,17 +84,5 @@ VARIABLES_KEY = u"defaults"
     VARIABLES_COLUMN_EDITABLE,
 ) = range(3)
 
-VARIABLES_OTHER = [
-    'normalplacemark',
-    'highlightplacemark',
-    'highlightplacemarkballoonbgcolor',
-    'highlightplacemarkballoontextcolor',
-    'inilatitute',
-    'inilongitude',
-    'inialtitude',
-    'inirange',
-    'initilt',
-    'iniheading',
-]
 
 # EOF

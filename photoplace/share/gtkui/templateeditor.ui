@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkWindow" id="window">
+    <property name="title" translatable="yes">PhotoPlace</property>
+    <property name="modal">True</property>
+    <property name="default_width">600</property>
+    <property name="default_height">360</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="icon">photoplace.png</property>
+    <property name="skip_taskbar_hint">True</property>
+    <signal name="delete_event" handler="on_window_delete_event" object="window"/>
+    <child>
+      <object class="GtkVBox" id="vbox-window">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkToolbar" id="toolbar-window">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkToolButton" id="toolbutton-wintemplates-new">
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Create an empty template</property>
+                <property name="label" translatable="yes" comments="toolbar templates, menu">New</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-new</property>
+                <signal name="clicked" handler="on_toolbutton-wintemplates-new_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton-wintemplates-load">
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Load a template from file</property>
+                <property name="label" translatable="yes" comments="toolbar templates, menu">Load</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-refresh</property>
+                <signal name="clicked" handler="on_toolbutton-wintemplates-load_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton-wintemplates-recover">
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Recover the contents from the original template</property>
+                <property name="label" translatable="yes" comments="toolbar templates, menu">Recover</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-undelete</property>
+                <signal name="clicked" handler="on_toolbutton-wintemplates-recover_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="toolbutton-wintemplates-sep1">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton-wintemplates-check">
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Checks if XML data is well formed, otherwise, the content will not be considered as XML data. 
+Note that contents will be checked after placing them in a (virtual) &lt;div&gt; section.</property>
+                <property name="is_important">True</property>
+                <property name="label" translatable="yes" comments="toolbar templates, menu">Validate</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-execute</property>
+                <signal name="clicked" handler="on_toolbutton-wintemplates-check_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton-wintemplates-save">
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Save the document in the template file</property>
+                <property name="is_important">True</property>
+                <property name="label" translatable="yes" comments="toolbar templates, menu">Save</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-save</property>
+                <signal name="clicked" handler="on_toolbutton-wintemplates-save_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="toolbutton-wintemplates-sep3">
+                <property name="visible">True</property>
+                <property name="draw">False</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton-wintemplates-exit">
+                <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Close this window</property>
+                <property name="label" translatable="yes" comments="toolbar templates, menu">Exit</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-quit</property>
+                <signal name="clicked" handler="on_toolbutton-wintemplates-exit_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="toolbutton-wintemplates-sep2">
+                <property name="visible">True</property>
+                <property name="draw">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow" id="scrolledwindow">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="shadow_type">out</property>
+            <child>
+              <object class="GtkTextView" id="textview">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="buffer">textbuffer</property>
+                <signal name="key_press_event" handler="on_textview_key_press_event"/>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkStatusbar" id="statusbar">
+            <property name="visible">True</property>
+            <property name="spacing">2</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkTextBuffer" id="textbuffer">
+    <signal name="changed" handler="on_textbuffer_changed"/>
+    <signal name="mark_set" handler="on_textbuffer_mark_set"/>
+  </object>
+</interface>

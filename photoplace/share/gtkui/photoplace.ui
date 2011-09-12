@@ -10,20 +10,6 @@
       <column type="gint"/>
     </columns>
   </object>
-  <object class="GtkListStore" id="treestore-photoinfo">
-    <columns>
-      <!-- column-name deletable -->
-      <column type="gboolean"/>
-      <!-- column-name editable -->
-      <column type="gboolean"/>
-      <!-- column-name key -->
-      <column type="gchararray"/>
-      <!-- column-name value -->
-      <column type="gchararray"/>
-      <!-- column-name fgcolor -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
   <object class="GtkListStore" id="treestore-variables">
     <columns>
       <!-- column-name key -->
@@ -206,8 +192,8 @@
                     <child>
                       <object class="GtkMenuItem" id="imagemenuitem-plugins">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" comments="menuitem.">List of available plugins. To see information about each plugin, put the mouse over its name,</property>
-                        <property name="label" translatable="yes">_Plugins</property>
+                        <property name="tooltip_text" translatable="yes" comments="menuitem.">List of available extensions. To see information about each add-on, put the mouse over its name.</property>
+                        <property name="label" translatable="yes">_Addons</property>
                         <property name="use_underline">True</property>
                       </object>
                     </child>
@@ -782,7 +768,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                             <property name="visible">True</property>
                             <property name="xpad">2</property>
                             <property name="ypad">8</property>
-                            <property name="label" translatable="yes" comments="options label inside first notebook.">&lt;b&gt;Options&lt;/b&gt;</property>
+                            <property name="label" translatable="yes" comments="options label inside first notebook.">&lt;b&gt;Parameters&lt;/b&gt;</property>
                             <property name="use_markup">True</property>
                             <property name="single_line_mode">True</property>
                           </object>
@@ -834,6 +820,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                         <property name="rules_hint">True</property>
                                         <property name="search_column">1</property>
                                         <property name="tooltip_column">12</property>
+                                        <signal name="button_press_event" handler="on_treeview-geophotos_button_press_event"/>
                                         <signal name="row_activated" handler="on_treeview-geophotos_row_activated"/>
                                         <child>
                                           <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-active">
@@ -1054,7 +1041,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                                     <property name="visible">True</property>
                                     <property name="xalign">0</property>
                                     <property name="xpad">4</property>
-                                    <property name="label" translatable="yes">List of parameters to make KML:</property>
+                                    <property name="label" translatable="yes">List of variables to make the KML:</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1220,7 +1207,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                     <child type="tab">
                       <object class="GtkLabel" id="notebook-label-plugins">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Plugins</property>
+                        <property name="label" translatable="yes">Addons</property>
                         <property name="use_markup">True</property>
                       </object>
                       <packing>
@@ -1360,7 +1347,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">PhotoPlace</property>
     <property name="version">0.5.0</property>
-    <property name="copyright">Copyright © 2010  José Riguera </property>
+    <property name="copyright">Copyright © 2011  José Riguera </property>
     <property name="comments" translatable="yes">A program for geotagging photos and generate a Google Earth layer</property>
     <property name="website">http://code.google.com/p/photoplace/</property>
     <property name="license" translatable="yes" comments="GPL License.">		    GNU GENERAL PUBLIC LICENSE
@@ -1457,7 +1444,7 @@ This General Public License does not permit incorporating your program into prop
 </property>
     <property name="authors">José Riguera López &lt;jriguera@gmail.com&gt;</property>
     <property name="documenters">Noela Sánchez Carnero &lt;noelas@gmail.com&gt;</property>
-    <property name="translator_credits" translatable="yes">Noela Sánchez Carnero &lt;noelas@gmail.com&gt;</property>
+    <property name="translator_credits" translatable="yes">José Riguera López &lt;jriguera@gmail.com&gt;</property>
     <property name="logo">photoplace.png</property>
     <property name="wrap_license">True</property>
     <signal name="close" handler="on_aboutdialog_close" object="dialog-about"/>
@@ -1586,287 +1573,6 @@ This General Public License does not permit incorporating your program into prop
     <property name="stock">gtk-sort-ascending</property>
     <property name="icon-size">5</property>
   </object>
-  <object class="GtkWindow" id="window-photoinfo">
-    <property name="title" translatable="yes">PhotoPlace</property>
-    <property name="modal">True</property>
-    <property name="destroy_with_parent">True</property>
-    <property name="icon">photoplace.png</property>
-    <property name="skip_taskbar_hint">True</property>
-    <property name="transient_for">window</property>
-    <signal name="delete_event" handler="on_window-photoinfo_delete_event" object="window-photoinfo"/>
-    <child>
-      <object class="GtkVBox" id="vbox-photoinfo">
-        <property name="visible">True</property>
-        <child>
-          <object class="GtkHBox" id="hbox-photoinfo-path">
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkLabel" id="label-photoinfo-path">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Picture path:</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="padding">10</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label-photoinfo-geophotopath">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="selectable">True</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                  <attribute name="foreground" value="#00000000ffff"/>
-                </attributes>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="padding">5</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkHBox" id="hbox-photoinfo-photo">
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkAspectFrame" id="aspectframe-photoinfo">
-                <property name="visible">True</property>
-                <property name="label_xalign">0</property>
-                <property name="shadow_type">out</property>
-                <property name="yalign">0</property>
-                <child>
-                  <object class="GtkImage" id="image-photoinfo">
-                    <property name="visible">True</property>
-                    <property name="stock">gtk-missing-image</property>
-                    <property name="icon-size">6</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="padding">1</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkScrolledWindow" id="scrolledwindow-photoinfo">
-                <property name="width_request">400</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="hscrollbar_policy">automatic</property>
-                <property name="vscrollbar_policy">automatic</property>
-                <child>
-                  <object class="GtkTreeView" id="treeview-photoinfo">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="model">treestore-photoinfo</property>
-                    <property name="headers_clickable">False</property>
-                    <property name="search_column">2</property>
-                    <property name="enable_tree_lines">True</property>
-                    <signal name="row_activated" handler="on_treeview-photoinfo_row_activated"/>
-                    <child>
-                      <object class="GtkTreeViewColumn" id="treeviewcolumn-photoinfo-key">
-                        <property name="resizable">True</property>
-                        <property name="title">key</property>
-                        <property name="reorderable">True</property>
-                        <property name="sort_indicator">True</property>
-                        <property name="sort_column_id">2</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="cellrenderertext-photoinfo-key"/>
-                          <attributes>
-                            <attribute name="foreground">4</attribute>
-                            <attribute name="text">2</attribute>
-                          </attributes>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkTreeViewColumn" id="treeviewcolumn-photoinfo-value">
-                        <property name="resizable">True</property>
-                        <property name="title">Value</property>
-                        <property name="expand">True</property>
-                        <property name="clickable">True</property>
-                        <child>
-                          <object class="GtkCellRendererText" id="cellrenderertext-photoinfo-value">
-                            <signal name="edited" handler="on_cellrenderertext-photoinfo-value_edited"/>
-                          </object>
-                          <attributes>
-                            <attribute name="editable">1</attribute>
-                            <attribute name="foreground">4</attribute>
-                            <attribute name="text">3</attribute>
-                          </attributes>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="padding">10</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkHBox" id="hbox-photoinfo-buttons">
-            <property name="visible">True</property>
-            <property name="spacing">3</property>
-            <child>
-              <object class="GtkLabel" id="label-photoinfo">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="label" translatable="yes">Add, delete or modify key/value:</property>
-                <property name="use_markup">True</property>
-                <property name="single_line_mode">True</property>
-              </object>
-              <packing>
-                <property name="padding">5</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEntry" id="entry-photoinfo-key">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="max_length">100</property>
-                <property name="invisible_char">●</property>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEntry" id="entry-photoinfo-value">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="max_length">1000</property>
-                <property name="invisible_char">●</property>
-              </object>
-              <packing>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="button-photoinfo-add">
-                <property name="label">gtk-add</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-                <signal name="clicked" handler="on_button-photoinfo-add_clicked"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="padding">10</property>
-                <property name="position">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="button-photoinfo-del">
-                <property name="label">gtk-remove</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-                <signal name="clicked" handler="on_button-photoinfo-del_clicked"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="padding">10</property>
-                <property name="position">4</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="padding">5</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkHSeparator" id="hseparator-photoinfo">
-            <property name="visible">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="padding">5</property>
-            <property name="position">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkHButtonBox" id="hbuttonbox-photoinfo">
-            <property name="visible">True</property>
-            <property name="border_width">10</property>
-            <child>
-              <object class="GtkButton" id="button-photoinfo-prev">
-                <property name="label">gtk-go-back</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-                <signal name="clicked" handler="on_button-photoinfo-prev_clicked"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="button-photoinfo-close">
-                <property name="label">gtk-close</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-                <signal name="clicked" handler="on_button-photoinfo-close_clicked" object="window-photoinfo"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="button-photoinfo-next">
-                <property name="label">gtk-go-forward</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-                <signal name="clicked" handler="on_button-photoinfo-next_clicked"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="position">4</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkImage" id="image-clear">
     <property name="visible">True</property>
     <property name="stock">gtk-new</property>
@@ -1892,179 +1598,6 @@ This General Public License does not permit incorporating your program into prop
     <property name="xpad">2</property>
     <property name="ypad">2</property>
     <property name="stock">gtk-execute</property>
-  </object>
-  <object class="GtkWindow" id="window-templates">
-    <property name="title" translatable="yes">PhotoPlace</property>
-    <property name="modal">True</property>
-    <property name="default_width">600</property>
-    <property name="default_height">360</property>
-    <property name="destroy_with_parent">True</property>
-    <property name="icon">photoplace.png</property>
-    <property name="skip_taskbar_hint">True</property>
-    <property name="transient_for">window</property>
-    <signal name="delete_event" handler="on_window-templates_delete_event" object="window-templates"/>
-    <child>
-      <object class="GtkVBox" id="vbox-window-templates">
-        <property name="visible">True</property>
-        <child>
-          <object class="GtkToolbar" id="toolbar-window-templates">
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkToolButton" id="toolbutton-wintemplates-new">
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Create an empty template</property>
-                <property name="label" translatable="yes" comments="toolbar templates, menu">New</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-new</property>
-                <signal name="clicked" handler="on_toolbutton-wintemplates-new_clicked"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="toolbutton-wintemplates-load">
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Load a template from file</property>
-                <property name="label" translatable="yes" comments="toolbar templates, menu">Load</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-refresh</property>
-                <signal name="clicked" handler="on_toolbutton-wintemplates-load_clicked"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="toolbutton-wintemplates-recover">
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Recover the default template</property>
-                <property name="label" translatable="yes" comments="toolbar templates, menu">Recover</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-undelete</property>
-                <signal name="clicked" handler="on_toolbutton-wintemplates-recover_clicked"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparatorToolItem" id="toolbutton-wintemplates-sep1">
-                <property name="visible">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="toolbutton-wintemplates-check">
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Checks if XML data is well formed, otherwise, the content will not be considered as XML data. 
-Note that contents will be checked by place them into a &lt;div&gt; section.</property>
-                <property name="is_important">True</property>
-                <property name="label" translatable="yes" comments="toolbar templates, menu">Validate</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-execute</property>
-                <signal name="clicked" handler="on_toolbutton-wintemplates-check_clicked"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="toolbutton-wintemplates-save">
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Save document as template</property>
-                <property name="is_important">True</property>
-                <property name="label" translatable="yes" comments="toolbar templates, menu">Save</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-save</property>
-                <signal name="clicked" handler="on_toolbutton-wintemplates-save_clicked"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparatorToolItem" id="toolbutton-wintemplates-sep3">
-                <property name="visible">True</property>
-                <property name="draw">False</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="toolbutton-wintemplates-exit">
-                <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">Close this window</property>
-                <property name="label" translatable="yes" comments="toolbar templates, menu">Exit</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-quit</property>
-                <signal name="clicked" handler="on_toolbutton-wintemplates-exit_clicked" object="window-templates"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparatorToolItem" id="toolbutton-wintemplates-sep2">
-                <property name="visible">True</property>
-                <property name="draw">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkScrolledWindow" id="scrolledwindow-templates">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">automatic</property>
-            <property name="shadow_type">out</property>
-            <child>
-              <object class="GtkTextView" id="textview-templates">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="buffer">textbuffer-templates</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkStatusbar" id="statusbar-window-templates">
-            <property name="visible">True</property>
-            <property name="spacing">2</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkTextBuffer" id="textbuffer-templates">
-    <signal name="changed" handler="on_textbuffer-templates_changed"/>
-    <signal name="mark_set" handler="on_textbuffer-templates_mark_set"/>
   </object>
   <object class="GtkAdjustment" id="adjustment-toffset">
     <property name="lower">-3600</property>
