@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#       GTKAddFiles.py
+#       GTKfiles.py
 #
 #       Copyright 2011 Jose Riguera Lopez <jriguera@gmail.com>
 #
@@ -20,11 +20,11 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 """
-A plugin for PhotoPlace to add files to kmz. GTK User Interface.
+Add-on for PhotoPlace to add files to kmz. GTK User Interface.
 """
-__program__ = "photoplace.addfiles"
+__program__ = "photoplace.files"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 __date__ = "May 2011"
 __license__ = "GPL v3"
 __copyright__ ="(c) Jose Riguera"
@@ -51,7 +51,7 @@ except Exception as e:
     raise
 warnings.resetwarnings()
 
-from addfiles import *
+from files import *
 
 
 # I18N gettext support
@@ -74,28 +74,27 @@ except Exception as e:
 
 # columns
 (
-    _GTKAddFiles_COLUMN_VAR,
-    _GTKAddFiles_COLUMN_KEY,
-    _GTKAddFiles_COLUMN_VALUE,
-    _GTKAddFiles_COLUMN_INFO
+    _GTKFiles_COLUMN_VAR,
+    _GTKFiles_COLUMN_KEY,
+    _GTKFiles_COLUMN_VALUE,
+    _GTKFiles_COLUMN_INFO
 ) = range(4)
 
-GTKAddFiles_COLUMN_TOOLTIP = _("Type %%(%s)s to get value of each variable")
+GTKFiles_COLUMN_TOOLTIP = _("Type %%(%s)s to get value of each variable")
 
 
 
-class GTKAddFiles(object):
+class GTKFiles(object):
 
-    def __init__(self, gtkbuilder, state, logger):
+    def __init__(self, gtkbuilder, userfacade, logger):
         object.__init__(self)
         self.plugin = gtk.VBox(False)
         self.logger = logger
         self.options = None
-        self.state = state
         # 1st line
         label_name = gtk.Label()
         align = gtk.Alignment(0.01, 0.5, 0, 0)
-        label_name.set_markup(_("List of additional files to be included into KMZ"))
+        label_name.set_markup(_("List of additional files to be included in KMZ"))
         align.add(label_name)
         self.plugin.pack_start(align, False, False, 10)
         # Parameters
@@ -105,26 +104,26 @@ class GTKAddFiles(object):
         # create model for parameters
         self.treestore = gtk.TreeStore(str, str, str, str)
         self.treeview = gtk.TreeView(self.treestore)
-        self.treeview.set_tooltip_column(_GTKAddFiles_COLUMN_INFO)
+        self.treeview.set_tooltip_column(_GTKFiles_COLUMN_INFO)
         self.treeview.set_rules_hint(True)
         self.treeview.get_selection().set_mode(gtk.SELECTION_SINGLE)
         # columns
         renderer = gtk.CellRendererText()
         column = gtk.TreeViewColumn(_("Variable"), renderer,
-            text=_GTKAddFiles_COLUMN_VAR)
+            text=_GTKFiles_COLUMN_VAR)
         column.set_resizable(True)
         column.set_min_width(170)
         self.treeview.append_column(column)
         renderer = gtk.CellRendererText()
         renderer.connect('edited', self._edit_cell)
         column = gtk.TreeViewColumn(_("Value (Destination)"), renderer,
-            text=_GTKAddFiles_COLUMN_KEY)
+            text=_GTKFiles_COLUMN_KEY)
         renderer.set_property('editable', True)
         column.set_resizable(True)
         self.treeview.append_column(column)
         renderer = gtk.CellRendererText()
         column = gtk.TreeViewColumn(_("Original file"), renderer,
-            text=_GTKAddFiles_COLUMN_VALUE)
+            text=_GTKFiles_COLUMN_VALUE)
         column.set_resizable(True)
         self.treeview.append_column(column)
         scroll.add(self.treeview)
@@ -174,7 +173,7 @@ class GTKAddFiles(object):
         self.options = options
         for variable in newfiles:
             dest, orig = newfiles[variable]
-            info = GTKAddFiles_COLUMN_TOOLTIP % variable
+            info = GTKFiles_COLUMN_TOOLTIP % variable
             self.treestore.append(None, [variable, dest, orig, info])
         self.counter_file = len(newfiles)
         self.newfiles = newfiles
@@ -192,11 +191,11 @@ class GTKAddFiles(object):
         destination = ''.join(c for c in destination if c in safechars)
         filekey = destination.replace('..','')
         if len(filekey) >= 3:
-            self.treestore.set(ite, _GTKAddFiles_COLUMN_KEY, filekey)
-            variable = self.treestore.get_value(ite, _GTKAddFiles_COLUMN_VAR)
+            self.treestore.set(ite, _GTKFiles_COLUMN_KEY, filekey)
+            variable = self.treestore.get_value(ite, _GTKFiles_COLUMN_VAR)
             dest, orig = self.newfiles[variable]
             self.newfiles[variable] = (filekey, orig)
-            self.options[AddFiles_VARIABLES][variable] = filekey
+            self.options[Files_VARIABLES][variable] = filekey
 
 
     def _click_add(self, widget):
@@ -214,11 +213,11 @@ class GTKAddFiles(object):
                 except:
                     pass
             self.counter_file += 1
-            variable = AddFiles_PREFIX_NAME + AddFiles_PREFIX_FILE + str(self.counter_file)
+            variable = Files_PREFIX_FILE + str(self.counter_file)
             value = os.path.basename(filename)
-            info = GTKAddFiles_COLUMN_TOOLTIP % variable
+            info = GTKFiles_COLUMN_TOOLTIP % variable
             self.treestore.append(None, [variable, value, filename, info])
-            self.options[AddFiles_VARIABLES][variable] = value
+            self.options[Files_VARIABLES][variable] = value
             self.newfiles[variable] = (value, filename)
 
 
@@ -226,8 +225,8 @@ class GTKAddFiles(object):
         selection = self.treeview.get_selection()
         model, ite = selection.get_selected()
         if ite != None:
-            variable = self.treestore.get_value(ite, _GTKAddFiles_COLUMN_VAR)
-            del self.options[AddFiles_VARIABLES][variable]
+            variable = self.treestore.get_value(ite, _GTKFiles_COLUMN_VAR)
+            del self.options[Files_VARIABLES][variable]
             del self.newfiles[variable]
             model.remove(ite)
 

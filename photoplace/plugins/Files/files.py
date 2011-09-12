@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#       addfiles.py
+#       files.py
 #
 #       Copyright 2011 Jose Riguera Lopez <jriguera@gmail.com>
 #
@@ -20,11 +20,11 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 """
-A plugin for PhotoPlace to add files to kmz
+Add-on for PhotoPlace to add files to kmz
 """
-__program__ = "photoplace.addfiles"
+__program__ = "photoplace.files"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 __date__ = "May 2011"
 __license__ = "GPL v3"
 __copyright__ ="(c) Jose Riguera"
@@ -60,19 +60,18 @@ except Exception as e:
 
 
 # Configuration keys
-AddFiles_CONFKEY = "addfiles"
-AddFiles_VARIABLES = 'defaults'
+Files_CONFKEY = "files"
+Files_VARIABLES = 'defaults'
 
 # Default values
-AddFiles_PREFIX_NAME = "Add"
-AddFiles_PREFIX_FILE = "File."
+Files_PREFIX_FILE = _("FILE.")
 
 
 
-class KmlPaths(Plugin):
+class Files(Plugin):
 
     description = _(
-        "A plugin to add files to KMZ"
+        "Add-on to add files in the KMZ file"
     )
     author = "Jose Riguera Lopez"
     email = "<jriguera@gmail.com>"
@@ -87,21 +86,21 @@ class KmlPaths(Plugin):
     }
 
 
-    def __init__(self, logger, state, args, argfiles=[], gtkbuilder=None):
-        Plugin.__init__(self, logger, state, args, argfiles, gtkbuilder)
+    def __init__(self, logger, userfacade, args, argfiles=[], gtkbuilder=None):
+        Plugin.__init__(self, logger, userfacade, args, argfiles, gtkbuilder)
         self.options = dict()
         # GTK widgets
         self.gui = None
         if gtkbuilder:
-            import GTKAddFiles
-            self.gui = GTKAddFiles.GTKAddFiles(gtkbuilder, state, logger)
+            import GTKfiles
+            self.gui = GTKfiles.GTKFiles(gtkbuilder, userfacade, logger)
         self.ready = -1
 
 
     def init(self, options, widget):
-        if not options.has_key(AddFiles_CONFKEY):
-            options[AddFiles_CONFKEY] = dict()
-        opt = options[AddFiles_CONFKEY]
+        if not options.has_key(Files_CONFKEY):
+            options[Files_CONFKEY] = dict()
+        opt = options[Files_CONFKEY]
         self.newfiles = None
         self.options = None
         self.process_variables(options, opt)
@@ -112,7 +111,7 @@ class KmlPaths(Plugin):
             else:
                 self.gui.show(None, self.options, self.newfiles)
         self.ready = 1
-        self.logger.debug(_("Starting plugin ..."))
+        self.logger.debug(_("Starting add-on ..."))
 
 
     def process_variables(self, options, opt):
@@ -136,10 +135,10 @@ class KmlPaths(Plugin):
             filekey = destination.replace('..','')
             if os.path.isfile(filename) and len(filekey) >= 3:
                 index += 1
-                variable = AddFiles_PREFIX_NAME + AddFiles_PREFIX_FILE + str(index)
+                variable = Files_PREFIX_FILE + str(index)
                 self.newfiles[variable] = (filekey, filename)
                 # add varible to state
-                options[AddFiles_VARIABLES][variable] = filekey
+                options[Files_VARIABLES][variable] = filekey
         self.options = options
 
 
@@ -164,17 +163,17 @@ class KmlPaths(Plugin):
                 dgettext['file'] = orig.encode(PLATFORMENCODING)
                 msg = _("Cannot copy '%(file)s': %(error)s") % dgettext
                 self.logger.error(msg)
-        self.logger.info(_("%d files copied by 'addfiles'.") % counter)
+        self.logger.info(_("%d files copied by 'files' add-on.") % counter)
 
 
     def end(self, options):
         self.ready = 0
         for variable in self.newfiles:
-            del self.options[AddFiles_VARIABLES][variable]
+            del self.options[Files_VARIABLES][variable]
         self.newfiles = None
         if self.gui:
             self.gui.hide(True)
-        self.logger.debug(_("Ending plugin ..."))
+        self.logger.debug(_("Ending add-on ..."))
 
 
 # EOF

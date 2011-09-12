@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-25 20:31+0200\n"
+"POT-Creation-Date: 2011-09-12 20:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,57 +17,61 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../addfiles.py:75
-msgid "A plugin to add files to KMZ"
+#: files.py:67
+msgid "FILE."
 msgstr ""
 
-#: ../addfiles.py:115
-msgid "Starting plugin ..."
+#: files.py:74
+msgid "Add-on to add files in the KMZ file"
 msgstr ""
 
-#: ../addfiles.py:165
+#: files.py:114
+msgid "Starting add-on ..."
+msgstr ""
+
+#: files.py:164
 #, python-format
 msgid "Cannot copy '%(file)s': %(error)s"
 msgstr ""
 
-#: ../addfiles.py:167
+#: files.py:166
 #, python-format
-msgid "%d files copied by 'addfiles'."
+msgid "%d files copied by 'files' add-on."
 msgstr ""
 
-#: ../addfiles.py:177
-msgid "Ending plugin ..."
+#: files.py:176
+msgid "Ending add-on ..."
 msgstr ""
 
-#: ../GTKAddFiles.py:83
+#: GTKfiles.py:83
 #, python-format
 msgid "Type %%(%s)s to get value of each variable"
 msgstr ""
 
-#: ../GTKAddFiles.py:98
-msgid "List of additional files to be included into KMZ"
+#: GTKfiles.py:97
+msgid "List of additional files to be included in KMZ"
 msgstr ""
 
-#: ../GTKAddFiles.py:113
+#: GTKfiles.py:112
 msgid "Variable"
 msgstr ""
 
-#: ../GTKAddFiles.py:120
+#: GTKfiles.py:119
 msgid "Value (Destination)"
 msgstr ""
 
-#: ../GTKAddFiles.py:126
+#: GTKfiles.py:125
 msgid "Original file"
 msgstr ""
 
-#: ../GTKAddFiles.py:133
+#: GTKfiles.py:132
 msgid "Add file"
 msgstr ""
 
-#: ../GTKAddFiles.py:136
+#: GTKfiles.py:135
 msgid "Delete"
 msgstr ""
 
-#: ../GTKAddFiles.py:204
+#: GTKfiles.py:203
 msgid "Select a file ..."
 msgstr ""

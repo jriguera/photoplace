@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: photoplace.addfiles 0.1.1\n"
+"Project-Id-Version: photoplace.files 0.1.1\n"
 "Report-Msgid-Bugs-To: <photoplace-project@googlegroups.com>\n"
-"POT-Creation-Date: 2011-07-25 20:31+0200\n"
+"POT-Creation-Date: 2011-09-12 20:30+0200\n"
 "PO-Revision-Date: 2011-06-11 16:51+0200\n"
 "Last-Translator: José Riguera López <jriguera@gmail.com>\n"
 "Language-Team: English <photoplace-project@googlegroups.com>\n"
@@ -17,58 +17,61 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../addfiles.py:75
-msgid "A plugin to add files to KMZ"
-msgstr "A plugin to add files to KMZ"
+#: files.py:67
+msgid "FILE."
+msgstr "FILE."
 
-#: ../addfiles.py:115
-msgid "Starting plugin ..."
-msgstr "Starting plugin ..."
+#: files.py:74
+msgid "Add-on to add files in the KMZ file"
+msgstr "Add-on to add files in the KMZ file"
 
-#: ../addfiles.py:165
+#: files.py:114
+msgid "Starting add-on ..."
+msgstr "Starting add-on ..."
+
+#: files.py:164
 #, python-format
 msgid "Cannot copy '%(file)s': %(error)s"
 msgstr "Cannot copy '%(file)s': %(error)s"
 
-#: ../addfiles.py:167
+#: files.py:166
 #, python-format
-msgid "%d files copied by 'addfiles'."
-msgstr "%d files copied by 'addfiles'."
+msgid "%d files copied by 'files' add-on."
+msgstr "%d files copied by 'files' add-on."
 
-#: ../addfiles.py:177
-msgid "Ending plugin ..."
-msgstr "Ending plugin ..."
+#: files.py:176
+msgid "Ending add-on ..."
+msgstr "Ending add-on ..."
 
-#: ../GTKAddFiles.py:83
+#: GTKfiles.py:83
 #, python-format
 msgid "Type %%(%s)s to get value of each variable"
 msgstr "Type %%(%s)s to get value of each variable"
 
-#: ../GTKAddFiles.py:98
-msgid "List of additional files to be included into KMZ"
-msgstr "List of additional files to be included into KMZ"
+#: GTKfiles.py:97
+msgid "List of additional files to be included in KMZ"
+msgstr "List of additional files to be included in KMZ"
 
-#: ../GTKAddFiles.py:113
+#: GTKfiles.py:112
 msgid "Variable"
 msgstr "Variable"
 
-#: ../GTKAddFiles.py:120
+#: GTKfiles.py:119
 msgid "Value (Destination)"
 msgstr "Value (Destination)"
 
-#: ../GTKAddFiles.py:126
+#: GTKfiles.py:125
 msgid "Original file"
 msgstr "Original file"
 
-#: ../GTKAddFiles.py:133
-#, fuzzy
+#: GTKfiles.py:132
 msgid "Add file"
-msgstr "Add File"
+msgstr "Add file"
 
-#: ../GTKAddFiles.py:136
+#: GTKfiles.py:135
 msgid "Delete"
 msgstr "Delete"
 
-#: ../GTKAddFiles.py:204
+#: GTKfiles.py:203
 msgid "Select a file ..."
 msgstr "Select a file ..."
