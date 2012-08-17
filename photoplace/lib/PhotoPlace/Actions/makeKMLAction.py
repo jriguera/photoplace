@@ -152,11 +152,11 @@ class MakeKML(Interface.Action, threading.Thread):
         self.rootdata[PhotoPlace_MaxLAT] = max_lat
         self.rootdata[PhotoPlace_MinLON] = min_lon
         self.rootdata[PhotoPlace_MaxLON] = max_lon
-        # Calculate the best values:
-        max_distance = pyGPX.distanceCoord(min_lat, min_lon, max_lat, max_lon)
-        altitude = max_distance * 2
-        self._set_value(PhotoPlace_IniALT, altitude)
+        self._set_value(PhotoPlace_IniALT, PhotoPlace_Cfg_default_inialt)
         self._set_value(PhotoPlace_IniRANGE, PhotoPlace_Cfg_default_inirange)
+        if self.rootdata[PhotoPlace_IniRANGE] < 1:
+            altitude = pyGPX.bestViewAltitude(max_lat, max_lon, min_lat, min_lon)
+            self.rootdata[PhotoPlace_IniRANGE] = altitude
         self._set_value(PhotoPlace_IniTILT, PhotoPlace_Cfg_default_initilt)
         self._set_value(PhotoPlace_IniHEADING, PhotoPlace_Cfg_default_heading)
         center_lat = (max_lat + min_lat)/2.0

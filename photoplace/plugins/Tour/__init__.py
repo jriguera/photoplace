@@ -20,11 +20,12 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 """
+This add-on makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.2.1"
-__date__ = "December 2010"
+__version__ = "0.3.0"
+__date__ = "August 2011"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
 

@@ -25,11 +25,16 @@
 
     <Style id="highlightPlacemark">
       <IconStyle>
+        <scale>%(highlightplacemarkscale|0.8)s</scale>
+        <color>%(highlightplacemarkcolor|7f00ff00)s</color>
         <Icon>
-          <scale>0.7</scale>
-          <href>%(highlightplacemark|http://maps.google.com/mapfiles/kml/pal4/icon38.png)s</href>
+            <href>%(highlightplacemark|http://maps.google.com/mapfiles/kml/pal4/icon38.png)s</href>
         </Icon>
       </IconStyle>
+      <LabelStyle>
+        <scale>%(highlightplacemarklabelscale|0.8)s</scale>
+        <color>%(highlightplacemarklabelcolor|7f00ff00)s</color>
+      </LabelStyle>
       <BalloonStyle>
         <bgColor>%(highlightplacemarkballoonbgcolor|aa99ffff)s</bgColor>
         <textColor>%(highlightplacemarkballoontextcolor|ff000000)s</textColor>
@@ -38,13 +43,15 @@
 
     <Style id="normalPlacemark">
       <IconStyle>
-        <scale>0.6</scale>
+        <scale>%(normalplacemarkscale|0.5)s</scale>
+        <color>%(normalplacemarkcolor|4cffffff)s</color>
         <Icon>
             <href>%(normalplacemark|http://maps.google.com/mapfiles/kml/pal4/icon38.png)s</href>
         </Icon>
       </IconStyle>
       <LabelStyle>
-         <scale>0.6</scale>
+        <scale>%(normalplacemarklabelscale|0.5)s</scale>
+        <color>%(normalplacemarklabelcolor|4cffffff)s</color>
       </LabelStyle>
     </Style>
 

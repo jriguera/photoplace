@@ -3,7 +3,7 @@
 #
 #       GTKtour.py
 #
-#       Copyright 2010 Jose Riguera Lopez <jriguera@gmail.com>
+#       Copyright 2011 Jose Riguera Lopez <jriguera@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -20,12 +20,12 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 """
-This plugin makes a visual tour with all photos ....
+This add-on makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.2.1"
-__date__ = "December 2010"
+__version__ = "0.3.0"
+__date__ = "August 2011"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
 
@@ -435,7 +435,7 @@ class GTKTour(object):
         vbox.pack_start(scroll, True, True)
         vbox.show_all()
         self.treestore.clear()
-        ite = self.treestore.append(None, [str(_("Start Camera Parameters")), None, False])
+        ite = self.treestore.append(None, [str(_("First Camera Parameters")), None, False])
         self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_DESC,
             self.options[KmlTour_CONFKEY_BEGIN_DESC] , True])
         self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_STYLE,
@@ -461,7 +461,7 @@ class GTKTour(object):
             self.options[KmlTour_CONFKEY_TILT], True])
         self.treestore.append(ite, [KmlTour_CONFKEY_WAIT,
             self.options[KmlTour_CONFKEY_WAIT], True])
-        ite = self.treestore.append(None, [str(_("End Camera Parameters")), None, False])
+        ite = self.treestore.append(None, [str(_("Last Camera Parameters")), None, False])
         self.treestore.append(ite, [KmlTour_CONFKEY_END_DESC,
             self.options[KmlTour_CONFKEY_END_DESC] , True])
         self.treestore.append(ite, [KmlTour_CONFKEY_END_STYLE,

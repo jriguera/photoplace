@@ -2,7 +2,7 @@
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:gx="http://www.google.com/kml/ext/2.2">
   <Document>
     <!-- http://code.google.com/apis/kml/documentation/kmlreference.html -->
-    <name>%(name|Photos)s</name>
+    <name>%(name|Fotos)s</name>
     <visibility>1</visibility>
     <Snippet maxLines="0"></Snippet>
     <open>1</open>
@@ -12,24 +12,29 @@
         </table>
     ]]></description>
     <atom:author>
-      <atom:name>%(author|Unknown)s</atom:name>
+      <atom:name>%(author| )s</atom:name>
     </atom:author>
     <Folder>
         <name>About</name>
         <Snippet maxLines="1">
-            Todo acerca de esta capa. 
-            (Creada con PhotoPlace)
+            Acerca de esta capa. 
+            (Hecho con PhotoPlace)
         </Snippet>
         <description></description>
     </Folder>
 
     <Style id="highlightPlacemark">
       <IconStyle>
+        <scale>%(highlightplacemarkscale|0.8)s</scale>
+        <color>%(highlightplacemarkcolor|7f00ff00)s</color>
         <Icon>
-          <scale>0.7</scale>
-          <href>%(highlightplacemark|http://maps.google.com/mapfiles/kml/pal4/icon38.png)s</href>
+            <href>%(highlightplacemark|http://maps.google.com/mapfiles/kml/pal4/icon38.png)s</href>
         </Icon>
       </IconStyle>
+      <LabelStyle>
+        <scale>%(highlightplacemarklabelscale|0.8)s</scale>
+        <color>%(highlightplacemarklabelcolor|7f00ff00)s</color>
+      </LabelStyle>
       <BalloonStyle>
         <bgColor>%(highlightplacemarkballoonbgcolor|aa99ffff)s</bgColor>
         <textColor>%(highlightplacemarkballoontextcolor|ff000000)s</textColor>
@@ -38,13 +43,15 @@
 
     <Style id="normalPlacemark">
       <IconStyle>
-        <scale>0.6</scale>
+        <scale>%(normalplacemarkscale|0.5)s</scale>
+        <color>%(normalplacemarkcolor|4cffffff)s</color>
         <Icon>
             <href>%(normalplacemark|http://maps.google.com/mapfiles/kml/pal4/icon38.png)s</href>
         </Icon>
       </IconStyle>
       <LabelStyle>
-         <scale>0.6</scale>
+        <scale>%(normalplacemarklabelscale|0.5)s</scale>
+        <color>%(normalplacemarklabelcolor|4cffffff)s</color>
       </LabelStyle>
     </Style>
 

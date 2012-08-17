@@ -25,9 +25,9 @@ Add-on for PhotoPlace to generate paths and waypoints from GPX tracks to show th
 __program__ = "photoplace.gpxdata"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
 __version__ = "0.1.0"
-__date__ = "August 2011"
+__date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
-__copyright__ ="(c) Jose Riguera"
+__copyright__ ="(c) Jose Riguera Lopez"
 
 
 import os.path
@@ -77,6 +77,7 @@ PhotoPlace_PathSPMAX = "PhotoPlace.PathSPMAX"
 PhotoPlace_PathSPAVG = "PhotoPlace.PathSPAVG"
 PhotoPlace_PathNSEG = "PhotoPlace.PathNSEG"
 PhotoPlace_PathNWPT = "PhotoPlace.PathNWPT"
+
 PhotoPlace_WptNAME = "PhotoPlace.WptNAME"
 PhotoPlace_WptDESC = "PhotoPlace.WptDESC"
 PhotoPlace_WptLAT = "PhotoPlace.WptLAT"

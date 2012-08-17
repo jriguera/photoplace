@@ -126,5 +126,27 @@ def bearingCoord (lat0, lon0, lat1, lon1):
     return bearing
 
 
+def bestViewAltitude(max_lat, max_lon, min_lat, min_lon, scale_range=1.5, aspect_ratio=1.5):
+    """
+    Calculate the best altitude to see the points.
+    http://stackoverflow.com/questions/5491315/calculate-range-and-altitude-of-the-google-earth-kml-lookat-element-to-fit-all-f
+    http://code.google.com/p/earth-api-utility-library/source/browse/trunk/extensions/src/view/boundsview.js
+    """
+    center_lon = (max_lon + min_lon) / 2.0
+    center_lat = (max_lat + min_lat) / 2.0
+    
+    EW_distance = distanceCoord(center_lat, max_lon, center_lat, min_lon)
+    NS_distance = distanceCoord(min_lat, center_lon, max_lat, center_lon)
+    aspect_ratio = min(max(aspect_ratio, EW_distance / NS_distance), 1.0)
+    
+    # using the experimentally derived distance formula.
+    alpha = math.radians(45.0 / (aspect_ratio + 0.4) - 2.0)
+    expand_distance = max(NS_distance, EW_distance)
+    beta = min(math.radians(90.0), alpha + expand_distance / (2.0 * float(EarthsRadius)))
+    altitude = scale_range * float(EarthsRadius) * \
+               (math.sin(beta) * math.sqrt(1.0 + ( 1.0 / math.pow(math.tan(alpha), 2))) - 1)
+    return altitude
+
+
 # EOF
 

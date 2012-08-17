@@ -3,7 +3,7 @@
 #
 #       tour.py
 #
-#       Copyright 2010 Jose Riguera Lopez <jriguera@gmail.com>
+#       Copyright 2011 Jose Riguera Lopez <jriguera@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -20,12 +20,12 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 """
-This plugin makes a visual tour with all photos ....
+This add-on makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.2.1"
-__date__ = "December 2010"
+__version__ = "0.3.0"
+__date__ = "August 2011"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
 
@@ -74,10 +74,10 @@ KmlTour_MUSIC_MIX = False
 KmlTour_MUSIC_URI = ''
 KmlTour_BEGIN_NAME = _("Start")
 KmlTour_BEGIN_DESC = ''
-KmlTour_BEGIN_STYLE =  '#tour-first'
+KmlTour_BEGIN_STYLE = None      # '#tour-first'
 KmlTour_END_NAME = _("End")
 KmlTour_END_DESC = ''
-KmlTour_END_STYLE = '#tour-last'
+KmlTour_END_STYLE = None        # '#tour-last'
 KmlTour_FLYMODE = "smooth"
 KmlTour_ALTMODE = "absolute"
 KmlTour_SIMPL = True
@@ -92,16 +92,20 @@ KmlTour_BEGIN_HEADING = None
 KmlTour_BEGIN_FLYTIME = 8.0
 KmlTour_BEGIN_TILT = 50.0
 KmlTour_BEGIN_RANGE = 1000.0
-KmlTour_TILT = 30.0
+KmlTour_BEGIN_ICON = "http://maps.google.com/mapfiles/kml/shapes/flag.png"
+KmlTour_BEGIN_SCALE = 0.8
+KmlTour_TILT = 45.0
 KmlTour_WAIT = 7.0
 KmlTour_FLYTIME = 5.0
 KmlTour_HEADING = None
-KmlTour_RANGE = 200.0
+KmlTour_RANGE = None
 KmlTour_FOLLOWPATH = True
 KmlTour_END_FLYTIME = 5.0
 KmlTour_END_HEADING = None
 KmlTour_END_TILT = 50.0
 KmlTour_END_RANGE = 1000.0
+KmlTour_END_ICON = "http://maps.google.com/mapfiles/kml/shapes/flag.png"
+KmlTour_END_SCALE = 0.8
 
 # Configuration keys
 KmlTour_CONFKEY = "tour"
@@ -116,6 +120,8 @@ KmlTour_CONFKEY_KMLTOUR_MUSIC_URI = "mp3uri"
 KmlTour_CONFKEY_BEGIN_NAME = "beginname"
 KmlTour_CONFKEY_BEGIN_DESC = "begindescfile"
 KmlTour_CONFKEY_BEGIN_STYLE = "beginstyle"
+KmlTour_CONFKEY_BEGIN_ICON = "beginicon"
+KmlTour_CONFKEY_BEGIN_SCALE = "beginscale" 
 KmlTour_CONFKEY_BEGIN_WAIT = "beginwait"
 KmlTour_CONFKEY_BEGIN_HEADING = "beginheading"
 KmlTour_CONFKEY_BEGIN_FLYTIME = "beginflytime"
@@ -130,6 +136,8 @@ KmlTour_CONFKEY_FOLLOWPATH = "followpath"
 KmlTour_CONFKEY_END_NAME = "endname"
 KmlTour_CONFKEY_END_DESC = "enddescfile"
 KmlTour_CONFKEY_END_STYLE = "endstyle"
+KmlTour_CONFKEY_END_ICON = "endicon"
+KmlTour_CONFKEY_END_SCALE = "endscale" 
 KmlTour_CONFKEY_END_HEADING = "endheading"
 KmlTour_CONFKEY_END_FLYTIME = "endflytime"
 KmlTour_CONFKEY_END_TILT = "endtilt"
@@ -142,7 +150,9 @@ from KmlgxTour import *
 
 class KmlTour(Plugin):
 
-    description = _("A plugin to generate a visual tour with your photos.")
+    description = _(
+        "Add-on to generate a visual tour with your photos."
+    )
     author = "Jose Riguera Lopez"
     email = "<jriguera@gmail.com>"
     url = "http://code.google.com/p/photoplace/"
@@ -155,8 +165,8 @@ class KmlTour(Plugin):
         'NeedGUI' : False,
     }
 
-    def __init__(self, logger, state, args, argfiles=[], gtkbuilder=None):
-        Plugin.__init__(self, logger, state, args, argfiles, gtkbuilder)
+    def __init__(self, logger, userfacade, args, argfiles=[], gtkbuilder=None):
+        Plugin.__init__(self, logger, userfacade, args, argfiles, gtkbuilder)
         self.options = None
         # GTK widgets
         self.gui = None
@@ -261,22 +271,19 @@ class KmlTour(Plugin):
                 pass
             options[KmlTour_CONFKEY_BEGIN_DESC] = filename
         options.setdefault(KmlTour_CONFKEY_BEGIN_STYLE, KmlTour_BEGIN_STYLE)
-        self._set_option_float_none(options, KmlTour_CONFKEY_KMLTOUR_SIMPL_DISTANCE,
-            KmlTour_SIMPL_DISTANCE, (0, 1000000))
+        options.setdefault(KmlTour_CONFKEY_BEGIN_ICON, KmlTour_BEGIN_ICON)
+        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_SCALE, KmlTour_BEGIN_SCALE, (0.0, 10.0))
+        self._set_option_float_none(options, KmlTour_CONFKEY_KMLTOUR_SIMPL_DISTANCE, KmlTour_SIMPL_DISTANCE, (0, 1000000))
         if options[KmlTour_CONFKEY_KMLTOUR_SIMPL_DISTANCE] == None:
             options[KmlTour_CONFKEY_KMLTOUR_SIMPL_DISTANCE] = -1
         self._set_option_float(options, KmlTour_CONFKEY_BEGIN_WAIT, KmlTour_BEGIN_WAIT)
-        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_HEADING,
-            KmlTour_BEGIN_HEADING, (0,360))
-        self._set_option_float(options, KmlTour_CONFKEY_BEGIN_FLYTIME, KmlTour_BEGIN_FLYTIME,
-            (KmlTour_FLYTIME_LIMIT, None))
-        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_TILT,
-            KmlTour_BEGIN_TILT, (0,180))
-        self._set_option_float(options, KmlTour_CONFKEY_BEGIN_RANGE, KmlTour_BEGIN_RANGE)
+        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_HEADING, KmlTour_BEGIN_HEADING, (0,360))
+        self._set_option_float(options, KmlTour_CONFKEY_BEGIN_FLYTIME, KmlTour_BEGIN_FLYTIME, (KmlTour_FLYTIME_LIMIT, None))
+        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_TILT, KmlTour_BEGIN_TILT, (0,180))
+        self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_RANGE, KmlTour_BEGIN_RANGE)
         self._set_option_float(options, KmlTour_CONFKEY_WAIT, KmlTour_WAIT)
         self._set_option_float_none(options, KmlTour_CONFKEY_HEADING, KmlTour_HEADING, (0,360))
-        self._set_option_float(options, KmlTour_CONFKEY_FLYTIME, KmlTour_FLYTIME,
-            (KmlTour_FLYTIME_LIMIT, None))
+        self._set_option_float(options, KmlTour_CONFKEY_FLYTIME, KmlTour_FLYTIME, (KmlTour_FLYTIME_LIMIT, None))
         self._set_option_float_none(options, KmlTour_CONFKEY_TILT, KmlTour_TILT, (0,180))
         self._set_option_float(options, KmlTour_CONFKEY_RANGE, KmlTour_RANGE)
         self._set_option_bool(options, KmlTour_CONFKEY_FOLLOWPATH, KmlTour_FOLLOWPATH)
@@ -290,10 +297,10 @@ class KmlTour(Plugin):
                 pass
             options[KmlTour_CONFKEY_END_DESC] = filename
         options.setdefault(KmlTour_CONFKEY_END_STYLE, KmlTour_END_STYLE)
-        self._set_option_float_none(options, KmlTour_CONFKEY_END_HEADING,
-            KmlTour_END_HEADING, (0,360))
-        self._set_option_float(options, KmlTour_CONFKEY_END_FLYTIME, KmlTour_END_FLYTIME,
-            (KmlTour_FLYTIME_LIMIT, None))
+        options.setdefault(KmlTour_CONFKEY_END_ICON, KmlTour_END_ICON)
+        self._set_option_float_none(options, KmlTour_CONFKEY_END_SCALE, KmlTour_END_SCALE, (0.0, 10.0))
+        self._set_option_float_none(options, KmlTour_CONFKEY_END_HEADING, KmlTour_END_HEADING, (0,360))
+        self._set_option_float(options, KmlTour_CONFKEY_END_FLYTIME, KmlTour_END_FLYTIME, (KmlTour_FLYTIME_LIMIT, None))
         self._set_option_float_none(options, KmlTour_CONFKEY_END_TILT, KmlTour_END_TILT, (0,180))
         self._set_option_float(options, KmlTour_CONFKEY_END_RANGE, KmlTour_END_RANGE)
         self.options = options
@@ -312,7 +319,7 @@ class KmlTour(Plugin):
             else:
                 self.gui.show(None, opt)
         self.ready = 1
-        self.logger.debug(_("Starting plugin ..."))
+        self.logger.debug(_("Starting add-on ..."))
 
 
     @DRegister("MakeKML:ini")
@@ -406,18 +413,39 @@ class KmlTour(Plugin):
             self.center_lon = (self.max_lon + self.min_lon)/2.0
             self.center_lat = (self.max_lat + self.min_lat)/2.0
             ready = 1
+        # Calculate the best values:
+        
+        
+        max_distance = pyGPX.distanceCoord(self.min_lat, self.min_lon, self.max_lat, self.max_lon)
+        altitude = max_distance / 20
+        if altitude < 100:
+            altitude = 100
+        elif altitude > 3000:
+            altitude = 3000
+        self.options[KmlTour_CONFKEY_RANGE] = altitude
+        print "ALTITUDE_antes", altitude
+        
+        
+        altitude = pyGPX.bestViewAltitude(self.max_lat, self.max_lon, self.min_lat, self.min_lon)
+        print "ALTITUDE_nueva", altitude
+        
         return ready
+
+
+
+
+
 
 
     def set_first(self, str_tzdiff=''):
         begin_name = self.options[KmlTour_CONFKEY_BEGIN_NAME]
-        begin_style = self.options[KmlTour_CONFKEY_BEGIN_STYLE]
         begin_wait = self.options[KmlTour_CONFKEY_BEGIN_WAIT]
         begin_heading = self.options[KmlTour_CONFKEY_BEGIN_HEADING]
         begin_flytime = self.options[KmlTour_CONFKEY_BEGIN_FLYTIME]
         begin_tilt = self.options[KmlTour_CONFKEY_BEGIN_TILT]
         begin_range = self.options[KmlTour_CONFKEY_BEGIN_RANGE]
         begin_desc = self.get_description(KmlTour_CONFKEY_BEGIN_DESC)
+        begin_style = self.options[KmlTour_CONFKEY_BEGIN_STYLE]
         strtime = self.first_time.strftime("%Y-%m-%dT%H:%M:%S") + str_tzdiff
         if begin_heading == None:
             begin_heading = pyGPX.bearingCoord(
@@ -430,19 +458,24 @@ class KmlTour(Plugin):
             distance = distance * begin_range
         else:
             distance = begin_range
-        self.gxtour.begin(self.first_lon, self.first_lat, self.first_ele, strtime,
-            begin_name, begin_desc, begin_style, begin_wait, begin_heading,
-            begin_tilt, distance, begin_flytime)
+        if begin_style == None or len(begin_style) < 2:
+            begin_icon = self.options[KmlTour_CONFKEY_BEGIN_ICON]
+            begin_scale = self.options[KmlTour_CONFKEY_BEGIN_SCALE]
+            begin_style = datetime.datetime.now().strftime("tour-start" + "%Y%j%I%M")
+            self.gxtour.do_placemark_style(begin_style, begin_icon, begin_scale)
+            begin_style = '#' + begin_style
+        self.gxtour.begin(self.first_lon, self.first_lat, self.first_ele, strtime, begin_name, 
+            begin_desc, begin_style, begin_wait, begin_heading, begin_tilt, distance, begin_flytime)
 
 
     def set_last(self, str_tzdiff=''):
         end_name = self.options[KmlTour_CONFKEY_END_NAME]
-        end_style = self.options[KmlTour_CONFKEY_END_STYLE]
         end_heading = self.options[KmlTour_CONFKEY_END_HEADING]
         end_flytime = self.options[KmlTour_CONFKEY_END_FLYTIME]
         end_tilt = self.options[KmlTour_CONFKEY_END_TILT]
         end_range = self.options[KmlTour_CONFKEY_END_RANGE]
         end_desc = self.get_description(KmlTour_CONFKEY_END_DESC)
+        end_style = self.options[KmlTour_CONFKEY_END_STYLE]
         strtime = self.last_time.strftime("%Y-%m-%dT%H:%M:%S") + str_tzdiff
         if end_heading == None:
             end_heading = pyGPX.bearingCoord(
@@ -454,6 +487,12 @@ class KmlTour(Plugin):
                 self.center_lat, self.center_lon,
                 self.last_lat, self.last_lon)
             distance = distance * end_range
+        if end_style == None or len(end_style) < 2:
+            end_icon = self.options[KmlTour_CONFKEY_END_ICON]
+            end_scale = self.options[KmlTour_CONFKEY_END_SCALE]
+            end_style = datetime.datetime.now().strftime("tour-end" + "%Y%j%I%M")
+            self.gxtour.do_placemark_style(end_style, end_icon, end_scale)
+            end_style = '#' + end_style
         self.gxtour.end(self.last_lon, self.last_lat, self.last_ele, strtime,
             end_name, end_desc, end_style, end_heading, end_tilt, distance, end_flytime)
 
@@ -521,7 +560,7 @@ class KmlTour(Plugin):
         index.append(len_points-1)
         return [points[i] for i in index]
 
-
+    # defautl method
     def get_track_bytime(self, prev_time, time):
         found_first = False
         found_last = False
@@ -701,14 +740,16 @@ class KmlTour(Plugin):
     def load_photo(self, geophoto, *args, **kwargs):
         geophoto.attr[KmlTour_CONFKEY_WAIT] = self.options[KmlTour_CONFKEY_WAIT]
         if self.options[KmlTour_CONFKEY_HEADING] == None:
-            geophoto.attr[KmlTour_CONFKEY_HEADING] = ''
+            geophoto.attr[KmlTour_CONFKEY_HEADING] = 'd'
         else:
             geophoto.attr[KmlTour_CONFKEY_HEADING] = self.options[KmlTour_CONFKEY_HEADING]
         geophoto.attr[KmlTour_CONFKEY_FLYTIME] = self.options[KmlTour_CONFKEY_FLYTIME]
-        geophoto.attr[KmlTour_CONFKEY_TILT] = self.options[KmlTour_CONFKEY_TILT]
-        geophoto.attr[KmlTour_CONFKEY_RANGE] = self.options[KmlTour_CONFKEY_RANGE]
+        #geophoto.attr[KmlTour_CONFKEY_TILT] = self.options[KmlTour_CONFKEY_TILT]
+        geophoto.attr[KmlTour_CONFKEY_TILT] = 'd'
+        #geophoto.attr[KmlTour_CONFKEY_RANGE] = self.options[KmlTour_CONFKEY_RANGE]
+        geophoto.attr[KmlTour_CONFKEY_RANGE] = 'd'
         #geophoto.attr[KmlTour_CONFKEY_FOLLOWPATH] = int(self.options[KmlTour_CONFKEY_FOLLOWPATH])
-        geophoto.attr[KmlTour_CONFKEY_FOLLOWPATH] = ''
+        geophoto.attr[KmlTour_CONFKEY_FOLLOWPATH] = 'd'
 
 
     @DRegister("MakeKML:end")
@@ -867,7 +908,7 @@ class KmlTour(Plugin):
             self.traks_points = []
             self.tracks_pos = 0
             self.points_pos = 0
-            self.logger.debug(_("Resetting plugin ..."))
+            self.logger.debug(_("Resetting add-on ..."))
 
 
     def end(self, options):
@@ -879,7 +920,7 @@ class KmlTour(Plugin):
         self.points_pos = 0
         if self.gui:
             self.gui.hide()
-        self.logger.debug(_("Ending plugin ..."))
+        self.logger.debug(_("Ending add-on ..."))
 
 
 # EOF

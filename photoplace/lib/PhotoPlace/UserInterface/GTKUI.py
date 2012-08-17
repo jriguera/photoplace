@@ -613,17 +613,17 @@ class PhotoPlaceGUI(InterfaceUI):
         if not self.firstloadedphotos:
             # order by name (only first time)
             gobject.idle_add(self["treeviewcolumn-geophotos-picture"].clicked)
-            variables_key = 'name'
+            # Set name to photo folder
             value = os.path.basename(self.userfacade.state['photoinputdir'])
-            if not self.userfacade.options[VARIABLES_KEY].has_key(variables_key):
-                self.userfacade.options[VARIABLES_KEY][variables_key] = ''
-            if len(self.userfacade.options[VARIABLES_KEY][variables_key]) < 1:
+            if not self.userfacade.options[VARIABLES_KEY].has_key('name'):
+                self.userfacade.options[VARIABLES_KEY]['name'] = ''
+            if len(self.userfacade.options[VARIABLES_KEY]['name']) < 1:
                 model = self["treeview-variables"].get_model()
                 iterator = model.iter_children(self.variables_iterator)
                 parent = model.get_string_from_iter(self.variables_iterator)
                 found = False
                 while iterator != None:
-                    if model.get_value(iterator, VARIABLES_COLUMN_KEY) == variables_key:
+                    if model.get_value(iterator, VARIABLES_COLUMN_KEY) == 'name':
                         model.set(iterator, VARIABLES_COLUMN_VALUE, value)
                         found = True
                         break
@@ -631,8 +631,8 @@ class PhotoPlaceGUI(InterfaceUI):
                     if parent != model.get_string_from_iter(model.iter_parent(iterator)):
                         break
                 if not found:
-                    model.append(self.variables_iterator, [variables_key, value, True])
-                self.userfacade.options[VARIABLES_KEY][variables_key] = value
+                    model.append(self.variables_iterator, ['name', value, True])
+                self.userfacade.options[VARIABLES_KEY]['name'] = value
             self.firstloadedphotos = True
 
 
@@ -763,7 +763,7 @@ class PhotoPlaceGUI(InterfaceUI):
             self['entry-photouri'].set_sensitive(True)
             self._set_photouri()
         else:
-            self['togglebutton-outfile'].set_label(_(" No generate output file!"))
+            self['togglebutton-outfile'].set_label(_(" Do not generate output file!"))
             self['hscale-quality'].set_sensitive(False)
             self['hscale-zoom'].set_sensitive(False)
             self['entry-photouri'].set_text('')
@@ -800,10 +800,10 @@ class PhotoPlaceGUI(InterfaceUI):
                 if k == self.userfacade.state["exifmode"]:
                     default_pos = position
                 position += 1
-            self['checkbutton-outgeo'].set_label(_("Geolocate photos in mode:"))
+            self['checkbutton-outgeo'].set_label(_("Geotag photos in mode:"))
             self['combobox-exif'].set_active(default_pos)
         else:
-            self['checkbutton-outgeo'].set_label(_("No geolocate photos"))
+            self['checkbutton-outgeo'].set_label(_("Do not geotag photos!"))
             self['combobox-exif'].set_sensitive(False)
             self.userfacade.state["exifmode"] = -1
 
@@ -909,7 +909,7 @@ class PhotoPlaceGUI(InterfaceUI):
         geodata = ''
         geovalue = _("Picture not geotagged!")
         if geophoto.isGeoLocated():
-            geodata = _("  Longitude :\n  Latitude :\n  Elevation :") % dgettext
+            geodata = _("  Longitude\n  Latitude\n  Elevation") % dgettext
             geovalue = "%(lon)f\n%(lat)f\n%(ele)f" % dgettext
             color = TREEVIEWPHOTO_GEOLOCATED_COLOR
         tips = tips % dgettext
@@ -942,7 +942,7 @@ class PhotoPlaceGUI(InterfaceUI):
                     value = ''
                 model.append(iterator, [
                     geophoto.status, variable, geophoto.path, None, bool(geophoto.status), None, None,
-                    "<tt><b>%s</b></tt> :" % variable, value, None, False, True, _("Variable from template")])
+                    "<tt><b>%s</b></tt> " % variable, value, None, False, True, _("Variable from template")])
 
     def _set_geophoto_variables_cb(self, obj, iterator, geophoto, *args, **kwargs):
         self.set_geophoto_variables(iterator, geophoto)
@@ -1054,7 +1054,7 @@ class PhotoPlaceGUI(InterfaceUI):
             filename = templates[PhotoPlace_Cfg_KmlTemplateDescriptionPhoto_Path]
         except:
             pass
-        tooltip = "hola"
+        tooltip = ''
         self.windowteditor.show(text=text, template=filename, recover=filename, 
             completions=completions, tooltip=tooltip, cansave=False)
         self.windowteditor.connect('close', self._editor_setdesc, geophoto, ite)
@@ -1159,7 +1159,7 @@ class PhotoPlaceGUI(InterfaceUI):
         template = self["combobox-templates"].get_model().get_value(ite, 0)
         key = self["combobox-templates"].get_model().get_value(ite, 1)
         completions = list()
-        if key == PhotoPlace_Cfg_KmlTemplateDescriptionPhoto:
+        if key == PhotoPlace_Cfg_KmlTemplateDescriptionPhoto_Path:
             for item in PhotoPlace_TEMPLATE_VARS:
                 completions.append("%(" + item + ")s")
         self.windowteditor.show(template=template, completions=completions)
@@ -1187,7 +1187,7 @@ class PhotoPlaceGUI(InterfaceUI):
     def _reload_templates_cb(self, obj, text, filename, *args, **kwargs):
         for k, v in self.userfacade.options[TEMPLATES_KEY].iteritems():
             if os.path.basename(v) == os.path.basename(filename):
-                # Only reload templates ir are main (in the config file)
+                # Only reload templates if are main (in the config file)
                 self.reload_templates()
                 return
 

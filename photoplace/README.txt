@@ -33,11 +33,11 @@ with a geotagging  program, my antipodes in New Zeland, and your coins
 can help me to achieve this goals.
 
 
-Changes of this version: 0.5.0 (Q1 2011)
+Changes of this version: 0.5.0 (Q3 2012)
 ========================================
 * New GTK User interface with theme support.
 * Intelligent templates for descriptions.
-* Support for plugins.
+* Support for add-on's.
 * Multi-language.
 
 

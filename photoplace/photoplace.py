@@ -25,14 +25,14 @@ developed with python 2.x (>= 2.6) to easily geotag your photos.
 
 Also, with a track log from a GPS device, it can generate a *Google Earth*
 /*Maps* layer with your photos. Moreover, the program can be easily adapted 
-by editing templates and its functionality can be complemented with plugins, 
-for example there is a plugin to generate a music tour that can be used 
+by editing templates and its functionality can be complemented with add-ons, 
+for example there is a add-on to generate a music tour that can be used 
 to present your photo collection. 
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
 __version__ = "0.5.0"
-__date__ = "March 2011"
+__date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera, September 2010"
 
