@@ -10,26 +10,6 @@
       <column type="gint"/>
     </columns>
   </object>
-  <object class="GtkListStore" id="treestore-variables">
-    <columns>
-      <!-- column-name key -->
-      <column type="gchararray"/>
-      <!-- column-name value -->
-      <column type="gchararray"/>
-      <!-- column-name editable -->
-      <column type="gboolean"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="liststore-templates">
-    <columns>
-      <!-- column-name visual -->
-      <column type="gchararray"/>
-      <!-- column-name key -->
-      <column type="gchararray"/>
-      <!-- column-name value -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
   <object class="GtkListStore" id="treestore-geophotos">
     <columns>
       <!-- column-name status -->
@@ -190,11 +170,40 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="imagemenuitem-plugins">
+                      <object class="GtkImageMenuItem" id="imagemenuitem-editvariables">
+                        <property name="label" translatable="yes">Manage _Variables</property>
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" comments="menuitem.">List of available extensions. To see information about each add-on, put the mouse over its name.</property>
-                        <property name="label" translatable="yes">_Addons</property>
+                        <property name="tooltip_text" translatable="yes">Edit global KML variables.</property>
                         <property name="use_underline">True</property>
+                        <property name="image">image1</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-editvariables_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-templates">
+                        <property name="label" translatable="yes">Edit _Templates</property>
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">Edit Templates</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image2</property>
+                        <property name="use_stock">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem-sep4">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-plugins">
+                        <property name="label" translatable="yes">_Addons</property>
+                        <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">List of available extensions. To see information about each add-on, put the mouse over its name.</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image3</property>
+                        <property name="use_stock">False</property>
                       </object>
                     </child>
                   </object>
@@ -972,225 +981,6 @@ Not active for geottaging purposes, no output file will be generated.</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkFrame" id="frame-variables">
-                        <property name="visible">True</property>
-                        <property name="label_xalign">0</property>
-                        <child>
-                          <object class="GtkAlignment" id="alignment-variables">
-                            <property name="visible">True</property>
-                            <child>
-                              <object class="GtkVBox" id="vbox-variables">
-                                <property name="visible">True</property>
-                                <child>
-                                  <object class="GtkHBox" id="hbox-templates-edit">
-                                    <property name="visible">True</property>
-                                    <child>
-                                      <object class="GtkComboBox" id="combobox-templates">
-                                        <property name="visible">True</property>
-                                        <property name="model">liststore-templates</property>
-                                        <child>
-                                          <object class="GtkCellRendererText" id="cellrenderertext-templates"/>
-                                          <attributes>
-                                            <attribute name="text">0</attribute>
-                                          </attributes>
-                                        </child>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="pack_type">end</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="label-templates">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">1</property>
-                                        <property name="label" translatable="yes">Select Template:</property>
-                                        <property name="single_line_mode">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="padding">10</property>
-                                        <property name="pack_type">end</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton" id="button-templates-edit">
-                                        <property name="label">gtk-edit</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
-                                        <property name="use_stock">True</property>
-                                        <signal name="clicked" handler="on_button-templates-edit_clicked"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="padding">15</property>
-                                        <property name="pack_type">end</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="label-listvariables">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">0</property>
-                                    <property name="xpad">4</property>
-                                    <property name="label" translatable="yes">List of variables to make the KML:</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="padding">8</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkScrolledWindow" id="scrolledwindow-variables">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="hscrollbar_policy">automatic</property>
-                                    <property name="vscrollbar_policy">automatic</property>
-                                    <child>
-                                      <object class="GtkTreeView" id="treeview-variables">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="model">treestore-variables</property>
-                                        <child>
-                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-variables-name">
-                                            <property name="resizable">True</property>
-                                            <property name="min_width">100</property>
-                                            <property name="title">Name</property>
-                                            <property name="clickable">True</property>
-                                            <property name="reorderable">True</property>
-                                            <property name="sort_indicator">True</property>
-                                            <property name="sort_column_id">0</property>
-                                            <child>
-                                              <object class="GtkCellRendererText" id="cellrenderertext-variables-name"/>
-                                              <attributes>
-                                                <attribute name="text">0</attribute>
-                                              </attributes>
-                                            </child>
-                                          </object>
-                                        </child>
-                                        <child>
-                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-variables-value">
-                                            <property name="resizable">True</property>
-                                            <property name="min_width">100</property>
-                                            <property name="title">Value</property>
-                                            <property name="expand">True</property>
-                                            <property name="clickable">True</property>
-                                            <property name="reorderable">True</property>
-                                            <property name="sort_indicator">True</property>
-                                            <property name="sort_column_id">1</property>
-                                            <child>
-                                              <object class="GtkCellRendererText" id="cellrenderertext-variables-value">
-                                                <signal name="edited" handler="on_cellrenderertext-variables-value_edited"/>
-                                              </object>
-                                              <attributes>
-                                                <attribute name="editable">2</attribute>
-                                                <attribute name="text">1</attribute>
-                                              </attributes>
-                                            </child>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkHBox" id="hbox-variables-ctl">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">5</property>
-                                    <child>
-                                      <object class="GtkEntry" id="entry-variables-add">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="max_length">256</property>
-                                        <property name="invisible_char">●</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="padding">10</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton" id="button-variables-add">
-                                        <property name="label">gtk-add</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
-                                        <property name="use_stock">True</property>
-                                        <signal name="clicked" handler="on_button-variables-add_clicked"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton" id="button-variables-del">
-                                        <property name="label">gtk-remove</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
-                                        <property name="use_stock">True</property>
-                                        <signal name="clicked" handler="on_button-variables-del_clicked"/>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="padding">15</property>
-                                        <property name="pack_type">end</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="padding">6</property>
-                                    <property name="position">3</property>
-                                  </packing>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child type="label">
-                          <object class="GtkLabel" id="label-variables">
-                            <property name="visible">True</property>
-                            <property name="xpad">2</property>
-                            <property name="ypad">8</property>
-                            <property name="label" translatable="yes">&lt;b&gt;Options&lt;/b&gt;</property>
-                            <property name="use_markup">True</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="position">2</property>
-                        <property name="tab_expand">True</property>
-                        <property name="reorderable">True</property>
-                        <property name="detachable">True</property>
-                      </packing>
-                    </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="notebook-label-variabes">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Variables</property>
-                      </object>
-                      <packing>
-                        <property name="position">2</property>
-                        <property name="tab_fill">False</property>
-                      </packing>
-                    </child>
-                    <child>
                       <object class="GtkNotebook" id="notebook-plugins">
                         <property name="visible">True</property>
                         <property name="tab_pos">right</property>
@@ -1198,7 +988,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                         <property name="homogeneous">True</property>
                       </object>
                       <packing>
-                        <property name="position">3</property>
+                        <property name="position">2</property>
                         <property name="tab_expand">True</property>
                         <property name="reorderable">True</property>
                         <property name="detachable">True</property>
@@ -1211,7 +1001,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                         <property name="use_markup">True</property>
                       </object>
                       <packing>
-                        <property name="position">3</property>
+                        <property name="position">2</property>
                         <property name="tab_fill">False</property>
                       </packing>
                     </child>
@@ -1276,7 +1066,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
                     <child type="label">
                       <object class="GtkLabel" id="label-output">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes" comments="label of expansor for textview">&lt;b&gt;Output&lt;/b&gt;</property>
+                        <property name="label" translatable="yes" comments="label of expansor for textview">&lt;b&gt;Output Log&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                         <property name="single_line_mode">True</property>
                       </object>
@@ -1542,18 +1332,6 @@ This General Public License does not permit incorporating your program into prop
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="image-geo">
-    <property name="visible">True</property>
-    <property name="xalign">0</property>
-    <property name="xpad">10</property>
-    <property name="stock">gtk-find-and-replace</property>
-  </object>
-  <object class="GtkImage" id="image-outfile">
-    <property name="visible">True</property>
-    <property name="xalign">0</property>
-    <property name="xpad">10</property>
-    <property name="stock">gtk-save-as</property>
-  </object>
   <object class="GtkAdjustment" id="adjustment-quality">
     <property name="value">1</property>
     <property name="upper">3</property>
@@ -1593,17 +1371,42 @@ This General Public License does not permit incorporating your program into prop
     <property name="stock">gtk-save-as</property>
     <property name="icon-size">1</property>
   </object>
-  <object class="GtkImage" id="image-simulategeolocate">
-    <property name="visible">True</property>
-    <property name="xpad">2</property>
-    <property name="ypad">2</property>
-    <property name="stock">gtk-execute</property>
-  </object>
   <object class="GtkAdjustment" id="adjustment-toffset">
     <property name="lower">-3600</property>
     <property name="upper">3600</property>
     <property name="step_increment">1</property>
     <property name="page_increment">60</property>
     <signal name="value_changed" handler="on_adjustment-toffset_value_changed"/>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="stock">gtk-page-setup</property>
+    <property name="icon-size">1</property>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="stock">gtk-copy</property>
+  </object>
+  <object class="GtkImage" id="image-geo">
+    <property name="visible">True</property>
+    <property name="xalign">0</property>
+    <property name="xpad">10</property>
+    <property name="stock">gtk-find-and-replace</property>
+  </object>
+  <object class="GtkImage" id="image-outfile">
+    <property name="visible">True</property>
+    <property name="xalign">0</property>
+    <property name="xpad">10</property>
+    <property name="stock">gtk-save-as</property>
+  </object>
+  <object class="GtkImage" id="image-simulategeolocate">
+    <property name="visible">True</property>
+    <property name="xpad">2</property>
+    <property name="ypad">2</property>
+    <property name="stock">gtk-execute</property>
+  </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="stock">gtk-convert</property>
   </object>
 </interface>

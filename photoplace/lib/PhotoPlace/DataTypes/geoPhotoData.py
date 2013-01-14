@@ -88,7 +88,7 @@ class GeoPhoto(object):
     implementacion. Moreover, it does not touch jpeg data so, the quality of photos
     is the original. More info about pyexiv2: http://tilloy.net/dev/pyexiv2/
     """
-    def __init__(self, path, name=u"--",
+    def __init__(self, path, name=None,
         lat = _GeoPhoto_DEFAULT_LAT,
         lon = _GeoPhoto_DEFAULT_LON,
         ele = _GeoPhoto_DEFAULT_ELE,
@@ -115,7 +115,7 @@ class GeoPhoto(object):
         self.name = name
         self.status = 0
         self.toffset = 0
-        if name == u"--":
+        if name == None:
             self.name = os.path.basename(self.path)
         self.exif = None
         self.attr = {}

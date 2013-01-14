@@ -46,6 +46,8 @@ PhotoPlace_version = "0.5.0"
 PhotoPlace_url = "http://code.google.com/p/photoplace"
 PhotoPlace_date = "Jan 2011"
 PhotoPlace_onlinehelp = "http://code.google.com/p/photoplace/wiki/OnlineHelp"
+PhotoPlace_estimated = _("<estimated>")
+PhotoPlace_default = _("<default>")
 
 # Variables on templates
 PhotoPlace_PhotoNAME = 'Photo.NAME'
@@ -166,7 +168,7 @@ PhotoPlace_Cfg_default = {
         'photofolder' : _("Photos"),
         'defaultvalue': "-",
     },
-    'plugins'   : {} 
+    'addons'   : {} 
 }
 PhotoPlace_Cfg_timeformat = _("%A %d. %B %Y")
 PhotoPlace_Cfg_loglevel = logging.DEBUG
@@ -203,10 +205,11 @@ PhotoPlace_CONFIG_NOCLONE = {
         'iniheading',
     ],
     'templates' : [],
-    'plugins'   : [],
+    'addons'   : [],
 }
 
-
+TEMPLATES_KEY = u"templates"
+VARIABLES_KEY = u"defaults"
 VARIABLES_OTHER = [
     'normalplacemark',
     'normalplacemarkscale',

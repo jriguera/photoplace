@@ -33,12 +33,12 @@ __copyright__ ="(c) Jose Riguera, September 2011"
 import os
 import sys
 import time
+import datetime
 import codecs
 import Image
 import webbrowser
 import StringIO
 import xml.dom.minidom
-import getpass
 import cgi
 import warnings
 
@@ -72,6 +72,7 @@ from Interface import InterfaceUI
 from GTKUIdefinitions import *
 from GTKPhotoInfo import *
 from GTKTemplateEditor import *
+from GTKVariableEditor import *
 
 
 
@@ -177,15 +178,10 @@ class PhotoPlaceGUI(InterfaceUI):
             self["treeview-geophotos"].set_model(gtk.TreeStore(
                 int, str, str, str, bool, gtk.gdk.Pixbuf, str, str, str, str, bool, bool, str))
             self["treeview-geophotos"].set_rules_hint(True)
-            self["treeviewcolumn-variables-name"].set_title(_("Name"))
-            self["treeviewcolumn-variables-value"].set_title(_("Value"))
-            self["treeview-variables"].set_model(gtk.TreeStore(str, str, bool))
-            self["treeview-variables"].set_rules_hint(True)
-            settings = gtk.settings_get_default()
-            settings.props.gtk_button_images = True
             self.in_process = True
             self.windowteditor = TemplateEditorGUI(resourcedir, self.window)
             self.windowphotoinfo = PhotoInfoGUI(resourcedir, self.window)
+            self.windowvariables = VariableEditorGUI(resourcedir, self.window)
             self.window.show_all()
 
     def __getitem__(self, key):
@@ -250,11 +246,10 @@ class PhotoPlaceGUI(InterfaceUI):
         self.num_photos_process = 0
         self.reloadtemplates = False
         self.firstloadedphotos = False
-        self.variables_iterator = None
         self.in_process = False
         self.windowteditor.init(self.userfacade)
-        model = self["treeview-geophotos"].get_model()
-        self.windowphotoinfo.init(self.userfacade, model)
+        self.windowphotoinfo.init(self.userfacade, self["treeview-geophotos"].get_model())
+        self.windowvariables.init(self.userfacade)
 
     def start(self, load_files=True):
         #gtk.gdk.threads_enter()
@@ -262,7 +257,6 @@ class PhotoPlaceGUI(InterfaceUI):
             sleeper = lambda: time.sleep(.001) or True
             gobject.timeout_add(400, sleeper)
         loaded_templates = self.action_loadtemplates()
-        self._show_variables()
         if load_files and loaded_templates:
             # Read current file
             selection = False
@@ -296,6 +290,15 @@ class PhotoPlaceGUI(InterfaceUI):
             menuitem.connect('toggled', self._toggle_active_plugin, plugin)
             notebookframe.show_all()
             menuitem.show()
+        # Templates
+        imagemenuitem_templates = self.builder.get_object("imagemenuitem-templates")
+        menuitem_templates = gtk.Menu()
+        imagemenuitem_templates.set_submenu(menuitem_templates)
+        for k, v in self.userfacade.options[TEMPLATES_KEY].iteritems():
+            menuitem = gtk.MenuItem(os.path.basename(v))
+            menuitem.connect('activate', self._clicked_template_edit, k, v)
+            menuitem_templates.add(menuitem)
+            menuitem.show()
         # GTK signals
         self.signals = {
             "on_aboutdialog_close": self.dialog_close,
@@ -314,6 +317,7 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_imagemenuitem-exit_activate": self.end,
             "on_imagemenuitem-about_activate": self.dialog_show,
             "on_imagemenuitem-onlinehelp_activate": self._click_onlinehelp,
+            "on_imagemenuitem-editvariables_activate": self.show_editvariables,
             "on_button-openphotos_clicked": self._clicked_photodir,
             "on_button-opengpx_clicked": self._clicked_gpx,
             "on_toggletoolbutton-plugins_toggled": self._toggle_loadplugins,
@@ -331,15 +335,13 @@ class PhotoPlaceGUI(InterfaceUI):
             "on_cellgeophotos_toggled": self._toggle_geophoto,
             "on_treeview-geophotos_row_activated": self._clicked_geophoto,
             "on_treeview-geophotos_button_press_event": self._lclicked_geophoto,
-            "on_button-variables-add_clicked": self._add_variable,
-            "on_button-variables-del_clicked": self._del_variable,
-            "on_cellrenderertext-variables-value_edited": self._edit_cell_variable,
             "on_cellrenderertext-geophotos-value_edited": self._edit_cell_geophoto,
-            "on_button-templates-edit_clicked": self._clicked_template_edit,
         }
         self.builder.connect_signals(self.signals)
         self.windowteditor.connect('_save', self._reload_templates_cb)
         self.windowphotoinfo.connect('_save', self._set_geophoto_variables_cb)
+        settings = gtk.settings_get_default()
+        settings.props.gtk_button_images = True
         gtk.main()
         gtk.gdk.threads_leave()
 
@@ -407,7 +409,7 @@ class PhotoPlaceGUI(InterfaceUI):
         for p, e in errors.iteritems():
             self.show_dialog(e.type, e.msg, e.tip)
         activation_errors = dict()
-        for p in self.userfacade.options["plugins"]:
+        for p in self.userfacade.addons:
             if not p in errors:
                 try:
                     error = self.userfacade.activate_plugin(p, self.builder)
@@ -439,7 +441,7 @@ class PhotoPlaceGUI(InterfaceUI):
             dgettext['plugin_lic'] = cgi.escape(plgobj.license)
             dgettext['plugin_url'] = cgi.escape(plgobj.url)
             dgettext['plugin_desc'] = cgi.escape(plgobj.description)
-            markup = _("Plugin <b>%(plugin_name)s</b> version %(plugin_version)s\n"
+            markup = _("Add-on <b>%(plugin_name)s</b> version %(plugin_version)s\n"
                 "by <b>%(plugin_author)s</b> %(plugin_mail)s\n"
                 "%(plugin_cpr)s %(plugin_date)s, License: %(plugin_lic)s\n"
                 "More info at: <b>%(plugin_url)s</b>\n\n<i>%(plugin_desc)s</i>")
@@ -618,20 +620,6 @@ class PhotoPlaceGUI(InterfaceUI):
             if not self.userfacade.options[VARIABLES_KEY].has_key('name'):
                 self.userfacade.options[VARIABLES_KEY]['name'] = ''
             if len(self.userfacade.options[VARIABLES_KEY]['name']) < 1:
-                model = self["treeview-variables"].get_model()
-                iterator = model.iter_children(self.variables_iterator)
-                parent = model.get_string_from_iter(self.variables_iterator)
-                found = False
-                while iterator != None:
-                    if model.get_value(iterator, VARIABLES_COLUMN_KEY) == 'name':
-                        model.set(iterator, VARIABLES_COLUMN_VALUE, value)
-                        found = True
-                        break
-                    iterator = model.iter_next(iterator)
-                    if parent != model.get_string_from_iter(model.iter_parent(iterator)):
-                        break
-                if not found:
-                    model.append(self.variables_iterator, ['name', value, True])
                 self.userfacade.options[VARIABLES_KEY]['name'] = value
             self.firstloadedphotos = True
 
@@ -892,7 +880,7 @@ class PhotoPlaceGUI(InterfaceUI):
         dgettext['lon'] = geophoto.lon
         dgettext['lat'] = geophoto.lat
         dgettext['ele'] = geophoto.ele
-        tips = "%(path)s\n\n"
+        tips = "%(path)s\n"
         try:
             dgettext['author'] = geophoto["Exif.Image.Artist"]
             tips = tips + _("# Author: %(author)s\n")
@@ -916,10 +904,10 @@ class PhotoPlaceGUI(InterfaceUI):
         if geophoto.status > 1:
             geophoto.status = 1
             color = TREEVIEWPHOTO_CHANGED_COLOR
-        if geophoto.attr:
-            tips += _("# Attributes: \n")
-            for k,v in geophoto.attr.iteritems():
-                tips += "\t%s: %s\n" % (k, v)
+        #if geophoto.attr:
+        #    tips += _("# Attributes: \n")
+        #    for k,v in geophoto.attr.iteritems():
+        #        tips += "\t%s: %s\n" % (k, v)
         model = self["treeview-geophotos"].get_model()
         iterator = model.append(None, [
             geophoto.status, geophoto.name, geophoto.path, geophoto.time,
@@ -1035,9 +1023,6 @@ class PhotoPlaceGUI(InterfaceUI):
             self.userfacade.state.geophotostyle[key] = None
             del self.userfacade.state.geophotostyle[key]
 
-
-
-
     def _activate_menuedit(self, widget, geophoto, ite):
         key = geophoto.path
         text = None
@@ -1068,105 +1053,15 @@ class PhotoPlaceGUI(InterfaceUI):
             self.userfacade.state.geophotostyle[key] = style
         style[PhotoPlace_Cfg_KmlTemplateDescriptionPhoto_Path] = text
 
-
-    # ######################################
-    # Callbacks from notebook page Variables
-    # ######################################
-
-    def _show_variables(self, *args, **kwargs):
-        model = self["treeview-variables"].get_model()
-        model.clear()
-        self.variables_iterator = model.append(None, [_("Main Parameters"), None, False])
-        iterator_other = model.append(None, [_("Other Parameters"), None, False])
-        for k, v in self.userfacade.options[VARIABLES_KEY].iteritems():
-            if not isinstance(k, unicode):
-                try:
-                    k = unicode(k, PLATFORMENCODING)
-                except:
-                    pass
-            if k in VARIABLES_OTHER:
-                model.append(iterator_other, [k, v, True])
-            else:
-                if k == 'author' and not v:
-                    try:
-                        v = unicode(getpass.getuser(), PLATFORMENCODING)
-                        self.userfacade.options[VARIABLES_KEY][k] = v
-                    except:
-                        pass
-                elif k == 'date' and not v:
-                    v = datetime.date.today().strftime(PhotoPlace_Cfg_timeformat)
-                    v = unicode(v, PLATFORMENCODING)
-                    self.userfacade.options[VARIABLES_KEY][k] = v
-                model.append(self.variables_iterator, [k, v, True])
-        # Templates
-        self["treeview-variables"].expand_to_path((0))
-        model = self["combobox-templates"].get_model()
-        model.clear()
-        for k, v in self.userfacade.options[TEMPLATES_KEY].iteritems():
-            model.append([os.path.basename(v), k, v])
-
-    def _add_variable(self, widget, key=None, value='_'):
-        if key != None:
-            lkey = key
-        else:
-            lkey = self['entry-variables-add'].get_text().strip()
-            if not isinstance(lkey, unicode):
-                try:
-                    lkey = unicode(lkey, 'UTF-8')
-                except:
-                    pass
-        if lkey and not self.userfacade.options[VARIABLES_KEY].has_key(lkey):
-            model = self["treeview-variables"].get_model()
-            iterator = model.append(self.variables_iterator, [lkey, value, True])
-            self.userfacade.options[VARIABLES_KEY][lkey] = unicode(value, 'UTF-8')
-            self['entry-variables-add'].set_text('')
-            path = model.get_path(iterator)
-            self["treeview-variables"].scroll_to_cell(path)
-            treeselection = self["treeview-variables"].get_selection()
-            treeselection.select_path(path)
-
-    def _del_variable(self, widget):
-        selection = self["treeview-variables"].get_selection()
-        model, ite = selection.get_selected()
-        if ite != None and model.get_value(ite, VARIABLES_COLUMN_EDITABLE):
-            key = model.get_value(ite, VARIABLES_COLUMN_KEY)
-            if not isinstance(key, unicode):
-                try:
-                    key = unicode(key, 'UTF-8')
-                except:
-                    pass
-            model.remove(ite)
-            try:
-                del self.userfacade.options[VARIABLES_KEY][key]
-            except:
-                pass
-
-    def _edit_cell_variable(self, cell, path_string, new_text):
-        model = self["treeview-variables"].get_model()
-        treestore_iter = model.get_iter_from_string(path_string)
-        key = model.get_value(treestore_iter, VARIABLES_COLUMN_KEY)
-        if not isinstance(key, unicode):
-            try:
-                key = unicode(key, 'UTF-8')
-            except:
-                pass
-        if model.get_value(treestore_iter, VARIABLES_COLUMN_EDITABLE):
-            self.userfacade.options[VARIABLES_KEY][key] = new_text
-            model.set(treestore_iter, VARIABLES_COLUMN_VALUE, new_text)
-
-    def _clicked_template_edit(self, widget=None, data=None):
-        ite = self['combobox-templates'].get_active_iter()
-        template = self["combobox-templates"].get_model().get_value(ite, 0)
-        key = self["combobox-templates"].get_model().get_value(ite, 1)
+    def _clicked_template_edit(self, widget, keypath, template):
         completions = list()
-        if key == PhotoPlace_Cfg_KmlTemplateDescriptionPhoto_Path:
+        if keypath == PhotoPlace_Cfg_KmlTemplateDescriptionPhoto_Path:
             for item in PhotoPlace_TEMPLATE_VARS:
                 completions.append("%(" + item + ")s")
         self.windowteditor.show(template=template, completions=completions)
 
-
-
-
+    def show_editvariables(self, widget=None, data=None):
+        self.windowvariables.show()
 
     def reload_templates(self):
         if self.action_loadtemplates():

@@ -297,6 +297,7 @@ class State(object):
             self.set_outputfile(None, False)
         except:
             pass
+        
 
 
     def get_template(self, filepath, subdir=u"templates"):

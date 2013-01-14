@@ -76,7 +76,7 @@ class PhotoPlaceCOM(InterfaceUI):
         for p, e in errors.iteritems():
             print(e)
         self.plugins_error = []
-        for p in self.userfacade.options["plugins"]:
+        for p in self.userfacade.addons :
             if not p in errors:
                 try:
                     error = self.userfacade.activate_plugin(p, None)

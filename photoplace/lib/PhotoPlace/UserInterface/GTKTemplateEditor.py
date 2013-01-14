@@ -586,7 +586,7 @@ class TemplateEditorGUI(gobject.GObject):
         self.savefile = None
         self.autocompletions = list()
         self.disconnect()
-        return text
+        return True
 
 
 # EOF

@@ -38,6 +38,7 @@ GTKUI_RESOURCES_PATH = u"gtkui"
 GTKUI_RESOURCE_GUIXML = os.path.join(GTKUI_RESOURCES_PATH, u"photoplace.ui")
 GTKUI_RESOURCE_GUIICON = os.path.join(GTKUI_RESOURCES_PATH, u"photoplace.png")
 GTKUI_RESOURCE_TemplateEditorGUIXML = os.path.join(GTKUI_RESOURCES_PATH, u"templateeditor.ui")
+GTKUI_RESOURCE_VariableEditorGUIXML = os.path.join(GTKUI_RESOURCES_PATH, u"variableeditor.ui")
 GTKUI_RESOURCE_PhotoInfoGUIXML = os.path.join(GTKUI_RESOURCES_PATH, u"photoinfo.ui")
 GTKUI_GETTEXT_DOMAIN = "photoplace"
 
@@ -75,9 +76,6 @@ TREEVIEWPHOTOINFO_GEOPHOTOEXIF_COLOR = "blue"
     TREEVIEWPHOTOINFO_COL_VALUE,
     TREEVIEWPHOTOINFO_COL_BGCOLOR,
 ) = range(5)
-
-TEMPLATES_KEY = u"templates"
-VARIABLES_KEY = u"defaults"
 (
     VARIABLES_COLUMN_KEY,
     VARIABLES_COLUMN_VALUE,

@@ -24,8 +24,8 @@ This add-on makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.3.0"
-__date__ = "August 2011"
+__version__ = "0.3.1"
+__date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
 
@@ -145,24 +145,11 @@ class GTKTour(object):
         sw_ini.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.textview_ini = gtk.TextView()
         self.textview_ini.set_tooltip_markup(tooltip_text)
+        self.textview_ini.connect('populate-popup', self._lclicked_textview, KmlTour_CONFKEY_BEGIN_DESC)
         sw_ini.add(self.textview_ini)
         frame_ini.add(sw_ini)
-        frame_ini.set_size_request(-1, 42)
-        vbox_ini.pack_start(frame_ini, True, True, 5)
-        hbox_ini = gtk.HBox(False)
-        label_ini_text = gtk.Label()
-        label_ini_text.set_markup(_("... or load it from"))
-        label_ini_text.set_justify(gtk.JUSTIFY_LEFT)
-        hbox_ini.pack_start(label_ini_text, False, False)
-        self.filechooserbutton_ini = gtk.Button()
-        image = gtk.Image()
-        image.set_from_stock(gtk.STOCK_FILE, gtk.ICON_SIZE_BUTTON)
-        self.filechooserbutton_ini.set_image(image)
-        self.filechooserbutton_ini.set_label(_('[select a file]'))
-        self.filechooserbutton_ini.connect('clicked',
-            self._load_file, self.textview_ini, KmlTour_CONFKEY_BEGIN_DESC)
-        hbox_ini.pack_start(self.filechooserbutton_ini, True, True, 10)
-        vbox_ini.pack_start(hbox_ini, False, False)
+        #frame_ini.set_size_request(-1, 42)
+        vbox_ini.pack_start(frame_ini, True, True)
         hbox_text.pack_start(vbox_ini, True, True, 5)
         # Right
         vbox_end = gtk.VBox(False)
@@ -176,24 +163,11 @@ class GTKTour(object):
         sw_end.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.textview_end = gtk.TextView()
         self.textview_end.set_tooltip_markup(tooltip_text)
+        self.textview_end.connect('populate-popup', self._lclicked_textview, KmlTour_CONFKEY_END_DESC)
         sw_end.add(self.textview_end)
         frame_end.add(sw_end)
-        frame_end.set_size_request(-1, 42)
-        vbox_end.pack_start(frame_end, True, True, 5)
-        hbox_end = gtk.HBox(False)
-        label_end_text = gtk.Label()
-        label_end_text.set_markup(_("... or load it from"))
-        label_end_text.set_justify(gtk.JUSTIFY_LEFT)
-        hbox_end.pack_start(label_end_text, False, False)
-        self.filechooserbutton_end = gtk.Button()
-        image = gtk.Image()
-        image.set_from_stock(gtk.STOCK_FILE, gtk.ICON_SIZE_BUTTON)
-        self.filechooserbutton_end.set_image(image)
-        self.filechooserbutton_end.set_label(_('[select a file]'))
-        self.filechooserbutton_end.connect('clicked',
-            self._load_file, self.textview_end, KmlTour_CONFKEY_END_DESC)
-        hbox_end.pack_start(self.filechooserbutton_end, True, True, 10)
-        vbox_end.pack_start(hbox_end, False, False)
+        #frame_end.set_size_request(-1, 42)
+        vbox_end.pack_start(frame_end, True, True)
         hbox_text.pack_start(vbox_end, True, True, 5)
         self.plugin.pack_start(hbox_text, True, True, 10)
         # Music buttons
@@ -280,7 +254,6 @@ class GTKTour(object):
                 pass
             else:
                 self.options[key] = filename
-                widget.set_label(os.path.basename(filename))
 
 
     def setup(self, options):
@@ -294,8 +267,6 @@ class GTKTour(object):
             self._set_textview(self.textview_ini, filename)
         except:
             self.textview_ini.get_buffer().set_text(KmlTour_BEGIN_DESC)
-        else:
-            self.filechooserbutton_ini.set_label(os.path.basename(filename))
         filename = options[KmlTour_CONFKEY_END_DESC]
         try:
             if filename == None:
@@ -303,8 +274,6 @@ class GTKTour(object):
             self._set_textview(self.textview_end, filename)
         except:
             self.textview_end.get_buffer().set_text(KmlTour_END_DESC)
-        else:
-            self.filechooserbutton_end.set_label(os.path.basename(filename))
         for mp3 in options[KmlTour_CONFKEY_KMLTOUR_MUSIC]:
             self.combobox_mp3.append_text(os.path.basename(mp3))
         else:
@@ -316,6 +285,16 @@ class GTKTour(object):
         self.spinbutton_epsilon.set_sensitive(follow_value)
         self.options = options
         self.adjustment_epsilon.set_value(options[KmlTour_CONFKEY_KMLTOUR_SIMPL_DISTANCE])
+
+
+    def _lclicked_textview(self, widget, menu, key):
+        menu_load = gtk.ImageMenuItem(gtk.STOCK_FILE)
+        menu_load.set_property('label', _("Load content from a file"))
+        menu_load.connect("activate", self._load_file, widget, key)
+        menu_separator = gtk.SeparatorMenuItem()
+        menu.prepend(menu_separator)
+        menu.prepend(menu_load)
+        menu.show_all()
 
 
     def _set_textview(self, textview, filename, bytes=102400, wrap=gtk.WRAP_NONE):

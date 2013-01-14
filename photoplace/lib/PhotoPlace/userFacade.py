@@ -40,6 +40,8 @@ import ConfigParser
 import logging
 import logging.handlers
 import loggingHandler
+import datetime
+import getpass
 
 from observerHandler import DObserver
 
@@ -195,6 +197,7 @@ class UserFacade(object):
         self.finalize = False
         self.state = None
         self.observers = {}
+        self.addons = self.options["addons"]
         # add the handler to the root logger
         self.logger = logging.getLogger()
         self.mainloghandler = loggingHandler.LogRedirectHandler()
@@ -308,6 +311,25 @@ class UserFacade(object):
                     value = dictionary.get(key, None)
                     dictionary[key] = value
             rconfig[section] = dictionary
+        for k, v in rconfig[VARIABLES_KEY].iteritems():
+            if not isinstance(k, unicode):
+                try:
+                    k = unicode(k, PLATFORMENCODING)
+                except:
+                    pass
+            if k in VARIABLES_OTHER:
+                pass
+            else:
+                if k == 'author' and not v:
+                    try:
+                        v = unicode(getpass.getuser(), PLATFORMENCODING)
+                        rconfig[VARIABLES_KEY][k] = v
+                    except:
+                        pass
+                elif k == 'date' and not v:
+                    v = datetime.date.today().strftime(PhotoPlace_Cfg_timeformat)
+                    v = unicode(v, PLATFORMENCODING)
+                    rconfig[VARIABLES_KEY][k] = v
         return rconfig
 
 
@@ -567,7 +589,7 @@ class UserFacade(object):
 
     def load_plugins(self):
         errors = {}
-        for plugin, path in self.options["plugins"].iteritems():
+        for plugin, path in self.addons.iteritems():
             path = os.path.expanduser(path)
             path = os.path.expandvars(path)
             path = os.path.normpath(path)

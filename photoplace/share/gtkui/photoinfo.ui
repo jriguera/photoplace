@@ -32,32 +32,19 @@
           <object class="GtkHBox" id="hbox-photoinfo-path">
             <property name="visible">True</property>
             <child>
-              <object class="GtkLabel" id="label-path">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Picture path:</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="padding">10</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel" id="label-geophotopath">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="selectable">True</property>
+                <property name="track_visited_links">False</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                   <attribute name="foreground" value="#00000000ffff"/>
                 </attributes>
               </object>
               <packing>
-                <property name="position">1</property>
+                <property name="padding">5</property>
+                <property name="position">0</property>
               </packing>
             </child>
           </object>
