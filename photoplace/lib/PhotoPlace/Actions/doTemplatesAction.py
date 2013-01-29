@@ -35,7 +35,7 @@ import locale
 
 import Interface
 from PhotoPlace.DataTypes import kmlData
-from PhotoPlace.userFacade import Error
+from PhotoPlace.Facade import Error
 from PhotoPlace.definitions import *
 
 

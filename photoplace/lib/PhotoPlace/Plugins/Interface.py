@@ -74,9 +74,11 @@ class Plugin(object):
         self.argfiles = argfiles
         self.args = args
         self.gtkbuilder = gtkbuilder
+        self.ready = -1
 
     def init(self, options, widget_container):
         self.logger.debug("init")
+        self.ready = 1
         pass
 
     def reset(self):
@@ -85,6 +87,7 @@ class Plugin(object):
 
     def end(self, options):
         self.logger.debug("end")
+        self.ready = 0
         pass
 
 

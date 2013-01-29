@@ -144,7 +144,7 @@ class PluginManager(object):
             dgettext['error'] = str(e)
             msg = _("Cannot reset module '%(module)s': %(error)s.")
             raise PluginManagerError(msg % dgettext)
-            
+
     def end(self, plugin, *args, **kwargs):
         dgettext = dict(module=plugin.__module__)
         try:
@@ -193,7 +193,9 @@ class PluginManager(object):
                         klass = k
                 if klass:
                     try:
-                        plugin(self.instances[klass], *args, **kwargs)
+                        instance = self.instances[klass]
+                        if instance.ready:
+                            plugin(self.instances[klass], *args, **kwargs)
                     except Exception as exception:
                         dgettext = dict(module=name)
                         dgettext['error'] = str(exception)

@@ -568,7 +568,7 @@ class TemplateEditorGUI(gobject.GObject):
             self.statusbar.push(0, _('XML error: %s') % text)
             return False
         else:
-            self.statusbar.push(0, _('Perfect! template is well formed!'))
+            self.statusbar.push(0, _('Perfect! template is ok!'))
             return True
 
 

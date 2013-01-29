@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkListStore" id="liststore-templates">
+    <columns>
+      <!-- column-name visual -->
+      <column type="gchararray"/>
+      <!-- column-name key -->
+      <column type="gchararray"/>
+      <!-- column-name value -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkTreeStore" id="treestore-variables">
+    <columns>
+      <!-- column-name key -->
+      <column type="gchararray"/>
+      <!-- column-name value -->
+      <column type="gchararray"/>
+      <!-- column-name editable -->
+      <column type="gboolean"/>
+    </columns>
+  </object>
+  <object class="GtkWindow" id="window">
+    <property name="width_request">400</property>
+    <property name="height_request">380</property>
+    <property name="title" translatable="yes">PhotoPlace</property>
+    <property name="modal">True</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="icon">photoplace.png</property>
+    <property name="skip_taskbar_hint">True</property>
+    <signal name="delete_event" handler="on_window_delete_event" object="window"/>
+    <child>
+      <object class="GtkVBox" id="vbox-variables">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkToolbar" id="toolbar-variables">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkToolItem" id="toolbutton-sep1">
+                <property name="visible">True</property>
+                <property name="is_important">True</property>
+                <child>
+                  <object class="GtkLabel" id="label-listvariables">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">4</property>
+                    <property name="label" translatable="yes">Variables to make the KML:</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="toolbutton-sep2">
+                <property name="visible">True</property>
+                <property name="draw">False</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton-exit">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Exit</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-quit</property>
+                <signal name="clicked" handler="on_toolbutton-exit_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow" id="scrolledwindow-variables">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
+            <child>
+              <object class="GtkTreeView" id="treeview-variables">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="model">treestore-variables</property>
+                <property name="search_column">0</property>
+                <child>
+                  <object class="GtkTreeViewColumn" id="treeviewcolumn-variables-name">
+                    <property name="resizable">True</property>
+                    <property name="min_width">100</property>
+                    <property name="title">Name</property>
+                    <property name="clickable">True</property>
+                    <property name="reorderable">True</property>
+                    <property name="sort_indicator">True</property>
+                    <property name="sort_column_id">0</property>
+                    <child>
+                      <object class="GtkCellRendererText" id="cellrenderertext-variables-name"/>
+                      <attributes>
+                        <attribute name="text">0</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn" id="treeviewcolumn-variables-value">
+                    <property name="resizable">True</property>
+                    <property name="min_width">100</property>
+                    <property name="title">Value</property>
+                    <property name="expand">True</property>
+                    <property name="clickable">True</property>
+                    <property name="reorderable">True</property>
+                    <property name="sort_indicator">True</property>
+                    <property name="sort_column_id">1</property>
+                    <child>
+                      <object class="GtkCellRendererText" id="cellrenderertext-variables-value">
+                        <signal name="edited" handler="on_cellrenderertext-variables-value_edited"/>
+                      </object>
+                      <attributes>
+                        <attribute name="editable">2</attribute>
+                        <attribute name="text">1</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHBox" id="hbox-variables-ctl">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkEntry" id="entry-variables-add">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="max_length">256</property>
+                <property name="invisible_char">●</property>
+                <property name="width_chars">20</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="padding">5</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="button-variables-add">
+                <property name="label">gtk-add</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_button-variables-add_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="button-variables-del">
+                <property name="label">gtk-remove</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="on_button-variables-del_clicked"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="padding">20</property>
+                <property name="pack_type">end</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="padding">5</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

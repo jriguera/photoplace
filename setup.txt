@@ -33,7 +33,7 @@
 
 * Installation from setup (Warning, there is no unistaller!)
     $ python setup.py install
-    # and plugins!
-    $ python setup.py install_plugins
+    # and for addons:
+    $ python setup.py install_addons
 
 Happy coding!

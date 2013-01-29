@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-25 20:39+0200\n"
+"POT-Creation-Date: 2013-01-27 16:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,167 +17,59 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../GTKPaths.py:141
-msgid "Generate a path from geotagged photos"
-msgstr ""
-
-#: ../GTKPaths.py:165
-msgid "Path Name/Parameter"
-msgstr ""
-
-#: ../GTKPaths.py:174
-msgid "Description/Value"
-msgstr ""
-
-#: ../GTKPaths.py:279 ../paths.py:442
-#, python-format
-msgid "Cannot read file '%s'."
-msgstr ""
-
-#: ../GTKPaths.py:311
-msgid "template: "
-msgstr ""
-
-#: ../GTKPaths.py:319
-msgid "Double click to edit values ..."
-msgstr ""
-
-#: ../GTKPaths.py:382
-msgid "Select a color for path ..."
-msgstr ""
-
-#: ../GTKPaths.py:476
-msgid "[select a file]"
-msgstr ""
-
-#: ../GTKPaths.py:480
-msgid "PhotoPlace: Path Description Template"
-msgstr ""
-
-#: ../GTKPaths.py:487
-msgid "Type the presentation text ... "
-msgstr ""
-
-#: ../GTKPaths.py:495
-#, python-format
-msgid ""
-"You can use simple HTML tags like list (<i>li</i>, <i>ul</i>) or <i>table</"
-"i>and use these expresions to get some interesting values: \n"
-"\n"
-"<span font_family='monospace' size='small'><b>%(PhotoPlace.PathNAME)s</b> -> "
-"Path name\n"
-"<b>%(PhotoPlace.PathDESC)s</b> -> Path description\n"
-"<b>%(PhotoPlace.PathTINI)s</b> -> Initial time (first point)\n"
-"<b>%(PhotoPlace.PathTEND)s</b> -> End time (last point)\n"
-"<b>%(PhotoPlace.PathDRTN)s</b> -> Duration\n"
-"<b>%(PhotoPlace.PathLEN)s</b> -> Length (in meters)\n"
-"<b>%(PhotoPlace.PathLENMIN)s</b> -> Minimum length\n"
-"<b>%(PhotoPlace.PathLENMAX)s</b> -> Maximum length\n"
-"<b>%(PhotoPlace.PathSPMIN)s</b> -> Minimum speed (m/s)\n"
-"<b>%(PhotoPlace.PathSPMAX)s</b> -> Maximum speed (m/s)\n"
-"<b>%(PhotoPlace.PathSPAVG)s</b> -> Average speed (m/s)\n"
-"<b>%(PhotoPlace.PathNSEG)s</b> -> Number of segments\n"
-"<b>%(PhotoPlace.PathNWPT)s</b> -> Number of waypoints\n"
-"</span>\n"
-" You can also use the <b>[defaults]</b> variables defined in the same way."
-msgstr ""
-
-#: ../GTKPaths.py:527
-msgid "... or load it from"
-msgstr ""
-
-#: ../GTKPaths.py:627
-msgid "Select file ..."
-msgstr ""
-
-#: ../GTKPaths.py:631
-msgid "All files"
-msgstr ""
-
-#: ../KmlPath.py:74
-msgid "KML not correct. Cannot found 'Document' tag!"
-msgstr ""
-
-#: ../paths.py:92
+#: ../gpxdata.py:108
 msgid "Paths"
 msgstr ""
 
-#: ../paths.py:93
-msgid "Photo path"
-msgstr ""
-
-#: ../paths.py:94
-msgid "Generated path from geotagged photos"
-msgstr ""
-
-#: ../paths.py:98
+#: ../gpxdata.py:109
 msgid "Photos"
 msgstr ""
 
-#: ../paths.py:110
+#: ../gpxdata.py:110
+msgid "Geotagged Photo's path"
+msgstr ""
+
+#: ../gpxdata.py:137
 msgid ""
-"A plugin to generate paths from GPX tracks to show them in the KML layer."
+"Add-on to generate paths and waypoints from GPX tracks in order to show them "
+"in the KML layer."
 msgstr ""
 
-#: ../paths.py:158
-msgid "Starting plugin ..."
+#: ../gpxdata.py:188
+msgid "Starting Add-on ..."
 msgstr ""
 
-#: ../paths.py:206
+#: ../gpxdata.py:210
 #, python-format
-msgid "Cannot understand the key '%s' in config file."
+msgid "Value of '%(key)s' incorrect: Cannot find template file '%(template)s'."
 msgstr ""
 
-#: ../paths.py:226
-#, python-format
-msgid ""
-"Track #%(path_number)s, original name: %(path_name)s\n"
-"%(path_desc)s\n"
-msgstr ""
-
-#: ../paths.py:235
-#, python-format
-msgid "Points: %(path_npoints)s, length: %(path_len).3f m.\n"
-msgstr ""
-
-#: ../paths.py:236
-#, python-format
-msgid "Duration: %(path_time)s\n"
-msgstr ""
-
-#: ../paths.py:237
-#, python-format
-msgid "Begin time: %(path_begin)s\n"
-msgstr ""
-
-#: ../paths.py:238
-#, python-format
-msgid "Final time: %(path_end)s\n"
-msgstr ""
-
-#: ../paths.py:241
-#, python-format
-msgid "Error processing track #%(path_number)s '%(path_name)s': %(error)s."
-msgstr ""
-
-#: ../paths.py:257
+#: ../gpxdata.py:226
 #, python-format
 msgid ""
-"Track '%(path_name)s'\n"
-"%(path_desc)s\n"
-"Number of photos: %(path_npoints)s"
+"Value of '%(key)s' incorrect: %(error)s. Setting up default value "
+"'%(value)s'."
 msgstr ""
 
-#: ../paths.py:275
-msgid "Processing all tracks (paths) from GPX data ... "
+#: ../gpxdata.py:264
+msgid "Negative index for key"
 msgstr ""
 
-#: ../paths.py:280
+#: ../gpxdata.py:276
+msgid "Cannot find template file"
+msgstr ""
+
+#: ../gpxdata.py:279
 #, python-format
-msgid "%s paths have been generated for KML data."
+msgid "Cannot understand the key '%(key)s' in config file: %(error)s."
 msgstr ""
 
-#: ../paths.py:308
+#: ../gpxdata.py:298
+#, python-format
+msgid "Cannot read file '%(file)s': %(error)s"
+msgstr ""
+
+#: ../gpxdata.py:396
 #, python-format
 msgid ""
 "Generated WayPoint from '%(photo)s' at %(photo_time)s (UTC=%(photo_tutc)s) "
@@ -185,35 +77,234 @@ msgid ""
 "%(photo_ele).8f)."
 msgstr ""
 
-#: ../paths.py:329
+#: ../gpxdata.py:411
 #, python-format
 msgid ""
-"Track '%(track_name)s' was generated from %(track_numphotos)s geotagged "
-"photos."
+"Track '%(track_name)s' was generated from %(track_nphotos)s geotagged photos."
 msgstr ""
 
-#: ../paths.py:333
+#: ../gpxdata.py:415
 #, python-format
 msgid "Photo track '%(track_name)s' is empty due to no geotagged photos!"
 msgstr ""
 
-#: ../paths.py:382
+#: ../gpxdata.py:428
+msgid "Processing all tracks (paths) from GPX data ... "
+msgstr ""
+
+#: ../gpxdata.py:433
+#, python-format
+msgid "%s paths have been generated for KML data."
+msgstr ""
+
+#: ../gpxdata.py:436
+#, python-format
+msgid "%s waypoints have been processed for KML data."
+msgstr ""
+
+#: ../gpxdata.py:480 ../gpxdata.py:545
+#, python-format
+msgid "Cannot find template file '%(template)s'"
+msgstr ""
+
+#: ../gpxdata.py:492
 #, python-format
 msgid ""
-"Path '%(path)s', ('%(path_desc)s'): points=%(path_npoints)d, segments="
-"%(path_nsegments)d, length=%(path_len)s, avgspeed=%(path_avgsp).3f, "
-"time='%(path_time)s'"
+"Path '%(path)s': points=%(path_npoints)d, segments=%(path_nsegments)d, "
+"length=%(path_len)s, avgspeed=%(path_avgsp).3f, time='%(path_time)s'"
 msgstr ""
 
-#: ../paths.py:389
+#: ../gpxdata.py:498
 #, python-format
-msgid "Error while processing track '%(path_name)s': %(error)s."
+msgid "Error while processing track '%(path)s': %(error)s."
 msgstr ""
 
-#: ../paths.py:467
-msgid "Resetting plugin ..."
+#: ../gpxdata.py:552
+#, python-format
+msgid "Setting up WayPoint '%(wpt)s' lat=%(wpt_lat)s, lon=%(wpt_lon)s"
 msgstr ""
 
-#: ../paths.py:480
-msgid "Ending plugin ..."
+#: ../gpxdata.py:557
+#, python-format
+msgid "Error while processing waypoint '%(wpt)s': %(error)s."
+msgstr ""
+
+#: ../gpxdata.py:587
+msgid "Resetting Add-on ..."
+msgstr ""
+
+#: ../gpxdata.py:605
+msgid "Ending Add-on ..."
+msgstr ""
+
+#: ../GTKGpxdata.py:108
+msgid "Width"
+msgstr ""
+
+#: ../GTKGpxdata.py:109
+msgid "Color"
+msgstr ""
+
+#: ../GTKGpxdata.py:126
+msgid "Include in KML: "
+msgstr ""
+
+#: ../GTKGpxdata.py:128
+msgid "Path from geottaged photos"
+msgstr ""
+
+#: ../GTKGpxdata.py:132
+msgid "Tracks from GPX"
+msgstr ""
+
+#: ../GTKGpxdata.py:136
+msgid "WayPoints from GPX"
+msgstr ""
+
+#: ../GTKGpxdata.py:163
+msgid "Path Name/Parameter"
+msgstr ""
+
+#: ../GTKGpxdata.py:172
+msgid "Description/Value"
+msgstr ""
+
+#: ../GTKGpxdata.py:271
+msgid "List of generated paths from geotagged photos"
+msgstr ""
+
+#: ../GTKGpxdata.py:272
+msgid "Paths from geottaged photos"
+msgstr ""
+
+#: ../GTKGpxdata.py:292
+#, python-format
+msgid " %d path(s)"
+msgstr ""
+
+#: ../GTKGpxdata.py:299
+msgid "List of tracks read from GPX file"
+msgstr ""
+
+#: ../GTKGpxdata.py:300
+msgid "Tracks from GPS data"
+msgstr ""
+
+#: ../GTKGpxdata.py:320
+#, python-format
+msgid " %d track(s)"
+msgstr ""
+
+#: ../GTKGpxdata.py:327
+msgid "List of WayPoints read from GPX file"
+msgstr ""
+
+#: ../GTKGpxdata.py:328
+msgid "WayPoints from GPS data"
+msgstr ""
+
+#: ../GTKGpxdata.py:348
+#, python-format
+msgid " %d waypoint(s)"
+msgstr ""
+
+#: ../GTKGpxdata.py:365
+#, python-format
+msgid "Track #%(path_id)s (original name: %(path_oname)s)\n"
+msgstr ""
+
+#: ../GTKGpxdata.py:374
+#, python-format
+msgid "Points: %(path_npoints)s, length: %(path_len).3f m.\n"
+msgstr ""
+
+#: ../GTKGpxdata.py:375
+#, python-format
+msgid "Duration: %(path_time)s\n"
+msgstr ""
+
+#: ../GTKGpxdata.py:376
+#, python-format
+msgid "Begin time: %(path_begin)s\n"
+msgstr ""
+
+#: ../GTKGpxdata.py:377
+#, python-format
+msgid "Final time: %(path_end)s\n"
+msgstr ""
+
+#: ../GTKGpxdata.py:381 ../GTKGpxdata.py:411
+msgid "Double click to edit values ..."
+msgstr ""
+
+#: ../GTKGpxdata.py:409
+#, python-format
+msgid "WayPoint #%(wpt_id)s (original name: %(wpt_oname)s)\n"
+msgstr ""
+
+#: ../GTKGpxdata.py:434
+msgid "Edit main default template ..."
+msgstr ""
+
+#: ../GTKGpxdata.py:436
+msgid "Edit main default template for tracks"
+msgstr ""
+
+#: ../GTKGpxdata.py:438
+msgid "Edit main default template for generated paths"
+msgstr ""
+
+#: ../GTKGpxdata.py:440
+msgid "Edit main default template for waypoints"
+msgstr ""
+
+#: ../GTKGpxdata.py:460
+msgid "Edit Template/Description"
+msgstr ""
+
+#: ../GTKGpxdata.py:461
+msgid "Default Template"
+msgstr ""
+
+#: ../GTKGpxdata.py:473
+#, python-format
+msgid ""
+"\n"
+"<span font_family='monospace' size='small'><b>%(PhotoPlace.WptNAME)s</b> -> "
+"WayPoint name\n"
+"<b>%(PhotoPlace.WptDESC)s</b> -> Description\n"
+"<b>%(PhotoPlace.WptLAT)s</b>  -> Latitude\n"
+"<b>%(PhotoPlace.WptLON)s</b>  -> Longitude\n"
+"<b>%(PhotoPlace.WptELE)s</b>  -> Altitude\n"
+"<b>%(PhotoPlace.WptTIME)s</b> -> UTC Time\n"
+"</span>"
+msgstr ""
+
+#: ../GTKGpxdata.py:490
+#, python-format
+msgid ""
+"\n"
+"<span font_family='monospace' size='small'><b>%(PhotoPlace.PathNAME)s</b>   -"
+"> Path name\n"
+"<b>%(PhotoPlace.PathDESC)s</b>   -> Path description\n"
+"<b>%(PhotoPlace.PathTINI)s</b>   -> Initial time (first point)\n"
+"<b>%(PhotoPlace.PathTEND)s</b>   -> End time (last point)\n"
+"<b>%(PhotoPlace.PathDRTN)s</b>   -> Duration\n"
+"<b>%(PhotoPlace.PathLEN)s</b>    -> Length (in meters)\n"
+"<b>%(PhotoPlace.PathLENMIN)s</b> -> Minimum length\n"
+"<b>%(PhotoPlace.PathLENMAX)s</b> -> Maximum length\n"
+"<b>%(PhotoPlace.PathSPMIN)s</b>  -> Minimum speed (m/s)\n"
+"<b>%(PhotoPlace.PathSPMAX)s</b>  -> Maximum speed (m/s)\n"
+"<b>%(PhotoPlace.PathSPAVG)s</b>  -> Average speed (m/s)\n"
+"<b>%(PhotoPlace.PathNSEG)s</b>   -> Number of segments\n"
+"<b>%(PhotoPlace.PathNWPT)s</b>   -> Number of waypoints\n"
+"</span>"
+msgstr ""
+
+#: ../GTKGpxdata.py:663
+msgid "Select a color for path ..."
+msgstr ""
+
+#: ../KMLGpxdata.py:73
+msgid "KML not correct. Cannot found 'Document' tag!"
 msgstr ""

@@ -34,6 +34,7 @@ import os.path
 import cStringIO
 import Image
 import warnings
+import types
 
 warnings.filterwarnings('ignore', module='gtk')
 try:
@@ -146,7 +147,8 @@ class PhotoInfoGUI(gobject.GObject):
             treeviewcolumn_key.set_fixed_width(180)
             treeviewcolumn_value = self.builder.get_object("treeviewcolumn-value")
             treeviewcolumn_value.set_title(_("Value"))
-            self.treestore = gtk.TreeStore(bool, bool, str, str, str)
+            # deletable, editable, key, value, fgcolor, instance
+            self.treestore = gtk.TreeStore(bool, bool, str, str, str, gobject.TYPE_PYOBJECT, str)
             self.treeview.set_model(self.treestore)
             self.treeview.set_rules_hint(True)
             self.ready = False
@@ -159,6 +161,7 @@ class PhotoInfoGUI(gobject.GObject):
 
     def init(self, userfacade, treemodel):
         self.userfacade = userfacade
+        self.stzdiff = userfacade.state.stzdiff
         self.current_geophoto = None
         self.current_pixbuf = None
         self.main_treemodel_iterator = None
@@ -265,22 +268,27 @@ class PhotoInfoGUI(gobject.GObject):
         model = self.treeview.get_model()
         model.clear()
         color = TREEVIEWPHOTOINFO_GEOPHOTOINFO_COLOR
-        model.append(None,[False, False, _("Image name"), str(geophoto['name']), color])
-        model.append(None,[False, False, _("Date/Time"), str(geophoto['time']), color])
+        model.append(None,[False, False, _("Image name"), str(geophoto['name']), color, types.StringType, 'name'])
+        model.append(None,[False, False, _("Date/Time"), str(geophoto['time']), color, types.StringType, 'time'])
         if geophoto.isGeoLocated():
-            model.append(None,[False, False, _("Longitude"), "%f" % geophoto['lon'], color])
-            model.append(None,[False, False, _("Latitude"), "%f" % geophoto['lat'], color])
-            model.append(None,[False, False, _("Elevation"), "%f" % geophoto['ele'], color])
+            model.append(None,[False, False, _("Longitude"), "%f" % geophoto['lon'], color, types.FloatType, 'lon'])
+            model.append(None,[False, False, _("Latitude"), "%f" % geophoto['lat'], color, types.FloatType, 'lat'])
+            model.append(None,[False, False, _("Elevation"), "%f" % geophoto['ele'], color, types.FloatType, 'ele'])
+            if geophoto.ptime:
+                ptime = geophoto.ptime.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
+                model.append(None,[False, False, _("GeoTime"), ptime, color, types.StringType, 'ptime'])
         color = TREEVIEWPHOTOINFO_GEOPHOTOATTR_COLOR
+        ite = model.append(None, [False, False, _("Image Variables"), None, color, None, None])
+        model.append(ite,[False, True, _("Status"), "%d" % geophoto['status'], color, types.IntType, 'status'])
+        model.append(ite,[False, True, _("Time offset"), "%d" % geophoto['toffset'], color, types.IntType, 'toffset'])
         if geophoto.attr:
-            ite = model.append(None, [False, False, _("Image Variables"), None, color])
             for k, v in geophoto.attr.iteritems():
-                model.append(ite, [ True, True, str(k), str(v), color])
+                model.append(ite, [ True, True, str(k), str(v), color, type(v), ''])
         color = TREEVIEWPHOTOINFO_GEOPHOTOEXIF_COLOR
-        ite = model.append(None, [ False, False, _("Image EXIF Values"), None, color])
+        ite = model.append(None, [ False, False, _("Image EXIF Values"), None, color, None, None])
         for k in geophoto.exif.exif_keys:
             try:
-                model.append(ite, [ False, False, str(k), str(geophoto[k]), color])
+                model.append(ite, [ False, False, str(k), str(geophoto[k]), color, None, ''])
             except:
                 pass
         self.treeview.expand_all()
@@ -326,7 +334,7 @@ class PhotoInfoGUI(gobject.GObject):
         model = treeview.get_model()
         ite = model.get_iter(path)
         if model.get_value(ite, TREEVIEWPHOTOINFO_COL_EDIT):
-            key = model.get_value(ite, TREEVIEWPHOTOINFO_COL_KEY)
+            key = model.get_value(ite, TREEVIEWPHOTOINFO_COL_VKEY)
             value = model.get_value(ite, TREEVIEWPHOTOINFO_COL_VALUE)
             self["entry-key"].set_text(key)
 
@@ -346,9 +354,20 @@ class PhotoInfoGUI(gobject.GObject):
     def _edit_cell(self, cell, path_string, new_text):
         model = self.treeview.get_model()
         treestore_iter = model.get_iter_from_string(path_string)
+        obj = model.get_value(treestore_iter, TREEVIEWPHOTOINFO_COL_TYPE)
         key = model.get_value(treestore_iter, TREEVIEWPHOTOINFO_COL_KEY)
-        self.current_geophoto.attr[key] = new_text.strip()
-        model.set(treestore_iter, TREEVIEWPHOTOINFO_COL_VALUE, new_text)
+        text = new_text.strip()
+        try:
+            if key:
+                # is a geophoto main attr
+                self.current_geophoto[key] = obj(text)
+            else:
+                # user/plugin defined
+                key = model.get_value(treestore_iter, TREEVIEWPHOTOINFO_COL_VKEY)
+                self.current_geophoto.attr[key] = obj(text)
+            model.set(treestore_iter, TREEVIEWPHOTOINFO_COL_VALUE, text)
+        except:
+            pass
 
     def close(self, window=None, event=None):
         self.emit('save', self.main_treemodel_iterator, self.current_geophoto)

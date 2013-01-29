@@ -1,0 +1,10 @@
+#!/bin/sh
+
+intltool-extract --type=gettext/glade ../share/gtkui/*.ui
+files=$(find ../lib/PhotoPlace -name "*.py" | xargs)
+xgettext --language=Python --keyword=_ --keyword=N_ --from-code=UTF-8 --output=photoplace.pot ../share/gtkui/*.ui.h ../photoplace.py $files
+
+msgmerge --update --no-fuzzy-matching en.po photoplace.pot
+#msginit --input=photoplace.pot --locale=en --output-file=en.po 
+
+msgfmt en.po --output-file=../locale/en/LC_MESSAGES/photoplace.mo 

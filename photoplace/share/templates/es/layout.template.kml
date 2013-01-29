@@ -8,7 +8,7 @@
     <open>1</open>
     <description><![CDATA[
         <table cellspacing="2" cellpadding="2" border="0">
-        <tr><td>%(shortdescripcion| )s</td></tr>
+        <tr><td>%(shortdescription| )s</td></tr>
         </table>
     ]]></description>
     <atom:author>
@@ -16,7 +16,7 @@
     </atom:author>
     <Folder>
         <name>About</name>
-        <Snippet maxLines="1">
+        <Snippet maxLines="0">
             Acerca de esta capa. 
             (Hecho con PhotoPlace)
         </Snippet>
@@ -93,7 +93,7 @@
         <longitude>%(inilongitude|0.0)s</longitude>
         <latitude>%(inilatitute|0.0)s</latitude>
         <altitude>%(inialtitude|2000)s</altitude>
-        <range>%(inirange|0)s</range>
+        <range>%(inirange|2000)s</range>
         <tilt>%(initilt|0)s</tilt>
         <heading>%(iniheading|0)s</heading>
         <altitudeMode>relativeToGround</altitudeMode>

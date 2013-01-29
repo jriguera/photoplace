@@ -40,12 +40,12 @@ msgstr "Imposible interpretar datos GPX: '%s'."
 #: ../gpxdata.py:76 ../gpxdata.py:135 ../gpxdata.py:157
 #, python-format
 msgid "latitude = '%d', not in [-90.0..90.0] range"
-msgstr "latitud = '%d', no est en rango [-90.0..90.0]"
+msgstr "latitud = '%d', no está en rango [-90.0..90.0]"
 
 #: ../gpxdata.py:78 ../gpxdata.py:137 ../gpxdata.py:159
 #, python-format
 msgid "longitude = '%d', not in [-180.0..180.0] range"
-msgstr "longitud = '%d', no est en rango [-180.0..180.0]"
+msgstr "longitud = '%d', no está en rango [-180.0..180.0]"
 
 #: ../gpxdata.py:83 ../gpxdata.py:566
 #, python-format
@@ -74,7 +74,7 @@ msgstr ""
 #: ../gpxdata.py:221
 #, python-format
 msgid "Cannot delete point at pos %s!"
-msgstr "Imposible borrar punto en la posición %s!"
+msgstr "¡Imposible borrar punto en la posición %s!"
 
 #: ../gpxdata.py:389 ../gpxdata.py:422
 #, python-format
@@ -84,12 +84,12 @@ msgstr ""
 
 #: ../gpxdata.py:392
 msgid "Segment empty!"
-msgstr "Segmento vacío!"
+msgstr "¡Segmento vacío!"
 
 #: ../gpxdata.py:416
 #, python-format
 msgid "Cannot delete segment at pos %s!"
-msgstr "Imposible borrar segmento en la posición %s!"
+msgstr "¡Imposible borrar segmento en la posición %s!"
 
 #: ../gpxparser.py:75
 #, python-format
@@ -120,7 +120,7 @@ msgstr "Camino %(number)s %(type)s. %(src)s. %(link)s."
 #: ../gpxparser.py:366
 #, python-format
 msgid "Route number %(route_number)s (of %(number)s)"
-msgstr "Ruta nmero %(route_number)s (de %(number)s)"
+msgstr "Ruta número %(route_number)s (de %(number)s)"
 
 #: ../gpxparser.py:371
 #, python-format

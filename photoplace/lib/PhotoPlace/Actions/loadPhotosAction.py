@@ -36,7 +36,7 @@ import datetime
 
 import Interface
 from PhotoPlace.DataTypes import geoPhotoData
-from PhotoPlace.userFacade import Error
+from PhotoPlace.Facade import Error
 from PhotoPlace.definitions import *
 
 

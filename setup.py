@@ -45,17 +45,17 @@ PhotoPlace Setup Script
 
  * Install
      - python setup.py install
-     # and plugins!
-     - python setup.py install_plugins
+     # and for addons:
+     - python setup.py install_addons
 
  @summary: Used for building the photoplace distribution files and installations
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
 __version__ = "0.5.0"
-__date__ = "January 2011"
+__date__ = "January 2013"
 __license__ = "GPL (v2 or later)"
-__copyright__ ="(c) Jose Riguera, September 2010"
+__copyright__ ="(c) Jose Riguera, September 2010-2013"
 
 import os
 import sys
@@ -119,7 +119,7 @@ ICON = {
     'win32' : os.path.join("logos", "photoplace.ico"),
     'other' : os.path.join("logos", "photoplace.png"),
 }
-PLUGINSDIR = '_plugins_'
+PLUGINSDIR = '_addons_'
 
 
 # ########################
@@ -178,17 +178,17 @@ def get_files(base, dir, dst, baddirs=['.*'], goodfiles=['*.*'], badfiles=['*.*~
     return walker(base, dir, dst)
 
 
-def get_plugins(base, directory):
+def get_addons(base, directory):
     lib_dir = os.path.join(base, directory)
     packages = [f for f in os.listdir(lib_dir) 
         if os.path.isdir(os.path.join(lib_dir, f)) and not f.startswith('.')]
-    plugins = dict()
+    addons = dict()
     for package in packages:
         data_dir = os.path.join(lib_dir, package)
         package_files = find_files(lib_dir, package, ['*.*~'], ['.*'], ['*.py'])
         package_data = find_files(lib_dir, package, ['*.*~', '*.py*', '*.po'])
-        plugins[package] = (data_dir, package_files, package_data)
-    return plugins
+        addons[package] = (data_dir, package_files, package_data)
+    return addons
 
 
 def get_packages(base, directory):
@@ -279,7 +279,7 @@ class build(_build):
 
 
 class install(_install):
-    #sub_commands = _install.sub_commands + [('install_plugins', None)]
+    #sub_commands = _install.sub_commands + [('install_addons', None)]
     
     def initialize_options(self):
         _install.initialize_options(self)
@@ -292,33 +292,33 @@ class install(_install):
 
 
 
-class install_plugins(cmd.Command):
-    description = 'install plugins'
+class install_addons(cmd.Command):
+    description = 'install addons'
     user_options = [
-        ('plugins-dir=', None, "base directory of plugins"),
-        ('plugins-dist=', 'd', "base directory to install plugins"),
+        ('addons-dir=', None, "base directory of addons"),
+        ('addons-dist=', 'd', "base directory to install addons"),
     ]
 
     def initialize_options(self):
-        self.plugins_dist = None
-        self.plugins_dir = None
+        self.addons_dist = None
+        self.addons_dir = None
     
     def finalize_options(self):
-        if self.plugins_dist == None:
+        if self.addons_dist == None:
             install = self.get_finalized_command('install')
-            self.plugins_dist = os.path.join(install.install_data,'share', 'photoplace')
-        if self.plugins_dir == None:
+            self.addons_dist = os.path.join(install.install_data,'share', 'photoplace')
+        if self.addons_dir == None:
             install = self.get_finalized_command('install')
-            self.plugins_dir = os.path.join(install.install_lib, 'PhotoPlace', PLUGINSDIR)
+            self.addons_dir = os.path.join(install.install_lib, 'PhotoPlace', PLUGINSDIR)
     
     def run(self):
-        destination = os.path.join(self.plugins_dist, 'plugins')
+        destination = os.path.join(self.addons_dist, 'addons')
         try:
             print "Creating symlink " + destination
-            os.symlink(self.plugins_dir, destination)
+            os.symlink(self.addons_dir, destination)
         except:
-            print "Cannot create symlink, copying plugins to " + destination
-            _copy_tree(self.plugins_dir, destination, preserve_symlinks=1, update=1, verbose=1)
+            print "Cannot create symlink, copying addons to " + destination
+            _copy_tree(self.addons_dir, destination, preserve_symlinks=1, update=1, verbose=1)
 
 
 
@@ -346,8 +346,8 @@ if __WIN_PLATFORM__:
         gtktheme = None
         gtkdata = True
         gtkdir = None
-        plugins = None
-        plugindir = ''
+        addons = None
+        addondir = ''
         languages = ['en', 'en_GB', 'es', 'gl']
         
         def initialize_options(self):
@@ -418,16 +418,16 @@ if __WIN_PLATFORM__:
                 file.write("# Generated from setup.py\n")
                 file.write('gtk-theme-name = "%s"\n' % self.gtktheme)
                 file.close()
-            # Plugins
-            if self.plugins != None:
-                print("*** Copying core plugins ***")
+            # addons
+            if self.addons != None:
+                print("*** Copying core addons ***")
                 build = self.get_finalized_command('build')
-                orig_plugin_dir = os.path.join(build.build_base, self.plugins)
-                for f in find_files(orig_plugin_dir, ''):
-                    dest_dir = os.path.dirname(os.path.join(self.exe_dir, self.plugindir, f))
+                orig_addon_dir = os.path.join(build.build_base, self.addons)
+                for f in find_files(orig_addon_dir, ''):
+                    dest_dir = os.path.dirname(os.path.join(self.exe_dir, self.addondir, f))
                     if not os.path.exists(dest_dir):
                         os.makedirs(dest_dir)
-                    self.copy_file(os.path.join(orig_plugin_dir, f), dest_dir, preserve_mode=0)
+                    self.copy_file(os.path.join(orig_addon_dir, f), dest_dir, preserve_mode=0)
 
 
     class bdist_win(cmd.Command):
@@ -539,7 +539,7 @@ else:
 # setup helper functions
 # ######################
 
-def get_program_libs(base, directory='lib', plugin_dir=PLUGINSDIR):
+def get_program_libs(base, directory='lib', addon_dir=PLUGINSDIR):
     """
     Generate the list of packages in lib directory
     """
@@ -553,13 +553,13 @@ def get_program_libs(base, directory='lib', plugin_dir=PLUGINSDIR):
         for key, data in libs_photoplace['package_dir'].iteritems():
             libs['package_dir']['PhotoPlace.' + key] = data
     
-    plugins_photoplace = get_packages(base, 'plugins')
-    for lib in plugins_photoplace['packages']:
-        libs['packages'].append('PhotoPlace.' + plugin_dir + '.' + lib)
-        for key, data in plugins_photoplace['package_data'].iteritems():
-            libs['package_data']['PhotoPlace.' + plugin_dir + '.' + key] = data
-        for key, data in plugins_photoplace['package_dir'].iteritems():
-            libs['package_dir']['PhotoPlace.' + plugin_dir + '.' + key] = data
+    addons_photoplace = get_packages(base, 'addons')
+    for lib in addons_photoplace['packages']:
+        libs['packages'].append('PhotoPlace.' + addon_dir + '.' + lib)
+        for key, data in addons_photoplace['package_data'].iteritems():
+            libs['package_data']['PhotoPlace.' + addon_dir + '.' + key] = data
+        for key, data in addons_photoplace['package_dir'].iteritems():
+            libs['package_dir']['PhotoPlace.' + addon_dir + '.' + key] = data
     
     return libs
 
@@ -582,8 +582,8 @@ if __name__ == '__main__':
                 data_files += get_files(os.path.join('include', os.sys.platform), '', '')
         py2exe.gtktheme = 'Human'
         py2exe.gtkthemes = "include\\GTKThemes\\"
-        py2exe.plugins = os.path.join('lib', 'PhotoPlace', PLUGINSDIR)
-        py2exe.plugindir = os.path.join('share', 'photoplace', 'plugins')
+        py2exe.addons = os.path.join('lib', 'PhotoPlace', PLUGINSDIR)
+        py2exe.addondir = os.path.join('share', 'photoplace', 'addons')
         kwargs['windows'] = [{
             'script':PROGRAM, 
             'icon_resources':[(1, ICON['win32'])]
@@ -615,7 +615,7 @@ if __name__ == '__main__':
     kwargs['cmdclass']['build'] = build
     kwargs['cmdclass']['clean'] = clean
     kwargs['cmdclass']['install'] = install
-    kwargs['cmdclass']['install_plugins'] = install_plugins
+    kwargs['cmdclass']['install_addons'] = install_addons
     kwargs['cmdclass']['build_trans'] = build_trans
     kwargs['options']['build_trans'] = { 
         'trans_base': SRC_DIR, 

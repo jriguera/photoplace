@@ -157,8 +157,8 @@ class GeoPhoto(object):
             "azi",
             "tilt",
             "status",
-            "toffset"
-            "ptime"
+            "toffset",
+            "ptime",
         ]
         if k in keys:
             return getattr(self, key)

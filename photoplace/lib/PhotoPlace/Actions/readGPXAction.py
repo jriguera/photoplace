@@ -38,7 +38,7 @@ import urllib
 import pyGPX
 
 import Interface
-from PhotoPlace.userFacade import Error
+from PhotoPlace.Facade import Error
 from PhotoPlace.definitions import *
 
 

@@ -50,15 +50,8 @@ class MakeKML(Interface.Action, threading.Thread):
         self.quality = state.quality['img']
         self.jpgzoom = state['jpgzoom']
         self.outputdir = state.outputdir
-        utczoneminutes = state['utczoneminutes']
-        self.time_zone = datetime.timedelta(minutes=utczoneminutes)
-        self.str_tzdiff = '-'
-        if utczoneminutes < 0:
-            utczoneminutes = -utczoneminutes
-            self.str_tzdiff = '+'
-        hours, remainder = divmod(utczoneminutes, 60)
-        minutes, seconds = divmod(remainder, 60)
-        self.str_tzdiff = self.str_tzdiff + "%.2d:%.2d" % (hours, minutes)
+        self.tzdiff = state.tzdiff
+        self.stzdiff = state.stzdiff
         self.uri_mode = 0
         self.rootdata = dict(rootdata)
 
@@ -114,14 +107,14 @@ class MakeKML(Interface.Action, threading.Thread):
                     self.dgettext['path'] = track.name #.encode(PLATFORMENCODING)
                     msg = _("Cannot process '%(path)s': %(error)s.") % self.dgettext
                     self.logger.error(msg)
-            min_time = min_time + self.time_zone
-            max_time = max_time + self.time_zone
+            smax_time = max_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
+            smin_time = min_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
         else:
             num_tracks = 1
             prev_lat = 0.0
             prev_lon = 0.0
             for geophoto in self.state.geophotos:
-                if geophoto.status > 0 and geophoto.isGeoLocated():
+                if geophoto.status >= self.state.status and geophoto.isGeoLocated():
                     if num_points == 0:
                         min_time = geophoto.time
                     else:
@@ -140,13 +133,15 @@ class MakeKML(Interface.Action, threading.Thread):
                     prev_lat = geophoto.lat
                     prev_lon = geophoto.lon
                     num_points += 1
+            min_time = min_time - self.tzdiff
+            max_time = max_time - self.tzdiff
+            smax_time = max_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
+            smin_time = min_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
         diff_time = abs(max_time - min_time)
         self.rootdata[PhotoPlace_NumPOINTS] = num_points
         self.rootdata[PhotoPlace_NumTRACKS] = num_tracks
-        str_time = min_time.strftime("%Y-%m-%dT%H:%M:%S")
-        self.rootdata[PhotoPlace_MinTime] = str_time + self.str_tzdiff
-        str_time = max_time.strftime("%Y-%m-%dT%H:%M:%S")
-        self.rootdata[PhotoPlace_MaxTime] = str_time + self.str_tzdiff
+        self.rootdata[PhotoPlace_MinTime] = smin_time
+        self.rootdata[PhotoPlace_MaxTime] = smax_time
         self.rootdata[PhotoPlace_DiffTime] = str(diff_time)
         self.rootdata[PhotoPlace_MinLAT] = min_lat
         self.rootdata[PhotoPlace_MaxLAT] = max_lat
@@ -208,8 +203,8 @@ class MakeKML(Interface.Action, threading.Thread):
                 photodata[PhotoPlace_PhotoHEIGHT] = self.jpgsize[1]
                 photodata[PhotoPlace_PhotoZOOM] = self.jpgzoom
                 photodata[PhotoPlace_ResourceURI] = self.photouri  #.encode(PLATFORMENCODING)
-                str_utctime = photo.time.strftime("%Y-%m-%dT%H:%M:%S")
-                photodata[PhotoPlace_PhotoUTCDATE] = str_utctime + self.str_tzdiff
+                photo_tutc = photo.time - self.tzdiff
+                photodata[PhotoPlace_PhotoUTCDATE] = photo_tutc.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
                 for k in photo.exif.exif_keys:
                     try:
                         photodata[k] = str(photo.exif[k].value)

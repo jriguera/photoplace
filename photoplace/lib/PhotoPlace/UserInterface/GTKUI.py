@@ -66,6 +66,7 @@ warnings.resetwarnings()
 from PhotoPlace.definitions import *
 from PhotoPlace.observerHandler import *
 from PhotoPlace.stateHandler import *
+from PhotoPlace.Facade import *
 from PhotoPlace.userFacade import *
 from PhotoPlace.Plugins.Interface import *
 from Interface import InterfaceUI
@@ -1224,8 +1225,8 @@ class PhotoPlaceGUI(InterfaceUI):
                     self.num_photos_process += 1
             if self.num_photos_process < 1:
                 mtype = _("OOps ...")
-                msg = _("No photos loaded, cannot do anything!.")
-                tip = _("Select a directory with photos.")
+                msg = _("There are no geotagged photos!, I cannot do anything!.")
+                tip = _("Load a GPX file or select a folder with geotagged photos.")
                 self.show_dialog(mtype, msg, tip, gtk.MESSAGE_INFO)
                 self.in_process = False
                 return False

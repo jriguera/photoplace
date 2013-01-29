@@ -39,7 +39,7 @@ import math
 import threading
 import locale
 
-from userFacade import Error
+from Facade import Error
 from definitions import *
 
 
@@ -172,6 +172,8 @@ class State(object):
         self.gpxdata = None
         self.kmldata = None
         self.geophotostyle = {}
+        self.tzdiff = datetime.timedelta()
+        self.stzdiff = u'Z'
         #
         self.initial()
 
@@ -617,6 +619,15 @@ class State(object):
                 "be positive or negative.")
             raise Error(msg, tip, "ValueError")
         self._utczoneminutes = utczoneminutes
+        # Time Zone correction
+        self.tzdiff = datetime.timedelta(minutes=utczoneminutes)
+        self.stzdiff = '+'
+        if utczoneminutes < 0:
+            utczoneminutes = -utczoneminutes
+            self.stzdiff = '-'
+        hours, remainder = divmod(utczoneminutes, 60)
+        minutes, seconds = divmod(remainder, 60)
+        self.stzdiff = self.stzdiff + "%.2d:%.2d" % (hours, minutes)
 
 
     @DSynchronized()

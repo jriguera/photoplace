@@ -95,29 +95,26 @@ char *s = N_(" As well, you can write suggestions or impressions to :");
 /* advanced options in main page of notebook. */
 char *s = N_("<b>Advanced</b>");
 char *s = N_("<b>Loaded photos</b>");
-/* options label inside first notebook. */
-char *s = N_("<b>Options</b>");
 /* label of expansor for textview */
-char *s = N_("<b>Output</b>");
+char *s = N_("<b>Output Log</b>");
+/* options label inside first notebook. */
+char *s = N_("<b>Parameters</b>");
 char *s = N_("A program for geotagging photos and generate a Google Earth layer");
 /* window title */
 char *s = N_("About ...");
-char *s = N_("Add, delete or modify key/value:");
 char *s = N_("Additional info");
+char *s = N_("Addons");
 /* expander advanced. */
 char *s = N_("Advanced options. Default settings are safe and good for most of the users.");
-char *s = N_("Checks if XML data is well formed, otherwise, the content will not be considered as XML data. \n"
-             "Note that contents will be checked by place them into a <div> section.");
-char *s = N_("Close this window");
 char *s = N_("Compression");
-char *s = N_("Create an empty template");
 char *s = N_("Delta seconds for geotagging:");
 /* menuitem. */
 char *s = N_("Directory with photos for geotagging. All photos will be geotagged if <geotagged> mode is selected.");
 /* donations */
 char *s = N_("Donate via PayPal");
-/* toolbar templates, menu */
-char *s = N_("Exit");
+char *s = N_("Edit Templates");
+char *s = N_("Edit _Templates");
+char *s = N_("Edit global KML variables.");
 /* menuitem. */
 char *s = N_("Exit the program. I hope see you soon :-)");
 char *s = N_("I have a dream ... well I have a lot of dreams, but this is one of them ...");
@@ -129,17 +126,11 @@ char *s = N_("If it is active, this will be the output file. It can be a KMZ (al
 char *s = N_("Input GPX file");
 char *s = N_("It simulates the geottaging process with the current GPX data and time values.");
 char *s = N_("JPEG/ZIP Quality vs. Compression. The best quality will make big KMZ files with best JPEG quality and poor compression. This settings are also applicable to zip KMZ compression ratio.");
-/* menuitem. */
-char *s = N_("List of available plugins. To see information about each plugin, put the mouse over its name,");
-char *s = N_("List of parameters to make KML:");
-/* toolbar templates, menu */
-char *s = N_("Load");
-char *s = N_("Load a template from file");
+char *s = N_("José Riguera López <jriguera@gmail.com>");
+char *s = N_("List of available extensions. To see information about each add-on, put the mouse over its name.");
 /* main label of notebook. */
 char *s = N_("Main");
-/* toolbar templates, menu */
-char *s = N_("New");
-char *s = N_("Noela Sánchez Carnero <noelas@gmail.com>");
+char *s = N_("Manage _Variables");
 char *s = N_("Open _Directory");
 char *s = N_("Open _GPX");
 char *s = N_("Open a web browser with online help");
@@ -149,26 +140,17 @@ char *s = N_("Open an eXchange Format (GPX) in order to match the date of each p
 char *s = N_("Output file to save the KML data.");
 char *s = N_("Output photo zoom percentage. 1.00 means original size, 0.50 means half size and so on ...");
 char *s = N_("Photo size:");
-char *s = N_("PhotoPlace");
 /* picture label of notebook. */
 char *s = N_("Photos");
-char *s = N_("Picture path:");
 char *s = N_("Plugins");
 char *s = N_("Press this to start! The show must go on!");
 char *s = N_("Quality");
-/* toolbar templates, menu */
-char *s = N_("Recover");
 char *s = N_("Recover default configuration.");
-char *s = N_("Recover the default template");
 /* menuitem. */
 char *s = N_("Remove all loaded files/directories to start again.");
-/* toolbar templates, menu */
-char *s = N_("Save");
-char *s = N_("Save document as template");
 char *s = N_("Save the current preferences.");
 /* entry. */
 char *s = N_("Seconds (positive or negative) to add to the photos time in order to match them with GPS data.");
-char *s = N_("Select Template:");
 char *s = N_("Select a directory with photos for geotagging. All photos will be geotagged if <geotagged> mode is selected.");
 char *s = N_("Select an eXchange Format (GPX) in order to match the date of each photo with the position.");
 char *s = N_("Select input photo directory");
@@ -188,17 +170,14 @@ char *s = N_("Time offset:");
 /* label. */
 char *s = N_("Time zone of photos:");
 char *s = N_("URI for geotagging photos:");
-/* toolbar templates, menu */
-char *s = N_("Validate");
-char *s = N_("Variables");
 char *s = N_("Zoom percentaje. 1 means original size, 0.5 means half size and so on ...");
+char *s = N_("_Addons");
 /* toolbar */
 char *s = N_("_Exit");
 /* menuitem. */
 char *s = N_("_File");
 /* menuitem. */
 char *s = N_("_Help");
-char *s = N_("_Plugins");
 /* menuitem. */
 char *s = N_("_Preferences");
 char *s = N_("_Reset");

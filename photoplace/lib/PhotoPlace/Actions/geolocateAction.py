@@ -45,7 +45,7 @@ class Geolocate(Interface.Action, threading.Thread):
         threading.Thread.__init__(self)
         self.geophotos = state.geophotos
         self.gpxdata = state.gpxdata
-        self.time_zone = datetime.timedelta(minutes=state['utczoneminutes'])
+        self.tzdiff = state.tzdiff
         self.maxdeltaseconds = state["maxdeltaseconds"]
         self.forcegeolocation = state["exifmode"] == 1
         self.dgettext['exifmode'] = self.state["exifmode"]
@@ -55,7 +55,7 @@ class Geolocate(Interface.Action, threading.Thread):
     def ini(self, *args, **kwargs):
         self._notify_ini(self.maxdeltaseconds, self.forcegeolocation)
         self.dgettext['maxdeltaseconds'] = self.maxdeltaseconds
-        self.dgettext['timezone'] = self.time_zone
+        self.dgettext['timezone'] = self.tzdiff
         msg = _("Geotagging mode <%(exifmode)s>, diff from UTC %(timezone)s "
             "and delta of %(maxdeltaseconds)s seconds ...") % self.dgettext
         self.logger.info(msg)
@@ -68,23 +68,29 @@ class Geolocate(Interface.Action, threading.Thread):
         self.dgettext['time_delta'] = max_delta
         for photo in self.geophotos:
             self._notify_run(photo, 0)
-            if photo.status < 1:
+            if photo.status < self.state.status:
                 continue
             self.dgettext['photo'] = photo.name.encode(PLATFORMENCODING)
             self.dgettext['photo_time'] = photo.time
-            photo_tutc = photo.time - self.time_zone
+            photo_tutc = photo.time - self.tzdiff
             self.dgettext['photo_tutc'] = photo_tutc
             self.dgettext['photo_lon'] = photo.lon
             self.dgettext['photo_lat'] = photo.lat
             self.dgettext['photo_ele'] = photo.ele
-            if photo.isGeoLocated() and not self.forcegeolocation:
-                self.logger.debug(_("Photo: '%(photo)s' at %(photo_time)s "
-                    "(UTC=%(photo_tutc)s) is geotagged with (lon=%(photo_lon).8f, "
-                    "lat=%(photo_lat).8f, ele=%(photo_ele).8f). Calculated "
-                    "coordinates ignored due to <nooverwrite> option.") % self.dgettext)
-                self._notify_run(photo, -1)
-                continue
-            tracksegs = []
+            if photo.isGeoLocated():
+                if not self.forcegeolocation:
+                    self.logger.debug(_("Photo: '%(photo)s' at %(photo_time)s "
+                        "(UTC=%(photo_tutc)s) is geotagged with (lon=%(photo_lon).8f, "
+                        "lat=%(photo_lat).8f, ele=%(photo_ele).8f). Calculated "
+                        "coordinates ignored due to <nooverwrite> option.") % self.dgettext)
+                    photo.ptime = photo_tutc
+                    self.photo_counter += 1
+                    photo.status += 1
+                    self.geolocated.append(photo)
+                    #self._notify_run(photo, 1)
+                    self._notify_run(photo, -1)
+                    continue
+            tracksegs = list()
             for track in self.gpxdata.tracks:
                 if not track.status:
                     continue
@@ -95,16 +101,16 @@ class Geolocate(Interface.Action, threading.Thread):
                     "delta %(time_delta)s. No closed points.") % self.dgettext)
                 self._notify_run(photo, -2)
             else:
-                min_diff = datetime.timedelta.max
+                min_tdiff = datetime.timedelta.max
                 closed_point = None
                 for tragseg in tracksegs:
                     point = tragseg.closest(photo_tutc)
                     delta = abs(point.time - photo_tutc)
-                    if delta < min_diff:
-                        min_diff = delta
+                    if delta < min_tdiff:
+                        min_tdiff = delta
                         closed_point = point
                 self.dgettext['point_time'] = closed_point.time
-                if min_diff > max_delta:
+                if min_tdiff > max_delta:
                     self.logger.warning(_("It is impossible geotag '%(photo)s' "
                         "taken at %(photo_time)s (UTC=%(photo_tutc)s) with time delta "
                         "%(time_delta)s. The nearest point is too far "
@@ -118,7 +124,7 @@ class Geolocate(Interface.Action, threading.Thread):
                     self.dgettext['photo_lon'] = photo.lon
                     self.dgettext['photo_lat'] = photo.lat
                     self.dgettext['photo_ele'] = photo.ele
-                    self.dgettext['time_diff'] = min_diff
+                    self.dgettext['time_diff'] = min_tdiff
                     self.logger.debug(_("Photo: '%(photo)s' at %(photo_time)s "
                         "(UTC=%(photo_tutc)s) geotagged with (lon=%(photo_lon).8f, "
                         "lat=%(photo_lat).8f, ele=%(photo_ele).8f, time=%(point_time)s) "

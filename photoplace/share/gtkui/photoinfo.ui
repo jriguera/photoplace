@@ -8,12 +8,16 @@
       <column type="gboolean"/>
       <!-- column-name editable -->
       <column type="gboolean"/>
-      <!-- column-name key -->
+      <!-- column-name vkey -->
       <column type="gchararray"/>
       <!-- column-name value -->
       <column type="gchararray"/>
       <!-- column-name fgcolor -->
       <column type="gchararray"/>
+      <!-- column-name instance -->
+      <column type="GObject"/>
+      <!-- column-name key -->
+      <column type="gchar"/>
     </columns>
   </object>
   <object class="GtkWindow" id="window">

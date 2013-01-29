@@ -1,0 +1,128 @@
+# Python pyGPX package.
+# Copyright (C) 2011
+# This file is distributed under the same license as the pyGPX package.
+# Jose Riguera Lopez <jriguera@gmail.com>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-01-27 18:45+0100\n"
+"PO-Revision-Date: 2013-01-27 18:45+0100\n"
+"Last-Translator: Jose Riguera Lopez <jriguera@gmail.com>\n"
+"Language-Team: Spanish <>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../exceptions.py:63
+#, python-format
+msgid "GPX Track error: '%s'."
+msgstr "GPX Error no Camiño: '%s'."
+
+#: ../exceptions.py:71
+#, python-format
+msgid "GPX Segment error: '%s'."
+msgstr "GPX Error no Segmento: '%s'."
+
+#: ../exceptions.py:79
+#, python-format
+msgid "GPX Point element error: '%s'."
+msgstr "GPX Error no Punto: '%s'."
+
+#: ../exceptions.py:87
+#, python-format
+msgid "Cannot parse GPX data: '%s'."
+msgstr "Imposible interpretar datos GPX: '%s'."
+
+#: ../gpxdata.py:76 ../gpxdata.py:135 ../gpxdata.py:157
+#, python-format
+msgid "latitude = '%d', not in [-90.0..90.0] range"
+msgstr "latitude = '%d', non está no rango [-90.0..90.0]"
+
+#: ../gpxdata.py:78 ../gpxdata.py:137 ../gpxdata.py:159
+#, python-format
+msgid "longitude = '%d', not in [-180.0..180.0] range"
+msgstr "lonxitude = '%d', non está no rango [-180.0..180.0]"
+
+#: ../gpxdata.py:83 ../gpxdata.py:566
+#, python-format
+msgid "Time type excepted '%(type_expected)s', got '%(type_got)s' instead"
+msgstr ""
+"Esperábase tempo de tipo '%(type_expected)s' en vez de '%(type_got)s'"
+
+#: ../gpxdata.py:128 ../gpxdata.py:150
+#, python-format
+msgid "Latitude type excepted '%(type_expected)s', got '%(type_got)s' instead"
+msgstr ""
+"Esperábase latitude de tipo '%(type_expected)s' en vez de '%(type_got)s'"
+
+#: ../gpxdata.py:132 ../gpxdata.py:154
+#, python-format
+msgid "Longitude type excepted '%(type_expected)s', got '%(type_got)s' instead"
+msgstr ""
+"Esperábase lonxitude de tipo '%(type_expected)s' en vez de '%(type_got)s'"
+
+#: ../gpxdata.py:199 ../gpxdata.py:227
+#, python-format
+msgid "Point type excepted '%(type_expected)s', got '%(type_got)s' instead"
+msgstr ""
+"Esperábase punto de tipo '%(type_expected)s' en vez de '%(type_got)s'"
+
+#: ../gpxdata.py:221
+#, python-format
+msgid "Cannot delete point at pos %s!"
+msgstr "¡Imposible borrar punto na posición %s!"
+
+#: ../gpxdata.py:389 ../gpxdata.py:422
+#, python-format
+msgid "Segment type excepted '%(type_expected)s', got '%(type_got)s' instead"
+msgstr ""
+"Esperábase segmento de tipo '%(type_expected)s' en vez de '%(type_got)s'"
+
+#: ../gpxdata.py:392
+msgid "Segment empty!"
+msgstr "¡Segmento vacío!"
+
+#: ../gpxdata.py:416
+#, python-format
+msgid "Cannot delete segment at pos %s!"
+msgstr "¡Imposible borrar segmento na posición %s!"
+
+#: ../gpxparser.py:75
+#, python-format
+msgid ""
+"Time delta type excepted '%(type_expected)s', got '%(type_got)s' instead"
+msgstr ""
+"Esperábase delta de tempo de tipo '%(type_expected)s' en vez de "
+"'%(type_got)s'"
+
+#: ../gpxparser.py:85
+msgid "Cannot parse <time> node: "
+msgstr "Imposible interpretar nodo <time>: "
+
+#: ../gpxparser.py:180
+msgid "Cannot parse <wpt> node: "
+msgstr "Imposible interpretar nodo <wpt>: "
+
+#: ../gpxparser.py:323
+#, python-format
+msgid "Track number %(track_number)s (%(number)s)"
+msgstr "Camiño número %(track_number)s (de %(number)s)"
+
+#: ../gpxparser.py:328
+#, python-format
+msgid "Track %(number)s %(type)s. %(src)s. %(link)s."
+msgstr "Camiño %(number)s %(type)s. %(src)s. %(link)s."
+
+#: ../gpxparser.py:366
+#, python-format
+msgid "Route number %(route_number)s (of %(number)s)"
+msgstr "Ruta número %(route_number)s (de %(number)s)"
+
+#: ../gpxparser.py:371
+#, python-format
+msgid "Route %(number)s %(type)s. %(src)s. %(link)s."
+msgstr "Ruta %(number)s %(type)s. %(src)s. %(link)s."

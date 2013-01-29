@@ -1,0 +1,2345 @@
+# English Translations for photoplace
+# Copyright (C) 2011-2013 José Riguera López
+# This file is distributed under the same license as the photoplace.tour plugin
+# José Riguera López <jriguera@gmail.com>, 2011.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: photoplace 0.5.0\n"
+"Report-Msgid-Bugs-To: <photoplace-project@googlegroups.com>\n"
+"POT-Creation-Date: 2013-01-27 20:00+0100\n"
+"PO-Revision-Date: 2013-01-27 18:00+0100\n"
+"Last-Translator: José Riguera López <jriguera@gmail.com>\n"
+"Language-Team: English <photoplace-project@googlegroups.com>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../share/gtkui/photoinfo.ui.h:1
+msgid "Add a new Property"
+msgstr "Add a new Property"
+
+#: ../share/gtkui/photoinfo.ui.h:2
+msgid "Add or delete Property:"
+msgstr "Add or delete Property:"
+
+#: ../share/gtkui/photoinfo.ui.h:3
+msgid "Delete Property"
+msgstr "Delete Property"
+
+#: ../share/gtkui/photoinfo.ui.h:4 ../share/gtkui/templateeditor.ui.h:12
+#: ../share/gtkui/variableeditor.ui.h:2
+msgid "PhotoPlace"
+msgstr "PhotoPlace"
+
+#: ../share/gtkui/photoinfo.ui.h:5
+msgid "Property to add/delete"
+msgstr "Property to add/delete"
+
+#: ../share/gtkui/photoplace.ui.h:2
+msgid ""
+"\t\t    GNU GENERAL PUBLIC LICENSE\n"
+"\t\t       Version 2, June 1991\n"
+"\n"
+"Copyright (C) 1989, 1991 Free Software Foundation, Inc., 51 Franklin Street, "
+"Fifth Floor, Boston, MA 02110-1301 USA. Everyone is permitted to copy and "
+"distribute verbatim copies of this license document, but changing it is not "
+"allowed.\n"
+"\n"
+"\t\t\t    Preamble\n"
+"\n"
+"The licenses for most software are designed to take away your freedom to "
+"share and change it.  By contrast, the GNU General Public License is "
+"intended to guarantee your freedom to share and change free software--to "
+"make sure the software is free for all its users.  This General Public "
+"License applies to most of the Free Software Foundation's software and to "
+"any other program whose authors commit to using it.  (Some other Free "
+"Software Foundation software is covered by the GNU Lesser General Public "
+"License instead.)  You can apply it to your programs, too.\n"
+"\n"
+"When we speak of free software, we are referring to freedom, not price.  Our "
+"General Public Licenses are designed to make sure that you have the freedom "
+"to distribute copies of free software (and charge for this service if you "
+"wish), that you receive source code or can get it if you want it, that you "
+"can change the software or use pieces of it in new free programs; and that "
+"you know you can do these things.\n"
+"\n"
+"To protect your rights, we need to make restrictions that forbid anyone to "
+"deny you these rights or to ask you to surrender the rights. These "
+"restrictions translate to certain responsibilities for you if you distribute "
+"copies of the software, or if you modify it.\n"
+"\n"
+"For example, if you distribute copies of such a program, whether gratis or "
+"for a fee, you must give the recipients all the rights that you have.  You "
+"must make sure that they, too, receive or can get the source code.  And you "
+"must show them these terms so they know their rights.\n"
+"\n"
+"We protect your rights with two steps: (1) copyright the software, and (2) "
+"offer you this license which gives you legal permission to copy, distribute "
+"and/or modify the software.\n"
+"\n"
+"Also, for each author's protection and ours, we want to make certain that "
+"everyone understands that there is no warranty for this free software.  If "
+"the software is modified by someone else and passed on, we want its "
+"recipients to know that what they have is not the original, so that any "
+"problems introduced by others will not reflect on the original authors' "
+"reputations.\n"
+"\n"
+"Finally, any free program is threatened constantly by software patents.  We "
+"wish to avoid the danger that redistributors of a free program will "
+"individually obtain patent licenses, in effect making the program "
+"proprietary.  To prevent this, we have made it clear that any patent must be "
+"licensed for everyone's free use or not licensed at all.\n"
+"\n"
+"The precise terms and conditions for copying, distribution and modification "
+"follow.\n"
+"\n"
+"\t\t    GNU GENERAL PUBLIC LICENSE\n"
+"   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\n"
+"\n"
+"  0. This License applies to any program or other work which contains a "
+"notice placed by the copyright holder saying it may be distributed under the "
+"terms of this General Public License.  The \"Program\", below, refers to any "
+"such program or work, and a \"work based on the Program\" means either the "
+"Program or any derivative work under copyright law: that is to say, a work "
+"containing the Program or a portion of it, either verbatim or with "
+"modifications and/or translated into another language.  (Hereinafter, "
+"translation is included without limitation in the term \"modification\".)  "
+"Each licensee is addressed as \"you\".\n"
+"\n"
+"Activities other than copying, distribution and modification are not covered "
+"by this License; they are outside its scope.  The act of running the Program "
+"is not restricted, and the output from the Program is covered only if its "
+"contents constitute a work based on the Program (independent of having been "
+"made by running the Program). Whether that is true depends on what the "
+"Program does.\n"
+"\n"
+"  1. You may copy and distribute verbatim copies of the Program's source "
+"code as you receive it, in any medium, provided that you conspicuously and "
+"appropriately publish on each copy an appropriate copyright notice and "
+"disclaimer of warranty; keep intact all the notices that refer to this "
+"License and to the absence of any warranty; and give any other recipients of "
+"the Program a copy of this License along with the Program.\n"
+"\n"
+"You may charge a fee for the physical act of transferring a copy, and you "
+"may at your option offer warranty protection in exchange for a fee.\n"
+"\n"
+"  2. You may modify your copy or copies of the Program or any portion of it, "
+"thus forming a work based on the Program, and copy and distribute such "
+"modifications or work under the terms of Section 1 above, provided that you "
+"also meet all of these conditions:\n"
+"\n"
+"    a) You must cause the modified files to carry prominent notices stating "
+"that you changed the files and the date of any change.\n"
+"\n"
+"    b) You must cause any work that you distribute or publish, that in whole "
+"or in part contains or is derived from the Program or any part thereof, to "
+"be licensed as a whole at no charge to all third parties under the terms of "
+"this License.\n"
+"\n"
+"    c) If the modified program normally reads commands interactively when "
+"run, you must cause it, when started running for such interactive use in the "
+"most ordinary way, to print or display an announcement including an "
+"appropriate copyright notice and a notice that there is no warranty (or "
+"else, saying that you provide a warranty) and that users may redistribute "
+"the program under these conditions, and telling the user how to view a copy "
+"of this License.  (Exception: if the Program itself is interactive but does "
+"not normally print such an announcement, your work based on the Program is "
+"not required to print an announcement.)\n"
+"\n"
+"These requirements apply to the modified work as a whole.  If identifiable "
+"sections of that work are not derived from the Program, and can be "
+"reasonably considered independent and separate works in themselves, then "
+"this License, and its terms, do not apply to those sections when you "
+"distribute them as separate works.  But when you distribute the same "
+"sections as part of a whole which is a work based on the Program, the "
+"distribution of the whole must be on the terms of this License, whose "
+"permissions for other licensees extend to the entire whole, and thus to each "
+"and every part regardless of who wrote it.\n"
+"\n"
+"Thus, it is not the intent of this section to claim rights or contest your "
+"rights to work written entirely by you; rather, the intent is to exercise "
+"the right to control the distribution of derivative or collective works "
+"based on the Program.\n"
+"\n"
+"In addition, mere aggregation of another work not based on the Program with "
+"the Program (or with a work based on the Program) on a volume of a storage "
+"or distribution medium does not bring the other work under the scope of this "
+"License.\n"
+"\n"
+"  3. You may copy and distribute the Program (or a work based on it, under "
+"Section 2) in object code or executable form under the terms of Sections 1 "
+"and 2 above provided that you also do one of the following:\n"
+"\n"
+"    a) Accompany it with the complete corresponding machine-readable source "
+"code, which must be distributed under the terms of Sections 1 and 2 above on "
+"a medium customarily used for software interchange; or,\n"
+"\n"
+"    b) Accompany it with a written offer, valid for at least three years, to "
+"give any third party, for a charge no more than your cost of physically "
+"performing source distribution, a complete machine-readable copy of the "
+"corresponding source code, to be distributed under the terms of Sections 1 "
+"and 2 above on a medium customarily used for software interchange; or,\n"
+"\n"
+"    c) Accompany it with the information you received as to the offer to "
+"distribute corresponding source code.  (This alternative is allowed only for "
+"noncommercial distribution and only if you received the program in object "
+"code or executable form with such an offer, in accord with Subsection b "
+"above.)\n"
+"\n"
+"The source code for a work means the preferred form of the work for making "
+"modifications to it.  For an executable work, complete source code means all "
+"the source code for all modules it contains, plus any associated interface "
+"definition files, plus the scripts used to control compilation and "
+"installation of the executable.  However, as a special exception, the source "
+"code distributed need not include anything that is normally distributed (in "
+"either source or binary form) with the major components (compiler, kernel, "
+"and so on) of the operating system on which the executable runs, unless that "
+"component itself accompanies the executable.\n"
+"\n"
+"If distribution of executable or object code is made by offering access to "
+"copy from a designated place, then offering equivalent access to copy the "
+"source code from the same place counts as distribution of the source code, "
+"even though third parties are not compelled to copy the source along with "
+"the object code.\n"
+"\n"
+"  4. You may not copy, modify, sublicense, or distribute the Program except "
+"as expressly provided under this License.  Any attempt otherwise to copy, "
+"modify, sublicense or distribute the Program is void, and will automatically "
+"terminate your rights under this License. However, parties who have received "
+"copies, or rights, from you under this License will not have their licenses "
+"terminated so long as such parties remain in full compliance.\n"
+"\n"
+"  5. You are not required to accept this License, since you have not signed "
+"it.  However, nothing else grants you permission to modify or distribute the "
+"Program or its derivative works.  These actions are prohibited by law if you "
+"do not accept this License.  Therefore, by modifying or distributing the "
+"Program (or any work based on the Program), you indicate your acceptance of "
+"this License to do so, and all its terms and conditions for copying, "
+"distributing or modifying the Program or works based on it.\n"
+"\n"
+"  6. Each time you redistribute the Program (or any work based on the "
+"Program), the recipient automatically receives a license from the original "
+"licensor to copy, distribute or modify the Program subject to these terms "
+"and conditions.  You may not impose any further restrictions on the "
+"recipients' exercise of the rights granted herein. You are not responsible "
+"for enforcing compliance by third parties to this License.\n"
+"\n"
+"  7. If, as a consequence of a court judgment or allegation of patent "
+"infringement or for any other reason (not limited to patent issues), "
+"conditions are imposed on you (whether by court order, agreement or "
+"otherwise) that contradict the conditions of this License, they do not "
+"excuse you from the conditions of this License.  If you cannot distribute so "
+"as to satisfy simultaneously your obligations under this License and any "
+"other pertinent obligations, then as a consequence you may not distribute "
+"the Program at all.  For example, if a patent license would not permit "
+"royalty-free redistribution of the Program by all those who receive copies "
+"directly or indirectly through you, then the only way you could satisfy both "
+"it and this License would be to refrain entirely from distribution of the "
+"Program.\n"
+"\n"
+"If any portion of this section is held invalid or unenforceable under any "
+"particular circumstance, the balance of the section is intended to apply and "
+"the section as a whole is intended to apply in other circumstances.\n"
+"\n"
+"It is not the purpose of this section to induce you to infringe any patents "
+"or other property right claims or to contest validity of any such claims; "
+"this section has the sole purpose of protecting the integrity of the free "
+"software distribution system, which is implemented by public license "
+"practices.  Many people have made generous contributions to the wide range "
+"of software distributed through that system in reliance on consistent "
+"application of that system; it is up to the author/donor to decide if he or "
+"she is willing to distribute software through any other system and a "
+"licensee cannot impose that choice.\n"
+"\n"
+"This section is intended to make thoroughly clear what is believed to be a "
+"consequence of the rest of this License.\n"
+"\n"
+"  8. If the distribution and/or use of the Program is restricted in certain "
+"countries either by patents or by copyrighted interfaces, the original "
+"copyright holder who places the Program under this License  may add an "
+"explicit geographical distribution limitation excluding those countries, so "
+"that distribution is permitted only in or among countries not thus "
+"excluded.  In such case, this License incorporates the limitation as if "
+"written in the body of this License.\n"
+"\n"
+"  9. The Free Software Foundation may publish revised and/or new versions of "
+"the General Public License from time to time.  Such new versions will be "
+"similar in spirit to the present version, but may differ in detail to "
+"address new problems or concerns.\n"
+"\n"
+"Each version is given a distinguishing version number.  If the Program "
+"specifies a version number of this License which applies to it and \"any "
+"later version\", you have the option of following the terms and conditions "
+"either of that version or of any later version published by the Free "
+"Software Foundation.  If the Program does not specify a version number of "
+"this License, you may choose any version ever published by the Free Software "
+"Foundation.\n"
+"\n"
+"  10. If you wish to incorporate parts of the Program into other free "
+"programs whose distribution conditions are different, write to the author to "
+"ask for permission.  For software which is copyrighted by the Free Software "
+"Foundation, write to the Free Software Foundation; we sometimes make "
+"exceptions for this.  Our decision will be guided by the two goals of "
+"preserving the free status of all derivatives of our free software and of "
+"promoting the sharing and reuse of software generally.\n"
+"\n"
+"\t\t\t    NO WARRANTY\n"
+"\n"
+"  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY "
+"FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN "
+"OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES "
+"PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED "
+"OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF "
+"MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO "
+"THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE PROGRAM "
+"PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR "
+"CORRECTION.\n"
+"\n"
+"  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING "
+"WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR "
+"REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, "
+"INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING "
+"OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO "
+"LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR "
+"THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER "
+"PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE "
+"POSSIBILITY OF SUCH DAMAGES.\n"
+"\n"
+"\t\t     END OF TERMS AND CONDITIONS\n"
+"\n"
+"This General Public License does not permit incorporating your program into "
+"proprietary programs.  If your program is a subroutine library, you may "
+"consider it more useful to permit linking proprietary applications with the "
+"library.  If this is what you want to do, use the GNU Lesser General Public "
+"License instead of this License.\n"
+msgstr ""
+"\t\t    GNU GENERAL PUBLIC LICENSE\n"
+"\t\t       Version 2, June 1991\n"
+"\n"
+"Copyright (C) 1989, 1991 Free Software Foundation, Inc., 51 Franklin Street, "
+"Fifth Floor, Boston, MA 02110-1301 USA. Everyone is permitted to copy and "
+"distribute verbatim copies of this license document, but changing it is not "
+"allowed.\n"
+"\n"
+"\t\t\t    Preamble\n"
+"\n"
+"The licenses for most software are designed to take away your freedom to "
+"share and change it.  By contrast, the GNU General Public License is "
+"intended to guarantee your freedom to share and change free software--to "
+"make sure the software is free for all its users.  This General Public "
+"License applies to most of the Free Software Foundation's software and to "
+"any other program whose authors commit to using it.  (Some other Free "
+"Software Foundation software is covered by the GNU Lesser General Public "
+"License instead.)  You can apply it to your programs, too.\n"
+"\n"
+"When we speak of free software, we are referring to freedom, not price.  Our "
+"General Public Licenses are designed to make sure that you have the freedom "
+"to distribute copies of free software (and charge for this service if you "
+"wish), that you receive source code or can get it if you want it, that you "
+"can change the software or use pieces of it in new free programs; and that "
+"you know you can do these things.\n"
+"\n"
+"To protect your rights, we need to make restrictions that forbid anyone to "
+"deny you these rights or to ask you to surrender the rights. These "
+"restrictions translate to certain responsibilities for you if you distribute "
+"copies of the software, or if you modify it.\n"
+"\n"
+"For example, if you distribute copies of such a program, whether gratis or "
+"for a fee, you must give the recipients all the rights that you have.  You "
+"must make sure that they, too, receive or can get the source code.  And you "
+"must show them these terms so they know their rights.\n"
+"\n"
+"We protect your rights with two steps: (1) copyright the software, and (2) "
+"offer you this license which gives you legal permission to copy, distribute "
+"and/or modify the software.\n"
+"\n"
+"Also, for each author's protection and ours, we want to make certain that "
+"everyone understands that there is no warranty for this free software.  If "
+"the software is modified by someone else and passed on, we want its "
+"recipients to know that what they have is not the original, so that any "
+"problems introduced by others will not reflect on the original authors' "
+"reputations.\n"
+"\n"
+"Finally, any free program is threatened constantly by software patents.  We "
+"wish to avoid the danger that redistributors of a free program will "
+"individually obtain patent licenses, in effect making the program "
+"proprietary.  To prevent this, we have made it clear that any patent must be "
+"licensed for everyone's free use or not licensed at all.\n"
+"\n"
+"The precise terms and conditions for copying, distribution and modification "
+"follow.\n"
+"\n"
+"\t\t    GNU GENERAL PUBLIC LICENSE\n"
+"   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\n"
+"\n"
+"  0. This License applies to any program or other work which contains a "
+"notice placed by the copyright holder saying it may be distributed under the "
+"terms of this General Public License.  The \"Program\", below, refers to any "
+"such program or work, and a \"work based on the Program\" means either the "
+"Program or any derivative work under copyright law: that is to say, a work "
+"containing the Program or a portion of it, either verbatim or with "
+"modifications and/or translated into another language.  (Hereinafter, "
+"translation is included without limitation in the term \"modification\".)  "
+"Each licensee is addressed as \"you\".\n"
+"\n"
+"Activities other than copying, distribution and modification are not covered "
+"by this License; they are outside its scope.  The act of running the Program "
+"is not restricted, and the output from the Program is covered only if its "
+"contents constitute a work based on the Program (independent of having been "
+"made by running the Program). Whether that is true depends on what the "
+"Program does.\n"
+"\n"
+"  1. You may copy and distribute verbatim copies of the Program's source "
+"code as you receive it, in any medium, provided that you conspicuously and "
+"appropriately publish on each copy an appropriate copyright notice and "
+"disclaimer of warranty; keep intact all the notices that refer to this "
+"License and to the absence of any warranty; and give any other recipients of "
+"the Program a copy of this License along with the Program.\n"
+"\n"
+"You may charge a fee for the physical act of transferring a copy, and you "
+"may at your option offer warranty protection in exchange for a fee.\n"
+"\n"
+"  2. You may modify your copy or copies of the Program or any portion of it, "
+"thus forming a work based on the Program, and copy and distribute such "
+"modifications or work under the terms of Section 1 above, provided that you "
+"also meet all of these conditions:\n"
+"\n"
+"    a) You must cause the modified files to carry prominent notices stating "
+"that you changed the files and the date of any change.\n"
+"\n"
+"    b) You must cause any work that you distribute or publish, that in whole "
+"or in part contains or is derived from the Program or any part thereof, to "
+"be licensed as a whole at no charge to all third parties under the terms of "
+"this License.\n"
+"\n"
+"    c) If the modified program normally reads commands interactively when "
+"run, you must cause it, when started running for such interactive use in the "
+"most ordinary way, to print or display an announcement including an "
+"appropriate copyright notice and a notice that there is no warranty (or "
+"else, saying that you provide a warranty) and that users may redistribute "
+"the program under these conditions, and telling the user how to view a copy "
+"of this License.  (Exception: if the Program itself is interactive but does "
+"not normally print such an announcement, your work based on the Program is "
+"not required to print an announcement.)\n"
+"\n"
+"These requirements apply to the modified work as a whole.  If identifiable "
+"sections of that work are not derived from the Program, and can be "
+"reasonably considered independent and separate works in themselves, then "
+"this License, and its terms, do not apply to those sections when you "
+"distribute them as separate works.  But when you distribute the same "
+"sections as part of a whole which is a work based on the Program, the "
+"distribution of the whole must be on the terms of this License, whose "
+"permissions for other licensees extend to the entire whole, and thus to each "
+"and every part regardless of who wrote it.\n"
+"\n"
+"Thus, it is not the intent of this section to claim rights or contest your "
+"rights to work written entirely by you; rather, the intent is to exercise "
+"the right to control the distribution of derivative or collective works "
+"based on the Program.\n"
+"\n"
+"In addition, mere aggregation of another work not based on the Program with "
+"the Program (or with a work based on the Program) on a volume of a storage "
+"or distribution medium does not bring the other work under the scope of this "
+"License.\n"
+"\n"
+"  3. You may copy and distribute the Program (or a work based on it, under "
+"Section 2) in object code or executable form under the terms of Sections 1 "
+"and 2 above provided that you also do one of the following:\n"
+"\n"
+"    a) Accompany it with the complete corresponding machine-readable source "
+"code, which must be distributed under the terms of Sections 1 and 2 above on "
+"a medium customarily used for software interchange; or,\n"
+"\n"
+"    b) Accompany it with a written offer, valid for at least three years, to "
+"give any third party, for a charge no more than your cost of physically "
+"performing source distribution, a complete machine-readable copy of the "
+"corresponding source code, to be distributed under the terms of Sections 1 "
+"and 2 above on a medium customarily used for software interchange; or,\n"
+"\n"
+"    c) Accompany it with the information you received as to the offer to "
+"distribute corresponding source code.  (This alternative is allowed only for "
+"noncommercial distribution and only if you received the program in object "
+"code or executable form with such an offer, in accord with Subsection b "
+"above.)\n"
+"\n"
+"The source code for a work means the preferred form of the work for making "
+"modifications to it.  For an executable work, complete source code means all "
+"the source code for all modules it contains, plus any associated interface "
+"definition files, plus the scripts used to control compilation and "
+"installation of the executable.  However, as a special exception, the source "
+"code distributed need not include anything that is normally distributed (in "
+"either source or binary form) with the major components (compiler, kernel, "
+"and so on) of the operating system on which the executable runs, unless that "
+"component itself accompanies the executable.\n"
+"\n"
+"If distribution of executable or object code is made by offering access to "
+"copy from a designated place, then offering equivalent access to copy the "
+"source code from the same place counts as distribution of the source code, "
+"even though third parties are not compelled to copy the source along with "
+"the object code.\n"
+"\n"
+"  4. You may not copy, modify, sublicense, or distribute the Program except "
+"as expressly provided under this License.  Any attempt otherwise to copy, "
+"modify, sublicense or distribute the Program is void, and will automatically "
+"terminate your rights under this License. However, parties who have received "
+"copies, or rights, from you under this License will not have their licenses "
+"terminated so long as such parties remain in full compliance.\n"
+"\n"
+"  5. You are not required to accept this License, since you have not signed "
+"it.  However, nothing else grants you permission to modify or distribute the "
+"Program or its derivative works.  These actions are prohibited by law if you "
+"do not accept this License.  Therefore, by modifying or distributing the "
+"Program (or any work based on the Program), you indicate your acceptance of "
+"this License to do so, and all its terms and conditions for copying, "
+"distributing or modifying the Program or works based on it.\n"
+"\n"
+"  6. Each time you redistribute the Program (or any work based on the "
+"Program), the recipient automatically receives a license from the original "
+"licensor to copy, distribute or modify the Program subject to these terms "
+"and conditions.  You may not impose any further restrictions on the "
+"recipients' exercise of the rights granted herein. You are not responsible "
+"for enforcing compliance by third parties to this License.\n"
+"\n"
+"  7. If, as a consequence of a court judgment or allegation of patent "
+"infringement or for any other reason (not limited to patent issues), "
+"conditions are imposed on you (whether by court order, agreement or "
+"otherwise) that contradict the conditions of this License, they do not "
+"excuse you from the conditions of this License.  If you cannot distribute so "
+"as to satisfy simultaneously your obligations under this License and any "
+"other pertinent obligations, then as a consequence you may not distribute "
+"the Program at all.  For example, if a patent license would not permit "
+"royalty-free redistribution of the Program by all those who receive copies "
+"directly or indirectly through you, then the only way you could satisfy both "
+"it and this License would be to refrain entirely from distribution of the "
+"Program.\n"
+"\n"
+"If any portion of this section is held invalid or unenforceable under any "
+"particular circumstance, the balance of the section is intended to apply and "
+"the section as a whole is intended to apply in other circumstances.\n"
+"\n"
+"It is not the purpose of this section to induce you to infringe any patents "
+"or other property right claims or to contest validity of any such claims; "
+"this section has the sole purpose of protecting the integrity of the free "
+"software distribution system, which is implemented by public license "
+"practices.  Many people have made generous contributions to the wide range "
+"of software distributed through that system in reliance on consistent "
+"application of that system; it is up to the author/donor to decide if he or "
+"she is willing to distribute software through any other system and a "
+"licensee cannot impose that choice.\n"
+"\n"
+"This section is intended to make thoroughly clear what is believed to be a "
+"consequence of the rest of this License.\n"
+"\n"
+"  8. If the distribution and/or use of the Program is restricted in certain "
+"countries either by patents or by copyrighted interfaces, the original "
+"copyright holder who places the Program under this License  may add an "
+"explicit geographical distribution limitation excluding those countries, so "
+"that distribution is permitted only in or among countries not thus "
+"excluded.  In such case, this License incorporates the limitation as if "
+"written in the body of this License.\n"
+"\n"
+"  9. The Free Software Foundation may publish revised and/or new versions of "
+"the General Public License from time to time.  Such new versions will be "
+"similar in spirit to the present version, but may differ in detail to "
+"address new problems or concerns.\n"
+"\n"
+"Each version is given a distinguishing version number.  If the Program "
+"specifies a version number of this License which applies to it and \"any "
+"later version\", you have the option of following the terms and conditions "
+"either of that version or of any later version published by the Free "
+"Software Foundation.  If the Program does not specify a version number of "
+"this License, you may choose any version ever published by the Free Software "
+"Foundation.\n"
+"\n"
+"  10. If you wish to incorporate parts of the Program into other free "
+"programs whose distribution conditions are different, write to the author to "
+"ask for permission.  For software which is copyrighted by the Free Software "
+"Foundation, write to the Free Software Foundation; we sometimes make "
+"exceptions for this.  Our decision will be guided by the two goals of "
+"preserving the free status of all derivatives of our free software and of "
+"promoting the sharing and reuse of software generally.\n"
+"\n"
+"\t\t\t    NO WARRANTY\n"
+"\n"
+"  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY "
+"FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN "
+"OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES "
+"PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED "
+"OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF "
+"MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO "
+"THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE PROGRAM "
+"PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR "
+"CORRECTION.\n"
+"\n"
+"  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING "
+"WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR "
+"REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, "
+"INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING "
+"OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO "
+"LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR "
+"THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER "
+"PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE "
+"POSSIBILITY OF SUCH DAMAGES.\n"
+"\n"
+"\t\t     END OF TERMS AND CONDITIONS\n"
+"\n"
+"This General Public License does not permit incorporating your program into "
+"proprietary programs.  If your program is a subroutine library, you may "
+"consider it more useful to permit linking proprietary applications with the "
+"library.  If this is what you want to do, use the GNU Lesser General Public "
+"License instead of this License.\n"
+
+#: ../share/gtkui/photoplace.ui.h:94
+msgid " As well, you can write suggestions or impressions to :"
+msgstr " As well, you can write suggestions or impressions to :"
+
+#: ../share/gtkui/photoplace.ui.h:96
+msgid "<b>Advanced</b>"
+msgstr "<b>Advanced</b>"
+
+#: ../share/gtkui/photoplace.ui.h:97
+msgid "<b>Loaded photos</b>"
+msgstr "<b>Loaded photos</b>"
+
+#: ../share/gtkui/photoplace.ui.h:99
+msgid "<b>Output Log</b>"
+msgstr "<b>Output Log</b>"
+
+#: ../share/gtkui/photoplace.ui.h:101
+msgid "<b>Parameters</b>"
+msgstr "<b>Parameters</b>"
+
+#: ../share/gtkui/photoplace.ui.h:102
+msgid "A program for geotagging photos and generate a Google Earth layer"
+msgstr "A program for geotagging photos and generate a Google Earth layer"
+
+#: ../share/gtkui/photoplace.ui.h:104
+msgid "About ..."
+msgstr "About ..."
+
+#: ../share/gtkui/photoplace.ui.h:105
+msgid "Additional info"
+msgstr "Additional info"
+
+#: ../share/gtkui/photoplace.ui.h:106
+msgid "Addons"
+msgstr "Addons"
+
+#: ../share/gtkui/photoplace.ui.h:108
+msgid ""
+"Advanced options. Default settings are safe and good for most of the users."
+msgstr ""
+"Advanced options. Default settings are safe and good for most of the users."
+
+#: ../share/gtkui/photoplace.ui.h:109
+msgid "Compression"
+msgstr "Compression"
+
+#: ../share/gtkui/photoplace.ui.h:110
+msgid "Delta seconds for geotagging:"
+msgstr "Delta seconds for geotagging:"
+
+#: ../share/gtkui/photoplace.ui.h:112
+msgid ""
+"Directory with photos for geotagging. All photos will be geotagged if "
+"<geotagged> mode is selected."
+msgstr ""
+"Directory with photos for geotagging. All photos will be geotagged if "
+"<geotagged> mode is selected."
+
+#: ../share/gtkui/photoplace.ui.h:114
+msgid "Donate via PayPal"
+msgstr "Donate via PayPal"
+
+#: ../share/gtkui/photoplace.ui.h:115
+msgid "Edit Templates"
+msgstr "Edit Templates"
+
+#: ../share/gtkui/photoplace.ui.h:116
+msgid "Edit _Templates"
+msgstr "Edit _Templates"
+
+#: ../share/gtkui/photoplace.ui.h:117
+msgid "Edit global KML variables."
+msgstr "Edit global KML variables."
+
+#: ../share/gtkui/photoplace.ui.h:119
+msgid "Exit the program. I hope see you soon :-)"
+msgstr "Exit the program. I hope see you soon :-)"
+
+#: ../share/gtkui/photoplace.ui.h:120
+msgid ""
+"I have a dream ... well I have a lot of dreams, but this is one of them ..."
+msgstr ""
+"I have a dream ... well I have a lot of dreams, but this is one of them ..."
+
+#: ../share/gtkui/photoplace.ui.h:122
+msgid ""
+"If active, the exif data of pictures will be updated. With \"write\" mode "
+"each photo will be updated only if photo is not geotagged, by other hand "
+"\"overwrite\" will update each photo with the values calculated by "
+"PhotoPlace."
+msgstr ""
+"If active, the exif data of pictures will be updated. With \"write\" mode "
+"each photo will be updated only if photo is not geotagged, by other hand "
+"\"overwrite\" will update each photo with the values calculated by "
+"PhotoPlace."
+
+#: ../share/gtkui/photoplace.ui.h:123
+msgid "If is selected, all the plugins will be activated."
+msgstr "If is selected, all the addon's will be activated."
+
+#: ../share/gtkui/photoplace.ui.h:124
+msgid ""
+"If it is active, this will be the output file. It can be a KMZ (all in one, "
+"compressed Google Earth Layer) or KML and a directory with the processed "
+"photos.\n"
+"Not active for geottaging purposes, no output file will be generated."
+msgstr ""
+"If it is active, this one will be the output file. It can be a KMZ (all in one, "
+"a compressed Google Earth Layer) or KML and a directory with the processed "
+"photos.\n"
+"Not active if only geottaging purposes are wanted, no output file will be generated."
+
+#: ../share/gtkui/photoplace.ui.h:126
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1132
+msgid "Input GPX file"
+msgstr "GPX file"
+
+#: ../share/gtkui/photoplace.ui.h:127
+msgid ""
+"It simulates the geottaging process with the current GPX data and time "
+"values."
+msgstr ""
+"Simulation of the geottaging process with the current GPX data and time "
+"values."
+
+#: ../share/gtkui/photoplace.ui.h:128
+msgid ""
+"JPEG/ZIP Quality vs. Compression. The best quality will make big KMZ files "
+"with best JPEG quality and poor compression. This settings are also "
+"applicable to zip KMZ compression ratio."
+msgstr ""
+"JPEG/ZIP Quality/Compression. The best quality will make big KMZ files "
+"with the best JPEG quality and poor compression. This settings are also "
+"applicable to zip KMZ compression ratio."
+
+#: ../share/gtkui/photoplace.ui.h:129
+msgid "José Riguera López <jriguera@gmail.com>"
+msgstr "José Riguera López <jriguera@gmail.com>"
+
+#: ../share/gtkui/photoplace.ui.h:130
+msgid ""
+"List of available extensions. To see information about each add-on, put the "
+"mouse over its name."
+msgstr ""
+"List of available extensions. To see information about each add-on, put the "
+"mouse over its name."
+
+#: ../share/gtkui/photoplace.ui.h:132
+msgid "Main"
+msgstr "Main"
+
+#: ../share/gtkui/photoplace.ui.h:133
+msgid "Manage _Variables"
+msgstr "Manage _Variables"
+
+#: ../share/gtkui/photoplace.ui.h:134
+msgid "Open _Directory"
+msgstr "Open _Directory"
+
+#: ../share/gtkui/photoplace.ui.h:135
+msgid "Open _GPX"
+msgstr "Open _GPX"
+
+#: ../share/gtkui/photoplace.ui.h:136
+msgid "Open a web browser with online help"
+msgstr "Open a web browser with online help"
+
+#: ../share/gtkui/photoplace.ui.h:138
+msgid ""
+"Open an eXchange Format (GPX) in order to match the date of each photo with "
+"the position."
+msgstr ""
+"Open an eXchange Format (GPX) in order to match the date of each photo with "
+"the position."
+
+#: ../share/gtkui/photoplace.ui.h:140
+msgid "Output file to save the KML data."
+msgstr "Output file to save the KML data."
+
+#: ../share/gtkui/photoplace.ui.h:141
+msgid ""
+"Output photo zoom percentage. 1.00 means original size, 0.50 means half size "
+"and so on ..."
+msgstr ""
+"Output photo zoom percentage. 1.00 means original size, 0.50 means half size "
+"and so on ..."
+
+#: ../share/gtkui/photoplace.ui.h:142
+msgid "Photo size:"
+msgstr "Photo size:"
+
+#: ../share/gtkui/photoplace.ui.h:144 ../lib/PhotoPlace/definitions.py:168
+msgid "Photos"
+msgstr "Photos"
+
+#: ../share/gtkui/photoplace.ui.h:145
+msgid "Plugins"
+msgstr "Addons"
+
+#: ../share/gtkui/photoplace.ui.h:146
+msgid "Press this to start! The show must go on!"
+msgstr "Press this to start! The show must go on!"
+
+#: ../share/gtkui/photoplace.ui.h:147
+msgid "Quality"
+msgstr "Quality"
+
+#: ../share/gtkui/photoplace.ui.h:148
+msgid "Recover default configuration."
+msgstr "Recover default configuration."
+
+#: ../share/gtkui/photoplace.ui.h:150
+msgid "Remove all loaded files/directories to start again."
+msgstr "Remove all loaded photos/files/directories to start again."
+
+#: ../share/gtkui/photoplace.ui.h:151
+msgid "Save the current preferences."
+msgstr "Save the current preferences."
+
+#: ../share/gtkui/photoplace.ui.h:153
+msgid ""
+"Seconds (positive or negative) to add to the photos time in order to match "
+"them with GPS data."
+msgstr ""
+"Seconds (positive or negative) to add to the photos time in order to match "
+"them with GPS data (GPX)."
+
+#: ../share/gtkui/photoplace.ui.h:154
+msgid ""
+"Select a directory with photos for geotagging. All photos will be geotagged "
+"if <geotagged> mode is selected."
+msgstr ""
+"Select a directory with photos for geotagging. All photos will be geotagged "
+"if <geotagged> mode is selected."
+
+#: ../share/gtkui/photoplace.ui.h:155
+msgid ""
+"Select an eXchange Format (GPX) in order to match the date of each photo "
+"with the position."
+msgstr ""
+"Select an eXchange Format (GPX) in order to match the date of each photo "
+"with the position."
+
+#: ../share/gtkui/photoplace.ui.h:156
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1131
+msgid "Select input photo directory"
+msgstr "Photo directory"
+
+#: ../share/gtkui/photoplace.ui.h:157
+msgid "Simulate geotagging"
+msgstr "Simulate geotagging"
+
+#: ../share/gtkui/photoplace.ui.h:159
+msgid ""
+"The authors and developers hope you like this program. We would really "
+"appreciate it if you would consider making a small donation: half of the "
+"money will be donated to a local NGO Ecodesarrollo Gaia (http://gaiadiaadia."
+"blogspot.com) that helps people in Senegal (Africa), with the other half, I "
+"would like to visit Australia and,  in connection with a geotagging  "
+"program, my antipodes in New Zeland, and your coins can help me to achieve "
+"this goals."
+msgstr ""
+"The authors and developers hope you like this program. We would really "
+"appreciate it if you would consider making a small donation: half of the "
+"money will be donated to a local NGO Ecodesarrollo Gaia (http://gaiadiaadia."
+"blogspot.com) that helps people in Senegal (Africa), with the other half, I "
+"would like to visit Australia and,  in connection with a geotagging  "
+"program, my antipodes in New Zeland, and your coins can help me to achieve "
+"this goals."
+
+#: ../share/gtkui/photoplace.ui.h:161
+msgid ""
+"The maximum time gap allowed between the time of a photo and the nearest "
+"point of GPS data."
+msgstr ""
+"The maximum time gap allowed between the time of a photo and the nearest "
+"point of GPS data."
+
+#: ../share/gtkui/photoplace.ui.h:163
+msgid ""
+"The time zone of the photos. It depends on the settings of time/date of the "
+"camera and the GPS (UTC time), it is the difference in hours between both."
+msgstr ""
+"The time zone of the photos. It depends on the settings of time/date of the "
+"camera and the GPS (UTC time), it is the difference in hours between both."
+
+#: ../share/gtkui/photoplace.ui.h:165
+msgid ""
+"This entry defines the Uniform Resource Identifier for each geolocated "
+"photo. It is useful to generate a independent KML file where the photos will "
+"be linked into it."
+msgstr ""
+"This entry defines the Uniform Resource Identifier for each geolocated "
+"photo. It is useful to generate a independent KML file where the photos will "
+"be linked into it, for example for publishing them on a web."
+
+#: ../share/gtkui/photoplace.ui.h:167
+msgid ""
+"This entry defines the Uniform Resource Identifier for each geotagged photo. "
+"It is useful to generate a independent KML file where the photos will be "
+"linked into it."
+msgstr ""
+"This entry defines the Uniform Resource Identifier for each geotagged photo. "
+"It is useful to generate a independent KML file where the photos will be "
+"linked into it."
+
+#: ../share/gtkui/photoplace.ui.h:169
+msgid "Time offset:"
+msgstr "Time offset:"
+
+#: ../share/gtkui/photoplace.ui.h:171
+msgid "Time zone of photos:"
+msgstr "Time zone of photos:"
+
+#: ../share/gtkui/photoplace.ui.h:172
+msgid "URI for geotagging photos:"
+msgstr "URI for geotagged photos:"
+
+#: ../share/gtkui/photoplace.ui.h:173
+msgid ""
+"Zoom percentaje. 1 means original size, 0.5 means half size and so on ..."
+msgstr ""
+"Zoom percentaje. 1 means original size, 0.5 means half size and so on ..."
+
+#: ../share/gtkui/photoplace.ui.h:174
+msgid "_Addons"
+msgstr "_Addons"
+
+#: ../share/gtkui/photoplace.ui.h:176
+msgid "_Exit"
+msgstr "_Exit"
+
+#: ../share/gtkui/photoplace.ui.h:178
+msgid "_File"
+msgstr "_File"
+
+#: ../share/gtkui/photoplace.ui.h:180
+msgid "_Help"
+msgstr "_Help"
+
+#: ../share/gtkui/photoplace.ui.h:182
+msgid "_Preferences"
+msgstr "_Preferences"
+
+#: ../share/gtkui/photoplace.ui.h:183
+msgid "_Reset"
+msgstr "_Reset"
+
+#: ../share/gtkui/photoplace.ui.h:184
+msgid "_Save as"
+msgstr "_Save as"
+
+#: ../share/gtkui/photoplace.ui.h:186
+msgid "and"
+msgstr "and"
+
+#: ../share/gtkui/templateeditor.ui.h:1
+msgid ""
+"Checks if XML data is well formed, otherwise, the content will not be "
+"considered as XML data. \n"
+"Note that contents will be checked after placing them in a (virtual) <div> "
+"section."
+msgstr ""
+"Checks if XML data is well formed, otherwise, the content will not be "
+"considered as XML data. \n"
+"Note that contents will be checked after placing them in a (virtual) <div> "
+"section."
+
+#: ../share/gtkui/templateeditor.ui.h:3
+msgid "Close this window"
+msgstr "Close this window"
+
+#: ../share/gtkui/templateeditor.ui.h:4
+msgid "Create an empty template"
+msgstr "Create an empty template"
+
+#: ../share/gtkui/templateeditor.ui.h:6 ../share/gtkui/variableeditor.ui.h:1
+msgid "Exit"
+msgstr "Exit"
+
+#: ../share/gtkui/templateeditor.ui.h:8
+msgid "Load"
+msgstr "Load"
+
+#: ../share/gtkui/templateeditor.ui.h:9
+msgid "Load a template from file"
+msgstr "Load a template from file"
+
+#: ../share/gtkui/templateeditor.ui.h:11
+msgid "New"
+msgstr "New"
+
+#: ../share/gtkui/templateeditor.ui.h:14
+msgid "Recover"
+msgstr "Recover"
+
+#: ../share/gtkui/templateeditor.ui.h:15
+msgid "Recover the contents from the original template"
+msgstr "Recover the contents from the original template"
+
+#: ../share/gtkui/templateeditor.ui.h:17
+msgid "Save"
+msgstr "Save"
+
+#: ../share/gtkui/templateeditor.ui.h:18
+msgid "Save the document in the template file"
+msgstr "Save the document in the template file"
+
+#: ../share/gtkui/templateeditor.ui.h:20
+msgid "Validate"
+msgstr "Validate"
+
+#: ../share/gtkui/variableeditor.ui.h:3
+msgid "Variables to make the KML:"
+msgstr "Variables and parameters to make the KML:"
+
+#: ../photoplace.py:172
+msgid ""
+"usage: %prog [options] <photodir> <file.gpx> [<output.kml>|<output.kmz>]"
+msgstr ""
+"usage: %prog [options] <photodir> <file.gpx> [<output.kml>|<output.kmz>]"
+
+#: ../photoplace.py:174
+msgid ""
+"This is a python program to geolocate photos from a GPX data. Besides, it "
+"can generate a KMZ layer for Google Earth with all geolocated photos. By "
+"default, it tries to launch a graphical UI, if that is not possible, all "
+"options must be supplied by command line."
+msgstr ""
+"This is a python program to geolocate photos from a GPX data. Besides, it "
+"can generate a KMZ layer for Google Earth with all geolocated photos. By "
+"default it tries to launch a graphical UI, if that is not possible, all "
+"parameters must be supplied by command line."
+
+#: ../photoplace.py:180
+#, python-format
+msgid ""
+"By default, the program searchs the configuration file "
+"'%(defaultconfigfile)s' in current directory, then in user home directory "
+"under '%(defaultconfigdir)s'.  "
+msgstr ""
+"By default, the program searchs the configuration file "
+"'%(defaultconfigfile)s' in current directory, then in user home directory "
+"under '%(defaultconfigdir)s'.  "
+
+#: ../photoplace.py:183
+msgid ""
+"This program is able to create a virtual flux capacitor and, with the right "
+"settings, it can be used to time travels ... "
+msgstr ""
+"This program is able to create a virtual flux capacitor and, with the right "
+"settings, it can be used to time travels ... "
+
+#: ../photoplace.py:195
+msgid "Read the configuration from <configfile.cfg>"
+msgstr "Read the configuration from <configfile.cfg>"
+
+#: ../photoplace.py:198
+msgid ""
+"Only do geolocating the photos of input directory, not generating any output "
+"file"
+msgstr ""
+"Only do geolocating the photos of input directory, not generating any output "
+"file"
+
+#: ../photoplace.py:202
+msgid ""
+"Other options like them are defined in the config file. This argument can be "
+"supplied as many times as it was necessary for all options. The format is '-"
+"o \"section:key=value\"'"
+msgstr ""
+"Other parameters like them are defined in the config file. This argument can be "
+"supplied as many times as it was necessary for all parameters. The format is '-"
+"o \"section:key=value\"'"
+
+#: ../photoplace.py:207
+msgid "Launch the batch mode, with command line args."
+msgstr "Launch the batch mode, with command line args."
+
+#: ../photoplace.py:242
+#, python-format
+msgid ""
+"Error: Cannot launch GUI: %s.\n"
+"Trying batch mode ...\n"
+msgstr ""
+"Error: Cannot launch GUI: %s.\n"
+"Trying batch mode ...\n"
+
+#: ../photoplace.py:253
+#, python-format
+msgid "Fatal error: Cannot launch program: %s.\n"
+msgstr "Fatal error: Cannot launch program: %s.\n"
+
+#: ../lib/PhotoPlace/DataTypes/kmlData.py:130
+#, python-format
+msgid ""
+"Cannot set up main KML template from file '%(layout_file)s' due to: "
+"%(error)s."
+msgstr ""
+"Cannot set up main KML template from file '%(layout_file)s' due to: "
+"%(error)s."
+
+#: ../lib/PhotoPlace/DataTypes/kmlData.py:150
+#, python-format
+msgid "Cannot read XML template file '%(filename)s': (%(errno)s) %(strerror)s."
+msgstr "Cannot read XML template file '%(filename)s': (%(errno)s) %(strerror)s."
+
+#: ../lib/PhotoPlace/DataTypes/kmlData.py:154
+#, python-format
+msgid "XML file '%(filename)s' not in UTF-8 format: %(error)s."
+msgstr "XML file '%(filename)s' not in UTF-8 format: %(error)s."
+
+#: ../lib/PhotoPlace/DataTypes/kmlData.py:158
+#, python-format
+msgid "Cannot parse XML template file '%(filename)s': %(error)s."
+msgstr "Cannot parse XML template file '%(filename)s': %(error)s."
+
+#: ../lib/PhotoPlace/DataTypes/kmlData.py:192
+#, python-format
+msgid "Cannot read template file '%(template_file)s': %(error)s"
+msgstr "Cannot read template file '%(template_file)s': %(error)s"
+
+#: ../lib/PhotoPlace/DataTypes/kmlData.py:198
+#, python-format
+msgid "Cannot find root <div mode=[cdata|text|xml]> in '%(template_file)s'."
+msgstr "Cannot find XML root '<div mode=[cdata|text|xml]>' in '%(template_file)s'."
+
+#: ../lib/PhotoPlace/DataTypes/geoPhotoData.py:179
+#, python-format
+msgid "latitude = '%f', value not in [-90.0..90.0] range"
+msgstr "latitude = '%f', value not in [-90.0..90.0] range"
+
+#: ../lib/PhotoPlace/DataTypes/geoPhotoData.py:184
+#, python-format
+msgid "longitude = '%f', value not in [-180.0..180.0] range"
+msgstr "longitude = '%f', value not in [-180.0..180.0] range"
+
+#: ../lib/PhotoPlace/DataTypes/geoPhotoData.py:193
+#, python-format
+msgid "azimut = '%f', value not in [0.0..360.0] range"
+msgstr "azimut = '%f', value not in [0.0..360.0] range"
+
+#: ../lib/PhotoPlace/DataTypes/geoPhotoData.py:198
+#, python-format
+msgid "tilt = '%f', value not in [-180.0..180.0] range"
+msgstr "tilt = '%f', value not in [-180.0..180.0] range"
+
+#: ../lib/PhotoPlace/DataTypes/geoPhotoData.py:231
+#, python-format
+msgid "Cannot read image file '%(image_path)s': %(error)s."
+msgstr "Cannot read photo '%(image_path)s': %(error)s."
+
+#: ../lib/PhotoPlace/DataTypes/geoPhotoData.py:267
+#, python-format
+msgid "Cannot read GPS metadata of '%(image_path)s': %(error)s"
+msgstr "Cannot read GPS metadata of '%(image_path)s': %(error)s"
+
+#: ../lib/PhotoPlace/DataTypes/geoPhotoData.py:298
+#, python-format
+msgid "Cannot write metadata of '%(image_path)s': %(error)s."
+msgstr "Cannot write metadata of '%(image_path)s': %(error)s."
+
+#: ../lib/PhotoPlace/DataTypes/geoPhotoData.py:430
+#, python-format
+msgid "Cannot copy '%(image_path)s' to '%(image_dst)s': %(error)s."
+msgstr "Cannot copy '%(image_path)s' to '%(image_dst)s': %(error)s."
+
+#: ../lib/PhotoPlace/DataTypes/geoPhotoData.py:442
+#, python-format
+msgid ""
+"Cannot copy image metadata from '%(image_path)s' to '%(image_dst)s': "
+"%(error)s."
+msgstr ""
+"Cannot copy image metadata from '%(image_path)s' to '%(image_dst)s': "
+"%(error)s."
+
+#: ../lib/PhotoPlace/Actions/copyFilesAction.py:59
+#, python-format
+msgid "Generating copy of JPEG files in '%(outputdir)s' ..."
+msgstr "Generating a copy of photos in '%(outputdir)s' ..."
+
+#: ../lib/PhotoPlace/Actions/copyFilesAction.py:62
+msgid "Nothing to do!. No output dir!"
+msgstr "Nothing to do!. No output dir!"
+
+#: ../lib/PhotoPlace/Actions/copyFilesAction.py:89
+#, python-format
+msgid "Cannot copy '%(photo)s' to '%(new_path)s': %(error)s."
+msgstr "Cannot copy '%(photo)s' to '%(new_path)s': %(error)s."
+
+#: ../lib/PhotoPlace/Actions/copyFilesAction.py:94
+#, python-format
+msgid "Photo '%(photo)s' has been copied to '%(new_path)s'."
+msgstr "Photo '%(photo)s' has been copied to '%(new_path)s'."
+
+#: ../lib/PhotoPlace/Actions/copyFilesAction.py:98
+#: ../lib/PhotoPlace/Actions/makeKMLAction.py:231
+#: ../lib/PhotoPlace/Actions/writeExifAction.py:88
+#, python-format
+msgid "Ignoring not geolocated photo '%(photo)s' (%(photo_time)s)."
+msgstr "Ignoring not geolocated photo '%(photo)s' (%(photo_time)s)."
+
+#: ../lib/PhotoPlace/Actions/copyFilesAction.py:107
+#, python-format
+msgid "%(num_photos)d photos have been processed, %(num_copies)d were copied."
+msgstr "%(num_photos)d photos have been processed, %(num_copies)d were copied."
+
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:67
+#, python-format
+msgid "Cannot create KML file '%(outputkml)s': (%(errno)s) %(strerror)s."
+msgstr "Cannot create KML file '%(outputkml)s': (%(errno)s) %(strerror)s."
+
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:70
+#, python-format
+msgid "Check if output dir '%s' exists and is writable."
+msgstr "Check if output dir '%s' exists and is writable."
+
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:84
+#, python-format
+msgid "Cannot write to file '%(outputkml)s': %(error)s."
+msgstr "Cannot write to file '%(outputkml)s': %(error)s."
+
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:86
+#, python-format
+msgid "Check if output dir '%s' is writable."
+msgstr "Check if output dir '%s' is writable."
+
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:97
+#, python-format
+msgid "KML output file '%(outputkml)s' has been generated."
+msgstr "KML output file '%(outputkml)s' has been generated."
+
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:100
+#, python-format
+msgid "Generating KMZ file '%(outputkmz)s' ..."
+msgstr "Generating KMZ file '%(outputkmz)s' ..."
+
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:112
+#, python-format
+msgid "Adding file '%s' to KMZ ..."
+msgstr "Adding file '%s' to KMZ ..."
+
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:125
+#, python-format
+msgid "KMZ file '%(outputkmz)s' has been generated."
+msgstr "KMZ output file '%(outputkmz)s' has been generated."
+
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:130
+#, python-format
+msgid "Deleting directory '%(tmpdir)s' ..."
+msgstr "Deleting temporal directory '%(tmpdir)s' ..."
+
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:134
+#, python-format
+msgid "Cannot delete directory '%(tmpdir)s': %(error)s."
+msgstr "Cannot delete directory '%(tmpdir)s': %(error)s."
+
+#: ../lib/PhotoPlace/Actions/Interface.py:64
+msgid "Starting ..."
+msgstr "Starting ..."
+
+#: ../lib/PhotoPlace/Actions/Interface.py:72
+msgid "Finished ..."
+msgstr "Finished ..."
+
+#: ../lib/PhotoPlace/Actions/readGPXAction.py:62
+#, python-format
+msgid "Cannot read GPX file '%(gpxinputfile)s': (%(errno)s) %(strerror)s."
+msgstr "Cannot read GPX file '%(gpxinputfile)s': (%(errno)s) %(strerror)s."
+
+#: ../lib/PhotoPlace/Actions/readGPXAction.py:65
+msgid "Check file path, permissions ... "
+msgstr "Check file path, permissions ... "
+
+#: ../lib/PhotoPlace/Actions/readGPXAction.py:69
+#, python-format
+msgid "GPX file '%(gpxinputfile)s' not in UTF-8 format: %(error)s."
+msgstr "GPX file '%(gpxinputfile)s' not in UTF-8 format: %(error)s."
+
+#: ../lib/PhotoPlace/Actions/readGPXAction.py:72
+msgid "Check file format. Maybe you need to export that file again."
+msgstr "Check file format. Maybe you need to export that file again."
+
+#: ../lib/PhotoPlace/Actions/readGPXAction.py:78
+#, python-format
+msgid "Processing GPX data from '%(gpxinputfile)s' ..."
+msgstr "Processing GPX data from '%(gpxinputfile)s' ..."
+
+#: ../lib/PhotoPlace/Actions/readGPXAction.py:90
+#, python-format
+msgid "Cannot parse GPX file '%(gpxinputfile)s': %(error)s"
+msgstr "Cannot parse GPX file '%(gpxinputfile)s': %(error)s"
+
+#: ../lib/PhotoPlace/Actions/readGPXAction.py:92
+msgid "Check if file is compatible with GPS eXchange Format (GPX)"
+msgstr "Check if file is compatible with GPS eXchange Format (GPX) in UTF-8"
+
+#: ../lib/PhotoPlace/Actions/readGPXAction.py:104
+#, python-format
+msgid "'%(gpxinputfile)s': %(num_trks)s tracks and %(num_wpts)s waypoints."
+msgstr "'%(gpxinputfile)s': %(num_trks)s tracks and %(num_wpts)s waypoints."
+
+#: ../lib/PhotoPlace/Actions/geolocateAction.py:59
+#, python-format
+msgid ""
+"Geotagging mode <%(exifmode)s>, diff from UTC %(timezone)s and delta of "
+"%(maxdeltaseconds)s seconds ..."
+msgstr ""
+"Geotagging mode <%(exifmode)s>, diff from UTC %(timezone)s and delta of "
+"%(maxdeltaseconds)s seconds ..."
+
+#: ../lib/PhotoPlace/Actions/geolocateAction.py:82
+#, python-format
+msgid ""
+"Photo: '%(photo)s' at %(photo_time)s (UTC=%(photo_tutc)s) is geotagged with "
+"(lon=%(photo_lon).8f, lat=%(photo_lat).8f, ele=%(photo_ele).8f). Calculated "
+"coordinates ignored due to <nooverwrite> option."
+msgstr ""
+"Photo: '%(photo)s' at %(photo_time)s (UTC=%(photo_tutc)s) is geotagged with "
+"(lon=%(photo_lon).8f, lat=%(photo_lat).8f, ele=%(photo_ele).8f). Calculated "
+"coordinates ignored due to <nooverwrite> option."
+
+#: ../lib/PhotoPlace/Actions/geolocateAction.py:99
+#, python-format
+msgid ""
+"It is impossible geotag '%(photo)s' taken at %(photo_time)s (UTC="
+"%(photo_tutc)s) with time delta %(time_delta)s. No closed points."
+msgstr ""
+"It is impossible geotag '%(photo)s' taken at %(photo_time)s (UTC="
+"%(photo_tutc)s) with time delta %(time_delta)s. No closed GPX waypoints."
+
+#: ../lib/PhotoPlace/Actions/geolocateAction.py:114
+#, python-format
+msgid ""
+"It is impossible geotag '%(photo)s' taken at %(photo_time)s (UTC="
+"%(photo_tutc)s) with time delta %(time_delta)s. The nearest point is too far "
+"(time=%(point_time)s)."
+msgstr ""
+"It is impossible geotag '%(photo)s' taken at %(photo_time)s (UTC="
+"%(photo_tutc)s) with time delta %(time_delta)s. The nearest point is too far "
+"(time=%(point_time)s)."
+
+#: ../lib/PhotoPlace/Actions/geolocateAction.py:128
+#, python-format
+msgid ""
+"Photo: '%(photo)s' at %(photo_time)s (UTC=%(photo_tutc)s) geotagged with "
+"(lon=%(photo_lon).8f, lat=%(photo_lat).8f, ele=%(photo_ele).8f, time="
+"%(point_time)s) and time delta '%(time_diff)s'."
+msgstr ""
+"Photo: '%(photo)s' at %(photo_time)s (UTC=%(photo_tutc)s) geotagged with "
+"(lon=%(photo_lon).8f, lat=%(photo_lat).8f, ele=%(photo_ele).8f, time="
+"%(point_time)s) and time delta '%(time_diff)s'."
+
+#: ../lib/PhotoPlace/Actions/geolocateAction.py:144
+#, python-format
+msgid "%(proc_photos)s of %(num_photos)s photos have been geotagged."
+msgstr "%(proc_photos)s of %(num_photos)s photos have been geotagged."
+
+#: ../lib/PhotoPlace/Actions/loadPhotosAction.py:59
+#, python-format
+msgid "Cannot read '%(photoinputdir)s' directory: %(error)s."
+msgstr "Cannot read '%(photoinputdir)s' directory: %(error)s."
+
+#: ../lib/PhotoPlace/Actions/loadPhotosAction.py:62
+msgid "Check directory permissions"
+msgstr "Check directory permissions"
+
+#: ../lib/PhotoPlace/Actions/loadPhotosAction.py:68
+#, python-format
+msgid "Processing photos in '%(photoinputdir)s' ..."
+msgstr "Processing photos in '%(photoinputdir)s' ..."
+
+#: ../lib/PhotoPlace/Actions/loadPhotosAction.py:85
+#, python-format
+msgid "Error processing photo '%(photo)s': %(error)s."
+msgstr "Error processing photo '%(photo)s': %(error)s."
+
+#: ../lib/PhotoPlace/Actions/loadPhotosAction.py:101
+#, python-format
+msgid "Photo file name '%(photo)s' was processed properly."
+msgstr "Photo file name '%(photo)s' was processed properly."
+
+#: ../lib/PhotoPlace/Actions/loadPhotosAction.py:109
+#, python-format
+msgid "'%(photoinputdir)s': %(num_photos)s photos have been processed."
+msgstr "'%(photoinputdir)s': %(num_photos)s photos have been processed."
+
+#: ../lib/PhotoPlace/Actions/makeKMLAction.py:108
+#, python-format
+msgid "Cannot process '%(path)s': %(error)s."
+msgstr "Cannot process '%(path)s': %(error)s."
+
+#: ../lib/PhotoPlace/Actions/makeKMLAction.py:176
+msgid "Generating KML from photos' geodata ..."
+msgstr "Generating KML from photos' geodata ..."
+
+#: ../lib/PhotoPlace/Actions/makeKMLAction.py:177
+#, python-format
+msgid "Generating KML from photos with options: <%s>."
+msgstr "Generating KML from photos with parameters: <%s>."
+
+#: ../lib/PhotoPlace/Actions/makeKMLAction.py:227
+#, python-format
+msgid "Photo '%(photo)s' was processed for KML data"
+msgstr "Photo '%(photo)s' was processed for KML data"
+
+#: ../lib/PhotoPlace/Actions/makeKMLAction.py:242
+#, python-format
+msgid "%(num_photos)s photos have been processed for KML data."
+msgstr "%(num_photos)s photos have been processed for KML data."
+
+#: ../lib/PhotoPlace/Actions/doTemplatesAction.py:64
+#, python-format
+msgid "Template file '%s' does not exist!."
+msgstr "Template file '%s' does not exist!."
+
+#: ../lib/PhotoPlace/Actions/doTemplatesAction.py:68
+#, python-format
+msgid "Those templates do not exist! : %s."
+msgstr "Those templates do not exist! : %s."
+
+#: ../lib/PhotoPlace/Actions/doTemplatesAction.py:69
+msgid ""
+"Check file path and permissions of templates defined in the configuration "
+"file"
+msgstr ""
+"Check file path and permissions of templates defined in the configuration "
+"file"
+
+#: ../lib/PhotoPlace/Actions/doTemplatesAction.py:84
+msgid ""
+"Check file path and permissions of 'KmlTemplate' value defined in the "
+"configuration file"
+msgstr ""
+"Check file path and permissions of 'KmlTemplate' value defined in the "
+"configuration file"
+
+#: ../lib/PhotoPlace/Actions/doTemplatesAction.py:88
+#, python-format
+msgid "Setting up main template '%(kmltemplate)s'"
+msgstr "Setting up main template '%(kmltemplate)s'"
+
+#: ../lib/PhotoPlace/Actions/doTemplatesAction.py:95
+msgid ""
+"Check paths, permissions and format of the templates defined into the "
+"configuration file."
+msgstr ""
+"Check paths, permissions and format of the templates defined into the "
+"configuration file."
+
+#: ../lib/PhotoPlace/Actions/writeExifAction.py:53
+msgid "Writing new EXIF data to JPEG files ..."
+msgstr "Writing new EXIF metadata to photos ..."
+
+#: ../lib/PhotoPlace/Actions/writeExifAction.py:55
+msgid "Nothing to do!. Not in geolocate mode!"
+msgstr "Nothing to do!. Not in geolocate mode!"
+
+#: ../lib/PhotoPlace/Actions/writeExifAction.py:78
+#, python-format
+msgid "Error while EXIF data was being written to '%(photo)s': %(error)s"
+msgstr "Error while EXIF data was being written to '%(photo)s': %(error)s"
+
+#: ../lib/PhotoPlace/Actions/writeExifAction.py:83
+#, python-format
+msgid ""
+"Photo '%(photo)s' (%(photo_time)s) geolocated. EXIF data written: (lon="
+"%(photo_lon).8f, lat=%(photo_lat).8f, ele=%(photo_ele).8f)."
+msgstr ""
+"Photo '%(photo)s' (%(photo_time)s) geolocated. EXIF data written: (lon="
+"%(photo_lon).8f, lat=%(photo_lat).8f, ele=%(photo_ele).8f)."
+
+#: ../lib/PhotoPlace/Actions/writeExifAction.py:97
+#, python-format
+msgid ""
+"%(num_photos)s photos have been processed, exif data of %(num_wexif)s "
+"updated."
+msgstr ""
+"%(num_photos)s photos have been processed, EXIF data of %(num_wexif)s "
+"updated."
+
+#: ../lib/PhotoPlace/stateHandler.py:246
+msgid "Reseting state data ... "
+msgstr "Reseting state data ... "
+
+#: ../lib/PhotoPlace/stateHandler.py:370
+#, python-format
+msgid ""
+"Value of 'quality' not defined in the configuration file. Setting default "
+"value '%s'."
+msgstr ""
+"Value of 'quality' not defined in the configuration file. Setting default "
+"value '%s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:373
+#, python-format
+msgid "Value of 'quality' incorrect: %s. "
+msgstr "Value of 'quality' incorrect: %s. "
+
+#: ../lib/PhotoPlace/stateHandler.py:375
+msgid "Set a correct value of 'quality'."
+msgstr "Set a correct value for the parameter 'quality'."
+
+#: ../lib/PhotoPlace/stateHandler.py:390
+#, python-format
+msgid ""
+"Value of 'jpgzoom' not defined in the configuration file. Setting default "
+"value '%s'."
+msgstr ""
+"Value of 'JPGZoom' not defined in the configuration file. Setting default "
+"value '%s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:393
+#, python-format
+msgid "Value of 'JPGZoom' incorrect: %s. "
+msgstr "Value of 'JPGZoom' incorrect: %s. "
+
+#: ../lib/PhotoPlace/stateHandler.py:395
+msgid "Set a correct value of 'JPGZoom'."
+msgstr "Set a correct value for the parameter 'JPGZoom'."
+
+#: ../lib/PhotoPlace/stateHandler.py:412
+#, python-format
+msgid ""
+"Value of 'jpgwidth' and/or 'jpgheight' not defined in the configuration "
+"file. Setting default value '%s'."
+msgstr ""
+"Value of 'JPGWidth' and/or 'JPGHeight' not defined in the configuration "
+"file. Setting default value '%s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:415
+#, python-format
+msgid "Value of 'JPGWidth' and/or 'JPGHeight' incorrect: %s. "
+msgstr "Value of 'JPGWidth' and/or 'JPGHeight' incorrect: %s. "
+
+#: ../lib/PhotoPlace/stateHandler.py:417
+msgid "Set a correct value of 'JPGWidth' and/or 'JPGHeight'."
+msgstr "Set a correct value for the parameter 'JPGWidth' and/or 'JPGHeight'."
+
+#: ../lib/PhotoPlace/stateHandler.py:436
+msgid "Output file not selected!"
+msgstr "Output file not selected!"
+
+#: ../lib/PhotoPlace/stateHandler.py:439
+msgid "Choose an output file to continue!"
+msgstr "Choose an output file to continue!"
+
+#: ../lib/PhotoPlace/stateHandler.py:464
+#, python-format
+msgid "Cannot create temporary directory in '%(output_dir)s': %(error)s."
+msgstr "Cannot create temporary directory in '%(output_dir)s': %(error)s."
+
+#: ../lib/PhotoPlace/stateHandler.py:467 ../lib/PhotoPlace/stateHandler.py:483
+msgid "Check output directory write permissions"
+msgstr "Check output directory write permissions"
+
+#: ../lib/PhotoPlace/stateHandler.py:481
+#, python-format
+msgid "Cannot create files in '%(output_dir)s': %(error)s."
+msgstr "Cannot create files in '%(output_dir)s': %(error)s."
+
+#: ../lib/PhotoPlace/stateHandler.py:494
+#, python-format
+msgid "Unknown extension of output file '%s'."
+msgstr "Unknown extension of the output file '%s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:495
+msgid "The extension of output file determines the program mode"
+msgstr "The suffix of the output file, .kmz or .kml, determines the program mode"
+
+#: ../lib/PhotoPlace/stateHandler.py:555
+msgid "Directory with input photos not defined ... Nothing to do!"
+msgstr "Directory with input photos not defined ... Nothing to do!"
+
+#: ../lib/PhotoPlace/stateHandler.py:558
+msgid "Select a input photos directory to continue!"
+msgstr "Select a input photos directory to continue!"
+
+#: ../lib/PhotoPlace/stateHandler.py:566
+#, python-format
+msgid "Photo input directory '%s' not found!."
+msgstr "Photo input directory '%s' not found!."
+
+#: ../lib/PhotoPlace/stateHandler.py:569
+msgid "Check if the selected directory exist."
+msgstr "Check if the selected directory exist."
+
+#: ../lib/PhotoPlace/stateHandler.py:583
+msgid "GPX file not defined ... Nothing to do!"
+msgstr "GPX file not defined ... Nothing to do!"
+
+#: ../lib/PhotoPlace/stateHandler.py:586
+msgid "Select a GPX input file to continue!"
+msgstr "Select a GPX input file to continue!"
+
+#: ../lib/PhotoPlace/stateHandler.py:594
+#, python-format
+msgid "GPX input file '%s' not found!."
+msgstr "GPX input file '%s' not found!."
+
+#: ../lib/PhotoPlace/stateHandler.py:597
+msgid "Check the selected GPX input file to continue."
+msgstr "Check the selected GPX input file to continue."
+
+#: ../lib/PhotoPlace/stateHandler.py:611
+#, python-format
+msgid ""
+"Value of 'utczoneminutes' not defined in the configuration file. Estimated "
+"local value is '%s'."
+msgstr ""
+"Value of 'utczoneminutes' not defined in the configuration file. Estimated "
+"local value is '%s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:615
+#, python-format
+msgid ""
+"Value of 'utczoneminutes' incorrect: %(error)s. Setting default value "
+"'%(value)s'."
+msgstr ""
+"Value of 'utczoneminutes' incorrect: %(error)s. Setting default value "
+"'%(value)s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:618
+msgid ""
+"Set the value of UTC Time Zone to continue. The value may be positive or "
+"negative."
+msgstr ""
+"Set the value of UTC Time Zone to continue. The value may be positive or "
+"negative."
+
+#: ../lib/PhotoPlace/stateHandler.py:642
+#, python-format
+msgid ""
+"Value of 'maxdeltaseconds' not defined in the configuration file. Setting "
+"default value '%s'."
+msgstr ""
+"Value of 'maxdeltaseconds' not defined in the configuration file. Setting "
+"default value '%s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:646
+#, python-format
+msgid ""
+"Value of 'maxdeltaseconds' incorrect: %(error)s. Setting default value "
+"'%(value)s'."
+msgstr ""
+"Value of 'maxdeltaseconds' incorrect: %(error)s. Setting default value "
+"'%(value)s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:660
+#, python-format
+msgid ""
+"Value of 'timeoffsetseconds' not defined in the configuration file. Setting "
+"default value '%s'."
+msgstr ""
+"Value of 'timeoffsetseconds' not defined in the configuration file. Setting "
+"default value '%s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:664
+#, python-format
+msgid ""
+"Value of 'timeoffsetseconds' incorrect: %(error)s. Setting default value "
+"'%(value)s'."
+msgstr ""
+"Value of 'timeoffsetseconds' incorrect: %(error)s. Setting default value "
+"'%(value)s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:678
+#, python-format
+msgid ""
+"Value of 'exifmode' not defined in the configuration file. Setting default "
+"value '%s'."
+msgstr ""
+"Value of 'exifmode' not defined in the configuration file. Setting default "
+"value '%s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:682
+#, python-format
+msgid ""
+"Value of 'exifmode' incorrect: %(error)s. Setting default value '%(value)s'."
+msgstr ""
+"Value of 'exifmode' incorrect: %(error)s. Setting default value '%(value)s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:692
+#, python-format
+msgid "Main KML template not defined. Setting default KML template file '%s'."
+msgstr "Main KML template not defined. Setting default KML template file '%s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:696
+#, python-format
+msgid "Value of '%(key)s' incorrect. Setting to default value '%(value)s'."
+msgstr "Value of '%(key)s' incorrect. Setting to default value '%(value)s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:733
+#, python-format
+msgid "Main KML template file '%s' not found!."
+msgstr "Main KML template file '%s' not found!."
+
+#: ../lib/PhotoPlace/stateHandler.py:735
+msgid "Check if it is defined properly in the configuration file."
+msgstr "Check if it is defined properly in the configuration file."
+
+#: ../lib/PhotoPlace/stateHandler.py:748
+#, python-format
+msgid ""
+"Value of 'copyonlygeolocated' not defined in the configuration file. Setting "
+"default value '%s'."
+msgstr ""
+"Value of 'copyonlygeolocated' not defined in the configuration file. Setting "
+"default value '%s'."
+
+#: ../lib/PhotoPlace/stateHandler.py:752
+#, python-format
+msgid ""
+"Value of 'copyonlygeolocated' incorrect: %(error)s. Setting default value "
+"'%(value)s'."
+msgstr ""
+"Value of 'copyonlygeolocated' incorrect: %(error)s. Setting default value "
+"'%(value)s'."
+
+#: ../lib/PhotoPlace/Facade.py:179
+#, python-format
+msgid ""
+"Warning processing geophoto string attribute '%(attr)s': type not valid!"
+msgstr ""
+"Warning processing geophoto string attribute '%(attr)s': type not valid!"
+
+#: ../lib/PhotoPlace/Facade.py:205
+#, python-format
+msgid "Warning processing geophoto bool attribute '%(attr)s': type not valid!"
+msgstr "Warning processing geophoto bool attribute '%(attr)s': type not valid!"
+
+#: ../lib/PhotoPlace/Facade.py:233
+#, python-format
+msgid ""
+"Warning processing geophoto number attribute '%(attr)s': type not valid!"
+msgstr ""
+"Warning processing geophoto number attribute '%(attr)s': type not valid!"
+
+#: ../lib/PhotoPlace/Facade.py:340
+msgid "Check if plugin syntax is correct ... "
+msgstr "Check if Addon syntax is correct ... "
+
+#: ../lib/PhotoPlace/Facade.py:357 ../lib/PhotoPlace/Facade.py:370
+msgid "Check Plugin base class ... "
+msgstr "Check Addon base class ... "
+
+#: ../lib/PhotoPlace/Facade.py:398
+msgid "Cannot initiate plugin while some operations are pending ..."
+msgstr "Cannot initiate add-on while some operations are pending ..."
+
+#: ../lib/PhotoPlace/Facade.py:400 ../lib/PhotoPlace/Facade.py:419
+#: ../lib/PhotoPlace/Facade.py:438 ../lib/PhotoPlace/Facade.py:462
+#: ../lib/PhotoPlace/Facade.py:567
+msgid "Wait a moment ... "
+msgstr "Wait a moment ... "
+
+#: ../lib/PhotoPlace/Facade.py:410
+msgid "Check Plugin init method ... "
+msgstr "Check Addon 'init' method ... "
+
+#: ../lib/PhotoPlace/Facade.py:417
+msgid "Cannot reset plugin while some operations are pending ..."
+msgstr "Cannot 'reset' add-on while some operations are pending ..."
+
+#: ../lib/PhotoPlace/Facade.py:429
+msgid "Check Plugin reset method ... "
+msgstr "Check Addon 'reset' method ... "
+
+#: ../lib/PhotoPlace/Facade.py:436
+msgid "Cannot finish plugin while some operations are pending ..."
+msgstr "Cannot finish add-on while some operations are pending ..."
+
+#: ../lib/PhotoPlace/Facade.py:448
+msgid "Check Plugin end method ... "
+msgstr "Check Addon 'end' method ... "
+
+#: ../lib/PhotoPlace/Facade.py:460
+msgid "Cannot clear state while some operations are pending ..."
+msgstr "Cannot clear state while some operations are pending ..."
+
+#: ../lib/PhotoPlace/Facade.py:565
+msgid "Some operations are pending ..."
+msgstr "Some operations are pending ..."
+
+#: ../lib/PhotoPlace/Facade.py:579
+#, python-format
+msgid "Cannot make dir '%(outputkml)s': %(error)s."
+msgstr "Cannot make dir '%(outputkml)s': %(error)s."
+
+#: ../lib/PhotoPlace/Facade.py:581
+msgid "Check if that dir exists or is writable."
+msgstr "Check if that dir exists or is writable."
+
+#: ../lib/PhotoPlace/userFacade.py:120
+#, python-format
+msgid "Cannot create backup of configfile '%(file)s': %(error)s.\n"
+msgstr "Cannot create backup of configfile '%(file)s': %(error)s.\n"
+
+#: ../lib/PhotoPlace/userFacade.py:130
+#, python-format
+msgid "Cannot overwrite '%(tofile)s': %(error)s.\n"
+msgstr "Cannot overwrite '%(tofile)s': %(error)s.\n"
+
+#: ../lib/PhotoPlace/userFacade.py:133
+#, python-format
+msgid "Configuration recovered to '%(tofile)s'.\n"
+msgstr "Configuration recovered to '%(tofile)s'.\n"
+
+#: ../lib/PhotoPlace/userFacade.py:171
+#, python-format
+msgid "Cannot set up logfile: %s."
+msgstr "Cannot set up logfile: %s."
+
+#: ../lib/PhotoPlace/userFacade.py:179
+#, python-format
+msgid "# with configuration file '%s'."
+msgstr "# with configuration file '%s'."
+
+#: ../lib/PhotoPlace/userFacade.py:181
+#, python-format
+msgid "# main options: %s"
+msgstr "# main options: %s"
+
+#: ../lib/PhotoPlace/userFacade.py:189
+#, python-format
+msgid "Cannot find config file '%(configfile)s'.\n"
+msgstr "Cannot find config file '%(configfile)s'.\n"
+
+#: ../lib/PhotoPlace/userFacade.py:197
+#, python-format
+msgid "Cannot understand the format of config file '%(configfile)s'.\n"
+msgstr "Cannot understand the format of config file '%(configfile)s'.\n"
+
+#: ../lib/PhotoPlace/userFacade.py:204
+#, python-format
+msgid ""
+"Configuration file '%(configfile)s' is incomplete: cannot find section "
+"'[%(section)s]'. Ignoring it!\n"
+msgstr ""
+"Configuration file '%(configfile)s' is incomplete: cannot find section "
+"'[%(section)s]'. Ignoring it!\n"
+
+#: ../lib/PhotoPlace/userFacade.py:209
+#, python-format
+msgid "Cannot parse the configuration file '%(configfile)s': %(error)s.\n"
+msgstr "Cannot parse the configuration file '%(configfile)s': %(error)s.\n"
+
+#: ../lib/PhotoPlace/userFacade.py:323
+#, python-format
+msgid "Cannot create backup of configfile to '%(file)s': %(error)s."
+msgstr "Cannot create backup of configfile to '%(file)s': %(error)s."
+
+#: ../lib/PhotoPlace/userFacade.py:326
+#, python-format
+msgid "Check if path '%(path)s' exists or is writable."
+msgstr "Check if path '%(path)s' exists or is writable."
+
+#: ../lib/PhotoPlace/userFacade.py:334
+#, python-format
+msgid "Cannot write values in configfile '%(file)s': %(error)s."
+msgstr "Cannot write values in configfile '%(file)s': %(error)s."
+
+#: ../lib/PhotoPlace/userFacade.py:337
+msgid "Check if path/file exists or is writable."
+msgstr "Check if path/file exists or is writable."
+
+#: ../lib/PhotoPlace/userFacade.py:390
+#, python-format
+msgid "Configuration saved to '%(file)s'."
+msgstr "Configuration saved to '%(file)s'."
+
+#: ../lib/PhotoPlace/userFacade.py:393
+msgid "No configuration file loaded. Nothing to do!"
+msgstr "No configuration file loaded. Nothing to do!"
+
+#: ../lib/PhotoPlace/userFacade.py:407
+#, python-format
+msgid "Cannot create backup of configfile '%(file)s': %(error)s."
+msgstr "Cannot create backup of configfile '%(file)s': %(error)s."
+
+#: ../lib/PhotoPlace/userFacade.py:409 ../lib/PhotoPlace/userFacade.py:424
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:861
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1227
+msgid "OOps ..."
+msgstr "OOps ..."
+
+#: ../lib/PhotoPlace/userFacade.py:410
+#, python-format
+msgid "Check if '%(path)s' exists or is writable."
+msgstr "Check if '%(path)s' exists or is writable."
+
+#: ../lib/PhotoPlace/userFacade.py:422
+#, python-format
+msgid "Cannot copy '%(fromfile)s' to '%(tofile)s': %(error)s."
+msgstr "Cannot copy '%(fromfile)s' to '%(tofile)s': %(error)s."
+
+#: ../lib/PhotoPlace/userFacade.py:425
+msgid "Check if paths exist or are writable."
+msgstr "Check if paths exist or are writable."
+
+#: ../lib/PhotoPlace/userFacade.py:428
+#, python-format
+msgid "Configuration recovered from '%(fromfile)s' to '%(tofile)s'."
+msgstr "Configuration recovered from '%(fromfile)s' to '%(tofile)s'."
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:196
+#, python-format
+msgid ""
+"You can use simple HTML tags like <i>list</i> (<i>li</i>, <i>ul</i>) or "
+"<i>table</i> and use expresions like <b>%(Variable|<i>DEFAULT</i>)s</b> to "
+"get values. <b><i>DEFAULT</i></b> is the value to set up when <b>Variable</"
+"b> has no value, if <b><i>DEFAULT</i></b> is none (not a character, even "
+"space) <b>Variable</b> will not be shown. You can use the all global "
+"variables defined in the same way.\n"
+"\n"
+"To get all supported variables press <b>&lt;ctl&gt;&lt;space&gt;</b>\n"
+msgstr ""
+"You can use simple HTML tags like <i>list</i> (<i>li</i>, <i>ul</i>) or "
+"<i>table</i> and use expresions like <b>%(Variable|<i>DEFAULT</i>)s</b> to "
+"get values. <b><i>DEFAULT</i></b> is the value to set up when <b>Variable</"
+"b> has no value, if <b><i>DEFAULT</i></b> is none (not a character, even "
+"space) <b>Variable</b> will not be shown. You can use the all global "
+"variables defined in the same way.\n"
+"\n"
+"To get all supported variables press <b>&lt;ctl&gt;&lt;space&gt;</b>\n"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:314
+#, python-format
+msgid "%(program)s: Editing description"
+msgstr "%(program)s: Editing description"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:317
+#, python-format
+msgid "%(program)s: Editing template <%(template)s>"
+msgstr "%(program)s: Editing template <%(template)s>"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:319
+#, python-format
+msgid "%(program)s: Editing template"
+msgstr "%(program)s: Editing template"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:337
+msgid "Select file to load ..."
+msgstr "Select file to load ..."
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:341
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:673
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:700
+msgid "All files"
+msgstr "All files"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:355
+#, python-format
+msgid "Template from file '%s' loaded"
+msgstr "Template from file '%s' loaded"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:447
+msgid "Template saved without problems"
+msgstr "Template saved without problems"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:450
+msgid "Error processing template"
+msgstr "Error processing template"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:513
+#, python-format
+msgid "Line %(line)d, column %(column)d (%(chars)d chars in document)"
+msgstr "Line %(line)d, column %(column)d (%(chars)d chars in document)"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:521
+msgid "New empty template"
+msgstr "New empty template"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:523
+msgid "Empty description"
+msgstr "Empty description"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:535
+msgid "Cannot be recovered!"
+msgstr "Cannot be recovered!"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:544
+msgid "Cannot find system template!"
+msgstr "Cannot find system template!"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:568
+#, python-format
+msgid "XML error: %s"
+msgstr "XML error: %s"
+
+#: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:571
+msgid "Perfect! template is ok!"
+msgstr "Perfect! template is ok!"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:175
+#: ../lib/PhotoPlace/UserInterface/GTKVariableEditor.py:89
+msgid "Name"
+msgstr "Name"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:176
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:149
+#: ../lib/PhotoPlace/UserInterface/GTKVariableEditor.py:90
+msgid "Value"
+msgstr "Value"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:177
+msgid "Picture"
+msgstr "Picture"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:178
+msgid "Information"
+msgstr "Information"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:284
+#, python-format
+msgid ""
+"Welcome to %(program)s v %(version)s. If you like it, please consider making "
+"a donation ;-) See 'About' menu for more information"
+msgstr ""
+"Welcome to %(program)s v %(version)s. If you like it, please consider making "
+"a donation ;-) See 'About' menu for more information"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:445
+#, python-format
+msgid ""
+"Add-on <b>%(plugin_name)s</b> version %(plugin_version)s\n"
+"by <b>%(plugin_author)s</b> %(plugin_mail)s\n"
+"%(plugin_cpr)s %(plugin_date)s, License: %(plugin_lic)s\n"
+"More info at: <b>%(plugin_url)s</b>\n"
+"\n"
+"<i>%(plugin_desc)s</i>"
+msgstr ""
+"Add-on <b>%(plugin_name)s</b> version %(plugin_version)s\n"
+"by <b>%(plugin_author)s</b> %(plugin_mail)s\n"
+"%(plugin_cpr)s %(plugin_date)s, License: %(plugin_lic)s\n"
+"More info at: <b>%(plugin_url)s</b>\n"
+"\n"
+"<i>%(plugin_desc)s</i>"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:454
+msgid "<b>Options</b>"
+msgstr "<b>Options</b>"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:556
+#, python-format
+msgid "Loading photo %s ..."
+msgstr "Loading photo '%s' ..."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:562
+#, python-format
+msgid "Geotagging photo %s ..."
+msgstr "Geotagging photo '%s' ..."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:567
+#, python-format
+msgid "Processing photo %s ..."
+msgstr "Processing photo '%s' ..."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:578
+msgid "Let's Go!"
+msgstr "Let's Go!"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:579
+msgid "Click me to start!"
+msgstr "Click me to start!"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:582
+msgid "I am working! Please, wait a moment ..."
+msgstr "I am working! Please, wait a moment ..."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:591
+#, python-format
+msgid "Adding to KML info of %s ..."
+msgstr "Adding to KML info of '%s' ..."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:596
+#, python-format
+msgid "Writing EXIF info of %s ..."
+msgstr "Writing EXIF info of '%s' ..."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:601
+#, python-format
+msgid "Copying photo %s ..."
+msgstr "Copying photo '%s' ..."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:606
+#, python-format
+msgid "Saving file %s ..."
+msgstr "Saving photo '%s' ..."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:638
+msgid "Info"
+msgstr "Info"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:640
+msgid "Warning"
+msgstr "Warning"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:642
+msgid "Error"
+msgstr "Error"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:650
+msgid "Select a directory with photos ..."
+msgstr "Select a directory with photos ..."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:663
+msgid "Select input GPX file ..."
+msgstr "Select input GPX file ..."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:668
+msgid "GPS eXchange Format GPX"
+msgstr "GPS eXchange Format GPX"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:685
+msgid "Choose output file ..."
+msgstr "Choose KMZ/KML output file ..."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:690
+msgid "Keyhole Markup Language (Google Earth Layer) KMZ"
+msgstr "Keyhole Markup Language (Google Earth Layer) KMZ"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:695
+msgid "Keyhole Markup Language (Google Earth Layer) KML"
+msgstr "Keyhole Markup Language (Google Earth Layer) KML"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:749
+msgid "Generate: "
+msgstr "Generate: "
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:755
+msgid " Do not generate output file!"
+msgstr " Do not generate KMZ/KML file!"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:792
+msgid "Geotag photos in mode:"
+msgstr "Geotag photos in mode:"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:795
+msgid "Do not geotag photos!"
+msgstr "Do not geotag photos!"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:862
+msgid "Cannot geolocate!. No GPX data file loaded!"
+msgstr "Cannot geolocate!. No GPX data file loaded!"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:863
+msgid "Load a GPX file to do that."
+msgstr "Load a GPX file to do that."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:887
+#, python-format
+msgid "# Author: %(author)s\n"
+msgstr "# Author: %(author)s\n"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:889
+msgid "Unknown"
+msgstr "Unknown"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:892
+#, python-format
+msgid ""
+"# Description:\n"
+" %(description)s\n"
+msgstr ""
+"# Description:\n"
+" %(description)s\n"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:895
+#, python-format
+msgid ""
+"<b>%(name)s</b>\n"
+"Date: %(date)s\n"
+"Time: %(time)s"
+msgstr ""
+"<b>%(name)s</b>\n"
+"Date: %(date)s\n"
+"Time: %(time)s"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:899
+msgid "Picture not geotagged!"
+msgstr "Photo not geotagged!"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:901
+msgid ""
+"  Longitude\n"
+"  Latitude\n"
+"  Elevation"
+msgstr ""
+"  Longitude\n"
+"  Latitude\n"
+"  Elevation"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:934
+msgid "Variable from template"
+msgstr "Variable from template"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1002
+msgid "View EXIF and Variables"
+msgstr "View EXIF and Variables"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1003
+msgid "Edit Template/Description"
+msgstr "Edit Template/Description"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1004
+msgid "Default Template"
+msgstr "Default Template"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1109
+#, python-format
+msgid "The original configuration file was recovered to '%(file)s'."
+msgstr "The original configuration file was recovered to '%(file)s'."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1111
+msgid "Restart the program in order to read the new configuration."
+msgstr "Restart the program in order to read the new configuration."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1112
+msgid "Attention!"
+msgstr "Attention!"
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1228
+msgid "There are no geotagged photos!, I cannot do anything!."
+msgstr "There are no geotagged photos!, I cannot do anything!."
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1229
+msgid "Load a GPX file or select a folder with geotagged photos."
+msgstr "Load a GPX file or select a folder with geotagged photos."
+
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:144
+msgid "Property"
+msgstr "Property"
+
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:271
+msgid "Image name"
+msgstr "Image name"
+
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:272
+msgid "Date/Time"
+msgstr "Date/Time"
+
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:274
+msgid "Longitude"
+msgstr "Longitude"
+
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:275
+msgid "Latitude"
+msgstr "Latitude"
+
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:276
+msgid "Elevation"
+msgstr "Elevation"
+
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:279
+msgid "GeoTime"
+msgstr "GeoTime"
+
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:281
+msgid "Image Variables"
+msgstr "Image Variables"
+
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:282
+msgid "Status"
+msgstr "Status"
+
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:283
+msgid "Time offset"
+msgstr "Time offset"
+
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:288
+msgid "Image EXIF Values"
+msgstr "Image EXIF Values"
+
+#: ../lib/PhotoPlace/UserInterface/GTKVariableEditor.py:162
+msgid "Main Parameters"
+msgstr "Main Parameters"
+
+#: ../lib/PhotoPlace/UserInterface/GTKVariableEditor.py:163
+msgid "Other Parameters"
+msgstr "Other Parameters"
+
+#: ../lib/PhotoPlace/definitions.py:49
+msgid "<estimated>"
+msgstr "<estimated>"
+
+#: ../lib/PhotoPlace/definitions.py:50
+msgid "<default>"
+msgstr "<default>"
+
+#: ../lib/PhotoPlace/definitions.py:150
+msgid "write"
+msgstr "<write>"
+
+#: ../lib/PhotoPlace/definitions.py:151
+msgid "overwrite"
+msgstr "<overwrite>"
+
+#: ../lib/PhotoPlace/definitions.py:152
+msgid "nowrite"
+msgstr "<nowrite>"
+
+#: ../lib/PhotoPlace/definitions.py:173
+msgid "%A %d. %B %Y"
+msgstr "%A %d. %B %Y"
+
+#: ../lib/PhotoPlace/Plugins/pluginManager.py:92
+#, python-format
+msgid "Cannot find module name '%(module)s' at '%(path)s': %(error)s."
+msgstr "Cannot find add-on '%(module)s' at '%(path)s': %(error)s."
+
+#: ../lib/PhotoPlace/Plugins/pluginManager.py:98
+#, python-format
+msgid "Cannot load module name '%(module)s': %(error)s."
+msgstr "Cannot load add-on '%(module)s': %(error)s."
+
+#: ../lib/PhotoPlace/Plugins/pluginManager.py:112
+#, python-format
+msgid "Cannot activate module name '%(module)s': %(error)s."
+msgstr "Cannot activate add-on '%(module)s': %(error)s."
+
+#: ../lib/PhotoPlace/Plugins/pluginManager.py:125
+#: ../lib/PhotoPlace/Plugins/pluginManager.py:138
+#, python-format
+msgid "Cannot init module '%(module)s': Not instanced!."
+msgstr "Cannot init add-on '%(module)s': Not instanced!."
+
+#: ../lib/PhotoPlace/Plugins/pluginManager.py:132
+#, python-format
+msgid "Cannot init module '%(module)s': %(error)s."
+msgstr "Cannot init add-on '%(module)s': %(error)s."
+
+#: ../lib/PhotoPlace/Plugins/pluginManager.py:145
+#, python-format
+msgid "Cannot reset module '%(module)s': %(error)s."
+msgstr "Cannot reset add-on '%(module)s': %(error)s."
+
+#: ../lib/PhotoPlace/Plugins/pluginManager.py:153
+#, python-format
+msgid "Cannot end module '%(module)s': Not instanced!."
+msgstr "Cannot end add-on '%(module)s': Not instanced!."
+
+#: ../lib/PhotoPlace/Plugins/pluginManager.py:159
+#, python-format
+msgid "Cannot end module '%(module)s': %(error)s."
+msgstr "Cannot end add-on '%(module)s': %(error)s."
+
+#: ../lib/PhotoPlace/Plugins/pluginManager.py:202
+#, python-format
+msgid "Exception in plugin '%(module)s' : %(error)s."
+msgstr "Exception in add-on '%(module)s' : %(error)s."

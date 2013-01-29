@@ -24,7 +24,7 @@ This add-on makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 __date__ = "August 2011"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
@@ -122,7 +122,7 @@ class gxTour(object):
         return self.kmldoc
 
 
-    def ini(self, name, description, 
+    def ini(self, name, description, timespan_begin, timespan_end,
         kmldoc=None, foldername=None, folderopen=True, visibility=True):
         
         if not kmldoc:
@@ -150,6 +150,14 @@ class gxTour(object):
             visibility_node = self.kmldoc.createElement("visibility")
             visibility_node.appendChild(self.kmldoc.createTextNode(str(int(visibility))))
             folder.appendChild(visibility_node)
+            timespan_node = self.kmldoc.createElement("TimeSpan")
+            begintimespan_node = self.kmldoc.createElement("begin")
+            begintimespan_node.appendChild(self.kmldoc.createTextNode(str(timespan_begin)))
+            timespan_node.appendChild(begintimespan_node)
+            endtimespan_node = self.kmldoc.createElement("end")
+            endtimespan_node.appendChild(self.kmldoc.createTextNode(str(timespan_end)))
+            timespan_node.appendChild(endtimespan_node)
+            folder.appendChild(timespan_node)
             self.document = folder
         self.tour = self.kmldoc.createElement("gx:Tour")
         name_node = self.kmldoc.createElement("name")

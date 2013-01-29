@@ -24,7 +24,7 @@ Add-on for PhotoPlace to generate paths and waypoints from GPX tracks to show th
 """
 __program__ = "photoplace.gpxdata"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera Lopez"
@@ -40,7 +40,7 @@ import gettext
 import locale
 
 import pyGPX
-from PhotoPlace.userFacade import TemplateDict
+from PhotoPlace.Facade import TemplateDict
 from PhotoPlace.Plugins.Interface import *
 from PhotoPlace.definitions import *
 
@@ -102,22 +102,25 @@ GPXData_CONFKEY_TRACKS_DESC = 'trackdesctemplate'
 GPXData_CONFKEY_TRACKS_COLOR = 'trackcolor'
 GPXData_CONFKEY_TRACKS_WIDTH = 'trackwidth'
 
+GPXData_VARIABLES = 'defaults'
+
 # Default values
 GPXData_NAME = _("Paths")
 GPXData_GPX_GENNAME = _('Photos')
-GPXData_GENPATH_NAME = _("Photo path")
-GPXData_GENPATH_DESC = _("Generated path from geotagged photos")
+GPXData_GENPATH_NAME = _("Geotagged Photo's path")
+GPXData_GENPATH_DESC = "%(PhotoPlace.PathDESC|)s"
 GPXData_GENPATH = False
 GPXData_GENTRACK = True
 GPXData_GENPOINTS = True
-GPXData_VARIABLES = 'defaults'
+GPXData_GENCOLOR = '64FFFF00'
+GPXData_GENWIDTH = '2'
 
 GPXData_WPT_ICON = u'http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png'
 GPXData_WPT_ICONSCALE = 0.5
 GPXData_WPT_FTEMPLATE = "WptDescription.xhtml"
 GPXData_WPT_DESC = None
 
-GPXData_TRACKS_COLOR = '20FFFF00'
+GPXData_TRACKS_COLOR = '7F0000FF'
 GPXData_TRACKS_WIDTH = '3'
 GPXData_TRACKS_FTEMPLATE = "PathDescription.xhtml"
 GPXData_TRACKS_DESC = None
@@ -235,10 +238,11 @@ class GPXData(Plugin):
             }
         }
         filename = self.state.get_template(GPXData_TRACKS_FTEMPLATE)
+        self.track_id = 0
         self.tracksinfo = {
             0:{
-                GPXData_CONFKEY_TRACKS_COLOR    : GPXData_TRACKS_COLOR,
-                GPXData_CONFKEY_TRACKS_WIDTH    : GPXData_TRACKS_WIDTH,
+                GPXData_CONFKEY_TRACKS_COLOR    : GPXData_GENCOLOR,
+                GPXData_CONFKEY_TRACKS_WIDTH    : GPXData_GENWIDTH,
                 GPXData_CONFKEY_TRACKS_DESC     : GPXData_GENPATH_DESC,
                 GPXData_CONFKEY_TRACKS_FTEMPLATE: filename,
             },
@@ -371,7 +375,6 @@ class GPXData(Plugin):
     def maketrack(self, geophotos):
         dgettext = dict()
         tracks = dict()
-        time_zone = datetime.timedelta(minutes=self.state['utczoneminutes'])
         gengpx = pyGPX.GPX(GPXData_GPX_GENNAME, datetime.datetime.utcnow())
         for photo in geophotos:
             foto_path = os.path.dirname(photo.path)
@@ -387,7 +390,7 @@ class GPXData(Plugin):
                 dgettext['photo_lat'] = photo.lat
                 dgettext['photo_ele'] = photo.ele
                 dgettext['photo_time'] = photo.time
-                photo_tutc = photo.time - time_zone
+                photo_tutc = photo.time - self.userfacade.state.tzdiff
                 dgettext['photo_tutc'] = photo_tutc
                 gpxwpt = pyGPX.GPXPoint(photo.lat, photo.lon, photo.ele, photo_tutc, photo.name)
                 msg = _("Generated WayPoint from '%(photo)s' at %(photo_time)s (UTC=%(photo_tutc)s) "
@@ -417,11 +420,8 @@ class GPXData(Plugin):
 
     @DRegister("MakeKML:finish")
     def generate(self, *args, **kwargs):
-        if not self.ready \
-            or not self.state.gpxdata \
-            or not self.state.outputkml:
-            self.ready = 0
-            return None
+        if not self.state.gpxdata or not self.state.outputkml:
+            return
         name = self.options[GPXData_CONFKEY_NAME]
         kmlgpx = KMLGpxdata.KMLGPXData(name, None, self.state.kmldata.getKml())
         num_tracks = 0

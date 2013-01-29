@@ -24,7 +24,7 @@ Add-on for PhotoPlace to add files to kmz
 """
 __program__ = "photoplace.files"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __date__ = "May 2011"
 __license__ = "GPL v3"
 __copyright__ ="(c) Jose Riguera"
@@ -168,8 +168,9 @@ class Files(Plugin):
 
     def end(self, options):
         self.ready = 0
-        for variable in self.newfiles:
-            del self.options[Files_VARIABLES][variable]
+        if self.newfiles:
+            for variable in self.newfiles:
+                del self.options[Files_VARIABLES][variable]
         self.newfiles = None
         if self.gui:
             self.gui.hide(True)

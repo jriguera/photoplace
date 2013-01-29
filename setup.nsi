@@ -92,7 +92,7 @@ RequestExecutionLevel admin
 ;Version Information
 VIProductVersion "${PRODUCT_VERSION}.0"
 VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
-VIAddVersionKey "Comments" "It is a multiplatform program developed in python to easily geotag your photos. It is tested on Linux and Windows platforms with python >= 2.6 series. Also, with a track log from a GPS device, it can generate a Google Earth/Maps layer with your photos. Moreover, the program can be easily adapted by editing templates and its functionality can be complemented with plugins, for example there is a plugin to generate a music tour that can be used to present your photo collection."
+VIAddVersionKey "Comments" "It is a multiplatform program developed in python to easily geotag your photos. It is tested on Linux and Windows platforms with python >= 2.6 series. Also, with a track log from a GPS device, it can generate a Google Earth/Maps layer with your photos. Moreover, the program can be easily adapted by editing templates and its functionality can be complemented with addons, for example there is one to generate a music tour that can be used to present your photo collection."
 VIAddVersionKey "LegalCopyright" "${PRODUCT_WEB_SITE}"
 VIAddVersionKey "FileDescription" "A tool for geotagging your photos and ... much more!"
 VIAddVersionKey "FileVersion" "${PRODUCT_VERSION}"

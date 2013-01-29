@@ -281,7 +281,16 @@ class KmlData(object):
         for phototemkey, phototem in self.phototemplates.iteritems():
             node_data = None
             if tmptemplates and phototemkey in tmptemplates:
-                node_data = tmptemplates[phototemkey]
+                node_data = ''
+                pdes = tmptemplates[phototemkey]
+                try:
+                    pdestemplate = sXMLTemplate.SXMLTemplate(pdes)
+                    pdestemplate.setRootInfo(photodata)
+                    div_element = pdestemplate.getDom().documentElement
+                    for child in div_element.childNodes:
+                        node_data += child.toxml()
+                except:
+                    node_data = pdes
             if node_data == None:
                 node_data = ''
                 mode, xmldom, content = phototem

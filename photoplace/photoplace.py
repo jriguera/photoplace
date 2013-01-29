@@ -137,7 +137,7 @@ if sys.platform.startswith('win'):
         os.environ['LANGUAGE'] = ':'.join(language)
 try:
     locale.setlocale(locale.LC_ALL,'')
-    #locale.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
+    locale.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
     gettext.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
     gettext.textdomain(__GETTEXT_DOMAIN__)
     gettext.install(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
@@ -199,7 +199,7 @@ def program(args=sys.argv):
             "generating any output file"))
     options_parser.add_option("-o", "--options",
         action="append", type="string", dest="options", metavar="SECTION:KEY=VALUE",
-        help = _("Other options like they are defined in the config file. This "
+        help = _("Other options like them are defined in the config file. This "
             "argument can be supplied as many times as it was necessary for "
             "all options. The format is '-o \"section:key=value\"'"))
     options_parser.add_option("-b", "--batch",

@@ -24,7 +24,7 @@ Add-on for PhotoPlace to generate paths and waypoints from GPX tracks to show th
 """
 __program__ = "photoplace.gpxdata"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera Lopez"
@@ -448,7 +448,7 @@ class GTKGPXData(object):
                             and style[GPXData_CONFKEY_TRACKS_DESC]:
                                 active = False
                         elif kind == _GTKGPXData_TYPE_PATH:
-                            style = self.trackstyles[obj_id]
+                            style = self.pathstyles[obj_id]
                             if style.has_key(GPXData_CONFKEY_TRACKS_DESC) \
                             and style[GPXData_CONFKEY_TRACKS_DESC]:
                                 active = False
@@ -528,28 +528,39 @@ class GTKGPXData(object):
                     text = style[GPXData_CONFKEY_WPT_DESC]
                 if style.has_key(GPXData_CONFKEY_WPT_FTEMPLATE):
                     filename = style[GPXData_CONFKEY_WPT_FTEMPLATE]
-            else:
+            elif kind == _GTKGPXData_TYPE_TRACK:
                 if style.has_key(GPXData_CONFKEY_TRACKS_DESC):
                     text = style[GPXData_CONFKEY_TRACKS_DESC]
                 if style.has_key(GPXData_CONFKEY_TRACKS_FTEMPLATE):
                     filename = style[GPXData_CONFKEY_TRACKS_FTEMPLATE]
+            else:
+                if style.has_key(GPXData_CONFKEY_TRACKS_DESC):
+                    text = style[GPXData_CONFKEY_TRACKS_DESC]
+                if text == None:
+                    text = self.tracksinfo[0][GPXData_CONFKEY_TRACKS_DESC]
             self.windoweditor.show(text=text, template=filename, recover=filename, 
                 completions=completions, tooltip=tooltip, cansave=False)
             self.windoweditor.connect('close', self._editor_setdesc, style, kind, obj_id)
         else:
+            cansave = True
             if kind == _GTKGPXData_TYPE_PATH:
                 filename = self.tracksinfo[0][GPXData_CONFKEY_TRACKS_FTEMPLATE]
                 text = self.tracksinfo[0][GPXData_CONFKEY_TRACKS_DESC]
+                style = self.tracksinfo[0]
+                cansave = False
             elif kind == _GTKGPXData_TYPE_TRACK:
                 filename = self.tracksinfo[1][GPXData_CONFKEY_TRACKS_FTEMPLATE]
                 text = self.tracksinfo[1][GPXData_CONFKEY_TRACKS_DESC]
+                style = self.tracksinfo[1]
             elif kind == _GTKGPXData_TYPE_WPT:
                 filename = self.wptsinfo[0][GPXData_CONFKEY_WPT_FTEMPLATE]
                 text = self.wptsinfo[0][GPXData_CONFKEY_WPT_DESC]
+                style = self.wptsinfo[0]
             if filename or text:
                 filename = os.path.basename(filename)
                 self.windoweditor.show(text=text, template=filename, 
-                    completions=completions, tooltip=tooltip)
+                    completions=completions, tooltip=tooltip, cansave=cansave)
+                self.windoweditor.connect('close', self._editor_setdesc, style, kind, obj_id)
 
 
     def _editor_setdesc(self, obj, text, template, style, kind, obj_id):
@@ -562,6 +573,8 @@ class GTKGPXData(object):
     def _activate_setdesc(self, widget, style, kind, obj_id, text=None):
         if kind == _GTKGPXData_TYPE_WPT:
             style[GPXData_CONFKEY_WPT_DESC] = text
+        elif kind == _GTKGPXData_TYPE_PATH:
+            style[GPXData_CONFKEY_TRACKS_DESC] = text
         else:
             style[GPXData_CONFKEY_TRACKS_DESC] = text
 
@@ -596,9 +609,9 @@ class GTKGPXData(object):
                     new = int(new_text)
                     self.treestore.set(treestore_iter, _GTKGPXData_COLUMN_VALUE, new_text)
                     if kind == _GTKGPXData_TYPE_PATH:
-                        self.pathstyles[obj_id][GPXData_CONFKEY_TRACKS_WIDTH] = new
+                        self.pathstyles[obj_id][GPXData_CONFKEY_TRACKS_WIDTH] = new_text
                     else:
-                        self.trackstyles[obj_id][GPXData_CONFKEY_TRACKS_WIDTH] = new
+                        self.trackstyles[obj_id][GPXData_CONFKEY_TRACKS_WIDTH] = new_text
                 except:
                     pass
             elif key == GPXData_CONFKEY_TRACKS_NAME:
@@ -642,9 +655,9 @@ class GTKGPXData(object):
             if color:
                 self.treestore.set(treestore_iter, _GTKGPXData_COLUMN_VALUE, color)
                 if kind == _GTKGPXData_TYPE_PATH:
-                    self.pathstyles[obj_id][GPXData_CONFKEY_TRACKS_WIDTH] = color
+                    self.pathstyles[obj_id][GPXData_CONFKEY_TRACKS_COLOR] = color
                 elif kind == _GTKGPXData_TYPE_TRACK:
-                    self.trackstyles[obj_id][GPXData_CONFKEY_TRACKS_WIDTH] = color
+                    self.trackstyles[obj_id][GPXData_CONFKEY_TRACKS_COLOR] = color
 
 
     def _show_color(self, value, title=_("Select a color for path ...")):

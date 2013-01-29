@@ -8,7 +8,7 @@
     <open>1</open>
     <description><![CDATA[
         <table cellspacing="2" cellpadding="2" border="0">
-        <tr><td>%(shortdescripcion| )s</td></tr>
+        <tr><td>%(shortdescription| )s</td></tr>
         </table>
     ]]></description>
     <atom:author>

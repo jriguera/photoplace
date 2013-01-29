@@ -24,7 +24,7 @@ This add-on makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.3.1"
+__version__ = "0.4.0"
 __date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
@@ -87,7 +87,7 @@ class GTKTour(object):
         hbox_name = gtk.HBox(False)
         label_name = gtk.Label()
         label_name.set_markup(_("Name:"))
-        label_name.set_tooltip_text(_("Name of the tour"))
+        label_name.set_tooltip_text(_("Tour's name"))
         hbox_name.pack_start(label_name, False, False, 5)
         self.entry_name = gtk.Entry(max=256)
         self.entry_name.connect('changed', self._set_entry, KmlTour_CONFKEY_KMLTOUR_NAME)
