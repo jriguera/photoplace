@@ -90,9 +90,9 @@
             <begin>%(PhotoPlace.MinTime|2000)s</begin>
             <end>%(PhotoPlace.MaxTime|2020)s</end>
         </TimeSpan>
-        <longitude>%(inilongitude|0.0)s</longitude>
-        <latitude>%(inilatitute|0.0)s</latitude>
-        <altitude>%(inialtitude|2000)s</altitude>
+        <longitude>%(inilongitude|0.0).8f</longitude>
+        <latitude>%(inilatitute|0.0).8f</latitude>
+        <altitude>%(inialtitude|2000).3f</altitude>
         <range>%(inirange|2000)s</range>
         <tilt>%(initilt|0)s</tilt>
         <heading>%(iniheading|0)s</heading>
@@ -115,9 +115,9 @@
                     <SchemaData schemaUrl="#PlaceTypePhotoId">
                         <SimpleData name="ID">%(Photo.NAME|-)s</SimpleData>
                         <SimpleData name="DATE">%(Photo.DATE|-)s</SimpleData>
-                        <SimpleData name="LAT">%(Photo.LAT|0)f</SimpleData>
-                        <SimpleData name="LON">%(Photo.LON|0)f</SimpleData>
-                        <SimpleData name="ELE">%(Photo.ELE|0)f</SimpleData>
+                        <SimpleData name="LAT">%(Photo.LAT|0).8f</SimpleData>
+                        <SimpleData name="LON">%(Photo.LON|0).8f</SimpleData>
+                        <SimpleData name="ELE">%(Photo.ELE|0).3f</SimpleData>
                     </SchemaData>
             </ExtendedData>
             <description></description>

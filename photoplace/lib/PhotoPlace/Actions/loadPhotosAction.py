@@ -33,12 +33,12 @@ __copyright__ ="(c) Jose Riguera, September 2010"
 import os.path
 import threading
 import datetime
+import re
 
 import Interface
 from PhotoPlace.DataTypes import geoPhotoData
 from PhotoPlace.Facade import Error
 from PhotoPlace.definitions import *
-
 
 
 class LoadPhotos(Interface.Action, threading.Thread):
@@ -79,7 +79,7 @@ class LoadPhotos(Interface.Action, threading.Thread):
                 filename = os.path.join(self.photoinputdir, fname)
                 self.dgettext['photo'] = filename  #.encode(PLATFORMENCODING)
                 try:
-                    geophoto = geoPhotoData.GeoPhoto(filename, fname.lower())
+                    geophoto = geoPhotoData.GeoPhoto(filename, re.sub(r"\s+", '_', fname.lower()))
                 except Exception as e:
                     self.dgettext['error'] = str(e)
                     msg = _("Error processing photo '%(photo)s': %(error)s.")

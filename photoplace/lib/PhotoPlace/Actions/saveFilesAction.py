@@ -53,9 +53,13 @@ class SaveFiles(Interface.Action, threading.Thread):
         self.dgettext['outputkml'] = self.outputkml  #.encode(PLATFORMENCODING)
         self.photouri = state["photouri"]
         self.outputdir = state.outputdir
-        self.dgettext['outputdir'] = self.outputdir.encode(PLATFORMENCODING)
+        self.dgettext['outputdir'] = ''
+        if self.outputdir != None:
+            self.dgettext['outputdir'] = self.outputdir.encode(PLATFORMENCODING)
         self.tmpdir = state.tmpdir
-        self.dgettext['tmpdir'] = self.tmpdir.encode(PLATFORMENCODING)
+        self.dgettext['tmpdir'] = ''
+        if self.tmpdir != None:
+            self.dgettext['tmpdir'] = self.tmpdir.encode(PLATFORMENCODING)
         self.quality = state.quality['zip']
         self.outputkmldir = os.path.dirname(self.outputkml)
         self.fd = None

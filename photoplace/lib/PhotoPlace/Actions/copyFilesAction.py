@@ -76,7 +76,7 @@ class CopyFiles(Interface.Action, threading.Thread):
             self.dgettext['photo_lat'] = photo.lat
             self.dgettext['photo_ele'] = photo.ele
             self.dgettext['photo_time'] = photo.time
-            if (not self.onlygeolocated) or photo.isGeoLocated():
+            if not self.onlygeolocated or photo.isGeoLocated():
                 new_file = os.path.join(self.outputdir, photo.name)
                 self.dgettext['new_path'] = new_file.encode(PLATFORMENCODING)
                 try:

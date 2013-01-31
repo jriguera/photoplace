@@ -30,9 +30,9 @@ __date__ = "May 2010"
 __license__ = "GPL (v3 or later)"
 __copyright__ ="(c) Jose Riguera, May 2010"
 
-
 import os
 import time
+import re
 import datetime
 import fractions
 try:
@@ -67,7 +67,6 @@ class GeoPhotoError(Exception):
         return self.value
 
 
-
 # #######################
 # GeoPhoto implementation
 # #######################
@@ -78,7 +77,7 @@ _GeoPhoto_DEFAULT_LON = 0.00001                 # longitude
 _GeoPhoto_DEFAULT_ELE = 0.00001                 # elevation
 _GeoPhoto_DEFAULT_AZI = 0.0                     # azimut or heading
 _GeoPhoto_DEFAULT_TILT = 90.0                   # default tilt with vertical
-_GeoPhoto_DEFAULT_TIME = datetime.datetime.min  # time
+_GeoPhoto_DEFAULT_TIME = None                   # time
 
 class GeoPhoto(object):
     """
@@ -92,7 +91,7 @@ class GeoPhoto(object):
         lat = _GeoPhoto_DEFAULT_LAT,
         lon = _GeoPhoto_DEFAULT_LON,
         ele = _GeoPhoto_DEFAULT_ELE,
-        time = _GeoPhoto_DEFAULT_TIME,
+        dtime = _GeoPhoto_DEFAULT_TIME,
         azi = _GeoPhoto_DEFAULT_AZI,
         tilt = _GeoPhoto_DEFAULT_TILT,
         loadexif = True):
@@ -107,7 +106,7 @@ class GeoPhoto(object):
             -`lat`: The latitude of the photo. Decimal degrees, WGS84 datum.
             -`lon`: The longitude of the photo. Decimal degrees, WGS84 datum.
             -`ele`: Elevation of the photo. Meters.
-            -`time`: Time. 'datetime.datetime' class
+            -`dtime`: Time. 'datetime.datetime' class
             -`loadexif`: if true, exif data will be read/written
         """
         object.__init__(self)
@@ -116,24 +115,25 @@ class GeoPhoto(object):
         self.status = 0
         self.toffset = 0
         if name == None:
-            self.name = os.path.basename(self.path)
+            self.name = re.sub(r"\s+", '_', os.path.basename(self.path))
         self.exif = None
         self.attr = {}
         self.loadexif = False
         self.ptime = None
-        self.time = _GeoPhoto_DEFAULT_TIME
+        self.time = time.ctime(os.path.getctime(path))
         self.lat = _GeoPhoto_DEFAULT_LAT
         self.lon = _GeoPhoto_DEFAULT_LON
         self.ele = _GeoPhoto_DEFAULT_ELE
         self.azi = _GeoPhoto_DEFAULT_AZI
         self.tilt = _GeoPhoto_DEFAULT_TILT
-        self.dgettext = dict(image=self.name)
+        self.dgettext = dict()
+        self.dgettext['image'] = self.name.encode('UTF-8')
         self.dgettext['image_path'] = self.path.encode('UTF-8')
         if loadexif :
             self.readExif()
         # Args take preference over exif
-        if time != _GeoPhoto_DEFAULT_TIME:
-            self["time"] = time
+        if dtime != _GeoPhoto_DEFAULT_TIME:
+            self["time"] = dtime
         if lat != _GeoPhoto_DEFAULT_LAT:
             self["lat"] = lat
         if lon != _GeoPhoto_DEFAULT_LON:

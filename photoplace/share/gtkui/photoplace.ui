@@ -1137,7 +1137,7 @@ Not active for geottaging purposes, no output file will be generated.</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">PhotoPlace</property>
     <property name="version">0.5.0</property>
-    <property name="copyright">Copyright © 2011  José Riguera </property>
+    <property name="copyright">Copyright © 2011-2013  José Riguera </property>
     <property name="comments" translatable="yes">A program for geotagging photos and generate a Google Earth layer</property>
     <property name="website">http://code.google.com/p/photoplace/</property>
     <property name="license" translatable="yes" comments="GPL License.">		    GNU GENERAL PUBLIC LICENSE

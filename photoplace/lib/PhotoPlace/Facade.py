@@ -37,6 +37,8 @@ import ConfigParser
 import logging
 import logging.handlers
 import loggingHandler
+import time
+import datetime
 
 from observerHandler import DObserver
 
@@ -63,6 +65,63 @@ class Error(Exception):
     def __str__(self):
         return "* %s (%s):\n * %s\n-> %s" % \
             (self.title, str(self.type), self.msg, self.tip)
+
+
+# #######################################
+# Parse string to datetime object
+# #######################################
+
+def parse_str_datetime(time_str):
+    """Return (<scope>, <datetime.datetime() instance>) for the given
+    datetime string.
+    
+    >>> _datetime_from_str("2009")
+    ('year', datetime.datetime(2009, 1, 1, 0, 0))
+    >>> _datetime_from_str("2009-12")
+    ('month', datetime.datetime(2009, 12, 1, 0, 0))
+    >>> _datetime_from_str("2009-12-25")
+    ('day', datetime.datetime(2009, 12, 25, 0, 0))
+    >>> _datetime_from_str("2009-12-25 13")
+    ('hour', datetime.datetime(2009, 12, 25, 13, 0))
+    >>> _datetime_from_str("2009-12-25 13:05")
+    ('minute', datetime.datetime(2009, 12, 25, 13, 5))
+    >>> _datetime_from_str("2009-12-25 13:05:14")
+    ('second', datetime.datetime(2009, 12, 25, 13, 5, 14))
+    >>> _datetime_from_str("2009-12-25 13:05:14.453728")
+    ('microsecond', datetime.datetime(2009, 12, 25, 13, 5, 14, 453728))
+    """
+    formats = [
+        # <scope>, <pattern>, <format>
+        ("year", "YYYY", "%Y"),
+        ("month", "YYYY-MM", "%Y-%m"),
+        ("day", "YYYY-MM-DD", "%Y-%m-%d"),
+        ("hour", "YYYY-MM-DD HH", "%Y-%m-%d %H"),
+        ("minute", "YYYY-MM-DD HH:MM", "%Y-%m-%d %H:%M"),
+        ("second", "YYYY-MM-DD HH:MM:SS", "%Y-%m-%d %H:%M:%S"),
+        # ".<microsecond>" at end is manually handled below
+        ("microsecond", "YYYY-MM-DD HH:MM:SS", "%Y-%m-%d %H:%M:%S"),
+    ]
+    for scope, pattern, format in formats:
+        if scope == "microsecond":
+            # Special handling for microsecond part. AFAIK there isn't a
+            # strftime code for this.
+            if time_str.count('.') != 1:
+                continue
+            time_str, microseconds_str = time_str.split('.')
+            try:
+                microsecond = int((microseconds_str + '000000')[:6])
+            except ValueError:
+                continue
+        try:
+            t = datetime.datetime.strptime(time_str, format)
+        except ValueError:
+            pass
+        else:
+            if scope == "microsecond":
+                t = t.replace(microsecond=microsecond)
+            return scope, t
+    else:
+        raise ValueError
 
 
 
@@ -337,7 +396,7 @@ class Facade(object):
             except Plugins.pluginManager.PluginManagerError as pluginerror:
                 msg = str(pluginerror)
                 self.logger.error(msg)
-                tip = _("Check if plugin syntax is correct ... ")
+                tip = _("Check if addon syntax is correct ... ")
                 errors[plugin] = Error(msg, tip, "PluginManagerError")
             except ValueError as valueerror:
                 msg = str(valueerror)
@@ -354,7 +413,7 @@ class Facade(object):
             except Plugins.pluginManager.PluginManagerError as pluginerror:
                 msg = str(pluginerror)
                 self.logger.error(msg)
-                tip = _("Check Plugin base class ... ")
+                tip = _("Check addon base class ... ")
                 errors[plg] = Error(msg, tip, "PluginManagerError")
         return errors
 
@@ -367,7 +426,7 @@ class Facade(object):
             except Plugins.pluginManager.PluginManagerError as pluginerror:
                 msg = str(pluginerror)
                 self.logger.error(msg)
-                tip = _("Check Plugin base class ... ")
+                tip = _("Check addon base class ... ")
                 return Error(msg, tip, "PluginManagerError")
         return None
 
@@ -395,7 +454,7 @@ class Facade(object):
 
     def init_plugin(self, plugin=None, capability='*', *args):
         if self.finalize:
-            msg = _("Cannot initiate plugin while some operations are pending ...")
+            msg = _("Cannot initiate addon while some operations are pending ...")
             self.logger.error(msg)
             tip = _("Wait a moment ... ")
             raise Error(msg, tip, "Error")
@@ -407,14 +466,14 @@ class Facade(object):
             except Plugins.pluginManager.PluginManagerError as pluginerror:
                 msg = str(pluginerror)
                 self.logger.error(msg)
-                tip = _("Check Plugin init method ... ")
+                tip = _("Check 'Plugin.init' method ... ")
                 raise Error(msg, tip, "PluginManagerError")
         return value
 
 
     def reset_plugin(self, plugin=None, capability='*', *args):
         if self.finalize:
-            msg = _("Cannot reset plugin while some operations are pending ...")
+            msg = _("Cannot reset addon while some operations are pending ...")
             self.logger.error(msg)
             tip = _("Wait a moment ... ")
             raise Error(msg, tip, "Error")
@@ -426,14 +485,14 @@ class Facade(object):
             except Plugins.pluginManager.PluginManagerError as pluginerror:
                 msg = str(pluginerror)
                 self.logger.error(msg)
-                tip = _("Check Plugin reset method ... ")
+                tip = _("Check 'Plugin.reset' method ... ")
                 raise Error(msg, tip, "PluginManagerError")
         return value
 
 
     def end_plugin(self, plugin=None, capability='*', *args):
         if self.finalize:
-            msg = _("Cannot finish plugin while some operations are pending ...")
+            msg = _("Cannot finish addon while some operations are pending ...")
             self.logger.error(msg)
             tip = _("Wait a moment ... ")
             raise Error(msg, tip, "Error")
@@ -445,7 +504,7 @@ class Facade(object):
             except Plugins.pluginManager.PluginManagerError as pluginerror:
                 msg = str(pluginerror)
                 self.logger.error(msg)
-                tip = _("Check Plugin end method ... ")
+                tip = _("Check 'Plugin.end' method ... ")
                 raise Error(msg, tip, "PluginManagerError")
         return value
 
@@ -578,7 +637,7 @@ class Facade(object):
                 dgettext['outputkml'] = self.state.outputdir.encode(PLATFORMENCODING)
                 msg = _("Cannot make dir '%(outputkml)s': %(error)s.") % dgettext
                 self.logger.error(msg)
-                tip = _("Check if that dir exists or is writable.")
+                tip = _("Check if that directory exists or is writable.")
                 raise Error(msg, tip, e.__class__.__name__)
         if wait:
             self.MakeKML().run()

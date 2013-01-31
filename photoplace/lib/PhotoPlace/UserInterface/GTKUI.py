@@ -341,6 +341,7 @@ class PhotoPlaceGUI(InterfaceUI):
         self.builder.connect_signals(self.signals)
         self.windowteditor.connect('_save', self._reload_templates_cb)
         self.windowphotoinfo.connect('_save', self._set_geophoto_variables_cb)
+        self.windowphotoinfo.connect('_reload', self._update_geophoto_cb)
         settings = gtk.settings_get_default()
         settings.props.gtk_button_images = True
         gtk.main()
@@ -553,18 +554,18 @@ class PhotoPlaceGUI(InterfaceUI):
 
     @DObserver
     def _update_progressbar_loadphoto_observer(self, geophoto, *args):
-        msg = _("Loading photo %s ...") % geophoto.name
+        msg = _("Loading photo '%s' ...") % geophoto.name
         gobject.idle_add(self.pulse_progressbar, msg)
         self._load_geophoto(geophoto)
 
     @DObserver
     def _update_progressbar_geolocate_observer(self, photo, *args):
-        msg = _("Geotagging photo %s ...") % photo.name
+        msg = _("Geotagging photo '%s' ...") % photo.name
         gobject.idle_add(self.pulse_progressbar, msg)
 
     @DObserver
     def _update_progressbar_makegpx_observer(self, photo, *args):
-        msg = _("Processing photo %s ...") % photo.name
+        msg = _("Processing photo '%s' ...") % photo.name
         gobject.idle_add(self.pulse_progressbar, msg)
 
     def set_progressbar(self, text=None, percent=-1.0):
@@ -588,22 +589,22 @@ class PhotoPlaceGUI(InterfaceUI):
 
     @DObserver
     def _set_progressbar_makekml_observer(self, photo, *args):
-        msg = _("Adding to KML info of %s ...") % photo.name
+        msg = _("Adding to KML info of '%s' ...") % photo.name
         gobject.idle_add(self.set_progressbar, msg)
 
     @DObserver
     def _set_progressbar_writeexif_observer(self, photo, *args):
-        msg = _("Writing EXIF info of %s ...") % photo.name
+        msg = _("Writing EXIF info of '%s' ...") % photo.name
         gobject.idle_add(self.set_progressbar, msg)
 
     @DObserver
     def _set_progressbar_copyfiles_observer(self, photo, *args):
-        msg = _("Copying photo %s ...") % photo.name
+        msg = _("Copying photo '%s' ...") % photo.name
         gobject.idle_add(self.set_progressbar, msg)
 
     @DObserver
     def _set_progressbar_savefiles_observer(self, filename, *args):
-        msg = _("Saving file %s ...") % filename
+        msg = _("Saving file '%s' ...") % filename
         gobject.idle_add(self.set_progressbar, msg)
 
     @DObserver
@@ -863,7 +864,7 @@ class PhotoPlaceGUI(InterfaceUI):
             tip = _("Load a GPX file to do that.")
             self.show_dialog(mtype, msg, tip, gtk.MESSAGE_INFO)
 
-    def _load_geophoto(self, geophoto):
+    def _load_geophoto(self, geophoto, main_iterator=None):
         color = TREEVIEWPHOTO_NORMAL_COLOR
         previews = geophoto.exif.previews
         largest = previews[-1]
@@ -899,7 +900,7 @@ class PhotoPlaceGUI(InterfaceUI):
         geovalue = _("Picture not geotagged!")
         if geophoto.isGeoLocated():
             geodata = _("  Longitude\n  Latitude\n  Elevation") % dgettext
-            geovalue = "%(lon)f\n%(lat)f\n%(ele)f" % dgettext
+            geovalue = "%(lon).8f\n%(lat).8f\n%(ele).3f" % dgettext
             color = TREEVIEWPHOTO_GEOLOCATED_COLOR
         tips = tips % dgettext
         if geophoto.status > 1:
@@ -910,9 +911,25 @@ class PhotoPlaceGUI(InterfaceUI):
         #    for k,v in geophoto.attr.iteritems():
         #        tips += "\t%s: %s\n" % (k, v)
         model = self["treeview-geophotos"].get_model()
-        iterator = model.append(None, [
-            geophoto.status, geophoto.name, geophoto.path, geophoto.time,
-            bool(geophoto.status), pixbuf, information, geodata, geovalue, color, True, False, tips])
+        if main_iterator == None:
+            iterator = model.append(None, [
+                geophoto.status, geophoto.name, geophoto.path, geophoto.time, bool(geophoto.status), 
+                pixbuf, information, geodata, geovalue, 
+                color, True, False, tips]
+            )
+        else:
+            model.set(main_iterator,
+                TREEVIEWPHOTOS_COL_STATUS, geophoto.status,
+                TREEVIEWPHOTOS_COL_NAME, geophoto.name,
+                TREEVIEWPHOTOS_COL_DATE, geophoto.time,
+                TREEVIEWPHOTOS_COL_ACTIVE, bool(geophoto.status),
+                TREEVIEWPHOTOS_COL_MAIN_INFO, information,
+                TREEVIEWPHOTOS_COL_DATA, geodata,
+                TREEVIEWPHOTOS_COL_VALUE, geovalue,
+                TREEVIEWPHOTOS_COL_BGCOLOR, color,
+                TREEVIEWPHOTOS_COL_INFO, tips
+             )
+            iterator = main_iterator
         self.set_geophoto_variables(iterator, geophoto)
         self["treeview-geophotos"].expand_row(model.get_path(iterator), True)
 
@@ -931,12 +948,15 @@ class PhotoPlaceGUI(InterfaceUI):
                     value = ''
                 model.append(iterator, [
                     geophoto.status, variable, geophoto.path, None, bool(geophoto.status), None, None,
-                    "<tt><b>%s</b></tt> " % variable, value, None, False, True, _("Variable from template")])
+                    "<tt><b>%s</b></tt> " % variable, value, None, False, True, _("Template Variable")])
 
     def _set_geophoto_variables_cb(self, obj, iterator, geophoto, *args, **kwargs):
         self.set_geophoto_variables(iterator, geophoto)
         model = self["treeview-geophotos"].get_model()
         self["treeview-geophotos"].expand_row(model.get_path(iterator), True)
+
+    def _update_geophoto_cb(self, obj, iterator, geophoto, *args, **kwargs):
+        self._load_geophoto(geophoto, iterator)
 
     def _toggle_geophoto(self, cell, path, data=None):
         model = self["treeview-geophotos"].get_model()

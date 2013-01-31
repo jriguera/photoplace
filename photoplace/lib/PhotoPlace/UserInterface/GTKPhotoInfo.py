@@ -35,6 +35,7 @@ import cStringIO
 import Image
 import warnings
 import types
+import re
 
 warnings.filterwarnings('ignore', module='gtk')
 try:
@@ -51,7 +52,7 @@ warnings.resetwarnings()
 
 from PhotoPlace.definitions import *
 from GTKUIdefinitions import *
-
+from PhotoPlace.Facade import parse_str_datetime as parse_str_datetime
 
 
 # ##############
@@ -119,6 +120,10 @@ class PhotoInfoGUI(gobject.GObject):
                     (gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT)),
         '_save': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, 
                     (gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT)),
+        'reload' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, 
+                    (gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT)),
+        '_reload' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, 
+                    (gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT)),
     }
 
     # Singleton
@@ -140,6 +145,15 @@ class PhotoInfoGUI(gobject.GObject):
             self.image = self.builder.get_object("image")
             self.label = self.builder.get_object("label-geophotopath")
             self.treeview = self.builder.get_object("treeview")
+            self.treeview.set_tooltip_markup(_("Double click on a cell to edit the value. \n\n"
+                "If you want to geotag a photo manualy, you have to switch to <b>[write]</b> mode first. "
+                "You must use the same format as you see for name, date and numbers. \n\n"
+                "<b>Latitude</b>, <b>Longitude</b>, <b>Elevation</b>: (float) GPS coordinates of the photo.\n\n"
+                "<b>Status</b>: (integer) value greather than 0 means active.\n\n"
+                "<b>Time Offset</b>: (integer) seconds to add to the current date/time to get the original date/time.\n\n"
+                "<b>Point Time</b>: (if appears, date/time, not editable) time of GPX point used to geotag the photo.\n\n"
+                "<b>Variables</b>: list of attributes settled up by Addons to control their behaviour.")
+            )
             treeviewcolumn_key = self.builder.get_object("treeviewcolumn-key")
             treeviewcolumn_key.set_title(_("Property"))
             treeviewcolumn_key.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
@@ -181,6 +195,7 @@ class PhotoInfoGUI(gobject.GObject):
         self.builder.connect_signals(self.signals)
         self._signals = {
             'save' : [],
+            'reload' : [],
         }
         self.ready = True
 
@@ -268,19 +283,25 @@ class PhotoInfoGUI(gobject.GObject):
         model = self.treeview.get_model()
         model.clear()
         color = TREEVIEWPHOTOINFO_GEOPHOTOINFO_COLOR
-        model.append(None,[False, False, _("Image name"), str(geophoto['name']), color, types.StringType, 'name'])
-        model.append(None,[False, False, _("Date/Time"), str(geophoto['time']), color, types.StringType, 'time'])
+        model.append(None,[False, True, _("<b>Name</b>"), str(geophoto['name']), color, types.StringType, 'name'])
+        model.append(None,[False, True, _("<b>Date/Time</b>"), str(geophoto['time']), color, types.StringType, 'time'])
+        lat = ''
+        lon = ''
+        ele = ''
         if geophoto.isGeoLocated():
-            model.append(None,[False, False, _("Longitude"), "%f" % geophoto['lon'], color, types.FloatType, 'lon'])
-            model.append(None,[False, False, _("Latitude"), "%f" % geophoto['lat'], color, types.FloatType, 'lat'])
-            model.append(None,[False, False, _("Elevation"), "%f" % geophoto['ele'], color, types.FloatType, 'ele'])
-            if geophoto.ptime:
-                ptime = geophoto.ptime.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
-                model.append(None,[False, False, _("GeoTime"), ptime, color, types.StringType, 'ptime'])
+            lon = "%.8f" % geophoto['lon']
+            lat = "%.8f" % geophoto['lat']
+            ele = "%.3f" % geophoto['ele']
+        model.append(None,[False, True, _("<b>Longitude</b>"), lon, color, types.FloatType, 'lon'])
+        model.append(None,[False, True, _("<b>Latitude</b>"), lat, color, types.FloatType, 'lat'])
+        model.append(None,[False, True, _("<b>Elevation</b>"), ele, color, types.FloatType, 'ele'])
+        if geophoto.ptime:
+            ptime = geophoto.ptime.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
+            model.append(None,[False, False, _("<b>Point Time</b>"), ptime, color, types.StringType, 'ptime'])
+        model.append(None,[False, True, _("<b>Time Offset</b>"), "%d" % geophoto['toffset'], color, types.IntType, 'toffset'])
+        model.append(None,[False, True, _("<b>Status</b>"), "%d" % geophoto['status'], color, types.IntType, 'status'])
         color = TREEVIEWPHOTOINFO_GEOPHOTOATTR_COLOR
-        ite = model.append(None, [False, False, _("Image Variables"), None, color, None, None])
-        model.append(ite,[False, True, _("Status"), "%d" % geophoto['status'], color, types.IntType, 'status'])
-        model.append(ite,[False, True, _("Time offset"), "%d" % geophoto['toffset'], color, types.IntType, 'toffset'])
+        ite = model.append(None, [False, False, _("Variables"), None, color, None, None])
         if geophoto.attr:
             for k, v in geophoto.attr.iteritems():
                 model.append(ite, [ True, True, str(k), str(v), color, type(v), ''])
@@ -359,13 +380,49 @@ class PhotoInfoGUI(gobject.GObject):
         text = new_text.strip()
         try:
             if key:
+                value = None
                 # is a geophoto main attr
-                self.current_geophoto[key] = obj(text)
+                if key == "name":
+                    text = re.sub(r"[^\w\s\.\-]", '', text)
+                    text = re.sub(r"\s+", '_', text)
+                    text, new_ext = os.path.splitext(text)
+                    if not text:
+                        raise ValueError
+                    value = text + PhotoPlace_FILE_DEF_EXTENSION
+                elif key == "lat":
+                    value = obj(text)
+                    if value < -90.0 or value > 90.0:
+                        raise ValueError
+                elif key == "lon":
+                    value = obj(text)
+                    if value < -180.0 or value > 180.0:
+                        raise ValueError
+                elif key == "ele":
+                    value = obj(text)
+                    if value < -100.0 or value > 50000.0:
+                        raise ValueError
+                elif key == "status":
+                    value = obj(text)
+                    if value < 0:
+                        raise ValueError
+                elif key == "toffset":
+                    value = obj(text)
+                elif key == "ptime" or key == "time":
+                    (scope, value) = parse_str_datetime(text)
+                    if not scope in [ "day", "hour", "minute", "second" ]:
+                        raise ValueError
+                if value != None:
+                    self.current_geophoto[key] = value
+                    model.set(treestore_iter, TREEVIEWPHOTOINFO_COL_VALUE, value)
+                else:
+                    raise ValueError
             else:
                 # user/plugin defined
                 key = model.get_value(treestore_iter, TREEVIEWPHOTOINFO_COL_VKEY)
                 self.current_geophoto.attr[key] = obj(text)
-            model.set(treestore_iter, TREEVIEWPHOTOINFO_COL_VALUE, text)
+                model.set(treestore_iter, TREEVIEWPHOTOINFO_COL_VALUE, text)
+            self.emit('reload', self.main_treemodel_iterator, self.current_geophoto)
+            self.emit('_reload', self.main_treemodel_iterator, self.current_geophoto)
         except:
             pass
 

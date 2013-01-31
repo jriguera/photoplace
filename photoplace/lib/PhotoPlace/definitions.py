@@ -182,6 +182,7 @@ PhotoPlace_Cfg_quality = [
     {'img': Image.BICUBIC, 'zip': zipfile.ZIP_STORED },
     {'img': Image.ANTIALIAS, 'zip': zipfile.ZIP_STORED } 
 ]
+PhotoPlace_FILE_DEF_EXTENSION = ".jpg"
 
 # This settings wont be saved with configuration (by default)
 PhotoPlace_CONFIG_NOCLONE = {
