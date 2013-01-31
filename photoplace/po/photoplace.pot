@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-27 19:06+0100\n"
+"POT-Creation-Date: 2013-01-31 23:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -418,7 +418,7 @@ msgid ""
 msgstr ""
 
 #: ../share/gtkui/photoplace.ui.h:126
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1132
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1152
 msgid "Input GPX file"
 msgstr ""
 
@@ -532,7 +532,7 @@ msgid ""
 msgstr ""
 
 #: ../share/gtkui/photoplace.ui.h:156
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1131
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1151
 msgid "Select input photo directory"
 msgstr ""
 
@@ -852,52 +852,52 @@ msgstr ""
 msgid "%(num_photos)d photos have been processed, %(num_copies)d were copied."
 msgstr ""
 
-#: ../lib/PhotoPlace/Actions/saveFilesAction.py:67
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:71
 #, python-format
 msgid "Cannot create KML file '%(outputkml)s': (%(errno)s) %(strerror)s."
 msgstr ""
 
-#: ../lib/PhotoPlace/Actions/saveFilesAction.py:70
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:74
 #, python-format
 msgid "Check if output dir '%s' exists and is writable."
 msgstr ""
 
-#: ../lib/PhotoPlace/Actions/saveFilesAction.py:84
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:88
 #, python-format
 msgid "Cannot write to file '%(outputkml)s': %(error)s."
 msgstr ""
 
-#: ../lib/PhotoPlace/Actions/saveFilesAction.py:86
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:90
 #, python-format
 msgid "Check if output dir '%s' is writable."
 msgstr ""
 
-#: ../lib/PhotoPlace/Actions/saveFilesAction.py:97
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:101
 #, python-format
 msgid "KML output file '%(outputkml)s' has been generated."
 msgstr ""
 
-#: ../lib/PhotoPlace/Actions/saveFilesAction.py:100
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:104
 #, python-format
 msgid "Generating KMZ file '%(outputkmz)s' ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/Actions/saveFilesAction.py:112
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:116
 #, python-format
 msgid "Adding file '%s' to KMZ ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/Actions/saveFilesAction.py:125
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:129
 #, python-format
 msgid "KMZ file '%(outputkmz)s' has been generated."
 msgstr ""
 
-#: ../lib/PhotoPlace/Actions/saveFilesAction.py:130
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:134
 #, python-format
 msgid "Deleting directory '%(tmpdir)s' ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/Actions/saveFilesAction.py:134
+#: ../lib/PhotoPlace/Actions/saveFilesAction.py:138
 #, python-format
 msgid "Cannot delete directory '%(tmpdir)s': %(error)s."
 msgstr ""
@@ -1314,76 +1314,76 @@ msgid ""
 "'%(value)s'."
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:179
+#: ../lib/PhotoPlace/Facade.py:238
 #, python-format
 msgid ""
 "Warning processing geophoto string attribute '%(attr)s': type not valid!"
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:205
+#: ../lib/PhotoPlace/Facade.py:264
 #, python-format
 msgid "Warning processing geophoto bool attribute '%(attr)s': type not valid!"
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:233
+#: ../lib/PhotoPlace/Facade.py:292
 #, python-format
 msgid ""
 "Warning processing geophoto number attribute '%(attr)s': type not valid!"
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:340
-msgid "Check if plugin syntax is correct ... "
+#: ../lib/PhotoPlace/Facade.py:399
+msgid "Check if addon syntax is correct ... "
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:357 ../lib/PhotoPlace/Facade.py:370
-msgid "Check Plugin base class ... "
+#: ../lib/PhotoPlace/Facade.py:416 ../lib/PhotoPlace/Facade.py:429
+msgid "Check addon base class ... "
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:398
-msgid "Cannot initiate plugin while some operations are pending ..."
+#: ../lib/PhotoPlace/Facade.py:457
+msgid "Cannot initiate addon while some operations are pending ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:400 ../lib/PhotoPlace/Facade.py:419
-#: ../lib/PhotoPlace/Facade.py:438 ../lib/PhotoPlace/Facade.py:462
-#: ../lib/PhotoPlace/Facade.py:567
+#: ../lib/PhotoPlace/Facade.py:459 ../lib/PhotoPlace/Facade.py:478
+#: ../lib/PhotoPlace/Facade.py:497 ../lib/PhotoPlace/Facade.py:521
+#: ../lib/PhotoPlace/Facade.py:626
 msgid "Wait a moment ... "
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:410
-msgid "Check Plugin init method ... "
+#: ../lib/PhotoPlace/Facade.py:469
+msgid "Check 'Plugin.init' method ... "
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:417
-msgid "Cannot reset plugin while some operations are pending ..."
+#: ../lib/PhotoPlace/Facade.py:476
+msgid "Cannot reset addon while some operations are pending ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:429
-msgid "Check Plugin reset method ... "
+#: ../lib/PhotoPlace/Facade.py:488
+msgid "Check 'Plugin.reset' method ... "
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:436
-msgid "Cannot finish plugin while some operations are pending ..."
+#: ../lib/PhotoPlace/Facade.py:495
+msgid "Cannot finish addon while some operations are pending ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:448
-msgid "Check Plugin end method ... "
+#: ../lib/PhotoPlace/Facade.py:507
+msgid "Check 'Plugin.end' method ... "
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:460
+#: ../lib/PhotoPlace/Facade.py:519
 msgid "Cannot clear state while some operations are pending ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:565
+#: ../lib/PhotoPlace/Facade.py:624
 msgid "Some operations are pending ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:579
+#: ../lib/PhotoPlace/Facade.py:638
 #, python-format
 msgid "Cannot make dir '%(outputkml)s': %(error)s."
 msgstr ""
 
-#: ../lib/PhotoPlace/Facade.py:581
-msgid "Check if that dir exists or is writable."
+#: ../lib/PhotoPlace/Facade.py:640
+msgid "Check if that directory exists or is writable."
 msgstr ""
 
 #: ../lib/PhotoPlace/userFacade.py:120
@@ -1472,8 +1472,8 @@ msgid "Cannot create backup of configfile '%(file)s': %(error)s."
 msgstr ""
 
 #: ../lib/PhotoPlace/userFacade.py:409 ../lib/PhotoPlace/userFacade.py:424
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:861
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1227
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:862
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1247
 msgid "OOps ..."
 msgstr ""
 
@@ -1529,8 +1529,8 @@ msgid "Select file to load ..."
 msgstr ""
 
 #: ../lib/PhotoPlace/UserInterface/GTKTemplateEditor.py:341
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:673
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:700
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:674
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:701
 msgid "All files"
 msgstr ""
 
@@ -1583,7 +1583,7 @@ msgid "Name"
 msgstr ""
 
 #: ../lib/PhotoPlace/UserInterface/GTKUI.py:176
-#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:149
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:163
 #: ../lib/PhotoPlace/UserInterface/GTKVariableEditor.py:90
 msgid "Value"
 msgstr ""
@@ -1603,7 +1603,7 @@ msgid ""
 "a donation ;-) See 'About' menu for more information"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:445
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:446
 #, python-format
 msgid ""
 "Add-on <b>%(plugin_name)s</b> version %(plugin_version)s\n"
@@ -1614,134 +1614,134 @@ msgid ""
 "<i>%(plugin_desc)s</i>"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:454
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:455
 msgid "<b>Options</b>"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:556
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:557
 #, python-format
-msgid "Loading photo %s ..."
+msgid "Loading photo '%s' ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:562
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:563
 #, python-format
-msgid "Geotagging photo %s ..."
+msgid "Geotagging photo '%s' ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:567
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:568
 #, python-format
-msgid "Processing photo %s ..."
-msgstr ""
-
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:578
-msgid "Let's Go!"
+msgid "Processing photo '%s' ..."
 msgstr ""
 
 #: ../lib/PhotoPlace/UserInterface/GTKUI.py:579
+msgid "Let's Go!"
+msgstr ""
+
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:580
 msgid "Click me to start!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:582
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:583
 msgid "I am working! Please, wait a moment ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:591
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:592
 #, python-format
-msgid "Adding to KML info of %s ..."
+msgid "Adding to KML info of '%s' ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:596
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:597
 #, python-format
-msgid "Writing EXIF info of %s ..."
+msgid "Writing EXIF info of '%s' ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:601
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:602
 #, python-format
-msgid "Copying photo %s ..."
+msgid "Copying photo '%s' ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:606
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:607
 #, python-format
-msgid "Saving file %s ..."
+msgid "Saving file '%s' ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:638
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:639
 msgid "Info"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:640
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:641
 msgid "Warning"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:642
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:643
 msgid "Error"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:650
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:651
 msgid "Select a directory with photos ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:663
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:664
 msgid "Select input GPX file ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:668
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:669
 msgid "GPS eXchange Format GPX"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:685
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:686
 msgid "Choose output file ..."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:690
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:691
 msgid "Keyhole Markup Language (Google Earth Layer) KMZ"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:695
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:696
 msgid "Keyhole Markup Language (Google Earth Layer) KML"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:749
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:750
 msgid "Generate: "
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:755
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:756
 msgid " Do not generate output file!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:792
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:793
 msgid "Geotag photos in mode:"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:795
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:796
 msgid "Do not geotag photos!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:862
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:863
 msgid "Cannot geolocate!. No GPX data file loaded!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:863
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:864
 msgid "Load a GPX file to do that."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:887
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:888
 #, python-format
 msgid "# Author: %(author)s\n"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:889
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:890
 msgid "Unknown"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:892
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:893
 #, python-format
 msgid ""
 "# Description:\n"
 " %(description)s\n"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:895
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:896
 #, python-format
 msgid ""
 "<b>%(name)s</b>\n"
@@ -1749,95 +1749,118 @@ msgid ""
 "Time: %(time)s"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:899
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:900
 msgid "Picture not geotagged!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:901
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:902
 msgid ""
 "  Longitude\n"
 "  Latitude\n"
 "  Elevation"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:934
-msgid "Variable from template"
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:951
+msgid "Template Variable"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1002
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1022
 msgid "View EXIF and Variables"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1003
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1023
 msgid "Edit Template/Description"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1004
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1024
 msgid "Default Template"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1109
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1129
 #, python-format
 msgid "The original configuration file was recovered to '%(file)s'."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1111
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1131
 msgid "Restart the program in order to read the new configuration."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1112
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1132
 msgid "Attention!"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1228
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1248
 msgid "There are no geotagged photos!, I cannot do anything!."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1229
+#: ../lib/PhotoPlace/UserInterface/GTKUI.py:1249
 msgid "Load a GPX file or select a folder with geotagged photos."
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:144
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:148
+msgid ""
+"Double click on a cell to edit the value. \n"
+"\n"
+"If you want to geotag a photo manualy, you have to switch to <b>[write]</b> "
+"mode first. You must use the same format as you see for name, date and "
+"numbers. \n"
+"\n"
+"<b>Latitude</b>, <b>Longitude</b>, <b>Elevation</b>: (float) GPS coordinates "
+"of the photo.\n"
+"\n"
+"<b>Status</b>: (integer) value greather than 0 means active.\n"
+"\n"
+"<b>Time Offset</b>: (integer) seconds to add to the current date/time to get "
+"the original date/time.\n"
+"\n"
+"<b>Point Time</b>: (if appears, date/time, not editable) time of GPX point "
+"used to geotag the photo.\n"
+"\n"
+"<b>Variables</b>: list of attributes settled up by Addons to control their "
+"behaviour."
+msgstr ""
+
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:158
 msgid "Property"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:271
-msgid "Image name"
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:286
+msgid "<b>Name</b>"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:272
-msgid "Date/Time"
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:287
+msgid "<b>Date/Time</b>"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:274
-msgid "Longitude"
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:295
+msgid "<b>Longitude</b>"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:275
-msgid "Latitude"
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:296
+msgid "<b>Latitude</b>"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:276
-msgid "Elevation"
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:297
+msgid "<b>Elevation</b>"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:279
-msgid "GeoTime"
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:300
+msgid "<b>Point Time</b>"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:281
-msgid "Image Variables"
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:301
+msgid "<b>Time Offset</b>"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:282
-msgid "Status"
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:302
+msgid "<b>Status</b>"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:283
-msgid "Time offset"
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:304
+msgid "Variables"
 msgstr ""
 
-#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:288
+#: ../lib/PhotoPlace/UserInterface/GTKPhotoInfo.py:309
 msgid "Image EXIF Values"
 msgstr ""
 
