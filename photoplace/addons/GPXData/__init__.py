@@ -24,7 +24,7 @@ Add-on for PhotoPlace to generate paths and waypoints from GPX tracks to show th
 """
 __program__ = "photoplace.gpxdata"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera Lopez"

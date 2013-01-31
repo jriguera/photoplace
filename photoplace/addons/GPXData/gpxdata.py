@@ -24,7 +24,7 @@ Add-on for PhotoPlace to generate paths and waypoints from GPX tracks to show th
 """
 __program__ = "photoplace.gpxdata"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera Lopez"
@@ -109,7 +109,7 @@ GPXData_NAME = _("Paths")
 GPXData_GPX_GENNAME = _('Photos')
 GPXData_GENPATH_NAME = _("Geotagged Photo's path")
 GPXData_GENPATH_DESC = "%(PhotoPlace.PathDESC|)s"
-GPXData_GENPATH = False
+GPXData_GENPATH = True
 GPXData_GENTRACK = True
 GPXData_GENPOINTS = True
 GPXData_GENCOLOR = '64FFFF00'
@@ -345,12 +345,14 @@ class GPXData(Plugin):
         if self.gui:
             self.gui.add_tracks(self.tracklist, self.trackstyles)
             self.gui.add_wpts(self.wptlist, self.wptstyles)
+            self.gui.set_tracks_widget(True)
+            self.gui.set_wpts_widget(True)
 
 
     @DRegister("LoadPhotos:end")
     def loadphotos(self, num_photos):
         if num_photos > 0:
-            gengpx = self.maketrack(self.state.geophotos)
+            gengpx, geo_photos = self.maketrack(self.state.geophotos)
             self.photodirlist = dict()
             self.photoliststyles = dict()
             style = 0
@@ -370,6 +372,8 @@ class GPXData(Plugin):
                 self.track_id += 1
             if self.gui:
                 self.gui.add_paths(self.photodirlist, self.photoliststyles)
+                if geo_photos > 1:
+                     self.gui.set_paths_widget(True)
 
 
     def maketrack(self, geophotos):
@@ -415,12 +419,12 @@ class GPXData(Plugin):
                 msg = _("Photo track '%(track_name)s' is empty due to no geotagged photos!")
                 self.logger.warning(msg % dgettext)
                 gpxtrk.status = False
-        return gengpx
+        return gengpx, proc_photos
 
 
     @DRegister("MakeKML:finish")
     def generate(self, *args, **kwargs):
-        if not self.state.gpxdata or not self.state.outputkml:
+        if not self.state.outputkml:
             return
         name = self.options[GPXData_CONFKEY_NAME]
         kmlgpx = KMLGpxdata.KMLGPXData(name, None, self.state.kmldata.getKml())
@@ -428,12 +432,13 @@ class GPXData(Plugin):
         self.logger.debug(_("Processing all tracks (paths) from GPX data ... "))
         if self.options[GPXData_CONFKEY_GENPATH]:
             num_tracks += self.gentrack(kmlgpx, self.photodirlist, self.photoliststyles)
-        if self.options[GPXData_CONFKEY_GENTRACK]:
-            num_tracks += self.gentrack(kmlgpx, self.tracklist, self.trackstyles)
-        self.logger.info(_("%s paths have been generated for KML data.") % num_tracks)
-        if self.options[GPXData_CONFKEY_GENPOINTS]:
-            num_wpoints = self.genwpoints(kmlgpx, self.wptlist, self.wptstyles)
-            self.logger.info(_("%s waypoints have been processed for KML data.") % num_wpoints)
+        if self.state.gpxdata:
+            if self.options[GPXData_CONFKEY_GENTRACK]:
+                num_tracks += self.gentrack(kmlgpx, self.tracklist, self.trackstyles)
+            self.logger.info(_("%s paths have been generated for KML data.") % num_tracks)
+            if self.options[GPXData_CONFKEY_GENPOINTS]:
+                num_wpoints = self.genwpoints(kmlgpx, self.wptlist, self.wptstyles)
+                self.logger.info(_("%s waypoints have been processed for KML data.") % num_wpoints)
 
 
     def gentrack(self, kml, tracklist, styleslist):

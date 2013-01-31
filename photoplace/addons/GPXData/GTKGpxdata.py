@@ -24,7 +24,7 @@ Add-on for PhotoPlace to generate paths and waypoints from GPX tracks to show th
 """
 __program__ = "photoplace.gpxdata"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera Lopez"
@@ -128,14 +128,17 @@ class GTKGPXData(object):
         self.checkbutton_genpath = gtk.CheckButton(_("Path from geottaged photos"))
         self.checkbutton_genpath.connect('toggled', 
             self._toggled_button, _GTKGPXData_TYPE_PATH)
+        self.checkbutton_genpath.set_sensitive(False)
         hbox_checks.pack_start(self.checkbutton_genpath, False, False, 5)
         self.checkbutton_gentrack = gtk.CheckButton(_("Tracks from GPX"))
         self.checkbutton_gentrack.connect('toggled', 
             self._toggled_button, _GTKGPXData_TYPE_TRACK)
+        self.checkbutton_gentrack.set_sensitive(False)
         hbox_checks.pack_start(self.checkbutton_gentrack, False, False, 8)
         self.checkbutton_genwpts = gtk.CheckButton(_("WayPoints from GPX"))
         self.checkbutton_genwpts.connect('toggled', 
             self._toggled_button, _GTKGPXData_TYPE_WPT)
+        self.checkbutton_genwpts.set_sensitive(False)
         hbox_checks.pack_start(self.checkbutton_genwpts, False, False, 5)
         self.plugin.pack_start(hbox_checks, False, False, 10)
         # Parameters
@@ -236,6 +239,9 @@ class GTKGPXData(object):
             self.checkbutton_genwpts.set_active(False)
             if tmp:
                 self.checkbutton_genwpts.set_active(True)
+        self.checkbutton_genpath.set_sensitive(False)
+        self.checkbutton_gentrack.set_sensitive(False)
+        self.checkbutton_genwpts.set_sensitive(False)
 
 
     def _toggled_button(self, widget, data):
@@ -264,6 +270,24 @@ class GTKGPXData(object):
             self.treestore.remove(ite)
         if remove:
             self.treestore.remove(iterator)
+
+
+    def set_paths_widget(self, mode=True):
+        self.checkbutton_genpath.set_sensitive(mode)
+        if self.options[GPXData_CONFKEY_GENPATH]:
+            self.checkbutton_genpath.set_active(mode)
+
+
+    def set_tracks_widget(self, mode=True):
+        self.checkbutton_gentrack.set_sensitive(mode)
+        if self.options[GPXData_CONFKEY_GENTRACK]:
+            self.checkbutton_gentrack.set_active(mode)
+
+
+    def set_wpts_widget(self, mode=True):
+        self.checkbutton_genwpts.set_sensitive(mode)
+        if self.options[GPXData_CONFKEY_GENPOINTS]:
+            self.checkbutton_genwpts.set_active(mode)
 
 
     def set_paths(self, mode=True):

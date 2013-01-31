@@ -716,10 +716,14 @@ class KmlTour(Plugin):
             self.first_lon = first_geophoto.lon
             self.first_ele = first_geophoto.ele
             self.first_time = first_geophoto.ptime
+            if self.first_time == None:
+                self.first_time = first_geophoto.time - self.state.tzdiff
             self.last_lat = last_geophoto.lat
             self.last_lon = last_geophoto.lon
             self.last_ele = last_geophoto.ele
             self.last_time = last_geophoto.ptime
+            if self.last_time == None:
+                self.last_time = last_geophoto.time - self.state.tzdiff
             self.geophotos_center_lon = self.center_lon
             self.geophotos_center_lat = self.center_lat
             self.geophotos_max_lat = self.max_lat
