@@ -24,7 +24,7 @@ This add-on makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 __date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
@@ -85,10 +85,12 @@ KmlTour_SIMPL_DISTANCE = None
 KmlTour_FOLLOW_ANGLECORNER = 30.0
 KmlTour_TRACK_SIMPLTOLERANCE = 2.0 # 1%
 KmlTour_FLYTIME_LIMIT = 0.001
-KmlTour_CRANGE_MINLIMIT = 100
+KmlTour_CRANGE_MINLIMIT = 100.0
+KmlTour_CRANGE_MAXLIMIT = 5000.0
 KmlTour_CRANGE_DEFAULTFACTOR = 0.5
-KmlTour_TILT_MAXLIMIT = 45
-KmlTour_TILT_MINLIMIT = 20
+KmlTour_TILT_MAXLIMIT = 45.0
+KmlTour_TILT_MINLIMIT = 20.0
+
 
 KmlTour_BEGIN_WAIT = 5.0
 KmlTour_BEGIN_HEADING = None
@@ -120,31 +122,41 @@ KmlTour_CONFKEY_KMLTOUR_DESC = "description"
 KmlTour_CONFKEY_KMLTOUR_MUSIC = "mp3list"
 KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX = "mp3mix"
 KmlTour_CONFKEY_KMLTOUR_MUSIC_URI = "mp3uri"
-KmlTour_CONFKEY_BEGIN_NAME = "beginname"
-KmlTour_CONFKEY_BEGIN_DESC = "begindescfile"
-KmlTour_CONFKEY_BEGIN_STYLE = "beginstyle"
-KmlTour_CONFKEY_BEGIN_ICON = "beginicon"
-KmlTour_CONFKEY_BEGIN_SCALE = "beginscale" 
-KmlTour_CONFKEY_BEGIN_WAIT = "beginwait"
-KmlTour_CONFKEY_BEGIN_HEADING = "beginheading"
-KmlTour_CONFKEY_BEGIN_FLYTIME = "beginflytime"
-KmlTour_CONFKEY_BEGIN_TILT = "begintilt"
-KmlTour_CONFKEY_BEGIN_RANGE = "beginrange"
-KmlTour_CONFKEY_WAIT = "wait"
-KmlTour_CONFKEY_HEADING = "heading"
-KmlTour_CONFKEY_FLYTIME = "flytime"
-KmlTour_CONFKEY_TILT = "tilt"
-KmlTour_CONFKEY_RANGE = "range"
-KmlTour_CONFKEY_FOLLOWPATH = "followpath"
-KmlTour_CONFKEY_END_NAME = "endname"
-KmlTour_CONFKEY_END_DESC = "enddescfile"
-KmlTour_CONFKEY_END_STYLE = "endstyle"
-KmlTour_CONFKEY_END_ICON = "endicon"
-KmlTour_CONFKEY_END_SCALE = "endscale" 
-KmlTour_CONFKEY_END_HEADING = "endheading"
-KmlTour_CONFKEY_END_FLYTIME = "endflytime"
-KmlTour_CONFKEY_END_TILT = "endtilt"
-KmlTour_CONFKEY_END_RANGE = "endrange"
+
+KmlTour_CONFKEY_BEGIN_NAME = "start_name"
+KmlTour_CONFKEY_BEGIN_DESC = "start_desc_file"
+KmlTour_CONFKEY_BEGIN_STYLE = "start_style"
+KmlTour_CONFKEY_BEGIN_ICON = "start_icon"
+KmlTour_CONFKEY_BEGIN_SCALE = "start_scale"
+
+KmlTour_CONFKEY_BEGIN_WAIT = "start_camera_wait"
+KmlTour_CONFKEY_BEGIN_HEADING = "start_camera_heading"
+KmlTour_CONFKEY_BEGIN_FLYTIME = "start_camera_fly_time"
+KmlTour_CONFKEY_BEGIN_TILT = "start_camera_tilt"
+KmlTour_CONFKEY_BEGIN_RANGE = "start_camera_range"
+
+KmlTour_CONFKEY_KMLTOUR_RANGE_MAX = "camera_range_max"
+KmlTour_CONFKEY_KMLTOUR_RANGE_MIN = "camera_range_min"
+KmlTour_CONFKEY_KMLTOUR_TILT_MAX = "camera_tilt_max"
+KmlTour_CONFKEY_KMLTOUR_TILT_MIN = "camera_tilt_min"
+
+KmlTour_CONFKEY_WAIT = "camera_wait"
+KmlTour_CONFKEY_HEADING = "camera_heading"
+KmlTour_CONFKEY_FLYTIME = "camera_fly_time"
+KmlTour_CONFKEY_TILT = "camera_tilt"
+KmlTour_CONFKEY_RANGE = "camera_range"
+KmlTour_CONFKEY_FOLLOWPATH = "camera_follow_path"
+
+KmlTour_CONFKEY_END_NAME = "end_name"
+KmlTour_CONFKEY_END_DESC = "end_desc_file"
+KmlTour_CONFKEY_END_STYLE = "end_style"
+KmlTour_CONFKEY_END_ICON = "end_icon"
+KmlTour_CONFKEY_END_SCALE = "end_scale"
+
+KmlTour_CONFKEY_END_HEADING = "camera_end_heading"
+KmlTour_CONFKEY_END_FLYTIME = "camera_end_fly_time"
+KmlTour_CONFKEY_END_TILT = "camera_end_tilt"
+KmlTour_CONFKEY_END_RANGE = "camera_end_range"
 
 
 from KmlgxTour import *
@@ -284,6 +296,10 @@ class KmlTour(Plugin):
         self._set_option_float_none(options, KmlTour_CONFKEY_KMLTOUR_SIMPL_DISTANCE, KmlTour_SIMPL_DISTANCE, (0, 1000000))
         if options[KmlTour_CONFKEY_KMLTOUR_SIMPL_DISTANCE] == None:
             options[KmlTour_CONFKEY_KMLTOUR_SIMPL_DISTANCE] = -1
+        self._set_option_float(options, KmlTour_CONFKEY_KMLTOUR_RANGE_MAX, KmlTour_CRANGE_MAXLIMIT)
+        self._set_option_float(options, KmlTour_CONFKEY_KMLTOUR_RANGE_MIN, KmlTour_CRANGE_MINLIMIT)
+        self._set_option_float(options, KmlTour_CONFKEY_KMLTOUR_TILT_MAX, KmlTour_TILT_MAXLIMIT)
+        self._set_option_float(options, KmlTour_CONFKEY_KMLTOUR_TILT_MIN, KmlTour_TILT_MINLIMIT)
         # begin
         self._set_option_float(options, KmlTour_CONFKEY_BEGIN_WAIT, KmlTour_BEGIN_WAIT)
         self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_HEADING, KmlTour_BEGIN_HEADING, (0,360))
@@ -767,8 +783,10 @@ class KmlTour(Plugin):
         time_prev = self.first_time
         # Calculate the best values for altitude
         self.altitude = pyGPX.bestViewAltitude(self.max_lat, self.max_lon, self.min_lat, self.min_lon)
-        if self.altitude < KmlTour_CRANGE_MINLIMIT:
-            self.altitude = KmlTour_CRANGE_MINLIMIT + 50
+        if self.altitude < self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MIN]:
+            self.altitude = self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MIN] + 50
+        if self.altitude > self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MAX]:
+            self.altitude = self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MAX]
         self.tour_points = dict()
         epsilon = simpl_distance
         if simpl_distance == None:
@@ -853,7 +871,7 @@ class KmlTour(Plugin):
             strtime = ptime.strftime("%Y-%m-%dT%H:%M:%S") + self.state.stzdiff
         else:
             strtime = gtime.strftime("%Y-%m-%dT%H:%M:%S")
-        range_offset = self.altitude - KmlTour_CRANGE_MINLIMIT
+        range_offset = self.altitude - self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MIN]
         range_mid = range_offset / 2.0
         
         # f(x) = (x/(self.distance / 15))^3 + range_mid + range_offset
@@ -864,8 +882,8 @@ class KmlTour(Plugin):
             camera = y + KmlTour_CRANGE_MINLIMIT
             if camera > self.altitude:
                 crange = self.altitude
-            elif camera < KmlTour_CRANGE_MINLIMIT:
-                crange = KmlTour_CRANGE_MINLIMIT
+            elif camera < self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MIN]:
+                crange = self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MIN]
             else:
                 crange = camera
         else:
@@ -873,11 +891,12 @@ class KmlTour(Plugin):
         #print "RANGE", crange
         if fly_tilt == None:
             if crange == self.altitude:
-                tilt = KmlTour_TILT_MAXLIMIT
-            elif crange == KmlTour_CRANGE_MINLIMIT:
-                tilt = KmlTour_TILT_MINLIMIT
+                tilt = self.options[KmlTour_CONFKEY_KMLTOUR_TILT_MAX]
+            elif crange == self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MIN]:
+                tilt = self.options[KmlTour_CONFKEY_KMLTOUR_TILT_MIN]
             else:
-                tilt = (crange - KmlTour_CRANGE_MINLIMIT) / (range_offset) * KmlTour_TILT_MAXLIMIT
+                tilt = (crange - self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MIN])
+                tilt = tilt / (range_offset) * self.options[KmlTour_CONFKEY_KMLTOUR_TILT_MAX]
         else:
             tilt = fly_tilt
         #print "TILT", tilt

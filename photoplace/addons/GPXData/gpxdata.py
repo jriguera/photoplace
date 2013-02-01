@@ -24,7 +24,7 @@ Add-on for PhotoPlace to generate paths and waypoints from GPX tracks to show th
 """
 __program__ = "photoplace.gpxdata"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 __date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera Lopez"
@@ -396,7 +396,7 @@ class GPXData(Plugin):
                 dgettext['photo_time'] = photo.time
                 photo_tutc = photo.time - self.userfacade.state.tzdiff
                 dgettext['photo_tutc'] = photo_tutc
-                gpxwpt = pyGPX.GPXPoint(photo.lat, photo.lon, photo.ele, photo_tutc, photo.name)
+                gpxwpt = pyGPX.GPXPoint(photo.lat, photo.lon, photo.ele, photo_tutc, {'id': photo.path})
                 msg = _("Generated WayPoint from '%(photo)s' at %(photo_time)s (UTC=%(photo_tutc)s) "
                     "with coordinates (lon=%(photo_lon).8f, lat=%(photo_lat).8f, ele=%(photo_ele).8f).")
                 self.logger.debug(msg % dgettext)
@@ -431,6 +431,7 @@ class GPXData(Plugin):
         num_tracks = 0
         self.logger.debug(_("Processing all tracks (paths) from GPX data ... "))
         if self.options[GPXData_CONFKEY_GENPATH]:
+            self.disable_photo_points()
             num_tracks += self.gentrack(kmlgpx, self.photodirlist, self.photoliststyles)
         if self.state.gpxdata:
             if self.options[GPXData_CONFKEY_GENTRACK]:
@@ -439,6 +440,18 @@ class GPXData(Plugin):
             if self.options[GPXData_CONFKEY_GENPOINTS]:
                 num_wpoints = self.genwpoints(kmlgpx, self.wptlist, self.wptstyles)
                 self.logger.info(_("%s waypoints have been processed for KML data.") % num_wpoints)
+
+
+    def disable_photo_points(self):
+        # Sinc un/selected fotos with path points
+        for track_id, track in self.photodirlist.iteritems():
+            if not track.status:
+                continue
+            for point in track.listpoints():
+                for gphoto in self.state.geophotos:
+                    if point.attr['id'] == gphoto.path:
+                        point.status = gphoto.status
+                        break
 
 
     def gentrack(self, kml, tracklist, styleslist):
@@ -470,9 +483,10 @@ class GPXData(Plugin):
                 coordinates = list()
                 num_points = 0
                 for point in track.listpoints():
-                    coor = (point.lon, point.lat, point.ele)
-                    coordinates.append(coor)
-                    num_points = num_points + 1
+                    if point.status:
+                        coor = (point.lon, point.lat, point.ele)
+                        coordinates.append(coor)
+                        num_points = num_points + 1
                 pathdata[PhotoPlace_PathNWPT] = num_points
                 # Set data
                 style = styleslist[track_id]

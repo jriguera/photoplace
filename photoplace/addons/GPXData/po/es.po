@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: photoplace.paths 0.2.0\n"
-"Report-Msgid-Bugs-To: <photoplace-project@googlegroups.com>\n"
-"POT-Creation-Date: 2011-07-25 20:39+0200\n"
+"Project-Id-Version: photoplace.paths 0.2.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-02-01 20:12+0100\n"
 "PO-Revision-Date: 2013-01-27 17:00+0100\n"
 "Last-Translator: José Riguera López <jriguera@gmail.com>\n"
 "Language-Team: Spanish <photoplace-project@googlegroups.com>\n"
@@ -34,8 +34,8 @@ msgid ""
 "Add-on to generate paths and waypoints from GPX tracks in order to show them "
 "in the KML layer."
 msgstr ""
-"Extensión para generar caminos y puntos a partir del GPX para luego mostrarlos "
-"en la capa KML."
+"Extensión para generar caminos y puntos a partir del GPX para luego "
+"mostrarlos en la capa KML."
 
 #: ../gpxdata.py:188
 msgid "Starting Add-on ..."
@@ -44,7 +44,9 @@ msgstr "Iniciando extensión ..."
 #: ../gpxdata.py:210
 #, python-format
 msgid "Value of '%(key)s' incorrect: Cannot find template file '%(template)s'."
-msgstr "Valor de '%(key)s' incorrecto: Imposible encontrar el fichero plantilla '%(template)s'."
+msgstr ""
+"Valor de '%(key)s' incorrecto: Imposible encontrar el fichero plantilla "
+"'%(template)s'."
 
 #: ../gpxdata.py:226
 #, python-format
@@ -73,49 +75,52 @@ msgstr "Clave desconocida '%(key)s' en el fichero de configuración: %(error)s."
 msgid "Cannot read file '%(file)s': %(error)s"
 msgstr "Imposible leer fichero '%(file)s': %(error)s"
 
-#: ../gpxdata.py:396
+#: ../gpxdata.py:400
 #, python-format
 msgid ""
 "Generated WayPoint from '%(photo)s' at %(photo_time)s (UTC=%(photo_tutc)s) "
 "with coordinates (lon=%(photo_lon).8f, lat=%(photo_lat).8f, ele="
 "%(photo_ele).8f)."
 msgstr ""
-"Punto (WayPoint) generado de '%(photo)s' el %(photo_time)s (UTC=%(photo_tutc)s) "
-"con coordenadas (lon=%(photo_lon).8f, lat=%(photo_lat).8f, ele="
-"%(photo_ele).8f)."
+"Punto (WayPoint) generado de '%(photo)s' el %(photo_time)s (UTC="
+"%(photo_tutc)s) con coordenadas (lon=%(photo_lon).8f, lat=%(photo_lat).8f, "
+"ele=%(photo_ele).8f)."
 
-#: ../gpxdata.py:411
+#: ../gpxdata.py:415
 #, python-format
 msgid ""
 "Track '%(track_name)s' was generated from %(track_nphotos)s geotagged photos."
 msgstr ""
-"Camino '%(track_name)s' generado a partir de %(track_nphotos)s fotos geoetiquetadas."
+"Camino '%(track_name)s' generado a partir de %(track_nphotos)s fotos "
+"geoetiquetadas."
 
-#: ../gpxdata.py:415
+#: ../gpxdata.py:419
 #, python-format
 msgid "Photo track '%(track_name)s' is empty due to no geotagged photos!"
-msgstr "El camino autogenerado de las fotos '%(track_name)s' está vacío porque no hay fotos geoetiquetadas!"
+msgstr ""
+"El camino autogenerado de las fotos '%(track_name)s' está vacío porque no "
+"hay fotos geoetiquetadas!"
 
-#: ../gpxdata.py:428
+#: ../gpxdata.py:432
 msgid "Processing all tracks (paths) from GPX data ... "
 msgstr "Procesando todos los caminos (paths) del GPX ... "
 
-#: ../gpxdata.py:433
+#: ../gpxdata.py:439
 #, python-format
 msgid "%s paths have been generated for KML data."
 msgstr "Se han generado %s caminos (tracks) para el KML."
 
-#: ../gpxdata.py:436
+#: ../gpxdata.py:442
 #, python-format
 msgid "%s waypoints have been processed for KML data."
 msgstr "Se han procesado %s puntos (waypoints) para el KML."
 
-#: ../gpxdata.py:480 ../gpxdata.py:545
+#: ../gpxdata.py:499 ../gpxdata.py:564
 #, python-format
 msgid "Cannot find template file '%(template)s'"
 msgstr "Imposible encontrar el fichero plantilla '%(template)s'"
 
-#: ../gpxdata.py:492
+#: ../gpxdata.py:511
 #, python-format
 msgid ""
 "Path '%(path)s': points=%(path_npoints)d, segments=%(path_nsegments)d, "
@@ -124,26 +129,27 @@ msgstr ""
 "Camino '%(path)s': puntos=%(path_npoints)d, segmentos=%(path_nsegments)d, "
 "longitud=%(path_len)s, velmedia=%(path_avgsp).3f, fecha='%(path_time)s'"
 
-#: ../gpxdata.py:498
+#: ../gpxdata.py:517
 #, python-format
 msgid "Error while processing track '%(path)s': %(error)s."
 msgstr "Error mientras se procesaba el camino (track) '%(path)s': %(error)s."
 
-#: ../gpxdata.py:552
+#: ../gpxdata.py:571
 #, python-format
 msgid "Setting up WayPoint '%(wpt)s' lat=%(wpt_lat)s, lon=%(wpt_lon)s"
-msgstr "Estableciendo punto (waypoint) '%(wpt)s' lat=%(wpt_lat)s, lon=%(wpt_lon)s"
+msgstr ""
+"Estableciendo punto (waypoint) '%(wpt)s' lat=%(wpt_lat)s, lon=%(wpt_lon)s"
 
-#: ../gpxdata.py:557
+#: ../gpxdata.py:576
 #, python-format
 msgid "Error while processing waypoint '%(wpt)s': %(error)s."
 msgstr "Error mientras se procesaba el punto (waypoint) '%(wpt)s': %(error)s."
 
-#: ../gpxdata.py:587
+#: ../gpxdata.py:606
 msgid "Resetting Add-on ..."
 msgstr "Reseteando extensión ..."
 
-#: ../gpxdata.py:605
+#: ../gpxdata.py:624
 msgid "Ending Add-on ..."
 msgstr "Finalizando extensión ..."
 
@@ -163,120 +169,120 @@ msgstr "Incluir en el KML: "
 msgid "Path from geottaged photos"
 msgstr "Camino de fotos geoetiquetadas"
 
-#: ../GTKGpxdata.py:132
+#: ../GTKGpxdata.py:133
 msgid "Tracks from GPX"
 msgstr "Caminos del GPX"
 
-#: ../GTKGpxdata.py:136
+#: ../GTKGpxdata.py:138
 msgid "WayPoints from GPX"
 msgstr "Puntos del GPX"
 
-#: ../GTKGpxdata.py:163
+#: ../GTKGpxdata.py:166
 msgid "Path Name/Parameter"
 msgstr "Camino Nombre/Parámetro"
 
-#: ../GTKGpxdata.py:172
+#: ../GTKGpxdata.py:175
 msgid "Description/Value"
 msgstr "Descripción/Valor"
 
-#: ../GTKGpxdata.py:271
+#: ../GTKGpxdata.py:295
 msgid "List of generated paths from geotagged photos"
 msgstr "Lista de caminos autogenerados de las fotos geoetiquetadas"
 
-#: ../GTKGpxdata.py:272
+#: ../GTKGpxdata.py:296
 msgid "Paths from geottaged photos"
 msgstr "Caminos de fotos geoetiquetadas"
 
-#: ../GTKGpxdata.py:292
+#: ../GTKGpxdata.py:316
 #, python-format
 msgid " %d path(s)"
 msgstr " %d camino(s)"
 
-#: ../GTKGpxdata.py:299
+#: ../GTKGpxdata.py:323
 msgid "List of tracks read from GPX file"
 msgstr "Lista de caminos en el fichero GPX"
 
-#: ../GTKGpxdata.py:300
+#: ../GTKGpxdata.py:324
 msgid "Tracks from GPS data"
 msgstr "Caminos del GPS"
 
-#: ../GTKGpxdata.py:320
+#: ../GTKGpxdata.py:344
 #, python-format
 msgid " %d track(s)"
 msgstr " %d camino(s)"
 
-#: ../GTKGpxdata.py:327
+#: ../GTKGpxdata.py:351
 msgid "List of WayPoints read from GPX file"
 msgstr "Lista de puntos en el fichero GPX"
 
-#: ../GTKGpxdata.py:328
+#: ../GTKGpxdata.py:352
 msgid "WayPoints from GPS data"
 msgstr "Puntos del GPS"
 
-#: ../GTKGpxdata.py:348
+#: ../GTKGpxdata.py:372
 #, python-format
 msgid " %d waypoint(s)"
 msgstr " %d punto(s)"
 
-#: ../GTKGpxdata.py:365
+#: ../GTKGpxdata.py:389
 #, python-format
 msgid "Track #%(path_id)s (original name: %(path_oname)s)\n"
 msgstr "Camino #%(path_id)s (nombre original: %(path_oname)s)\n"
 
-#: ../GTKGpxdata.py:374
+#: ../GTKGpxdata.py:398
 #, python-format
 msgid "Points: %(path_npoints)s, length: %(path_len).3f m.\n"
 msgstr "Puntos: %(path_npoints)s, longitud: %(path_len).3f m.\n"
 
-#: ../GTKGpxdata.py:375
+#: ../GTKGpxdata.py:399
 #, python-format
 msgid "Duration: %(path_time)s\n"
 msgstr "Duración: %(path_time)s\n"
 
-#: ../GTKGpxdata.py:376
+#: ../GTKGpxdata.py:400
 #, python-format
 msgid "Begin time: %(path_begin)s\n"
 msgstr "Fecha inicial: %(path_begin)s\n"
 
-#: ../GTKGpxdata.py:377
+#: ../GTKGpxdata.py:401
 #, python-format
 msgid "Final time: %(path_end)s\n"
 msgstr "Fecha final: %(path_end)s\n"
 
-#: ../GTKGpxdata.py:381 ../GTKGpxdata.py:411
+#: ../GTKGpxdata.py:405 ../GTKGpxdata.py:435
 msgid "Double click to edit values ..."
 msgstr "Doble click para editar valores ..."
 
-#: ../GTKGpxdata.py:409
+#: ../GTKGpxdata.py:433
 #, python-format
 msgid "WayPoint #%(wpt_id)s (original name: %(wpt_oname)s)\n"
 msgstr "Punto #%(wpt_id)s (nombre original: %(wpt_oname)s)\n"
 
-#: ../GTKGpxdata.py:434
+#: ../GTKGpxdata.py:458
 msgid "Edit main default template ..."
-msgstr "Editar plantilla principal por defecto ..."
-
-#: ../GTKGpxdata.py:436
-msgid "Edit main default template for tracks"
-msgstr "Editar plantilla principal por defecto para los caminos"
-
-#: ../GTKGpxdata.py:438
-msgid "Edit main default template for generated paths"
-msgstr "Editar plantilla principal por defecto de los caminos autogenerados"
-
-#: ../GTKGpxdata.py:440
-msgid "Edit main default template for waypoints"
-msgstr "Editar plantilla principal por defecto para los puntos"
+msgstr "Editar plantilla principal predeterminada ..."
 
 #: ../GTKGpxdata.py:460
+msgid "Edit main default template for tracks"
+msgstr "Editar plantilla principal predeterminada para los caminos"
+
+#: ../GTKGpxdata.py:462
+msgid "Edit main default template for generated paths"
+msgstr "Editar plantilla principal predeterminada de los caminos autogenerados"
+
+#: ../GTKGpxdata.py:464
+msgid "Edit main default template for waypoints"
+msgstr "Editar plantilla principal predeterminada para los puntos"
+
+#: ../GTKGpxdata.py:484
 msgid "Edit Template/Description"
 msgstr "Editar Plantilla/Descripción"
 
-#: ../GTKGpxdata.py:461
+#: ../GTKGpxdata.py:485
 msgid "Default Template"
-msgstr "Plantilla Por Defecto"
+msgstr "Plantilla Predeterminada"
 
-#: ../GTKGpxdata.py:473
+#: ../GTKGpxdata.py:497
 #, python-format
 msgid ""
 "\n"
@@ -299,7 +305,7 @@ msgstr ""
 "<b>%(PhotoPlace.WptTIME)s</b> -> Tiempo UTC\n"
 "</span>"
 
-#: ../GTKGpxdata.py:490
+#: ../GTKGpxdata.py:514
 #, python-format
 msgid ""
 "\n"
@@ -336,7 +342,7 @@ msgstr ""
 "<b>%(PhotoPlace.PathNWPT)s</b>   -> Número de puntos (WayPoints)\n"
 "</span>"
 
-#: ../GTKGpxdata.py:663
+#: ../GTKGpxdata.py:687
 msgid "Select a color for path ..."
 msgstr "Seleccione un color para el camino ..."
 

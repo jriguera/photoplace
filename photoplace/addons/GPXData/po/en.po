@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: photoplace.paths 0.2.0\n"
-"Report-Msgid-Bugs-To: <photoplace-project@googlegroups.com>\n"
-"POT-Creation-Date: 2011-07-25 20:39+0200\n"
+"Project-Id-Version: photoplace.paths 0.2.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-02-01 20:12+0100\n"
 "PO-Revision-Date: 2013-01-27 17:00+0100\n"
 "Last-Translator: José Riguera López <jriguera@gmail.com>\n"
 "Language-Team: English <photoplace-project@googlegroups.com>\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../gpxdata.py:108
 msgid "Paths"
-msgstr"Paths"
+msgstr "Paths"
 
 #: ../gpxdata.py:109
 msgid "Photos"
@@ -44,7 +44,8 @@ msgstr "Starting Add-on ..."
 #: ../gpxdata.py:210
 #, python-format
 msgid "Value of '%(key)s' incorrect: Cannot find template file '%(template)s'."
-msgstr "Value of '%(key)s' incorrect: Cannot find template file '%(template)s'."
+msgstr ""
+"Value of '%(key)s' incorrect: Cannot find template file '%(template)s'."
 
 #: ../gpxdata.py:226
 #, python-format
@@ -73,7 +74,7 @@ msgstr "Cannot understand the key '%(key)s' in config file: %(error)s."
 msgid "Cannot read file '%(file)s': %(error)s"
 msgstr "Cannot read file '%(file)s': %(error)s"
 
-#: ../gpxdata.py:396
+#: ../gpxdata.py:400
 #, python-format
 msgid ""
 "Generated WayPoint from '%(photo)s' at %(photo_time)s (UTC=%(photo_tutc)s) "
@@ -83,39 +84,39 @@ msgstr ""
 "Generated WayPoint from '%(photo)s' at %(photo_time)s (UTC=%(photo_tutc)s) "
 "with coordinates (lon=%(photo_lon).8f, lat=%(photo_lat).8f, ele="
 "%(photo_ele).8f)."
-
-#: ../gpxdata.py:411
-#, python-format
-msgid ""
-"Track '%(track_name)s' was generated from %(track_nphotos)s geotagged photos."
-msgstr ""
-"Track '%(track_name)s' was generated from %(track_nphotos)s geotagged photos."
 
 #: ../gpxdata.py:415
+#, python-format
+msgid ""
+"Track '%(track_name)s' was generated from %(track_nphotos)s geotagged photos."
+msgstr ""
+"Track '%(track_name)s' was generated from %(track_nphotos)s geotagged photos."
+
+#: ../gpxdata.py:419
 #, python-format
 msgid "Photo track '%(track_name)s' is empty due to no geotagged photos!"
 msgstr "Photo track '%(track_name)s' is empty due to no geotagged photos!"
 
-#: ../gpxdata.py:428
+#: ../gpxdata.py:432
 msgid "Processing all tracks (paths) from GPX data ... "
 msgstr "Processing all tracks (paths) from GPX data ... "
 
-#: ../gpxdata.py:433
+#: ../gpxdata.py:439
 #, python-format
 msgid "%s paths have been generated for KML data."
 msgstr "%s paths have been generated for KML data."
 
-#: ../gpxdata.py:436
+#: ../gpxdata.py:442
 #, python-format
 msgid "%s waypoints have been processed for KML data."
 msgstr "%s waypoints have been processed for KML data."
 
-#: ../gpxdata.py:480 ../gpxdata.py:545
+#: ../gpxdata.py:499 ../gpxdata.py:564
 #, python-format
 msgid "Cannot find template file '%(template)s'"
 msgstr "Cannot find template file '%(template)s'"
 
-#: ../gpxdata.py:492
+#: ../gpxdata.py:511
 #, python-format
 msgid ""
 "Path '%(path)s': points=%(path_npoints)d, segments=%(path_nsegments)d, "
@@ -124,26 +125,26 @@ msgstr ""
 "Path '%(path)s': points=%(path_npoints)d, segments=%(path_nsegments)d, "
 "length=%(path_len)s, avgspeed=%(path_avgsp).3f, time='%(path_time)s'"
 
-#: ../gpxdata.py:498
+#: ../gpxdata.py:517
 #, python-format
 msgid "Error while processing track '%(path)s': %(error)s."
 msgstr "Error while processing track '%(path)s': %(error)s."
 
-#: ../gpxdata.py:552
+#: ../gpxdata.py:571
 #, python-format
 msgid "Setting up WayPoint '%(wpt)s' lat=%(wpt_lat)s, lon=%(wpt_lon)s"
 msgstr "Setting up WayPoint '%(wpt)s' lat=%(wpt_lat)s, lon=%(wpt_lon)s"
 
-#: ../gpxdata.py:557
+#: ../gpxdata.py:576
 #, python-format
 msgid "Error while processing waypoint '%(wpt)s': %(error)s."
 msgstr "Error while processing waypoint '%(wpt)s': %(error)s."
 
-#: ../gpxdata.py:587
+#: ../gpxdata.py:606
 msgid "Resetting Add-on ..."
 msgstr "Resetting Add-on ..."
 
-#: ../gpxdata.py:605
+#: ../gpxdata.py:624
 msgid "Ending Add-on ..."
 msgstr "Ending Add-on ..."
 
@@ -163,120 +164,120 @@ msgstr "Include in KML: "
 msgid "Path from geottaged photos"
 msgstr "Path from geottaged photos"
 
-#: ../GTKGpxdata.py:132
+#: ../GTKGpxdata.py:133
 msgid "Tracks from GPX"
 msgstr "Tracks from GPX"
 
-#: ../GTKGpxdata.py:136
+#: ../GTKGpxdata.py:138
 msgid "WayPoints from GPX"
 msgstr "WayPoints from GPX"
 
-#: ../GTKGpxdata.py:163
+#: ../GTKGpxdata.py:166
 msgid "Path Name/Parameter"
 msgstr "Path Name/Parameter"
 
-#: ../GTKGpxdata.py:172
+#: ../GTKGpxdata.py:175
 msgid "Description/Value"
 msgstr "Description/Value"
 
-#: ../GTKGpxdata.py:271
+#: ../GTKGpxdata.py:295
 msgid "List of generated paths from geotagged photos"
 msgstr "List of generated paths from geotagged photos"
 
-#: ../GTKGpxdata.py:272
+#: ../GTKGpxdata.py:296
 msgid "Paths from geottaged photos"
 msgstr "Paths from geottaged photos"
 
-#: ../GTKGpxdata.py:292
+#: ../GTKGpxdata.py:316
 #, python-format
 msgid " %d path(s)"
 msgstr " %d path(s)"
 
-#: ../GTKGpxdata.py:299
+#: ../GTKGpxdata.py:323
 msgid "List of tracks read from GPX file"
 msgstr "List of tracks read from GPX file"
 
-#: ../GTKGpxdata.py:300
+#: ../GTKGpxdata.py:324
 msgid "Tracks from GPS data"
 msgstr "Tracks from GPS data"
 
-#: ../GTKGpxdata.py:320
+#: ../GTKGpxdata.py:344
 #, python-format
 msgid " %d track(s)"
 msgstr " %d track(s)"
 
-#: ../GTKGpxdata.py:327
+#: ../GTKGpxdata.py:351
 msgid "List of WayPoints read from GPX file"
 msgstr "List of WayPoints read from GPX file"
 
-#: ../GTKGpxdata.py:328
+#: ../GTKGpxdata.py:352
 msgid "WayPoints from GPS data"
 msgstr "WayPoints from GPS data"
 
-#: ../GTKGpxdata.py:348
+#: ../GTKGpxdata.py:372
 #, python-format
 msgid " %d waypoint(s)"
 msgstr " %d waypoint(s)"
 
-#: ../GTKGpxdata.py:365
+#: ../GTKGpxdata.py:389
 #, python-format
 msgid "Track #%(path_id)s (original name: %(path_oname)s)\n"
 msgstr "Track #%(path_id)s (original name: %(path_oname)s)\n"
 
-#: ../GTKGpxdata.py:374
+#: ../GTKGpxdata.py:398
 #, python-format
 msgid "Points: %(path_npoints)s, length: %(path_len).3f m.\n"
 msgstr "Points: %(path_npoints)s, length: %(path_len).3f m.\n"
 
-#: ../GTKGpxdata.py:375
+#: ../GTKGpxdata.py:399
 #, python-format
 msgid "Duration: %(path_time)s\n"
 msgstr "Duration: %(path_time)s\n"
 
-#: ../GTKGpxdata.py:376
+#: ../GTKGpxdata.py:400
 #, python-format
 msgid "Begin time: %(path_begin)s\n"
 msgstr "Begin time: %(path_begin)s\n"
 
-#: ../GTKGpxdata.py:377
+#: ../GTKGpxdata.py:401
 #, python-format
 msgid "Final time: %(path_end)s\n"
 msgstr "Final time: %(path_end)s\n"
 
-#: ../GTKGpxdata.py:381 ../GTKGpxdata.py:411
+#: ../GTKGpxdata.py:405 ../GTKGpxdata.py:435
 msgid "Double click to edit values ..."
 msgstr "Double click to edit values ..."
 
-#: ../GTKGpxdata.py:409
+#: ../GTKGpxdata.py:433
 #, python-format
 msgid "WayPoint #%(wpt_id)s (original name: %(wpt_oname)s)\n"
 msgstr "WayPoint #%(wpt_id)s (original name: %(wpt_oname)s)\n"
 
-#: ../GTKGpxdata.py:434
+#: ../GTKGpxdata.py:458
 msgid "Edit main default template ..."
 msgstr "Edit main default template ..."
 
-#: ../GTKGpxdata.py:436
+#: ../GTKGpxdata.py:460
 msgid "Edit main default template for tracks"
 msgstr "Edit main default template for tracks"
 
-#: ../GTKGpxdata.py:438
+#: ../GTKGpxdata.py:462
 msgid "Edit main default template for generated paths"
 msgstr "Edit main default template for generated paths"
 
-#: ../GTKGpxdata.py:440
+#: ../GTKGpxdata.py:464
 msgid "Edit main default template for waypoints"
 msgstr "Edit main default template for waypoints"
 
-#: ../GTKGpxdata.py:460
+#: ../GTKGpxdata.py:484
 msgid "Edit Template/Description"
 msgstr "Edit Template/Description"
 
-#: ../GTKGpxdata.py:461
+#: ../GTKGpxdata.py:485
 msgid "Default Template"
 msgstr "Default Template"
 
-#: ../GTKGpxdata.py:473
+#: ../GTKGpxdata.py:497
 #, python-format
 msgid ""
 "\n"
@@ -299,7 +300,7 @@ msgstr ""
 "<b>%(PhotoPlace.WptTIME)s</b> -> UTC Time\n"
 "</span>"
 
-#: ../GTKGpxdata.py:490
+#: ../GTKGpxdata.py:514
 #, python-format
 msgid ""
 "\n"
@@ -336,7 +337,7 @@ msgstr ""
 "<b>%(PhotoPlace.PathNWPT)s</b>   -> Number of waypoints\n"
 "</span>"
 
-#: ../GTKGpxdata.py:663
+#: ../GTKGpxdata.py:687
 msgid "Select a color for path ..."
 msgstr "Select a color for path ..."
 

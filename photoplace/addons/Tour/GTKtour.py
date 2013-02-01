@@ -24,7 +24,7 @@ This add-on makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 __date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
@@ -414,7 +414,26 @@ class GTKTour(object):
         vbox.pack_start(scroll, True, True)
         vbox.show_all()
         self.treestore.clear()
-        ite = self.treestore.append(None, [str(_("First Camera Parameters")), None, False])
+        ite = self.treestore.append(None, [str(_("Default Camera Parameters")), None, False])
+        self.treestore.append(ite, [KmlTour_CONFKEY_KMLTOUR_RANGE_MAX,
+            self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MAX] , True])
+        self.treestore.append(ite, [KmlTour_CONFKEY_KMLTOUR_RANGE_MIN,
+            self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MIN] , True])
+        self.treestore.append(ite, [KmlTour_CONFKEY_KMLTOUR_TILT_MAX,
+            self.options[KmlTour_CONFKEY_KMLTOUR_TILT_MAX] , True])
+        self.treestore.append(ite, [KmlTour_CONFKEY_KMLTOUR_TILT_MIN,
+            self.options[KmlTour_CONFKEY_KMLTOUR_TILT_MIN] , True])
+        self.treestore.append(ite, [KmlTour_CONFKEY_FLYTIME,
+            self.options[KmlTour_CONFKEY_FLYTIME], True])
+        self.treestore.append(ite, [KmlTour_CONFKEY_HEADING,
+            self.options[KmlTour_CONFKEY_HEADING], True])
+        self.treestore.append(ite, [KmlTour_CONFKEY_RANGE,
+            self.options[KmlTour_CONFKEY_RANGE], True])
+        self.treestore.append(ite, [KmlTour_CONFKEY_TILT,
+            self.options[KmlTour_CONFKEY_TILT], True])
+        self.treestore.append(ite, [KmlTour_CONFKEY_WAIT,
+            self.options[KmlTour_CONFKEY_WAIT], True])
+        ite = self.treestore.append(None, [str(_("Start Camera Parameters")), None, False])
         self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_DESC,
             self.options[KmlTour_CONFKEY_BEGIN_DESC] , True])
         self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_STYLE,
@@ -429,18 +448,7 @@ class GTKTour(object):
             self.options[KmlTour_CONFKEY_BEGIN_TILT], True])
         self.treestore.append(ite, [KmlTour_CONFKEY_BEGIN_WAIT,
             self.options[KmlTour_CONFKEY_BEGIN_WAIT], True])
-        ite = self.treestore.append(None, [str(_("Default Camera Parameters")), None, False])
-        self.treestore.append(ite, [KmlTour_CONFKEY_FLYTIME,
-            self.options[KmlTour_CONFKEY_FLYTIME], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_HEADING,
-            self.options[KmlTour_CONFKEY_HEADING], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_RANGE,
-            self.options[KmlTour_CONFKEY_RANGE], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_TILT,
-            self.options[KmlTour_CONFKEY_TILT], True])
-        self.treestore.append(ite, [KmlTour_CONFKEY_WAIT,
-            self.options[KmlTour_CONFKEY_WAIT], True])
-        ite = self.treestore.append(None, [str(_("Last Camera Parameters")), None, False])
+        ite = self.treestore.append(None, [str(_("End Camera Parameters")), None, False])
         self.treestore.append(ite, [KmlTour_CONFKEY_END_DESC,
             self.options[KmlTour_CONFKEY_END_DESC] , True])
         self.treestore.append(ite, [KmlTour_CONFKEY_END_STYLE,

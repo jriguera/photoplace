@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-27 18:00+0100\n"
+"POT-Creation-Date: 2013-02-01 21:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -140,15 +140,15 @@ msgid "Value"
 msgstr ""
 
 #: ../GTKtour.py:417
-msgid "First Camera Parameters"
-msgstr ""
-
-#: ../GTKtour.py:432
 msgid "Default Camera Parameters"
 msgstr ""
 
-#: ../GTKtour.py:443
-msgid "Last Camera Parameters"
+#: ../GTKtour.py:436
+msgid "Start Camera Parameters"
+msgstr ""
+
+#: ../GTKtour.py:451
+msgid "End Camera Parameters"
 msgstr ""
 
 #: ../KmlgxTour.py:115
@@ -176,65 +176,65 @@ msgstr ""
 msgid "End"
 msgstr ""
 
-#: ../tour.py:157
+#: ../tour.py:169
 msgid "Add-on to generate a visual tour with your photos."
 msgstr ""
 
-#: ../tour.py:199 ../tour.py:226
+#: ../tour.py:211 ../tour.py:238
 #, python-format
 msgid "Incorrect value for '%(key)s', setting default value '%(value)s'."
 msgstr ""
 
-#: ../tour.py:204 ../tour.py:231
+#: ../tour.py:216 ../tour.py:243
 #, python-format
 msgid "'%(key)s' not defined, setting default value '%(value)s'."
 msgstr ""
 
-#: ../tour.py:267
+#: ../tour.py:279
 #, python-format
 msgid "Cannot read mp3 file '%s'."
 msgstr ""
 
-#: ../tour.py:269
+#: ../tour.py:281
 #, python-format
 msgid "Incorrect value for '%s'."
 msgstr ""
 
-#: ../tour.py:334
+#: ../tour.py:350
 msgid "Starting add-on ..."
-msgstr ""
-
-#: ../tour.py:347
-#, python-format
-msgid "Cannot set mp3 sound files: %s."
 msgstr ""
 
 #: ../tour.py:363
 #, python-format
+msgid "Cannot set mp3 sound files: %s."
+msgstr ""
+
+#: ../tour.py:379
+#, python-format
 msgid "Cannot read file: '%s'."
 msgstr ""
 
-#: ../tour.py:753
+#: ../tour.py:773
 msgid "No data! Cowardly refusing to create a tour!"
 msgstr ""
 
-#: ../tour.py:923
+#: ../tour.py:946
 msgid "No KML output! Cowardly refusing to create a tour!"
 msgstr ""
 
-#: ../tour.py:927
+#: ../tour.py:950
 msgid "No geolocated photos! Cowardly refusing to create a tour!"
 msgstr ""
 
-#: ../tour.py:980
+#: ../tour.py:1003
 #, python-format
 msgid "Cannot create '%(outputfile)s' for writing: %(error)s."
 msgstr ""
 
-#: ../tour.py:1012
+#: ../tour.py:1035
 msgid "Resetting add-on ..."
 msgstr ""
 
-#: ../tour.py:1048
+#: ../tour.py:1071
 msgid "Ending add-on ..."
 msgstr ""
