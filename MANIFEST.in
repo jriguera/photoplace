@@ -1,7 +1,7 @@
 include *.txt *.py *.nsi
 include photoplace/*.txt photoplace/*.py
 recursive-include photoplace/share *
-recursive-include photoplace/locale *
+recursive-include photoplace/locale *.mo
 recursive-include photoplace/po *
 recursive-include photoplace/lib *
 recursive-include photoplace/addons *.py *.mo *.ui *.txt
