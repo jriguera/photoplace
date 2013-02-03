@@ -24,7 +24,7 @@ This add-on makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.4.1"
+__version__ = "0.5.0"
 __date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
@@ -90,7 +90,8 @@ KmlTour_CRANGE_MAXLIMIT = 5000.0
 KmlTour_CRANGE_DEFAULTFACTOR = 0.5
 KmlTour_TILT_MAXLIMIT = 45.0
 KmlTour_TILT_MINLIMIT = 20.0
-
+KmlTour_FROM_FIRST_PHOTO = False
+KmlTour_TO_LAST_PHOTO = False
 
 KmlTour_BEGIN_WAIT = 5.0
 KmlTour_BEGIN_HEADING = None
@@ -122,6 +123,8 @@ KmlTour_CONFKEY_KMLTOUR_DESC = "description"
 KmlTour_CONFKEY_KMLTOUR_MUSIC = "mp3list"
 KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX = "mp3mix"
 KmlTour_CONFKEY_KMLTOUR_MUSIC_URI = "mp3uri"
+KmlTour_CONFKEY_KMLTOUR_FIRST_PHOTO = "fromfirstphoto"
+KmlTour_CONFKEY_KMLTOUR_LAST_PHOTO = "tolastphoto"
 
 KmlTour_CONFKEY_BEGIN_NAME = "start_name"
 KmlTour_CONFKEY_BEGIN_DESC = "start_desc_file"
@@ -262,6 +265,8 @@ class KmlTour(Plugin):
         if folder == "-":
             options[KmlTour_CONFKEY_KMLTOUR_FOLDER] = None
         self._set_option_bool(options, KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX, KmlTour_MUSIC_MIX)
+        self._set_option_bool(options, KmlTour_CONFKEY_KMLTOUR_FIRST_PHOTO, KmlTour_FROM_FIRST_PHOTO)
+        self._set_option_bool(options, KmlTour_CONFKEY_KMLTOUR_LAST_PHOTO, KmlTour_TO_LAST_PHOTO)
         options.setdefault(KmlTour_CONFKEY_KMLTOUR_MUSIC_URI, KmlTour_MUSIC_URI)
         mp3s = options.setdefault(KmlTour_CONFKEY_KMLTOUR_MUSIC, [])
         if not isinstance(mp3s, list):
@@ -459,7 +464,6 @@ class KmlTour(Plugin):
             end_range = float(end_range)
         except:
             end_range = self._border_range(end_tilt, self.last_lat, self.last_lon)
-        #print "FINAL_DISTANCE=", end_range
         self.set_path(last_photo_id, end_flytime, end_tilt, end_range, end_heading)
         if end_style == None or len(end_style) < 2:
             end_icon = self.options[KmlTour_CONFKEY_END_ICON]
@@ -687,7 +691,7 @@ class KmlTour(Plugin):
         self.setup_geophoto(geophoto)
 
 
-    def set_bounds(self, status=1):
+    def set_bounds(self, status=1, from_first_photo=False, to_last_photo=False):
         self.max_lat = -90.0
         self.min_lat = 90.0
         self.max_lon = -180.0
@@ -756,20 +760,22 @@ class KmlTour(Plugin):
                 if track.status:
                     self.tracks_points.append(track.listpoints())
         if self.tracks_points:
-            self.first_lat = self.tracks_points[0][0].lat
-            self.first_lon = self.tracks_points[0][0].lon
-            self.first_ele = self.tracks_points[0][0].ele
-            self.first_time = self.tracks_points[0][0].time
-            self.last_lat = self.tracks_points[-1][-1].lat
-            self.last_lon = self.tracks_points[-1][-1].lon
-            self.last_ele = self.tracks_points[-1][-1].ele
-            self.last_time = self.tracks_points[-1][-1].time
+            if not from_first_photo:
+                self.first_lat = self.tracks_points[0][0].lat
+                self.first_lon = self.tracks_points[0][0].lon
+                self.first_ele = self.tracks_points[0][0].ele
+                self.first_time = self.tracks_points[0][0].time
+            if not to_last_photo:
+                self.last_lat = self.tracks_points[-1][-1].lat
+                self.last_lon = self.tracks_points[-1][-1].lon
+                self.last_ele = self.tracks_points[-1][-1].ele
+                self.last_time = self.tracks_points[-1][-1].time
             ready += 1
         return ready
 
 
-    def estimate_bounds(self, simpl_distance=None, status=1):
-        if not self.set_bounds(status):
+    def estimate_bounds(self, simpl_distance=None, status=1, from_first_photo=False, to_last_photo=False):
+        if not self.set_bounds(status, from_first_photo, to_last_photo):
             self.logger.debug(_("No data! Cowardly refusing to create a tour!"))
             return -1
         self.altitude = 0.0
@@ -830,28 +836,29 @@ class KmlTour(Plugin):
                 self.tour_points[num_photos] = (total_distance, gphoto.ptime, gphoto.time, points)
                 num_photos += 1
         # Last path
-        follow = self.options[KmlTour_CONFKEY_FOLLOWPATH]
-        points_len = 0
-        points = list()
-        if follow and time_prev != None and self.last_time != None:
-            points = self.get_track(lon_prev, lat_prev, time_prev, self.last_lon, self.last_lat, self.last_time)
-            points_len = len(points)
-            if points_len > 1 and epsilon > 0:
-                points = self.simpl_track_DouglasPeucker(points, epsilon)
+        if not to_last_photo:
+            follow = self.options[KmlTour_CONFKEY_FOLLOWPATH]
+            points_len = 0
+            points = list()
+            if follow and time_prev != None and self.last_time != None:
+                points = self.get_track(lon_prev, lat_prev, time_prev, self.last_lon, self.last_lat, self.last_time)
                 points_len = len(points)
-        total_distance = 0.0
-        if points_len < 1:
-            gpoint = pyGPX.GPXPoint(self.last_lat, self.last_lon, self.last_ele, self.last_time)
-            points.append(gpoint)
-            total_distance = gpoint.distance(lat_prev, lon_prev)
-        if points_len > 1:
-            for pos in xrange(1, points_len):
-                prev = points[pos - 1]
-                current = points[pos]
-                total_distance += prev.distance(current)
-        self.distance += total_distance
-        distances.append(total_distance)
-        self.tour_points[num_photos] = (total_distance, self.last_time, self.last_time + self.state.tzdiff, points)
+                if points_len > 1 and epsilon > 0:
+                    points = self.simpl_track_DouglasPeucker(points, epsilon)
+                    points_len = len(points)
+            total_distance = 0.0
+            if points_len < 1:
+                gpoint = pyGPX.GPXPoint(self.last_lat, self.last_lon, self.last_ele, self.last_time)
+                points.append(gpoint)
+                total_distance = gpoint.distance(lat_prev, lon_prev)
+            if points_len > 1:
+                for pos in xrange(1, points_len):
+                    prev = points[pos - 1]
+                    current = points[pos]
+                    total_distance += prev.distance(current)
+            self.distance += total_distance
+            distances.append(total_distance)
+            self.tour_points[num_photos] = (total_distance, self.last_time, self.last_time + self.state.tzdiff, points)
         # Some calculations
         if num_photos > 0:
             # Avg
@@ -873,7 +880,6 @@ class KmlTour(Plugin):
             strtime = gtime.strftime("%Y-%m-%dT%H:%M:%S")
         range_offset = self.altitude - self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MIN]
         range_mid = range_offset / 2.0
-        
         # f(x) = (x/(self.distance / 15))^3 + range_mid + range_offset
         # f(x) = -x + range_mid
         if fly_crange == None:
@@ -912,9 +918,16 @@ class KmlTour(Plugin):
                     heading = current.bearing(next.lat, next.lon)
                 if pos == 0:
                     heading_prev = heading
-                elif abs(heading_prev - heading) >= KmlTour_FOLLOW_ANGLECORNER:
-                    self.gxtour.do_flyto(current.lon, current.lat, current.ele, 
-                        strtime, heading, tilt, crange, flytime)
+                else: 
+                    # heading_prev - heading) >= KmlTour_FOLLOW_ANGLECORNER
+                    # using cos difference
+                    rad_heading = math.radians(heading)
+                    rad_heading_prev = math.radians(heading_prev)
+                    cos_diff = math.cos(rad_heading_prev) * math.cos(rad_heading_prev)
+                    cos_diff += math.sin(rad_heading) * math.sin(rad_heading)
+                    if cos_diff >= self.cos_max_diff_corner:
+                        self.gxtour.do_flyto(current.lon, current.lat, current.ele, 
+                            strtime, heading, tilt, crange, flytime)
                 heading_prev = heading
                 self.gxtour.do_flyto(next.lon, next.lat, next.ele, 
                     strtime, heading, tilt, crange, flytime)
@@ -941,19 +954,24 @@ class KmlTour(Plugin):
         name = self.options[KmlTour_CONFKEY_KMLTOUR_NAME]
         description = self.options[KmlTour_CONFKEY_KMLTOUR_DESC]
         folder = self.options[KmlTour_CONFKEY_KMLTOUR_FOLDER]
+        from_first_photo = self.options[KmlTour_CONFKEY_KMLTOUR_FIRST_PHOTO]
+        to_last_photo = self.options[KmlTour_CONFKEY_KMLTOUR_LAST_PHOTO]
         kml = self.state.kmldata.getKml()
         if not kml:
             self.logger.debug(_("No KML output! Cowardly refusing to create a tour!"))
             return
-        num_photos = self.estimate_bounds(None, self.state.status)
+        num_photos = self.estimate_bounds(None, self.state.status, from_first_photo, to_last_photo)
         if num_photos < 0:
             self.logger.debug(_("No geolocated photos! Cowardly refusing to create a tour!"))
             return
+        # KmlTour_FOLLOW_ANGLECORNER with cos(X - Y)
+        self.cos_max_diff_corner = math.cos(math.radians(KmlTour_FOLLOW_ANGLECORNER))
         spanbegin = self.first_time.strftime("%Y-%m-%dT%H:%M:%S") + self.state.stzdiff
         spanend = self.last_time.strftime("%Y-%m-%dT%H:%M:%S") + self.state.stzdiff
         self.gxtour.ini(name, description, spanbegin, spanend, kml, folder)
         # firt point for camera
-        self.set_first()
+        if not from_first_photo:
+            self.set_first()
         num_photos = 0
         for geophoto in self.state.geophotos:
             if geophoto.status < self.state.status or not geophoto.isGeoLocated():
@@ -986,7 +1004,8 @@ class KmlTour(Plugin):
             self.gxtour.music()
             num_photos += 1
         # Last path
-        self.set_last(num_photos)
+        if not to_last_photo:
+            self.set_last(num_photos)
 
 
     @DRegister("SaveFiles:ini")

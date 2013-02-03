@@ -24,7 +24,7 @@ This add-on makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.4.1"
+__version__ = "0.5.0"
 __date__ = "August 2011"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"

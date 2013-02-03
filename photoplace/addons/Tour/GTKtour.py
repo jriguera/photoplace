@@ -24,7 +24,7 @@ This add-on makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.4.1"
+__version__ = "0.5.0self.cos_max_diff_corner"
 __date__ = "August 2012"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
@@ -127,6 +127,19 @@ class GTKTour(object):
         hbox_name.pack_start(self.button_advanced, False, False, 5)
         self.plugin.pack_start(hbox_name, False, False)
         # 2nd line
+        hbox_first_last = gtk.HBox(True)
+        self.button_from_first_photo = gtk.CheckButton(_("Start tour from first geotagged photo"))
+        self.button_from_first_photo.set_tooltip_text(
+            _("If it is active, the tour will start with the first geotagged photo, without presentation."))
+        self.button_from_first_photo.connect('toggled', self._set_first_photo)
+        hbox_first_last.pack_start(self.button_from_first_photo, False, True, 5)
+        self.button_to_last_photo = gtk.CheckButton(_("End up tour with last geotagged photo"))
+        self.button_to_last_photo.set_tooltip_text(
+            _("If it is active, the tour will end up with the last geotagged photo, without ending."))
+        self.button_to_last_photo.connect('toggled', self._set_last_photo)
+        hbox_first_last.pack_start(self.button_to_last_photo, False, True, 5)
+        self.plugin.pack_start(hbox_first_last, False, False, 10)
+        # 3rd line
         tooltip_text = _("You can use simple HTML tags like "
             "list (<i>li</i>, <i>ul</i>) or <i>table</i> and use expresions "
             "like <span font_family='monospace' size='small'>"
@@ -135,16 +148,17 @@ class GTKTour(object):
             "<b>Variables</b> section.")
         hbox_text = gtk.HBox(True)
         vbox_ini = gtk.VBox(False)
-        label_ini = gtk.Label()
-        label_ini.set_markup(_("Type the presentation text ... "))
-        label_ini.set_justify(gtk.JUSTIFY_LEFT)
-        label_ini.set_alignment(0.0, 0.5)
-        vbox_ini.pack_start(label_ini, False, False)
+        self.label_ini = gtk.Label()
+        self.label_ini.set_markup(_("Presentation at the beginning of path:"))
+        self.label_ini.set_justify(gtk.JUSTIFY_LEFT)
+        self.label_ini.set_alignment(0.0, 0.5)
+        vbox_ini.pack_start(self.label_ini, False, False)
         frame_ini = gtk.Frame()
         sw_ini = gtk.ScrolledWindow()
         sw_ini.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.textview_ini = gtk.TextView()
-        self.textview_ini.set_tooltip_markup(tooltip_text)
+        self.textview_ini.set_tooltip_markup(tooltip_text + 
+            _("\n\nIf empty no description will appear at the beginning of path."))
         self.textview_ini.connect('populate-popup', self._lclicked_textview, KmlTour_CONFKEY_BEGIN_DESC)
         sw_ini.add(self.textview_ini)
         frame_ini.add(sw_ini)
@@ -153,23 +167,24 @@ class GTKTour(object):
         hbox_text.pack_start(vbox_ini, True, True, 5)
         # Right
         vbox_end = gtk.VBox(False)
-        label_end = gtk.Label()
-        label_end.set_markup(_("Ending text ... "))
-        label_end.set_justify(gtk.JUSTIFY_LEFT)
-        label_end.set_alignment(0.0, 0.5)
-        vbox_end.pack_start(label_end, False, False)
+        self.label_end = gtk.Label()
+        self.label_end.set_markup(_("Ending text at the end of path:"))
+        self.label_end.set_justify(gtk.JUSTIFY_LEFT)
+        self.label_end.set_alignment(0.0, 0.5)
+        vbox_end.pack_start(self.label_end, False, False)
         frame_end = gtk.Frame()
         sw_end = gtk.ScrolledWindow()
         sw_end.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.textview_end = gtk.TextView()
-        self.textview_end.set_tooltip_markup(tooltip_text)
+        self.textview_end.set_tooltip_markup(tooltip_text +
+            _("\n\nIf empty no description will appear at the end of path."))
         self.textview_end.connect('populate-popup', self._lclicked_textview, KmlTour_CONFKEY_END_DESC)
         sw_end.add(self.textview_end)
         frame_end.add(sw_end)
         #frame_end.set_size_request(-1, 42)
         vbox_end.pack_start(frame_end, True, True)
         hbox_text.pack_start(vbox_end, True, True, 5)
-        self.plugin.pack_start(hbox_text, True, True, 10)
+        self.plugin.pack_start(hbox_text, True, True, 0)
         # Music buttons
         hbox_music = gtk.HBox(False)
         label_music = gtk.Label()
@@ -220,6 +235,22 @@ class GTKTour(object):
 
     def hide(self):
         self.plugin.hide_all()
+
+
+    def _set_first_photo(self, widget, data=None):
+        value = widget.get_active()
+        self.textview_ini.set_sensitive(not value)
+        self.label_ini.set_sensitive(not value)
+        if self.options:
+            self.options[KmlTour_CONFKEY_KMLTOUR_FIRST_PHOTO] = value
+
+
+    def _set_last_photo(self, widget, data=None):
+        value = widget.get_active()
+        self.textview_end.set_sensitive(not value)
+        self.label_end.set_sensitive(not value)
+        if self.options:
+            self.options[KmlTour_CONFKEY_KMLTOUR_LAST_PHOTO] = value
 
 
     def get_placemark(self, key):
@@ -283,6 +314,14 @@ class GTKTour(object):
         follow_value = options[KmlTour_CONFKEY_FOLLOWPATH]
         self.button_follow_path.set_active(follow_value)
         self.spinbutton_epsilon.set_sensitive(follow_value)
+        value = options[KmlTour_CONFKEY_KMLTOUR_FIRST_PHOTO]
+        self.textview_ini.set_sensitive(not value)
+        self.label_ini.set_sensitive(not value)
+        self.button_from_first_photo.set_active(value)
+        value = options[KmlTour_CONFKEY_KMLTOUR_LAST_PHOTO]
+        self.textview_end.set_sensitive(not value)
+        self.label_end.set_sensitive(not value)
+        self.button_to_last_photo.set_active(value)
         self.options = options
         self.adjustment_epsilon.set_value(options[KmlTour_CONFKEY_KMLTOUR_SIMPL_DISTANCE])
 

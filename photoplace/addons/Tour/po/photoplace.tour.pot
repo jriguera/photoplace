@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-01 21:06+0100\n"
+"POT-Creation-Date: 2013-02-03 02:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,27 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: ../GTKtour.py:130
+#: ../GTKtour.py:131
+msgid "Start tour from first geotagged photo"
+msgstr ""
+
+#: ../GTKtour.py:133
+msgid ""
+"If it is active, the tour will start with the first geotagged photo, without "
+"presentation."
+msgstr ""
+
+#: ../GTKtour.py:136
+msgid "End up tour with last geotagged photo"
+msgstr ""
+
+#: ../GTKtour.py:138
+msgid ""
+"If it is active, the tour will end up with the last geotagged photo, without "
+"ending."
+msgstr ""
+
+#: ../GTKtour.py:143
 #, python-format
 msgid ""
 "You can use simple HTML tags like list (<i>li</i>, <i>ul</i>) or <i>table</"
@@ -64,90 +84,104 @@ msgid ""
 "<b>Variables</b> section."
 msgstr ""
 
-#: ../GTKtour.py:139
-msgid "Type the presentation text ... "
+#: ../GTKtour.py:152
+msgid "Presentation at the beginning of path:"
 msgstr ""
 
-#: ../GTKtour.py:157
-msgid "Ending text ... "
+#: ../GTKtour.py:161
+msgid ""
+"\n"
+"\n"
+"If empty no description will appear at the beginning of path."
 msgstr ""
 
-#: ../GTKtour.py:176
+#: ../GTKtour.py:171
+msgid "Ending text at the end of path:"
+msgstr ""
+
+#: ../GTKtour.py:180
+msgid ""
+"\n"
+"\n"
+"If empty no description will appear at the end of path."
+msgstr ""
+
+#: ../GTKtour.py:191
 msgid "Music:"
 msgstr ""
 
-#: ../GTKtour.py:182
+#: ../GTKtour.py:197
 msgid "Add a mp3 file to list"
 msgstr ""
 
-#: ../GTKtour.py:187
+#: ../GTKtour.py:202
 msgid "Delete the mp3 file selected in the combobox"
 msgstr ""
 
-#: ../GTKtour.py:190
+#: ../GTKtour.py:205
 msgid "Mix"
 msgstr ""
 
-#: ../GTKtour.py:192
+#: ../GTKtour.py:207
 msgid "Mix all mp3? If yes, it will sound all mp3's at the same time"
 msgstr ""
 
-#: ../GTKtour.py:197
+#: ../GTKtour.py:212
 msgid "URI:"
 msgstr ""
 
-#: ../GTKtour.py:200
+#: ../GTKtour.py:215
 msgid ""
 "URI to reference all mp3's. If you generate a KML for the web, this "
 "parameter will set the path where the files are."
 msgstr ""
 
-#: ../GTKtour.py:239
+#: ../GTKtour.py:270
 msgid "Select text file ..."
 msgstr ""
 
-#: ../GTKtour.py:243 ../GTKtour.py:338
+#: ../GTKtour.py:274 ../GTKtour.py:377
 msgid "All files"
 msgstr ""
 
-#: ../GTKtour.py:292
+#: ../GTKtour.py:331
 msgid "Load content from a file"
 msgstr ""
 
-#: ../GTKtour.py:309
+#: ../GTKtour.py:348
 #, python-format
 msgid "Cannot read file '%(file)s': %(error)s."
 msgstr ""
 
-#: ../GTKtour.py:329
+#: ../GTKtour.py:368
 msgid "Select MP3 files ..."
 msgstr ""
 
-#: ../GTKtour.py:333
+#: ../GTKtour.py:372
 msgid "MP3 files"
 msgstr ""
 
-#: ../GTKtour.py:388
+#: ../GTKtour.py:427
 msgid "PhotoPlace: Tour parameters"
 msgstr ""
 
-#: ../GTKtour.py:402
+#: ../GTKtour.py:441
 msgid "Name"
 msgstr ""
 
-#: ../GTKtour.py:408
+#: ../GTKtour.py:447
 msgid "Value"
 msgstr ""
 
-#: ../GTKtour.py:417
+#: ../GTKtour.py:456
 msgid "Default Camera Parameters"
 msgstr ""
 
-#: ../GTKtour.py:436
+#: ../GTKtour.py:475
 msgid "Start Camera Parameters"
 msgstr ""
 
-#: ../GTKtour.py:451
+#: ../GTKtour.py:490
 msgid "End Camera Parameters"
 msgstr ""
 
@@ -176,65 +210,65 @@ msgstr ""
 msgid "End"
 msgstr ""
 
-#: ../tour.py:169
+#: ../tour.py:172
 msgid "Add-on to generate a visual tour with your photos."
 msgstr ""
 
-#: ../tour.py:211 ../tour.py:238
+#: ../tour.py:214 ../tour.py:241
 #, python-format
 msgid "Incorrect value for '%(key)s', setting default value '%(value)s'."
 msgstr ""
 
-#: ../tour.py:216 ../tour.py:243
+#: ../tour.py:219 ../tour.py:246
 #, python-format
 msgid "'%(key)s' not defined, setting default value '%(value)s'."
 msgstr ""
 
-#: ../tour.py:279
+#: ../tour.py:284
 #, python-format
 msgid "Cannot read mp3 file '%s'."
 msgstr ""
 
-#: ../tour.py:281
+#: ../tour.py:286
 #, python-format
 msgid "Incorrect value for '%s'."
 msgstr ""
 
-#: ../tour.py:350
+#: ../tour.py:355
 msgid "Starting add-on ..."
 msgstr ""
 
-#: ../tour.py:363
+#: ../tour.py:368
 #, python-format
 msgid "Cannot set mp3 sound files: %s."
 msgstr ""
 
-#: ../tour.py:379
+#: ../tour.py:384
 #, python-format
 msgid "Cannot read file: '%s'."
 msgstr ""
 
-#: ../tour.py:773
+#: ../tour.py:779
 msgid "No data! Cowardly refusing to create a tour!"
 msgstr ""
 
-#: ../tour.py:946
+#: ../tour.py:961
 msgid "No KML output! Cowardly refusing to create a tour!"
 msgstr ""
 
-#: ../tour.py:950
+#: ../tour.py:965
 msgid "No geolocated photos! Cowardly refusing to create a tour!"
 msgstr ""
 
-#: ../tour.py:1003
+#: ../tour.py:1022
 #, python-format
 msgid "Cannot create '%(outputfile)s' for writing: %(error)s."
 msgstr ""
 
-#: ../tour.py:1035
+#: ../tour.py:1054
 msgid "Resetting add-on ..."
 msgstr ""
 
-#: ../tour.py:1071
+#: ../tour.py:1090
 msgid "Ending add-on ..."
 msgstr ""
