@@ -34,12 +34,12 @@ import os.path
 
 
 
-GTKUI_RESOURCES_PATH = u"gtkui"
-GTKUI_RESOURCE_GUIXML = os.path.join(GTKUI_RESOURCES_PATH, u"photoplace.ui")
-GTKUI_RESOURCE_GUIICON = os.path.join(GTKUI_RESOURCES_PATH, u"photoplace.png")
-GTKUI_RESOURCE_TemplateEditorGUIXML = os.path.join(GTKUI_RESOURCES_PATH, u"templateeditor.ui")
-GTKUI_RESOURCE_VariableEditorGUIXML = os.path.join(GTKUI_RESOURCES_PATH, u"variableeditor.ui")
-GTKUI_RESOURCE_PhotoInfoGUIXML = os.path.join(GTKUI_RESOURCES_PATH, u"photoinfo.ui")
+GTKUI_RESOURCES_PATH = "gtkui"
+GTKUI_RESOURCE_GUIXML = os.path.join(GTKUI_RESOURCES_PATH, "photoplace.ui")
+GTKUI_RESOURCE_GUIICON = os.path.join(GTKUI_RESOURCES_PATH, "photoplace.png")
+GTKUI_RESOURCE_TemplateEditorGUIXML = os.path.join(GTKUI_RESOURCES_PATH, "templateeditor.ui")
+GTKUI_RESOURCE_VariableEditorGUIXML = os.path.join(GTKUI_RESOURCES_PATH, "variableeditor.ui")
+GTKUI_RESOURCE_PhotoInfoGUIXML = os.path.join(GTKUI_RESOURCES_PATH, "photoinfo.ui")
 GTKUI_GETTEXT_DOMAIN = "photoplace"
 
 

@@ -65,11 +65,11 @@ except:
 __PROGRAM__ = 'photoplace'
 __PROGRAM_PATH__ = None
 __GETTEXT_DOMAIN__ = __PROGRAM__
-__RESOURCES_PATH__ = u'share'
-__LOCALE_PATH__ = u'locale'
-__LIB_PATH__ = u'lib'
-__RESOURCES_CONF_PATH__ = u'conf'
-__SHARE_DIR__ = os.path.join(u'share', u'photoplace')
+__RESOURCES_PATH__ = 'share'
+__LOCALE_PATH__ = 'locale'
+__LIB_PATH__ = 'lib'
+__RESOURCES_CONF_PATH__ = 'conf'
+__SHARE_DIR__ = os.path.join('share', 'photoplace')
 
 
 # hasattr(sys, "frozen") -> new py2exe
@@ -78,9 +78,10 @@ __SHARE_DIR__ = os.path.join(u'share', u'photoplace')
 if hasattr(sys, "frozen") or \
     hasattr(sys, "importers") or \
     imp.is_frozen("__main__"):
-    __PROGRAM_PATH__ = os.path.dirname(unicode(sys.executable, locale.getpreferredencoding()))
+    __PROGRAM_PATH__ = os.path.dirname(sys.executable)
 else:
-    __PROGRAM_PATH__ = os.path.dirname(unicode(os.path.realpath(__file__), locale.getpreferredencoding()))
+    #__PROGRAM_PATH__ = os.path.dirname(unicode(os.path.realpath(__file__), locale.getpreferredencoding()))
+    __PROGRAM_PATH__ = os.path.dirname(os.path.realpath(__file__))
 
 lib_path = os.path.join(__PROGRAM_PATH__, __LIB_PATH__)
 if os.path.isdir(lib_path):
@@ -93,7 +94,7 @@ resources_path = os.path.join(__PROGRAM_PATH__, __RESOURCES_PATH__)
 if not os.path.isdir(resources_path):
     # installed
     __RESOURCES_PATH__ = os.path.realpath(
-        os.path.join(__PROGRAM_PATH__, u'..', __RESOURCES_PATH__, __PROGRAM__))
+        os.path.join(__PROGRAM_PATH__, '..', __RESOURCES_PATH__, __PROGRAM__))
 else:
     new_resources_path = os.path.join(resources_path, __PROGRAM__)
     if not os.path.isdir(new_resources_path):
@@ -107,7 +108,7 @@ locale_path = os.path.join(__PROGRAM_PATH__, __LOCALE_PATH__)
 if not os.path.isdir(locale_path):
     # installed
     locale_path = os.path.realpath(
-        os.path.join(u'..', __SHARE_DIR__, __LOCALE_PATH__))
+        os.path.join('..', __SHARE_DIR__, __LOCALE_PATH__))
     if not os.path.isdir(locale_path):
         __LOCALE_PATH__ = None
     else:
@@ -137,7 +138,8 @@ if sys.platform.startswith('win'):
         os.environ['LANGUAGE'] = ':'.join(language)
 try:
     locale.setlocale(locale.LC_ALL,'')
-    locale.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
+    if not sys.platform.startswith('win'):
+        locale.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
     gettext.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
     gettext.textdomain(__GETTEXT_DOMAIN__)
     gettext.install(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
@@ -146,6 +148,7 @@ try:
             import ctypes
             libintl = ctypes.cdll.LoadLibrary("intl.dll") 
             libintl.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
+            libintl.bind_textdomain_codeset(__GETTEXT_DOMAIN__, 'UTF-8')
         except: 
             print("Error Loading translations into gtk.builder files")
 except Exception as e:
@@ -223,11 +226,11 @@ def program(args=sys.argv):
         try:
             os.makedirs(cfg_dir)
         except:
-            cfg_dir = u'.'
+            cfg_dir = '.'
     # redirect standard I/O to files
     if hasattr(sys, "frozen") or hasattr(sys, "importers") or imp.is_frozen("__main__"):
-        sys.stdout = open(os.path.join(cfg_dir, u"stdout.log"), 'w+')
-        sys.stderr = open(os.path.join(cfg_dir, u"stderr.log"), 'w+')
+        sys.stdout = open(os.path.join(cfg_dir, "stdout.log"), 'w+')
+        sys.stderr = open(os.path.join(cfg_dir, "stderr.log"), 'w+')
     userfacade = userFacade.UserFacade(__RESOURCES_PATH__, configfile, args, options, oargs)
     if not options.batch:
         try:

@@ -113,9 +113,9 @@ PhotoPlace_Cfg_main_jpgzoom = 0.15
 PhotoPlace_Cfg_main_quality = 1
 PhotoPlace_Cfg_main_maxdeltaseconds = 300
 PhotoPlace_Cfg_main_timeoffsetseconds = 0
-PhotoPlace_Cfg_main_photouri = u""
+PhotoPlace_Cfg_main_photouri = ""
 PhotoPlace_Cfg_main_copyonlygeolocated = True
-PhotoPlace_Cfg_main_kmltemplate = u"layout.template.kml"
+PhotoPlace_Cfg_main_kmltemplate = "layout.template.kml"
 PhotoPlace_Cfg_main_templateseparatorkey = '|'
 PhotoPlace_Cfg_main_templatedefaultvalue = " "
 PhotoPlace_Cfg_main_templateseparatornodes = '.'
@@ -135,16 +135,16 @@ PhotoPlace_Cfg_version = 5004
 Photoplace_Cfg_mode_command = 0
 Photoplace_Cfg_mode_gui = 1
 PhotoPlace_Cfg_dir = os.path.join(
-    unicode(os.path.expanduser("~"), PLATFORMENCODING, 'ignore'), u".photoplace")
-PhotoPlace_Cfg_file = u"photoplace.cfg"
-PhotoPlace_Cfg_fileextold = u".old"
-PhotoPlace_Cfg_altdir = u"conf"
+    unicode(os.path.expanduser("~"), PLATFORMENCODING, 'ignore'), ".photoplace")
+PhotoPlace_Cfg_file = "photoplace.cfg"
+PhotoPlace_Cfg_fileextold = ".old"
+PhotoPlace_Cfg_altdir = "conf"
 PhotoPlace_Cfg_optionsep = "="
 PhotoPlace_Cfg_sectionsep = ":"
 PhotoPlace_Cfg_PhotoRegExp = re.compile(r"\.jpg$", re.I)
 PhotoPlace_Cfg_KmlTemplatePhoto_Path = ['kml.Document.Folder.Placemark']
 PhotoPlace_Cfg_KmlTemplateDescriptionPhoto_Path = "kml.document.folder.placemark.description"
-PhotoPlace_Cfg_TemplateDescriptionPhoto_File = u"PhotoDescription.xhtml"
+PhotoPlace_Cfg_TemplateDescriptionPhoto_File = "PhotoDescription.xhtml"
 PhotoPlace_Cfg_DirMode = 0750
 PhotoPlace_Cfg_ExifModes = {
     0 : _('write'),
@@ -209,8 +209,8 @@ PhotoPlace_CONFIG_NOCLONE = {
     'addons'   : [],
 }
 
-TEMPLATES_KEY = u"templates"
-VARIABLES_KEY = u"defaults"
+TEMPLATES_KEY = "templates"
+VARIABLES_KEY = "defaults"
 VARIABLES_OTHER = [
     'normalplacemark',
     'normalplacemarkscale',
