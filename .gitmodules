@@ -1,0 +1,3 @@
+[submodule "photoplace/django"]
+	path = photoplace/django
+	url = git@bitbucket.org:jriguera/photoplace.django.git
