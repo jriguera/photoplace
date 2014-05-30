@@ -128,6 +128,7 @@ KmlTour_CONFKEY_KMLTOUR_LAST_PHOTO = "tolastphoto"
 
 KmlTour_CONFKEY_BEGIN_NAME = "start_name"
 KmlTour_CONFKEY_BEGIN_DESC = "start_desc_file"
+KmlTour_CONFKEY_BEGIN_DESC_TEXT = "start_desc"
 KmlTour_CONFKEY_BEGIN_STYLE = "start_style"
 KmlTour_CONFKEY_BEGIN_ICON = "start_icon"
 KmlTour_CONFKEY_BEGIN_SCALE = "start_scale"
@@ -152,6 +153,7 @@ KmlTour_CONFKEY_FOLLOWPATH = "camera_follow_path"
 
 KmlTour_CONFKEY_END_NAME = "end_name"
 KmlTour_CONFKEY_END_DESC = "end_desc_file"
+KmlTour_CONFKEY_END_DESC_TEXT = "end_desc"
 KmlTour_CONFKEY_END_STYLE = "end_style"
 KmlTour_CONFKEY_END_ICON = "end_icon"
 KmlTour_CONFKEY_END_SCALE = "end_scale"
@@ -295,6 +297,7 @@ class KmlTour(Plugin):
             except:
                 pass
             options[KmlTour_CONFKEY_BEGIN_DESC] = filename
+        options.setdefault(KmlTour_CONFKEY_BEGIN_DESC_TEXT, '')
         options.setdefault(KmlTour_CONFKEY_BEGIN_STYLE, KmlTour_BEGIN_STYLE)
         options.setdefault(KmlTour_CONFKEY_BEGIN_ICON, KmlTour_BEGIN_ICON)
         self._set_option_float_none(options, KmlTour_CONFKEY_BEGIN_SCALE, KmlTour_BEGIN_SCALE, (0.0, 10.0))
@@ -327,6 +330,7 @@ class KmlTour(Plugin):
             except:
                 pass
             options[KmlTour_CONFKEY_END_DESC] = filename
+        options.setdefault(KmlTour_CONFKEY_END_DESC_TEXT, '')
         options.setdefault(KmlTour_CONFKEY_END_STYLE, KmlTour_END_STYLE)
         options.setdefault(KmlTour_CONFKEY_END_ICON, KmlTour_END_ICON)
         self._set_option_float_none(options, KmlTour_CONFKEY_END_SCALE, KmlTour_END_SCALE, (0.0, 10.0))
@@ -369,7 +373,7 @@ class KmlTour(Plugin):
             self.gxtour = gxTour([], False, mp3uri)
 
 
-    def get_description(self, key, bytes=102400):
+    def get_description(self, key, fallback_key, bytes=102400):
         description = ''
         if self.gui:
             description = self.gui.get_textview(key)
@@ -389,25 +393,37 @@ class KmlTour(Plugin):
                 finally:
                     if fd:
                         fd.close()
+            else:
+                description =  self.options[fallback_key]
         templatedata = TemplateDict(self.defaultsinfo)
         return description % templatedata
 
 
     def _border_range(self, angle, lat, lon):
         # using ellipse polar equation
-        angle = 90.0 + angle
-        b_distance = self.altitude
-        c_distance = pyGPX.distanceCoord(self.center_lat, self.center_lon, lat, lon)
+        max_lat = self.center_lat
+        min_lat = lat
+        if min_lat > max_lat:
+            max_lat = lat
+            min_lat = self.center_lat
+        max_lon = self.center_lon
+        min_lon = lon
+        if min_lon > max_lon:
+            max_lon = lon
+            min_lon = self.center_lon
+        #b_distance = self.altitude            
+        b_distance = pyGPX.bestViewAltitude(max_lat, max_lon, min_lat, min_lon)
+        c_distance = pyGPX.distanceCoord(self.center_lat, self.center_lon, lat, lon) / 2.0
         a_distance = math.sqrt(c_distance * c_distance + b_distance * b_distance)
         eccentricity = float(c_distance) / a_distance
         rangle = math.radians(angle)
-        r = (a_distance * (1.0 - eccentricity * eccentricity)) / (1.0 - eccentricity * math.cos(rangle))
+        r = (a_distance * (1.0 - eccentricity * eccentricity)) / (1.0 + eccentricity * math.cos(rangle))
         return r
 
 
     def set_first(self):
         begin_name = self.options[KmlTour_CONFKEY_BEGIN_NAME]
-        begin_desc = self.get_description(KmlTour_CONFKEY_BEGIN_DESC)
+        begin_desc = self.get_description(KmlTour_CONFKEY_BEGIN_DESC, KmlTour_CONFKEY_BEGIN_DESC_TEXT)
         begin_style = self.options[KmlTour_CONFKEY_BEGIN_STYLE]
         begin_flytime = self.options[KmlTour_CONFKEY_BEGIN_FLYTIME]
         begin_wait = self.options[KmlTour_CONFKEY_BEGIN_WAIT]
@@ -442,7 +458,7 @@ class KmlTour(Plugin):
 
     def set_last(self, last_photo_id):
         end_name = self.options[KmlTour_CONFKEY_END_NAME]
-        end_desc = self.get_description(KmlTour_CONFKEY_END_DESC)
+        end_desc = self.get_description(KmlTour_CONFKEY_END_DESC, KmlTour_CONFKEY_END_DESC_TEXT)
         end_style = self.options[KmlTour_CONFKEY_END_STYLE]
         strtime = self.last_time.strftime("%Y-%m-%dT%H:%M:%S") + self.state.stzdiff
         end_flytime = self.options[KmlTour_CONFKEY_END_FLYTIME]
@@ -473,70 +489,6 @@ class KmlTour(Plugin):
             end_style = '#' + end_style
         self.gxtour.end(self.last_lon, self.last_lat, self.last_ele, strtime,
             end_name, end_desc, end_style, end_heading, end_tilt, end_range, end_flytime)
-
-
-    def simpl_track_DouglasPeucker(self, points, epsilon):
-        # epsilon depth in meters is the maximum allowed distance between the poin,
-        # and the paht. It is the height of the triangle abc where a-b and b-c are 
-        # two consecutive line segments 
-        len_points = len(points)
-        # indexes of points to include in the simplification
-        index = []
-        # if one or two points ...
-        if len_points < 3:
-            return points
-        band_sqr = epsilon * 360.0 / (2.0 * math.pi * pyGPX.EarthsRadius)
-        band_sqr = band_sqr * band_sqr
-        F = math.pi / 360.0
-        stack = [(0, len_points-1)]
-        while stack:
-            start, end = stack.pop()
-            if (end - start) > 1:
-                # intermediate points, find most distant intermediate point
-                # with the line from start to end points 
-                x12 = (points[end].lon - points[start].lon)
-                y12 = (points[end].lat - points[start].lat)
-                if math.fabs(x12) > 180.0:
-                    x12 = 360.0 - math.fabs(x12)
-                x12 *= math.cos(F * (points[end].lat + points[start].lat))
-                d12 = (x12*x12) + (y12*y12)
-
-                sig = start
-                max_dev_sqr = -1.0
-                for i in xrange(start + 1, end):
-                    x13 = (points[i].lon - points[start].lon)
-                    y13 = (points[i].lat - points[start].lat)
-                    if math.fabs(x13) > 180.0:
-                        x13 = 360.0 - math.fabs(x13)
-                    x13 *= math.cos(F * (points[i].lat + points[start].lat))
-                    d13 = (x13*x13) + (y13*y13)
-                    x23 = (points[i].lon - points[end].lon)
-                    y23 = (points[i].lat - points[end].lat)
-                    if math.fabs(x23) > 180.0:
-                        x23 = 360.0 - math.fabs(x23)
-                    x23 *= math.cos(F * (points[i].lat + points[end].lat))
-                    d23 = (x23*x23) + (y23*y23)
-                    if d13 >= (d12 + d23):
-                        dev_sqr = d23
-                    elif d23 >= (d12 + d13):
-                        dev_sqr = d13
-                    else:
-                        # solve triangle
-                        dev_sqr = (x13 * y12 - y13 * x12) * (x13 * y12 - y13 * x12) / d12
-                    if dev_sqr > max_dev_sqr:
-                        sig = i;
-                        max_dev_sqr = dev_sqr;
-                if max_dev_sqr < band_sqr:
-                    # no sig. intermediate point, transfer current start point 
-                    index.append(start)
-                else:
-                    stack.append((sig, end))
-                    stack.append((start, sig))
-            else:
-                index.append(start)
-        # last point
-        index.append(len_points-1)
-        return [points[i] for i in index]
 
 
     # defautl method
@@ -788,7 +740,10 @@ class KmlTour(Plugin):
         ele_prev = self.first_ele
         time_prev = self.first_time
         # Calculate the best values for altitude
-        self.altitude = pyGPX.bestViewAltitude(self.max_lat, self.max_lon, self.min_lat, self.min_lon)
+        try:
+            self.altitude = pyGPX.bestViewAltitude(self.max_lat, self.max_lon, self.min_lat, self.min_lon)
+        except:
+            self.altitude = self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MIN] + 50
         if self.altitude < self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MIN]:
             self.altitude = self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MIN] + 50
         if self.altitude > self.options[KmlTour_CONFKEY_KMLTOUR_RANGE_MAX]:
@@ -814,7 +769,7 @@ class KmlTour(Plugin):
                     points = self.get_track(lon_prev, lat_prev, time_prev, gphoto.lon, gphoto.lat, gphoto.ptime)
                     points_len = len(points)
                     if points_len > 1 and epsilon > 0:
-                        points = self.simpl_track_DouglasPeucker(points, epsilon)
+                        points = pyGPX.simplDouglasPeucker(points, epsilon)
                         points_len = len(points)
                 total_distance = 0.0
                 if points_len < 1:
@@ -844,7 +799,7 @@ class KmlTour(Plugin):
                 points = self.get_track(lon_prev, lat_prev, time_prev, self.last_lon, self.last_lat, self.last_time)
                 points_len = len(points)
                 if points_len > 1 and epsilon > 0:
-                    points = self.simpl_track_DouglasPeucker(points, epsilon)
+                    points = pyGPX.simplDouglasPeucker(points, epsilon)
                     points_len = len(points)
             total_distance = 0.0
             if points_len < 1:
@@ -1006,7 +961,7 @@ class KmlTour(Plugin):
         # Last path
         if not to_last_photo:
             self.set_last(num_photos)
-
+        
 
     @DRegister("SaveFiles:ini")
     def save(self, fd, outputkml, outputkmz, photouri, outputdir, quality):

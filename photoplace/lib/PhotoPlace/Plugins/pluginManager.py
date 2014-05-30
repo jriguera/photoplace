@@ -119,6 +119,18 @@ class PluginManager(object):
     def active(self, plugin):
         return plugin in self.instances
 
+    def get_plugins(self, capability=None):
+        result = []
+        if not capability:
+            for plugin in Interface.Plugin.__subclasses__():
+                result.append(plugin)
+        else:
+            for plugin in Interface.Plugin.__subclasses__():
+                if plugin.capabilities[capability]:
+                    result.append(plugin)
+        return result
+
+    # State must be passed via those functions
     def init(self, plugin, *args, **kwargs):
         dgettext = dict(module=plugin.__module__)
         if not plugin in self.instances:
@@ -159,17 +171,6 @@ class PluginManager(object):
             msg = _("Cannot end module '%(module)s': %(error)s.")
             raise PluginManagerError(msg % dgettext)
 
-    def get_plugins(self, capability=None):
-        result = []
-        if not capability:
-            for plugin in Interface.Plugin.__subclasses__():
-                result.append(plugin)
-        else:
-            for plugin in Interface.Plugin.__subclasses__():
-                if plugin.capabilities[capability]:
-                    result.append(plugin)
-        return result
-
     @classmethod
     def set_event(cls, event, funtion):
         if not cls.events.has_key(event):
@@ -179,7 +180,7 @@ class PluginManager(object):
     @DObserver
     def trigger(self, event, *args, **kwargs):
         """ 
-        Call this function to trigger an event. It will run any plugins that
+        Call this function to trigger an event. It will run any plugin that
         have registered themselves to the event. Any additional arguments or
         keyword arguments you pass in will be passed to the plugins.
         """

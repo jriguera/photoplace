@@ -44,14 +44,14 @@
     <Style id="normalPlacemark">
       <IconStyle>
         <scale>%(normalplacemarkscale|0.5)s</scale>
-        <color>%(normalplacemarkcolor|4cffffff)s</color>
+        <color>%(normalplacemarkcolor|ffffffff)s</color>
         <Icon>
             <href>%(normalplacemark|http://maps.google.com/mapfiles/kml/pal4/icon38.png)s</href>
         </Icon>
       </IconStyle>
       <LabelStyle>
         <scale>%(normalplacemarklabelscale|0.5)s</scale>
-        <color>%(normalplacemarklabelcolor|4cffffff)s</color>
+        <color>%(normalplacemarklabelcolor|00ffffff)s</color>
       </LabelStyle>
     </Style>
 
@@ -85,7 +85,7 @@
         </SimpleField>
     </Schema>
 
-    <LookAt>
+    <LookAt id="FirstCamera">
         <TimeSpan>
             <begin>%(PhotoPlace.MinTime|2000)s</begin>
             <end>%(PhotoPlace.MaxTime|2020)s</end>
@@ -99,7 +99,7 @@
         <altitudeMode>relativeToGround</altitudeMode>
     </LookAt>
 
-    <Folder>
+    <Folder id="GeoPhotos">
         <name>%(photofolder|Photos)s</name>
         <Placemark id="%(Photo.NAME|-)s">
             <TimeStamp>

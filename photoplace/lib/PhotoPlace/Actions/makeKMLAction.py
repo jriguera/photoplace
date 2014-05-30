@@ -107,6 +107,8 @@ class MakeKML(Interface.Action, threading.Thread):
                     self.dgettext['path'] = track.name #.encode(PLATFORMENCODING)
                     msg = _("Cannot process '%(path)s': %(error)s.") % self.dgettext
                     self.logger.error(msg)
+            max_time = max_time + self.tzdiff
+            min_time = min_time + self.tzdiff
             smax_time = max_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
             smin_time = min_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
         else:
@@ -133,8 +135,8 @@ class MakeKML(Interface.Action, threading.Thread):
                     prev_lat = geophoto.lat
                     prev_lon = geophoto.lon
                     num_points += 1
-            min_time = min_time - self.tzdiff
-            max_time = max_time - self.tzdiff
+            min_time = min_time #- self.tzdiff
+            max_time = max_time #- self.tzdiff
             smax_time = max_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
             smin_time = min_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
         diff_time = abs(max_time - min_time)
@@ -150,7 +152,10 @@ class MakeKML(Interface.Action, threading.Thread):
         self._set_value(PhotoPlace_IniALT, PhotoPlace_Cfg_default_inialt)
         self._set_value(PhotoPlace_IniRANGE, PhotoPlace_Cfg_default_inirange)
         if self.rootdata[PhotoPlace_IniRANGE] < 1:
-            altitude = pyGPX.bestViewAltitude(max_lat, max_lon, min_lat, min_lon)
+            if num_points > 1:
+                altitude = pyGPX.bestViewAltitude(max_lat, max_lon, min_lat, min_lon)
+            else:
+                altitude = PhotoPlace_Cfg_default_inialt
             self.rootdata[PhotoPlace_IniRANGE] = altitude
         self._set_value(PhotoPlace_IniTILT, PhotoPlace_Cfg_default_initilt)
         self._set_value(PhotoPlace_IniHEADING, PhotoPlace_Cfg_default_heading)

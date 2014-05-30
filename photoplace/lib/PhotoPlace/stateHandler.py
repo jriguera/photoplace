@@ -130,7 +130,7 @@ class DSynchronized(object):
 
 class State(object):
 
-    def __init__(self, resourcedir, options={}, resourcedir_user=None):
+    def __init__(self, resourcedir, options={}, resourcedir_user='', initial=True):
         object.__init__(self)
         self.__logger = logging.getLogger(self.__class__.__name__)
         #
@@ -175,7 +175,8 @@ class State(object):
         self.tzdiff = datetime.timedelta()
         self.stzdiff = u'Z'
         #
-        self.initial()
+        if initial:
+            self.initial()
 
 
     def __getitem__(self, key):
