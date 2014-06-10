@@ -209,8 +209,6 @@ class PhotoPlaceGUI(InterfaceUI):
         self.userfacade.addNotifier(
             self._set_progressbar_writeexif_observer, ["WriteExif:run"], self)
         self.userfacade.addNotifier(
-            self._set_progressbar_copyfiles_observer, ["CopyFiles:run"], self)
-        self.userfacade.addNotifier(
             self._set_progressbar_savefiles_observer, ["SaveFiles:run"], self)
         self.userfacade.addNotifier(
             self._update_progressbar_loadphoto_observer, ["LoadPhotos:run"], self)
@@ -595,11 +593,6 @@ class PhotoPlaceGUI(InterfaceUI):
     @DObserver
     def _set_progressbar_writeexif_observer(self, photo, *args):
         msg = _("Writing EXIF info of '%s' ...") % photo.name
-        gobject.idle_add(self.set_progressbar, msg)
-
-    @DObserver
-    def _set_progressbar_copyfiles_observer(self, photo, *args):
-        msg = _("Copying photo '%s' ...") % photo.name
         gobject.idle_add(self.set_progressbar, msg)
 
     @DObserver

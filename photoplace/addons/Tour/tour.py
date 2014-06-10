@@ -92,6 +92,7 @@ KmlTour_TILT_MAXLIMIT = 45.0
 KmlTour_TILT_MINLIMIT = 20.0
 KmlTour_FROM_FIRST_PHOTO = False
 KmlTour_TO_LAST_PHOTO = False
+KmlTour_COPYMUSIC = True
 
 KmlTour_BEGIN_WAIT = 5.0
 KmlTour_BEGIN_HEADING = None
@@ -120,6 +121,7 @@ KmlTour_CONFKEY_KMLTOUR_SIMPL_DISTANCE = "wptsimpldistance"
 KmlTour_CONFKEY_KMLTOUR_FOLDER = "foldername"
 KmlTour_CONFKEY_KMLTOUR_NAME = "name"
 KmlTour_CONFKEY_KMLTOUR_DESC = "description"
+KmlTour_CONFKEY_KMLTOUR_COPYMUSIC = "copymp3"
 KmlTour_CONFKEY_KMLTOUR_MUSIC = "mp3list"
 KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX = "mp3mix"
 KmlTour_CONFKEY_KMLTOUR_MUSIC_URI = "mp3uri"
@@ -269,6 +271,7 @@ class KmlTour(Plugin):
         self._set_option_bool(options, KmlTour_CONFKEY_KMLTOUR_MUSIC_MIX, KmlTour_MUSIC_MIX)
         self._set_option_bool(options, KmlTour_CONFKEY_KMLTOUR_FIRST_PHOTO, KmlTour_FROM_FIRST_PHOTO)
         self._set_option_bool(options, KmlTour_CONFKEY_KMLTOUR_LAST_PHOTO, KmlTour_TO_LAST_PHOTO)
+        self._set_option_bool(options, KmlTour_CONFKEY_KMLTOUR_COPYMUSIC, KmlTour_COPYMUSIC)
         options.setdefault(KmlTour_CONFKEY_KMLTOUR_MUSIC_URI, KmlTour_MUSIC_URI)
         mp3s = options.setdefault(KmlTour_CONFKEY_KMLTOUR_MUSIC, [])
         if not isinstance(mp3s, list):
@@ -965,6 +968,8 @@ class KmlTour(Plugin):
 
     @DRegister("SaveFiles:ini")
     def save(self, fd, outputkml, outputkmz, photouri, outputdir, quality):
+        if not self.options[KmlTour_CONFKEY_KMLTOUR_COPYMUSIC]:
+            return
         dgettext = dict()
         try:
             outdir = os.path.dirname(outputkml)
