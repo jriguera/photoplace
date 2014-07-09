@@ -121,7 +121,7 @@ PhotoPlace_Cfg_main_templatedefaultvalue = " "
 PhotoPlace_Cfg_main_templateseparatornodes = '.'
 PhotoPlace_Cfg_main_templatedeltag = ""
 
-PhotoPlace_Cfg_default_inialt = 500.0
+PhotoPlace_Cfg_default_inialt = 700.0
 PhotoPlace_Cfg_default_inirange = 0.0
 PhotoPlace_Cfg_default_initilt = 10.0
 PhotoPlace_Cfg_default_heading =  0.0

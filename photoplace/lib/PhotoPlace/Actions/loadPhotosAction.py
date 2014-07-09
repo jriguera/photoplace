@@ -80,7 +80,8 @@ class LoadPhotos(Interface.Action, threading.Thread):
                 self.dgettext['photo'] = filename  #.encode(PLATFORMENCODING)
                 try:
                     #geophoto = geoPhotoData.GeoPhoto(filename, re.sub(r"\s+", '_', fname))
-                    geophoto = geoPhotoData.GeoPhoto(filename, fname)
+                    geophoto = geoPhotoData.GeoPhoto(filename, re.sub(r"\s+", '_', fname.lower()))
+                    #geophoto = geoPhotoData.GeoPhoto(filename, fname)
                 except Exception as e:
                     self.dgettext['error'] = str(e)
                     msg = _("Error processing photo '%(photo)s': %(error)s.")

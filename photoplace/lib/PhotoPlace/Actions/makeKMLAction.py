@@ -107,10 +107,8 @@ class MakeKML(Interface.Action, threading.Thread):
                     self.dgettext['path'] = track.name #.encode(PLATFORMENCODING)
                     msg = _("Cannot process '%(path)s': %(error)s.") % self.dgettext
                     self.logger.error(msg)
-            max_time = max_time + self.tzdiff
-            min_time = min_time + self.tzdiff
-            smax_time = max_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
-            smin_time = min_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
+                min_time = min_time #- self.tzdiff
+                max_time = max_time #- self.tzdiff
         else:
             num_tracks = 1
             prev_lat = 0.0
@@ -135,10 +133,10 @@ class MakeKML(Interface.Action, threading.Thread):
                     prev_lat = geophoto.lat
                     prev_lon = geophoto.lon
                     num_points += 1
-            min_time = min_time #- self.tzdiff
-            max_time = max_time #- self.tzdiff
-            smax_time = max_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
-            smin_time = min_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
+            min_time = min_time - self.tzdiff
+            max_time = max_time - self.tzdiff
+        smax_time = max_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
+        smin_time = min_time.strftime("%Y-%m-%dT%H:%M:%S") + self.stzdiff
         diff_time = abs(max_time - min_time)
         self.rootdata[PhotoPlace_NumPOINTS] = num_points
         self.rootdata[PhotoPlace_NumTRACKS] = num_tracks
