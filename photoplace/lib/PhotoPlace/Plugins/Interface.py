@@ -43,8 +43,9 @@ __PLUGIN_PVERSION__ = "0.5.0"
 (
     PLUGIN_GUI_NO,
     PLUGIN_GUI_GTK,
+    PLUGIN_GUI_WEB,
     PLUGIN_GUI_OTHER,
-) = range(3)
+) = range(4)
 
 
 

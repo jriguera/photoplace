@@ -114,14 +114,14 @@ PhotoPlace_Cfg_main_quality = 1
 PhotoPlace_Cfg_main_maxdeltaseconds = 300
 PhotoPlace_Cfg_main_timeoffsetseconds = 0
 PhotoPlace_Cfg_main_photouri = ""
-PhotoPlace_Cfg_main_copyonlygeolocated = True
+PhotoPlace_Cfg_main_copymode = 2
 PhotoPlace_Cfg_main_kmltemplate = "layout.template.kml"
 PhotoPlace_Cfg_main_templateseparatorkey = '|'
 PhotoPlace_Cfg_main_templatedefaultvalue = " "
 PhotoPlace_Cfg_main_templateseparatornodes = '.'
 PhotoPlace_Cfg_main_templatedeltag = ""
 
-PhotoPlace_Cfg_default_inialt = 0.0
+PhotoPlace_Cfg_default_inialt = 700.0
 PhotoPlace_Cfg_default_inirange = 0.0
 PhotoPlace_Cfg_default_initilt = 10.0
 PhotoPlace_Cfg_default_heading =  0.0
@@ -131,7 +131,7 @@ PhotoPlace_Cfg_default_heading =  0.0
 # Interal Configuration. Do not touch !!!
 # #######################################
 
-PhotoPlace_Cfg_version = 5004
+PhotoPlace_Cfg_version = 5005
 Photoplace_Cfg_mode_command = 0
 Photoplace_Cfg_mode_gui = 1
 PhotoPlace_Cfg_dir = os.path.join(

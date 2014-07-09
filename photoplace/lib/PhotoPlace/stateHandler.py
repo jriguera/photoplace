@@ -130,7 +130,7 @@ class DSynchronized(object):
 
 class State(object):
 
-    def __init__(self, resourcedir, options={}, resourcedir_user=None):
+    def __init__(self, resourcedir, options={}, resourcedir_user='', initial=True):
         object.__init__(self)
         self.__logger = logging.getLogger(self.__class__.__name__)
         #
@@ -148,7 +148,7 @@ class State(object):
         self._maxdeltaseconds = PhotoPlace_Cfg_main_maxdeltaseconds
         self._timeoffsetseconds = PhotoPlace_Cfg_main_timeoffsetseconds
         self._exifmode = PhotoPlace_Cfg_main_exifmode
-        self._copyonlygeolocated = PhotoPlace_Cfg_main_copyonlygeolocated
+        self._copymode = PhotoPlace_Cfg_main_copymode
         self._version = PhotoPlace_Cfg_version
         self._photoinputdir = u''
         self._gpxinputfile = u''
@@ -175,7 +175,8 @@ class State(object):
         self.tzdiff = datetime.timedelta()
         self.stzdiff = u'Z'
         #
-        self.initial()
+        if initial:
+            self.initial()
 
 
     def __getitem__(self, key):
@@ -194,7 +195,7 @@ class State(object):
             "jpgsize",
             "quality",
             "jpgzoom",
-            "copyonlygeolocated",
+            "copymode",
         ]
         if k in keys:
             return getattr(self, '_' + k)
@@ -233,8 +234,8 @@ class State(object):
             self.set_quality(value)
         elif k == "jpgzoom":
             self.set_jpgzoom(value)
-        elif k == "copyonlygeolocated":
-            self.set_copyonlygeolocated(value)
+        elif k == "copymode":
+            self.set_copymode(value)
         elif k == 'logfile' or k == 'loglevel':
             self.options[k] = value
         else:
@@ -283,6 +284,7 @@ class State(object):
         self.set_quality()
         self.set_jpgzoom()
         self.set_exifmode()
+        self.set_copymode()
         self.set_maxdeltaseconds()
         self.set_timeoffsetseconds()
         self.set_utczoneminutes()
@@ -737,21 +739,21 @@ class State(object):
 
 
     @DSynchronized()
-    def set_copyonlygeolocated(self, value=None):
-        copyonlygeolocated = PhotoPlace_Cfg_main_copyonlygeolocated
+    def set_copymode(self, value=None):
+        copymode = PhotoPlace_Cfg_main_copymode
         try:
             if value != None:
-                copyonlygeolocated = value
+                copymode = int(value)
             else:
-                copyonlygeolocated = bool(int(self.options["copyonlygeolocated"]))
+                copymode = int(self.options["copymode"])
         except KeyError:
-            self.__logger.debug(_("Value of 'copyonlygeolocated' not defined in the "
-            "configuration file. Setting default value '%s'.") % copyonlygeolocated)
+            self.__logger.debug(_("Value of 'copymode' not defined in the "
+            "configuration file. Setting default value '%s'.") % copymode)
         except ValueError as valueerror:
-            dgettext = {'error': str(valueerror), 'value': copyonlygeolocated }
-            self.__logger.warning(_("Value of 'copyonlygeolocated' incorrect: %(error)s. "
+            dgettext = {'error': str(valueerror), 'value': copymode }
+            self.__logger.warning(_("Value of 'copymode' incorrect: %(error)s. "
             "Setting default value '%(value)s'.") % dgettext)
-        self._copyonlygeolocated = copyonlygeolocated
+        self._copymode = copymode
 
 
 # EOF
