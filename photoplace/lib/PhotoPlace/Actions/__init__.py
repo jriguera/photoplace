@@ -39,8 +39,7 @@ __all__ = [
     'doTemplatesAction', 
     'saveFilesAction',
     'makeKMLAction',
-    'writeExifAction',
-    'copyFilesAction'
+    'writeExifAction'
 ]
 import Interface
 import loadPhotosAction
@@ -50,7 +49,6 @@ import doTemplatesAction
 import saveFilesAction
 import makeKMLAction
 import writeExifAction
-import copyFilesAction
 
 
 # EOF

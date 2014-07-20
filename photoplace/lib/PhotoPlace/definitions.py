@@ -3,7 +3,7 @@
 #
 #       definitions.py
 #
-#       Copyright 2010 Jose Riguera Lopez <jriguera@gmail.com>
+#       Copyright 2014 Jose Riguera Lopez <jriguera@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.5.0"
-__date__ = "September 2010"
+__version__ = "0.6.0"
+__date__ = "July 2014"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
 
@@ -42,7 +42,7 @@ PLATFORMENCODING = locale.getpreferredencoding()
 
 
 PhotoPlace_name = "PhotoPlace"
-PhotoPlace_version = "0.5.0"
+PhotoPlace_version = "0.6.0"
 PhotoPlace_url = "http://code.google.com/p/photoplace"
 PhotoPlace_date = "Jan 2011"
 PhotoPlace_onlinehelp = "http://code.google.com/p/photoplace/wiki/OnlineHelp"
@@ -114,14 +114,14 @@ PhotoPlace_Cfg_main_quality = 1
 PhotoPlace_Cfg_main_maxdeltaseconds = 300
 PhotoPlace_Cfg_main_timeoffsetseconds = 0
 PhotoPlace_Cfg_main_photouri = ""
-PhotoPlace_Cfg_main_copyonlygeolocated = True
+PhotoPlace_Cfg_main_copymode = 2
 PhotoPlace_Cfg_main_kmltemplate = "layout.template.kml"
 PhotoPlace_Cfg_main_templateseparatorkey = '|'
 PhotoPlace_Cfg_main_templatedefaultvalue = " "
 PhotoPlace_Cfg_main_templateseparatornodes = '.'
 PhotoPlace_Cfg_main_templatedeltag = ""
 
-PhotoPlace_Cfg_default_inialt = 0.0
+PhotoPlace_Cfg_default_inialt = 700.0
 PhotoPlace_Cfg_default_inirange = 0.0
 PhotoPlace_Cfg_default_initilt = 10.0
 PhotoPlace_Cfg_default_heading =  0.0
@@ -131,7 +131,7 @@ PhotoPlace_Cfg_default_heading =  0.0
 # Interal Configuration. Do not touch !!!
 # #######################################
 
-PhotoPlace_Cfg_version = 5004
+PhotoPlace_Cfg_version = 5005
 Photoplace_Cfg_mode_command = 0
 Photoplace_Cfg_mode_gui = 1
 PhotoPlace_Cfg_dir = os.path.join(
@@ -149,13 +149,13 @@ PhotoPlace_Cfg_DirMode = 0750
 PhotoPlace_Cfg_ExifModes = {
     0 : _('write'),
     1 : _('overwrite'),
-   -1 : _('nowrite') 
+   -1 : _('nowrite')
 }
 PhotoPlace_Cfg_LogModes = {
     "info"   : logging.INFO,
     "debug"  : logging.DEBUG,
     "warning": logging.WARNING,
-    "error"  : logging.ERROR 
+    "error"  : logging.ERROR
 }
 PhotoPlace_Cfg_default = {
     'main'      : {},
@@ -168,7 +168,7 @@ PhotoPlace_Cfg_default = {
         'photofolder' : _("Photos"),
         'defaultvalue': "-",
     },
-    'addons'   : {} 
+    'addons'   : {}
 }
 PhotoPlace_Cfg_timeformat = _("%A %d. %B %Y")
 PhotoPlace_Cfg_loglevel = logging.DEBUG
@@ -180,7 +180,7 @@ PhotoPlace_Cfg_quality = [
     {'img': Image.NEAREST, 'zip': zipfile.ZIP_DEFLATED },
     {'img': Image.BILINEAR, 'zip': zipfile.ZIP_DEFLATED },
     {'img': Image.BICUBIC, 'zip': zipfile.ZIP_STORED },
-    {'img': Image.ANTIALIAS, 'zip': zipfile.ZIP_STORED } 
+    {'img': Image.ANTIALIAS, 'zip': zipfile.ZIP_STORED }
 ]
 PhotoPlace_FILE_DEF_EXTENSION = ".jpg"
 
@@ -188,16 +188,16 @@ PhotoPlace_FILE_DEF_EXTENSION = ".jpg"
 PhotoPlace_CONFIG_NOCLONE = {
     'main'      : [
         'version',
-        'photoinputdir', 
-        'gpxinputfile', 
-        'outputfile', 
-        'kmltemplate', 
-        'utczoneminutes', 
+        'photoinputdir',
+        'gpxinputfile',
+        'outputfile',
+        'kmltemplate',
+        'utczoneminutes',
         'photouri',
         ],
     'defaults'  : [
-        'name', 
-        'date', 
+        'name',
+        'date',
         'inilatitute',
         'inilongitude',
         'inialtitude',

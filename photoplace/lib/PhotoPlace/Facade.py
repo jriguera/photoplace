@@ -24,7 +24,7 @@ Public functions and methods of PhotoPlace
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 __date__ = "January 2013"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera, September 2010"
@@ -578,14 +578,6 @@ class Facade(object):
         return writeexif
 
 
-    def CopyFiles(self):
-        if self.finalize:
-            return None
-        copy = Actions.copyFilesAction.CopyFiles(self.state)
-        self._setObservers(copy)
-        return copy
-
-
     def SaveFiles(self):
         if self.finalize:
             return None
@@ -609,9 +601,6 @@ class Facade(object):
             write = Actions.writeExifAction.WriteExif(self.state)
             self._setObservers(write)
             write.run()
-        copy = Actions.copyFilesAction.CopyFiles(self.state)
-        self._setObservers(copy)
-        copy.run()
         save = Actions.saveFilesAction.SaveFiles(self.state)
         self._setObservers(save)
         save.run()

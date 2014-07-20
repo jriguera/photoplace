@@ -101,6 +101,9 @@ class DoTemplates(Interface.Action):
     def go(self, rini):
         self._notify_run(self.templates)
         self.state.kmldata = self.kmldata
+        for variable in self.state.kmldata.photo_variables:
+            if not variable in self.state.photovariables:
+                self.state.photovariables.append(variable)
         return self.kmldata
 
 

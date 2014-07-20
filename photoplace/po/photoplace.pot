@@ -703,12 +703,6 @@ msgid ""
 "under '%(defaultconfigdir)s'.  "
 msgstr ""
 
-#: ../photoplace.py:183
-msgid ""
-"This program is able to create a virtual flux capacitor and, with the right "
-"settings, it can be used to time travels ... "
-msgstr ""
-
 #: ../photoplace.py:195
 msgid "Read the configuration from <configfile.cfg>"
 msgstr ""

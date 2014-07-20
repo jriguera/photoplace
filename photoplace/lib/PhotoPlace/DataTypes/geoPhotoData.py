@@ -115,7 +115,7 @@ class GeoPhoto(object):
         self.status = 0
         self.toffset = 0
         if name == None:
-            self.name = re.sub(r"\s+", '_', os.path.basename(self.path))
+            self.name = os.path.basename(self.path)
         self.exif = None
         self.attr = {}
         self.loadexif = False

@@ -3,7 +3,7 @@
 #
 #       setup.py
 #
-#       Copyright 2010 Jose Riguera Lopez <jriguera@gmail.com>
+#       Copyright 2014 Jose Riguera Lopez <jriguera@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -52,10 +52,10 @@ PhotoPlace Setup Script
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.5.0"
-__date__ = "January 2013"
+__version__ = "0.6.0"
+__date__ = "July 2014"
 __license__ = "GPL (v2 or later)"
-__copyright__ ="(c) Jose Riguera, September 2010-2013"
+__copyright__ ="(c) Jose Riguera, 2010-2014"
 
 import os
 import sys
@@ -95,7 +95,7 @@ except ImportError:
 PLATFORM = os.sys.platform
 SRC_DIR = 'photoplace'
 PROGRAM = 'photoplace/photoplace.py'
-VERSION = '0.5.0'
+VERSION = '0.6.0'
 DATE = datetime.datetime.now().strftime("%B %Y")
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',

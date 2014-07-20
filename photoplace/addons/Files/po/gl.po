@@ -32,7 +32,7 @@ msgstr "Iniciando extensión ..."
 #: ../files.py:164
 #, python-format
 msgid "Cannot copy '%(file)s': %(error)s"
-msgstr "No podo copiar '%(file)s': %(error)s"
+msgstr "Non podo copiar '%(file)s': %(error)s"
 
 #: ../files.py:166
 #, python-format

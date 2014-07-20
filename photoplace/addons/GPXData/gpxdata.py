@@ -146,14 +146,14 @@ class GPXData(Plugin):
     license = __license__
     capabilities = {
         'GUI' : PLUGIN_GUI_GTK,
-        'NeedGUI' : False,
+        'UI' : False,
     }
 
 
-    def __init__(self, logger, userfacade, args, argfiles=[], gtkbuilder=None):
-        Plugin.__init__(self, logger, userfacade, args, argfiles, gtkbuilder)
+    def __init__(self, logger, userfacade, args, argfiles=[], gui=None):
+        Plugin.__init__(self, logger, userfacade, args, argfiles, gui)
         # GTK widgets
-        self.gui = None
+        self.pgui = None
         self.tracksinfo = None
         self.wptsinfo = None
         self.defaultsinfo = None
@@ -165,9 +165,9 @@ class GPXData(Plugin):
         self.wptstyles = None
         self.tracklist = None
         self.trackstyles = None
-        if gtkbuilder:
+        if gui:
             import GTKGpxdata
-            self.gui = GTKGpxdata.GTKGPXData(gtkbuilder, userfacade, logger)
+            self.pgui = GTKGpxdata.GTKGPXData(gui, userfacade, logger)
         self.ready = -1
 
 
@@ -178,12 +178,12 @@ class GPXData(Plugin):
         self.defaultsinfo = options[GPXData_VARIABLES]
         self.options = None
         self.process_variables(opt)
-        if self.gui:
+        if self.pgui:
             if self.ready == -1:
                 # 1st time
-                self.gui.show(widget, self.options, self.tracksinfo, self.wptsinfo, options)
+                self.pgui.show(widget, self.options, self.tracksinfo, self.wptsinfo, options)
             else:
-                self.gui.show(None, self.options, self.tracksinfo, self.wptsinfo, options)
+                self.pgui.show(None, self.options, self.tracksinfo, self.wptsinfo, options)
         self.ready = 1
         self.logger.debug(_("Starting Add-on ..."))
 
@@ -342,11 +342,11 @@ class GPXData(Plugin):
             self.wptstyles[wpt_id] = wptstyle
             self.wptlist[wpt_id] = wpt
             wpt_id += 1
-        if self.gui:
-            self.gui.add_tracks(self.tracklist, self.trackstyles)
-            self.gui.add_wpts(self.wptlist, self.wptstyles)
-            self.gui.set_tracks_widget(True)
-            self.gui.set_wpts_widget(True)
+        if self.pgui:
+            self.pgui.add_tracks(self.tracklist, self.trackstyles)
+            self.pgui.add_wpts(self.wptlist, self.wptstyles)
+            self.pgui.set_tracks_widget(True)
+            self.pgui.set_wpts_widget(True)
 
 
     @DRegister("LoadPhotos:end")
@@ -370,10 +370,10 @@ class GPXData(Plugin):
                 self.photoliststyles[self.track_id] = trackstyle
                 self.photodirlist[self.track_id] = track
                 self.track_id += 1
-            if self.gui:
-                self.gui.add_paths(self.photodirlist, self.photoliststyles)
+            if self.pgui:
+                self.pgui.add_paths(self.photodirlist, self.photoliststyles)
                 if geo_photos > 1:
-                     self.gui.set_paths_widget(True)
+                     self.pgui.set_paths_widget(True)
 
 
     def maketrack(self, geophotos):
@@ -601,8 +601,8 @@ class GPXData(Plugin):
             self.wptstyles = None
             self.tracklist = None
             self.trackstyles = None
-            if self.gui:
-                self.gui.reset()
+            if self.pgui:
+                self.pgui.reset()
             self.logger.debug(_("Resetting Add-on ..."))
 
 
@@ -619,8 +619,8 @@ class GPXData(Plugin):
         self.wptstyles = None
         self.tracklist = None
         self.trackstyles = None
-        if self.gui:
-            self.gui.hide(True)
+        if self.pgui:
+            self.pgui.hide(True)
         self.logger.debug(_("Ending Add-on ..."))
 
 

@@ -56,7 +56,28 @@ import geomath
 # GPX point Type implementation
 # #############################
 
-class GPXPoint(object):
+class GPXItem(object):
+    """
+    Base class for GPX components
+
+    """
+
+    def __cmp__(self, wpt):
+        pass
+
+    def __repr__(self):
+        pass
+
+    def __str__(self):
+        pass
+
+
+
+# #############################
+# GPX point Type implementation
+# #############################
+
+class GPXPoint(GPXItem):
     """
     Base class for GPX points
 
@@ -166,7 +187,7 @@ class GPXPoint(object):
 # GPX Segment Type implementation
 # ###############################
 
-class GPXSegment(object):
+class GPXSegment(GPXItem):
     """
     Base class for GPX track segments
     """
@@ -352,7 +373,7 @@ class GPXSegment(object):
 # GPX Track Type implementation
 # #############################
 
-class GPXTrack(object):
+class GPXTrack(GPXItem):
     """
     Base class for GPX Traks
     """

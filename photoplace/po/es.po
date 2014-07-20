@@ -1043,14 +1043,6 @@ msgstr ""
 "'%(defaultconfigfile)s' en el directorio actual, luego en el directorio de "
 "usuario en '%(defaultconfigdir)s'.  "
 
-#: ../photoplace.py:183
-msgid ""
-"This program is able to create a virtual flux capacitor and, with the right "
-"settings, it can be used to time travels ... "
-msgstr ""
-"Este programa es capaz de crear un condensador de fluzo y, con los "
-"parámetros adecuados puede usarse para viajar en el tiempo ... "
-
 #: ../photoplace.py:195
 msgid "Read the configuration from <configfile.cfg>"
 msgstr "Cargar la configuración desde <configfile.cfg>"

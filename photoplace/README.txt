@@ -33,11 +33,9 @@ with a geotagging  program, my antipodes in New Zeland, and your coins
 can help me to achieve this goals.
 
 
-Changes of this version: 0.5.0 (Q3 2012)
+Changes of this version: 0.6.0 (Q2 2014)
 ========================================
-* New GTK User interface with theme support.
-* Intelligent templates for descriptions.
-* Support for add-on's.
-* Multi-language.
+* New add-on for CSV import
+* Small improvements and bug fixes
 
 

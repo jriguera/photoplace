@@ -148,5 +148,73 @@ def bestViewAltitude(max_lat, max_lon, min_lat, min_lon, scale_range=1.5, aspect
     return altitude
 
 
+def simplDouglasPeucker(points, epsilon):
+    """
+    The Ramer–Douglas–Peucker algorithm (RDP) is an algorithm for reducing the 
+    number of points in a curve that is approximated by a series of points.
+    """
+    # epsilon depth in meters is the maximum allowed distance between the poin,
+    # and the paht. It is the height of the triangle abc where a-b and b-c are 
+    # two consecutive line segments 
+    len_points = len(points)
+    # indexes of points to include in the simplification
+    index = []
+    # if one or two points ...
+    if len_points < 3:
+        return points
+    band_sqr = epsilon * 360.0 / (2.0 * math.pi * EarthsRadius)
+    band_sqr = band_sqr * band_sqr
+    F = math.pi / 360.0
+    stack = [(0, len_points-1)]
+    while stack:
+        start, end = stack.pop()
+        if (end - start) > 1:
+            # intermediate points, find most distant intermediate point
+            # with the line from start to end points 
+            x12 = (points[end].lon - points[start].lon)
+            y12 = (points[end].lat - points[start].lat)
+            if math.fabs(x12) > 180.0:
+                x12 = 360.0 - math.fabs(x12)
+            x12 *= math.cos(F * (points[end].lat + points[start].lat))
+            d12 = (x12*x12) + (y12*y12)
+
+            sig = start
+            max_dev_sqr = -1.0
+            for i in xrange(start + 1, end):
+                x13 = (points[i].lon - points[start].lon)
+                y13 = (points[i].lat - points[start].lat)
+                if math.fabs(x13) > 180.0:
+                    x13 = 360.0 - math.fabs(x13)
+                x13 *= math.cos(F * (points[i].lat + points[start].lat))
+                d13 = (x13*x13) + (y13*y13)
+                x23 = (points[i].lon - points[end].lon)
+                y23 = (points[i].lat - points[end].lat)
+                if math.fabs(x23) > 180.0:
+                    x23 = 360.0 - math.fabs(x23)
+                x23 *= math.cos(F * (points[i].lat + points[end].lat))
+                d23 = (x23*x23) + (y23*y23)
+                if d13 >= (d12 + d23):
+                    dev_sqr = d23
+                elif d23 >= (d12 + d13):
+                    dev_sqr = d13
+                else:
+                    # solve triangle
+                    dev_sqr = (x13 * y12 - y13 * x12) * (x13 * y12 - y13 * x12) / d12
+                if dev_sqr > max_dev_sqr:
+                    sig = i;
+                    max_dev_sqr = dev_sqr;
+            if max_dev_sqr < band_sqr:
+                # no sig. intermediate point, transfer current start point 
+                index.append(start)
+            else:
+                stack.append((sig, end))
+                stack.append((start, sig))
+        else:
+            index.append(start)
+    # last point
+    index.append(len_points-1)
+    return [points[i] for i in index]
+
+
 # EOF
 
