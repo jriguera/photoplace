@@ -79,7 +79,7 @@ except Exception as e:
 
 class GTKTour(object):
 
-    def __init__(self, gtkbuilder, logger):
+    def __init__(self, gui, logger):
         object.__init__(self)
         self.logger = logger
         self.plugin = gtk.VBox(False)
@@ -157,7 +157,7 @@ class GTKTour(object):
         sw_ini = gtk.ScrolledWindow()
         sw_ini.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self.textview_ini = gtk.TextView()
-        self.textview_ini.set_tooltip_markup(tooltip_text + 
+        self.textview_ini.set_tooltip_markup(tooltip_text +
             _("\n\nIf empty no description will appear at the beginning of path."))
         self.textview_ini.connect('populate-popup', self._lclicked_textview, KmlTour_CONFKEY_BEGIN_DESC)
         sw_ini.add(self.textview_ini)
@@ -222,7 +222,7 @@ class GTKTour(object):
         # create model for parameters
         self.treestore = gtk.TreeStore(str, str, bool)
         self.options = None
-        self.window = gtkbuilder.get_object("window")
+        self.window = gui.builder.get_object("window")
 
 
     def show(self, widget=None, options=None):

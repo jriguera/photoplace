@@ -1,0 +1,207 @@
+# Galician translations for photoplace.csvimport plugin
+# Copyright (C) 2014 José Riguera López
+# This file is distributed under the same license as the photoplace.csvimport plugin
+# José Riguera López <jriguera@gmail.com>, 2011.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: photoplace.csvimport 0.1.0\n"
+"Report-Msgid-Bugs-To: <photoplace-project@googlegroups.com>\n"
+"POT-Creation-Date: 2014-07-20 02:36+0200\n"
+"PO-Revision-Date: 2014-07-20 02:36+0200\n"
+"Last-Translator: José Riguera López <jriguera@gmail.com>\n"
+"Language-Team: Galician <photoplace-project@googlegroups.com>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: csvimport.py:93
+msgid "Parse a CSV to add variables or geolocate photos."
+msgstr "Analiza un ficheiro CSV para engadir variables ou xeoetiquetar fotos."
+
+#: csvimport.py:135
+msgid "Starting add-on ..."
+msgstr "Iniciando extensión ..."
+
+#: csvimport.py:160
+#, python-format
+msgid "Incorrect value for '%s'."
+msgstr "Valor incorreto para '%s'."
+
+#: csvimport.py:202 GTKcsvimport.py:244
+#, python-format
+msgid "Cannot read file '%(file)s': %(error)s"
+msgstr "Imposible ler o ficheiro '%(file)s': %(error)s"
+
+#: csvimport.py:215
+#, python-format
+msgid "Processing CSV '%(file)s' with automatic format."
+msgstr "Procesando ficheiro CSV '%(file)s' con formato automático."
+
+#: csvimport.py:219
+#, python-format
+msgid ""
+"Processing CSV '%(file)s' data (with delimiter='%(delimiter)s', quotechar='%(quotechar)s', headers='%(headers)s')."
+msgstr ""
+"Procesando datos CSV '%(file)s' (con delimitador='%(delimiter)s', quotechar='%(quotechar)s', cabeceras='%(headers)s')."
+
+#: csvimport.py:234
+#, python-format
+msgid "CSV '%(file)s' has no headers and you have not defined them!"
+msgstr "CSV '%(file)s' non ten cabeceiras e non se definiron!"
+
+#: csvimport.py:333
+#, python-format
+msgid "Geotagging photo '%(name)s': (lon=%(lon).8f, lat=%(lat).8f)."
+msgstr "Xeoetiquetando foto '%(name)s': (lon=%(lon).8f, lat=%(lat).8f)."
+
+#: csvimport.py:338
+#, python-format
+msgid "CSV[%(line)s]: Photo '%(name)s' not found!"
+msgstr "CSV[%(line)s]: Foto '%(name)s' non atopada!"
+
+#: csvimport.py:343
+#, python-format
+msgid "Cannot read CSV[%(line)s]: %(error)s."
+msgstr "Imposible ler CSV[%(line)s]: %(error)s."
+
+#: csvimport.py:353 GTKcsvimport.py:289
+#, python-format
+msgid "%d photos processed with CSV data."
+msgstr "%d fotos procesadas con datos CSV."
+
+#: csvimport.py:363
+msgid "Ending add-on ..."
+msgstr "Rematando extensión ..."
+
+#: GTKcsvimport.py:88
+msgid "CSV file:"
+msgstr "Ficheiro CSV:"
+
+#: GTKcsvimport.py:95
+msgid "Select a CSV file to load photo's variables"
+msgstr "Seleccionar un ficheiro CSV para cargar as variables das fotos"
+
+#: GTKcsvimport.py:96 GTKcsvimport.py:393
+msgid "Select file"
+msgstr "Seleccionar ficheiro"
+
+#: GTKcsvimport.py:105
+msgid "Headers:"
+msgstr "Cabeceiras:"
+
+#: GTKcsvimport.py:110
+msgid ""
+"List of column headers of the CSV file. Each header will be a variable for each photo"
+msgstr ""
+"Lista das cabeceiras das columnas do ficheiro CSV. Cada cabeceira será unha variable para cada foto"
+
+#: GTKcsvimport.py:114
+msgid "where photo name is:"
+msgstr "onde o nome da foto é:"
+
+#: GTKcsvimport.py:119
+msgid ""
+"Name of the column to match with each photo file name. It must be one of the Headers"
+msgstr ""
+"Nome da columna para buscar polo nome da foto. Debe ser un definido na lista de Cabeceiras"
+
+#: GTKcsvimport.py:124
+msgid "Geolocate photos using CSV headers:"
+msgstr "Xeoetiquetar fotos usando as cabeceiras CSV:"
+
+#: GTKcsvimport.py:125
+msgid ""
+"It is active, it will assign the following headers to each photo. It will "
+"geotag the photos by using those headers, but, warning: GPX data will take "
+"precedence!"
+msgstr ""
+"Activado asignará as seguintes cabeceiras a cada foto. Etiquetará as fotos "
+"usando as columnas especificadas, pero coidado, os datos GPX teñen "
+"precedencia!"
+
+#: GTKcsvimport.py:133
+msgid "Latitude:"
+msgstr "Latitude:"
+
+#: GTKcsvimport.py:140
+msgid "Latitude header name"
+msgstr "Nome da cabeceira latitude"
+
+#: GTKcsvimport.py:143
+msgid "Longitude:"
+msgstr "Lonxitude:"
+
+#: GTKcsvimport.py:150
+msgid "Longitude header name"
+msgstr "Nome da cabeceira lonxitude"
+
+#: GTKcsvimport.py:153
+msgid "Time-Date:"
+msgstr "Hora-Data:"
+
+#: GTKcsvimport.py:162
+msgid "Elevation:"
+msgstr "Altitude:"
+
+#: GTKcsvimport.py:169
+msgid "Elevation header name"
+msgstr "Nome da cabeceira altitude"
+
+#: GTKcsvimport.py:179
+msgid "Process"
+msgstr "Procesar"
+
+#: GTKcsvimport.py:195
+msgid "Select CSV file ..."
+msgstr "Seleccionar un ficheiro CSV ..."
+
+#: GTKcsvimport.py:199
+msgid "Comma Separated Values (CSV)"
+msgstr "Comma Separated Values (CSV)"
+
+#: GTKcsvimport.py:203
+msgid "All files"
+msgstr "Tódolos ficheros"
+
+#: GTKcsvimport.py:246 GTKcsvimport.py:355 GTKcsvimport.py:364
+msgid "Error"
+msgstr "Erro"
+
+#: GTKcsvimport.py:246
+msgid "Please check file permisions"
+msgstr "Por favor, e preciso comprobar os permisos do ficheiro"
+
+#: GTKcsvimport.py:273
+msgid "File has no headers"
+msgstr "O ficheiro CSV non ten cabeceiras"
+
+#: GTKcsvimport.py:274
+msgid "You have to define the name of the headers."
+msgstr "Debe definir o nome das cabeceiras."
+
+#: GTKcsvimport.py:275
+msgid "Warning"
+msgstr "Atención"
+
+#: GTKcsvimport.py:353
+msgid "Cannot set headers"
+msgstr "Imposible estabecer as cabeceiras"
+
+#: GTKcsvimport.py:354
+msgid "Please, define the name of the headers to be used as variables."
+msgstr "Por favor, es preciso definir o nome das cabeceiras para ser usadas como variables."
+
+#: GTKcsvimport.py:362
+msgid "Cannot find header"
+msgstr "Imposible atopar cabeceira"
+
+#: GTKcsvimport.py:363
+msgid "Please, use the name of a header."
+msgstr "Por favor, use un nome de cabeceira."
+
+#: GTKcsvimport.py:405
+msgid "Date header name. Format should be: "
+msgstr "Nome da cabeceira hora-data. O formato debe ser: "

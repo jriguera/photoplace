@@ -3,7 +3,7 @@
 #
 #   photoplace.py
 #
-#       Copyright 2010 Jose Riguera Lopez <jriguera@gmail.com>
+#       Copyright 2014 Jose Riguera Lopez <jriguera@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -20,19 +20,19 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 """
-It is a multiplatform program (tested on Linux and Windows platforms) 
-developed with python 2.x (>= 2.6) to easily geotag your photos. 
+It is a multiplatform program (tested on Linux and Windows platforms)
+developed with python 2.x (>= 2.6) to easily geotag your photos.
 
 Also, with a track log from a GPS device, it can generate a *Google Earth*
-/*Maps* layer with your photos. Moreover, the program can be easily adapted 
-by editing templates and its functionality can be complemented with add-ons, 
-for example there is a add-on to generate a music tour that can be used 
-to present your photo collection. 
+/*Maps* layer with your photos. Moreover, the program can be easily adapted
+by editing templates and its functionality can be complemented with add-ons,
+for example there is a add-on to generate a music tour that can be used
+to present your photo collection.
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.5.0"
-__date__ = "August 2012"
+__version__ = "0.6.0"
+__date__ = "July 2014"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera, September 2010"
 
@@ -116,7 +116,7 @@ if not os.path.isdir(locale_path):
 else:
     __LOCALE_PATH__ = locale_path
 
-# hack for I18N in windows. Idea and code was taken from: 
+# hack for I18N in windows. Idea and code was taken from:
 # https://launchpad.net/gettext-py-windows by Alexander Belchenko.
 if sys.platform.startswith('win'):
     if not os.environ.get('LANGUAGE'):
@@ -140,19 +140,22 @@ try:
     locale.setlocale(locale.LC_ALL,'')
     if not sys.platform.startswith('win'):
         locale.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
+        locale.bind_textdomain_codeset(__GETTEXT_DOMAIN__, 'UTF-8')
+        locale.textdomain(__GETTEXT_DOMAIN__)
     gettext.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
+    gettext.bind_textdomain_codeset(__GETTEXT_DOMAIN__, 'UTF-8')
     gettext.textdomain(__GETTEXT_DOMAIN__)
-    gettext.install(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
+    gettext.install(__GETTEXT_DOMAIN__, __LOCALE_PATH__, unicode=1)
     if sys.platform.startswith('win'):
-        try: 
+        try:
             import ctypes
-            libintl = ctypes.cdll.LoadLibrary("intl.dll") 
+            libintl = ctypes.cdll.LoadLibrary("intl.dll")
             libintl.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
             libintl.bind_textdomain_codeset(__GETTEXT_DOMAIN__, 'UTF-8')
-        except: 
+        except:
             print("Error Loading translations into gtk.builder files")
 except Exception as e:
-    #locale.setlocale(locale.LC_ALL, 'C') 
+    #locale.setlocale(locale.LC_ALL, 'C')
     gettext.install(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
     #_ = lambda s: s
     print("Error setting up the translations: %s" % (e))
@@ -183,11 +186,9 @@ def program(args=sys.argv):
     epilog1 = _("By default, the program searchs the configuration file "
         "'%(defaultconfigfile)s' in current directory, then in user home "
         "directory under '%(defaultconfigdir)s'.  ") % dgettext
-    epilog2 = _("This program is able to create a virtual flux capacitor "
-        "and, with the right settings, it can be used to time travels ... ")
     epilog3 = "%(program)s v%(version)s. %(url)s " % dgettext
     epilog4 = "(c) Jose Riguera, %(date)s <jriguera@gmail.com>" % dgettext
-    options_epilog = epilog1 + epilog2 + epilog3 + epilog4
+    options_epilog = epilog1 + epilog3 + epilog4
     options_parser = optparse.OptionParser(
         usage = options_usage,
         version = options_version,

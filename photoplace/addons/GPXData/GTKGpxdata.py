@@ -112,7 +112,7 @@ _GTKGPXData_TRACKS_COLOR = _("Color")
 
 class GTKGPXData(object):
 
-    def __init__(self, gtkbuilder, userfacade, logger):
+    def __init__(self, gui, userfacade, logger):
         object.__init__(self)
         self.options = None
         self.goptions = None
@@ -126,17 +126,17 @@ class GTKGPXData(object):
         label.set_markup(_("Include in KML: "))
         hbox_checks.pack_start(label, False, False, 5)
         self.checkbutton_genpath = gtk.CheckButton(_("Path from geottaged photos"))
-        self.checkbutton_genpath.connect('toggled', 
+        self.checkbutton_genpath.connect('toggled',
             self._toggled_button, _GTKGPXData_TYPE_PATH)
         self.checkbutton_genpath.set_sensitive(False)
         hbox_checks.pack_start(self.checkbutton_genpath, False, False, 5)
         self.checkbutton_gentrack = gtk.CheckButton(_("Tracks from GPX"))
-        self.checkbutton_gentrack.connect('toggled', 
+        self.checkbutton_gentrack.connect('toggled',
             self._toggled_button, _GTKGPXData_TYPE_TRACK)
         self.checkbutton_gentrack.set_sensitive(False)
         hbox_checks.pack_start(self.checkbutton_gentrack, False, False, 8)
         self.checkbutton_genwpts = gtk.CheckButton(_("WayPoints from GPX"))
-        self.checkbutton_genwpts.connect('toggled', 
+        self.checkbutton_genwpts.connect('toggled',
             self._toggled_button, _GTKGPXData_TYPE_WPT)
         self.checkbutton_genwpts.set_sensitive(False)
         hbox_checks.pack_start(self.checkbutton_genwpts, False, False, 5)
@@ -157,7 +157,7 @@ class GTKGPXData(object):
         renderer = gtk.CellRendererToggle()
         renderer.set_radio(True)
         renderer.connect('toggled', self._toggled_row)
-        column = gtk.TreeViewColumn(None, renderer, 
+        column = gtk.TreeViewColumn(None, renderer,
             active=_GTKGPXData_COLUMN_ACT,
             visible=_GTKGPXData_COLUMN_VIS)
         treeview.append_column(column)
@@ -182,7 +182,7 @@ class GTKGPXData(object):
         scroll.add(treeview)
         self.plugin.pack_start(scroll, True, True)
         self.windoweditor = TemplateEditorGUI()
-        self.window = gtkbuilder.get_object("window")
+        self.window = gui.builder.get_object("window")
 
 
     def show(self, widget=None, options=None, tracks=None, wpts=None, goptions=None):
@@ -410,11 +410,11 @@ class GTKGPXData(object):
             name, desc, True, True, False, tip, _GTKGPXData_DEFAULT_FAMILY])
         self.treestore.append(ite, [
             track_id, kind, None, False, GPXData_CONFKEY_TRACKS_COLOR,
-            _GTKGPXData_TRACKS_COLOR, color, False, True, True, 
+            _GTKGPXData_TRACKS_COLOR, color, False, True, True,
             default_tip, _GTKGPXData_DEFAULT_FAMILY])
         self.treestore.append(ite, [
             track_id, kind, None, False, GPXData_CONFKEY_TRACKS_WIDTH,
-            _GTKGPXData_TRACKS_WIDTH, width, False, True, False, 
+            _GTKGPXData_TRACKS_WIDTH, width, False, True, False,
             default_tip, _GTKGPXData_DEFAULT_FAMILY])
 
 
@@ -562,7 +562,7 @@ class GTKGPXData(object):
                     text = style[GPXData_CONFKEY_TRACKS_DESC]
                 if text == None:
                     text = self.tracksinfo[0][GPXData_CONFKEY_TRACKS_DESC]
-            self.windoweditor.show(text=text, template=filename, recover=filename, 
+            self.windoweditor.show(text=text, template=filename, recover=filename,
                 completions=completions, tooltip=tooltip, cansave=False)
             self.windoweditor.connect('close', self._editor_setdesc, style, kind, obj_id)
         else:
@@ -582,7 +582,7 @@ class GTKGPXData(object):
                 style = self.wptsinfo[0]
             if filename or text:
                 filename = os.path.basename(filename)
-                self.windoweditor.show(text=text, template=filename, 
+                self.windoweditor.show(text=text, template=filename,
                     completions=completions, tooltip=tooltip, cansave=cansave)
                 self.windoweditor.connect('close', self._editor_setdesc, style, kind, obj_id)
 

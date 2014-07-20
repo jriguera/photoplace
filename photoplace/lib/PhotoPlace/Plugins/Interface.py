@@ -36,10 +36,10 @@ import pluginManager
 
 
 
-__PLUGIN_IVERSION__ = 0.1
+__PLUGIN_IVERSION__ = 0.2
 __PLUGIN_ICLASS__ = "Plugin"
 __PLUGIN_PNAME__ = "PhotoPlace"
-__PLUGIN_PVERSION__ = "0.5.0"
+__PLUGIN_PVERSION__ = "0.6.0"
 (
     PLUGIN_GUI_NO,
     PLUGIN_GUI_GTK,
@@ -64,17 +64,17 @@ class Plugin(object):
     license = "GPLv3"
     capabilities = {
         'GUI' : PLUGIN_GUI_NO,
-        'NeedGUI' : False,
+        'UI' : False,
     }
 
-    def __init__(self, logger, userfacade, args, argfiles=[], gtkbuilder=None):
+    def __init__(self, logger, userfacade, args, argfiles=[], gui=None):
         object.__init__(self)
         self.logger = logger
         self.state = userfacade.state
         self.userfacade = userfacade
         self.argfiles = argfiles
         self.args = args
-        self.gtkbuilder = gtkbuilder
+        self.gui = gui
         self.ready = -1
 
     def init(self, options, widget_container):

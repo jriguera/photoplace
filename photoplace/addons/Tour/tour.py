@@ -184,18 +184,18 @@ class KmlTour(Plugin):
     license = __license__
     capabilities = {
         'GUI' : PLUGIN_GUI_GTK,
-        'NeedGUI' : False,
+        'UI' : False,
     }
 
-    def __init__(self, logger, userfacade, args, argfiles=[], gtkbuilder=None):
-        Plugin.__init__(self, logger, userfacade, args, argfiles, gtkbuilder)
+    def __init__(self, logger, userfacade, args, argfiles=[], gui=None):
+        Plugin.__init__(self, logger, userfacade, args, argfiles, gui)
         self.options = None
         self.altitude = 0
         # GTK widgets
-        self.gui = None
-        if gtkbuilder:
+        self.pgui = None
+        if gui:
             import GTKtour
-            self.gui = GTKtour.GTKTour(gtkbuilder, logger)
+            self.pgui = GTKtour.GTKTour(gui, logger)
         self.ready = -1
 
 
@@ -351,12 +351,12 @@ class KmlTour(Plugin):
         self.defaultsinfo = options['defaults']
         opt = options[KmlTour_CONFKEY]
         self.process_variables(opt)
-        if self.gui:
+        if self.pgui:
             if self.ready == -1:
                 # 1st time
-                self.gui.show(widget, opt)
+                self.pgui.show(widget, opt)
             else:
-                self.gui.show(None, opt)
+                self.pgui.show(None, opt)
         self.ready = 1
         self.setup_geophotos()
         self.logger.debug(_("Starting add-on ..."))
@@ -378,8 +378,8 @@ class KmlTour(Plugin):
 
     def get_description(self, key, fallback_key, bytes=102400):
         description = ''
-        if self.gui:
-            description = self.gui.get_textview(key)
+        if self.pgui:
+            description = self.pgui.get_textview(key)
         else:
             filename = self.options[key]
             if filename != None:
@@ -414,7 +414,7 @@ class KmlTour(Plugin):
         if min_lon > max_lon:
             max_lon = lon
             min_lon = self.center_lon
-        #b_distance = self.altitude            
+        #b_distance = self.altitude
         b_distance = pyGPX.bestViewAltitude(max_lat, max_lon, min_lat, min_lon)
         c_distance = pyGPX.distanceCoord(self.center_lat, self.center_lon, lat, lon) / 2.0
         a_distance = math.sqrt(c_distance * c_distance + b_distance * b_distance)
@@ -455,7 +455,7 @@ class KmlTour(Plugin):
             begin_style = datetime.datetime.now().strftime("tour-start" + "%Y%j%I%M")
             self.gxtour.do_placemark_style(begin_style, begin_icon, begin_scale)
             begin_style = '#' + begin_style
-        self.gxtour.begin(self.first_lon, self.first_lat, self.first_ele, strtime, begin_name, 
+        self.gxtour.begin(self.first_lon, self.first_lat, self.first_ele, strtime, begin_name,
             begin_desc, begin_style, begin_wait, begin_heading, begin_tilt, begin_range, begin_flytime)
 
 
@@ -621,7 +621,7 @@ class KmlTour(Plugin):
         geophoto.attr[KmlTour_CONFKEY_TILT] = PhotoPlace_estimated
         #geophoto.attr[KmlTour_CONFKEY_TILT] = PhotoPlace_default
         #geophoto.attr[KmlTour_CONFKEY_RANGE] = self.options[KmlTour_CONFKEY_RANGE]
-        geophoto.attr[KmlTour_CONFKEY_RANGE] = PhotoPlace_estimated 
+        geophoto.attr[KmlTour_CONFKEY_RANGE] = PhotoPlace_estimated
         #geophoto.attr[KmlTour_CONFKEY_RANGE] = PhotoPlace_default
         #geophoto.attr[KmlTour_CONFKEY_FOLLOWPATH] = int(self.options[KmlTour_CONFKEY_FOLLOWPATH])
         geophoto.attr[KmlTour_CONFKEY_FOLLOWPATH] = PhotoPlace_default
@@ -764,7 +764,7 @@ class KmlTour(Plugin):
         for gphoto in self.state.geophotos:
             if gphoto.status >= status and gphoto.isGeoLocated():
                 follow = self.options[KmlTour_CONFKEY_FOLLOWPATH]
-                follow = self.userfacade.get_geophoto_attr_bool(gphoto, self.options, 
+                follow = self.userfacade.get_geophoto_attr_bool(gphoto, self.options,
                     KmlTour_CONFKEY_FOLLOWPATH, follow, follow)
                 points_len = 0
                 points = list()
@@ -876,7 +876,7 @@ class KmlTour(Plugin):
                     heading = current.bearing(next.lat, next.lon)
                 if pos == 0:
                     heading_prev = heading
-                else: 
+                else:
                     # heading_prev - heading) >= KmlTour_FOLLOW_ANGLECORNER
                     # using cos difference
                     rad_heading = math.radians(heading)
@@ -884,10 +884,10 @@ class KmlTour(Plugin):
                     cos_diff = math.cos(rad_heading_prev) * math.cos(rad_heading_prev)
                     cos_diff += math.sin(rad_heading) * math.sin(rad_heading)
                     if cos_diff >= self.cos_max_diff_corner:
-                        self.gxtour.do_flyto(current.lon, current.lat, current.ele, 
+                        self.gxtour.do_flyto(current.lon, current.lat, current.ele,
                             strtime, heading, tilt, crange, flytime)
                 heading_prev = heading
-                self.gxtour.do_flyto(next.lon, next.lat, next.ele, 
+                self.gxtour.do_flyto(next.lon, next.lat, next.ele,
                     strtime, heading, tilt, crange, flytime)
         else:
             if idpath == 0:
@@ -936,19 +936,19 @@ class KmlTour(Plugin):
                 # not selected
                 continue
             wait = self.options[KmlTour_CONFKEY_WAIT]
-            wait = self.userfacade.get_geophoto_attr_number(geophoto, self.options, 
+            wait = self.userfacade.get_geophoto_attr_number(geophoto, self.options,
                 KmlTour_CONFKEY_WAIT, wait, wait)
             #print "WAIT ", wait
             bearing = self.options[KmlTour_CONFKEY_HEADING]
-            bearing = self.userfacade.get_geophoto_attr_number(geophoto, self.options, 
+            bearing = self.userfacade.get_geophoto_attr_number(geophoto, self.options,
                 KmlTour_CONFKEY_HEADING, bearing, None)
             #print "Bearing ", bearing
             flytime = self.options[KmlTour_CONFKEY_FLYTIME]
-            flytime = self.userfacade.get_geophoto_attr_number(geophoto, self.options, 
+            flytime = self.userfacade.get_geophoto_attr_number(geophoto, self.options,
                 KmlTour_CONFKEY_FLYTIME, flytime, flytime)
             #print "FLYTIME ", flytime
             tilt = self.options[KmlTour_CONFKEY_TILT]
-            tilt = self.userfacade.get_geophoto_attr_number(geophoto, self.options, 
+            tilt = self.userfacade.get_geophoto_attr_number(geophoto, self.options,
                 KmlTour_CONFKEY_TILT, tilt, None)
             #print "TILT ", tilt
             crange = self.options[KmlTour_CONFKEY_RANGE]
@@ -964,7 +964,7 @@ class KmlTour(Plugin):
         # Last path
         if not to_last_photo:
             self.set_last(num_photos)
-        
+
 
     @DRegister("SaveFiles:ini")
     def save(self, fd, outputkml, outputkmz, photouri, outputdir, quality):
@@ -1045,8 +1045,8 @@ class KmlTour(Plugin):
         self.first_time = None
         self.last_ele = None
         self.last_time = None
-        if self.gui:
-            self.gui.hide()
+        if self.pgui:
+            self.pgui.hide()
         self.logger.debug(_("Ending add-on ..."))
 
 

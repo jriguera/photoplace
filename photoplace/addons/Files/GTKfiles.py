@@ -86,7 +86,7 @@ GTKFiles_COLUMN_TOOLTIP = _("Type %%(%s)s to get value of each variable")
 
 class GTKFiles(object):
 
-    def __init__(self, gtkbuilder, userfacade, logger):
+    def __init__(self, gui, userfacade, logger):
         object.__init__(self)
         self.plugin = gtk.VBox(False)
         self.logger = logger
@@ -140,7 +140,7 @@ class GTKFiles(object):
         self.options = None
         self.counter_file = 0
         self.newfiles = []
-        self.window = gtkbuilder.get_object("window")
+        self.window = gui.builder.get_object("window")
 
 
     def show(self, widget=None, options=None, newfiles=None):

@@ -99,7 +99,7 @@ class PhotoPlaceCOM(InterfaceUI):
         for plg, plgobj in self.userfacade.list_plugins().iteritems():
             if plg in self.plugins or plg in self.plugins_error:
                 continue
-            if not plgobj.capabilities['NeedGUI']:
+            if not plgobj.capabilities['UI']:
                 # Active all plugins
                 try:
                     self.userfacade.init_plugin(plg, '*', None)

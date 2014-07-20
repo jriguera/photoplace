@@ -174,6 +174,7 @@ class State(object):
         self.geophotostyle = {}
         self.tzdiff = datetime.timedelta()
         self.stzdiff = u'Z'
+        self.photovariables = []
         #
         if initial:
             self.initial()
@@ -261,6 +262,7 @@ class State(object):
         self.outputdir = None
         self.outputkmz = None
         self.outputkml = None
+        self.photovariables = []
         self.lock_geophotos.release()
         self.lock_gpxdata.release()
         self.lock_kmldata.release()
@@ -280,6 +282,7 @@ class State(object):
         self.outputdir = None
         self.outputkmz = None
         self.outputkml = None
+        self.photovariables = []
         self.set_jpgsize()
         self.set_quality()
         self.set_jpgzoom()
@@ -301,7 +304,7 @@ class State(object):
             self.set_outputfile(None, False)
         except:
             pass
-        
+
 
 
     def get_template(self, filepath, subdir=u"templates"):

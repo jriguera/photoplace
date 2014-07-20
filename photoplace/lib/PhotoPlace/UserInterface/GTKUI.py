@@ -84,7 +84,7 @@ from GTKVariableEditor import *
 class CellRendererTextClick(gtk.CellRendererText):
 
     __gproperties__ = {
-        'clickable': 
+        'clickable':
             (gobject.TYPE_BOOLEAN, 'clickable', 'is clickable?', False, gobject.PARAM_READWRITE)
     }
 
@@ -217,7 +217,7 @@ class PhotoPlaceGUI(InterfaceUI):
         self.userfacade.addNotifier(
             self._update_progressbar_makegpx_observer, ["MakeGPX:run"], self)
         self.userfacade.addNotifier(
-            self._set_progressbar_end_observer, 
+            self._set_progressbar_end_observer,
             ["Geolocate:end", "MakeGPX:end", "SaveFiles:end",], self)
         self.userfacade.addNotifier(
             self._set_loadphotos_end_observer, ["LoadPhotos:end"], self)
@@ -412,7 +412,7 @@ class PhotoPlaceGUI(InterfaceUI):
         for p in self.userfacade.addons:
             if not p in errors:
                 try:
-                    error = self.userfacade.activate_plugin(p, self.builder)
+                    error = self.userfacade.activate_plugin(p, self)
                 except Error as e:
                     activation_errors[p] = e
                     self.show_dialog(e.type, e.msg, e.tip)
@@ -640,7 +640,7 @@ class PhotoPlaceGUI(InterfaceUI):
         dialog.run()
         dialog.destroy()
 
-    def show_dialog_choose_photodir(self, select_dir=None, 
+    def show_dialog_choose_photodir(self, select_dir=None,
         title=_("Select a directory with photos ...")):
         dir_open_dlg = gtk.FileChooserDialog(title=title, parent=self.window,
             action=gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
@@ -860,13 +860,17 @@ class PhotoPlaceGUI(InterfaceUI):
     def _load_geophoto(self, geophoto, main_iterator=None):
         color = TREEVIEWPHOTO_NORMAL_COLOR
         previews = geophoto.exif.previews
-        largest = previews[-1]
-        loader = gtk.gdk.PixbufLoader('jpeg')
         width, height = TREEVIEWPHOTO_PHOTOSIZE
-        loader.set_size(width, height)
-        loader.write(largest.data)
-        loader.close()
-        pixbuf = loader.get_pixbuf()
+        # Patch submitted by Noela's team
+        if previews :
+            loader = gtk.gdk.PixbufLoader('jpeg')
+            loader.set_size(width, height)
+            largest = previews[-1]
+            loader.write(largest.data)
+            loader.close()
+            pixbuf = loader.get_pixbuf()
+        else :
+            pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(geophoto.path, width, height)
         dgettext = dict()
         dgettext['name'] = geophoto.name
         dgettext['path'] = geophoto.path
@@ -906,8 +910,8 @@ class PhotoPlaceGUI(InterfaceUI):
         model = self["treeview-geophotos"].get_model()
         if main_iterator == None:
             iterator = model.append(None, [
-                geophoto.status, geophoto.name, geophoto.path, geophoto.time, bool(geophoto.status), 
-                pixbuf, information, geodata, geovalue, 
+                geophoto.status, geophoto.name, geophoto.path, geophoto.time, bool(geophoto.status),
+                pixbuf, information, geodata, geovalue,
                 color, True, False, tips]
             )
         else:
@@ -932,7 +936,7 @@ class PhotoPlaceGUI(InterfaceUI):
         while child_iter != None:
             model.remove(child_iter)
             child_iter = model.iter_children(iterator)
-        for variable in self.userfacade.state.kmldata.photo_variables:
+        for variable in self.userfacade.state.photovariables:
             if not (variable in PhotoPlace_TEMPLATE_VARS):
                 #( ... or variable in  self.userfacade.options['defaults']):
                 try:
@@ -1054,7 +1058,7 @@ class PhotoPlaceGUI(InterfaceUI):
         except:
             pass
         tooltip = ''
-        self.windowteditor.show(text=text, template=filename, recover=filename, 
+        self.windowteditor.show(text=text, template=filename, recover=filename,
             completions=completions, tooltip=tooltip, cansave=False)
         self.windowteditor.connect('close', self._editor_setdesc, geophoto, ite)
 
@@ -1099,6 +1103,14 @@ class PhotoPlaceGUI(InterfaceUI):
                 # Only reload templates if are main (in the config file)
                 self.reload_templates()
                 return
+
+    def reload_treeviewgeophotos(self):
+        self["treeview-geophotos"].get_model().clear()
+        self.num_photos_process = 0
+        for geophoto in self.userfacade.state.geophotos:
+            self._load_geophoto(geophoto)
+            if geophoto.status > 0:
+                self.num_photos_process += 1
 
 
     # ####################
@@ -1211,12 +1223,7 @@ class PhotoPlaceGUI(InterfaceUI):
         except Error as e:
             self.show_dialog(e.type, e.msg, e.tip)
             return False
-        self["treeview-geophotos"].get_model().clear()
-        self.num_photos_process = 0
-        for geophoto in self.userfacade.state.geophotos:
-            self._load_geophoto(geophoto)
-            if geophoto.status > 0:
-                self.num_photos_process += 1
+        self.reload_treeviewgeophotos()
         return True
 
     def action_process(self, widget, data=None):

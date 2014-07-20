@@ -82,18 +82,18 @@ class Files(Plugin):
     license = __license__
     capabilities = {
         'GUI' : PLUGIN_GUI_GTK,
-        'NeedGUI' : False,
+        'UI' : False,
     }
 
 
-    def __init__(self, logger, userfacade, args, argfiles=[], gtkbuilder=None):
-        Plugin.__init__(self, logger, userfacade, args, argfiles, gtkbuilder)
+    def __init__(self, logger, userfacade, args, argfiles=[], gui=None):
+        Plugin.__init__(self, logger, userfacade, args, argfiles, gui)
         self.options = dict()
         # GTK widgets
-        self.gui = None
-        if gtkbuilder:
+        self.pgui = None
+        if gui:
             import GTKfiles
-            self.gui = GTKfiles.GTKFiles(gtkbuilder, userfacade, logger)
+            self.pgui = GTKfiles.GTKFiles(gui, userfacade, logger)
         self.ready = -1
 
 
@@ -104,12 +104,12 @@ class Files(Plugin):
         self.newfiles = None
         self.options = None
         self.process_variables(options, opt)
-        if self.gui:
+        if self.pgui:
             if self.ready == -1:
                 # 1st time
-                self.gui.show(widget, self.options, self.newfiles)
+                self.pgui.show(widget, self.options, self.newfiles)
             else:
-                self.gui.show(None, self.options, self.newfiles)
+                self.pgui.show(None, self.options, self.newfiles)
         self.ready = 1
         self.logger.debug(_("Starting add-on ..."))
 
@@ -172,8 +172,8 @@ class Files(Plugin):
             for variable in self.newfiles:
                 del self.options[Files_VARIABLES][variable]
         self.newfiles = None
-        if self.gui:
-            self.gui.hide(True)
+        if self.pgui:
+            self.pgui.hide(True)
         self.logger.debug(_("Ending add-on ..."))
 
 
