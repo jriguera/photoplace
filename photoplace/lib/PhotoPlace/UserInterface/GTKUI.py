@@ -35,12 +35,12 @@ import sys
 import time
 import datetime
 import codecs
-import Image
 import webbrowser
 import StringIO
 import xml.dom.minidom
 import cgi
 import warnings
+from PIL import Image
 
 warnings.filterwarnings('error', module='gtk')
 try:

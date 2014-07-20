@@ -31,20 +31,19 @@ __copyright__ ="(c) Jose Riguera"
 
 import re
 import zipfile
-import Image
 import logging
 import os.path
 import locale
 import logging
 import logging.handlers
+from PIL import Image
 
 PLATFORMENCODING = locale.getpreferredencoding()
-
 
 PhotoPlace_name = "PhotoPlace"
 PhotoPlace_version = "0.6.0"
 PhotoPlace_url = "http://code.google.com/p/photoplace"
-PhotoPlace_date = "Jan 2011"
+PhotoPlace_date = "Jul 2014"
 PhotoPlace_onlinehelp = "http://code.google.com/p/photoplace/wiki/OnlineHelp"
 PhotoPlace_estimated = _("<estimated>")
 PhotoPlace_default = _("<default>")

@@ -3,7 +3,7 @@
 #
 #       Facade.py
 #
-#       Copyright 2013 Jose Riguera Lopez <jriguera@gmail.com>
+#       Copyright 2014 Jose Riguera Lopez <jriguera@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -25,9 +25,9 @@ Public functions and methods of PhotoPlace
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
 __version__ = "0.6.0"
-__date__ = "January 2013"
+__date__ = "July 2014"
 __license__ = "GPL (v2 or later)"
-__copyright__ ="(c) Jose Riguera, September 2010"
+__copyright__ ="(c) Jose Riguera, 2010-2014"
 
 
 import os
@@ -41,7 +41,6 @@ import time
 import datetime
 
 from observerHandler import DObserver
-
 
 
 # #######################################
