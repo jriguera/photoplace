@@ -45,12 +45,14 @@ import ConfigParser
 import gettext
 import locale
 import sys
-reload(sys)
-sys.setdefaultencoding("utf-8")
+if not sys.platform.startswith('win'):
+    # For console mode, Because all files are UTF-8
+    reload(sys)
+    sys.setdefaultencoding("utf-8")
 
 # do imports
 try:
-    import Image
+    from PIL import Image
 except ImportError:
     print("Sorry, you don't have the Image (PIL) module installed, and this")
     print("program relies on it. Please install Image (PIL) module to continue.")
@@ -122,6 +124,9 @@ else:
 # hack for I18N in windows. Idea and code was taken from:
 # https://launchpad.net/gettext-py-windows by Alexander Belchenko.
 if sys.platform.startswith('win'):
+    # Load the dependencies for the official extensions in Windows
+    from PhotoPlace import extensions
+    # Lang env
     if not os.environ.get('LANGUAGE'):
         language = None
         try:
@@ -161,8 +166,6 @@ except Exception as e:
     gettext.install(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
     #_ = lambda s: s
     print("Error setting up the translations: %s" % (e))
-
-
 
 from PhotoPlace.definitions import *
 import PhotoPlace.userFacade as userFacade
@@ -230,7 +233,7 @@ def program(args=sys.argv):
             os.makedirs(cfg_dir)
         except:
             cfg_dir = '.'
-    # redirect standard I/O to files
+    # In windows, redirects standard I/O to files because there is no console
     if hasattr(sys, "frozen") or hasattr(sys, "importers") or imp.is_frozen("__main__"):
         sys.stdout = open(os.path.join(cfg_dir, "stdout.log"), 'w+')
         sys.stderr = open(os.path.join(cfg_dir, "stderr.log"), 'w+')

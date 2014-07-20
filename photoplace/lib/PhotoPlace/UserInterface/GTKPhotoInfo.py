@@ -32,10 +32,10 @@ __copyright__ ="(c) Jose Riguera, September 2011"
 
 import os.path
 import cStringIO
-import Image
 import warnings
 import types
 import re
+from PIL import Image
 
 warnings.filterwarnings('ignore', module='gtk')
 try:

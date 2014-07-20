@@ -36,7 +36,7 @@ import re
 import datetime
 import fractions
 try:
-    import Image
+    from PIL import Image
 except ImportError:
     print "Sorry, you don't have the Image (PIL) module installed, and this"
     print "script relies on it. Please install Image (PIL) module to continue."
