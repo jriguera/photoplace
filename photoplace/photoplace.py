@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 #   photoplace.py
@@ -29,6 +29,7 @@ by editing templates and its functionality can be complemented with add-ons,
 for example there is a add-on to generate a music tour that can be used
 to present your photo collection.
 """
+
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
 __version__ = "0.6.0"
@@ -38,12 +39,14 @@ __copyright__ ="(c) Jose Riguera, September 2010"
 
 import os
 import shutil
-import sys
 import imp
 import optparse
 import ConfigParser
 import gettext
 import locale
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 # do imports
 try:
@@ -187,7 +190,7 @@ def program(args=sys.argv):
         "'%(defaultconfigfile)s' in current directory, then in user home "
         "directory under '%(defaultconfigdir)s'.  ") % dgettext
     epilog3 = "%(program)s v%(version)s. %(url)s " % dgettext
-    epilog4 = "(c) Jose Riguera, %(date)s <jriguera@gmail.com>" % dgettext
+    epilog4 = "(c) Jose Riguera, <jriguera@gmail.com>" % dgettext
     options_epilog = epilog1 + epilog3 + epilog4
     options_parser = optparse.OptionParser(
         usage = options_usage,

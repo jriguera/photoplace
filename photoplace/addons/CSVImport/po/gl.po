@@ -109,8 +109,8 @@ msgstr ""
 "Nome da columna para buscar polo nome da foto. Debe ser un definido na lista de Cabeceiras"
 
 #: GTKcsvimport.py:124
-msgid "Geolocate photos using CSV headers:"
-msgstr "Xeoetiquetar fotos usando as cabeceiras CSV:"
+msgid "Geolocate photos using CSV headers"
+msgstr "Xeoetiquetar fotos usando as cabeceiras CSV"
 
 #: GTKcsvimport.py:125
 msgid ""

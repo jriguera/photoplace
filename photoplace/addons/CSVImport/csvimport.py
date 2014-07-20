@@ -77,11 +77,11 @@ CSVImport_CONFKEY_GEOLOCATE = 'geolocate'
 CSVImport_ENCODINGS = ['utf-8', 'windows-1252', 'latin1',  'windows-1250', 'iso-8859-1','iso-8859-2', 'us-ascii']
 CSVImport_DATE_PARSE = "%Y-%m-%dT%H:%M:%S"
 CSVImport_HEADER_ID = 'PHOTO'
-CSVImport_HEADER_LAT = 'LAT'
-CSVImport_HEADER_LON = 'LON'
-CSVImport_HEADER_ELE = 'ELE'
-CSVImport_HEADER_DATE = 'DATE'
-CSVImport_GEOLOCATE = True
+CSVImport_HEADER_LAT = ''
+CSVImport_HEADER_LON = ''
+CSVImport_HEADER_ELE = ''
+CSVImport_HEADER_DATE = ''
+CSVImport_GEOLOCATE = False
 CSVImport_HEADERS = []
 CSVImport_DELIMITER = None
 CSVImport_QUOTECHAR = None
@@ -228,7 +228,7 @@ class CSVImport(Plugin):
             else:
                 self.reader = csv.DictReader(self.fd, dialect=dialect, delimiter=delimiter, quotechar=quotechar)
                 if has_header:
-                    headers = self.reader.next()
+                    #headers = self.reader.next()
                     self.update_headers(headers)
                 else:
                     msg = _("CSV '%(file)s' has no headers and you have not defined them!")

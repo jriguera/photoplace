@@ -121,7 +121,7 @@ class GTKCSVImport(object):
         hbox_headers.pack_start(self.entry_headerid, False, False, 5)
         self.plugin.pack_start(hbox_headers, False, False, 5)
         # 4st line
-        self.checkbutton_geolocate = gtk.CheckButton(_("Geolocate photos using CSV headers:"))
+        self.checkbutton_geolocate = gtk.CheckButton(_("Geolocate photos using CSV headers"))
         self.checkbutton_geolocate.set_tooltip_text(_("It is active, it will assign the following headers to each photo. It will geotag the photos by using those headers, but, warning: GPX data will take precedence!"))
         self.checkbutton_geolocate.connect('toggled', self._geolocate)
         self.checkbutton_geolocate.set_sensitive(False)
@@ -408,20 +408,20 @@ class GTKCSVImport(object):
             self._set_csv(filename)
             self.entry_headers.set_text(', '.join(options[CSVImport_CONFKEY_HEADERS]))
             self.entry_headerid.set_text(options[CSVImport_CONFKEY_HEADERS][0])
-            if options[CSVImport_CONFKEY_GEOLOCATE]:
-                self.checkbutton_geolocate.set_active()
-                header = self.options[CSVImport_CONFKEY_HEADER_LAT]
-                if header:
-                    self.entry_lat.set_text(header)
-                header = self.options[CSVImport_CONFKEY_HEADER_LON]
-                if header:
-                    self.entry_lon.set_text(header)
-                header = self.options[CSVImport_CONFKEY_HEADER_ELE]
-                if header:
-                    self.entry_ele.set_text(header)
-                header = self.options[CSVImport_CONFKEY_HEADER_DATE]
-                if header:
-                    self.entry_date.set_text(header)
+        if options[CSVImport_CONFKEY_GEOLOCATE]:
+            self.checkbutton_geolocate.set_active(True)
+            header = self.options[CSVImport_CONFKEY_HEADER_LAT]
+            if header:
+                self.entry_lat.set_text(header)
+            header = self.options[CSVImport_CONFKEY_HEADER_LON]
+            if header:
+                self.entry_lon.set_text(header)
+            header = self.options[CSVImport_CONFKEY_HEADER_ELE]
+            if header:
+                self.entry_ele.set_text(header)
+            header = self.options[CSVImport_CONFKEY_HEADER_DATE]
+            if header:
+                self.entry_date.set_text(header)
 
 
 #EOF

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.16"/>
+  <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
+  <object class="GtkTextBuffer" id="textbuffer">
+    <signal name="changed" handler="on_textbuffer_changed" swapped="no"/>
+    <signal name="mark-set" handler="on_textbuffer_mark_set" swapped="no"/>
+  </object>
   <object class="GtkWindow" id="window">
+    <property name="can_focus">False</property>
     <property name="title" translatable="yes">PhotoPlace</property>
     <property name="modal">True</property>
     <property name="default_width">600</property>
@@ -10,21 +15,25 @@
     <property name="destroy_with_parent">True</property>
     <property name="icon">photoplace.png</property>
     <property name="skip_taskbar_hint">True</property>
-    <signal name="delete_event" handler="on_window_delete_event" object="window"/>
+    <signal name="delete-event" handler="on_window_delete_event" object="window" swapped="yes"/>
     <child>
       <object class="GtkVBox" id="vbox-window">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <child>
           <object class="GtkToolbar" id="toolbar-window">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkToolButton" id="toolbutton-wintemplates-new">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Create an empty template</property>
+                <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes" comments="toolbar templates, menu">New</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-new</property>
-                <signal name="clicked" handler="on_toolbutton-wintemplates-new_clicked"/>
+                <signal name="clicked" handler="on_toolbutton-wintemplates-new_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -34,11 +43,13 @@
             <child>
               <object class="GtkToolButton" id="toolbutton-wintemplates-load">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Load a template from file</property>
+                <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes" comments="toolbar templates, menu">Load</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-refresh</property>
-                <signal name="clicked" handler="on_toolbutton-wintemplates-load_clicked"/>
+                <signal name="clicked" handler="on_toolbutton-wintemplates-load_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -48,11 +59,13 @@
             <child>
               <object class="GtkToolButton" id="toolbutton-wintemplates-recover">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Recover the contents from the original template</property>
+                <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes" comments="toolbar templates, menu">Recover</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-undelete</property>
-                <signal name="clicked" handler="on_toolbutton-wintemplates-recover_clicked"/>
+                <signal name="clicked" handler="on_toolbutton-wintemplates-recover_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -62,6 +75,7 @@
             <child>
               <object class="GtkSeparatorToolItem" id="toolbutton-wintemplates-sep1">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -71,13 +85,15 @@
             <child>
               <object class="GtkToolButton" id="toolbutton-wintemplates-check">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Checks if XML data is well formed, otherwise, the content will not be considered as XML data. 
 Note that contents will be checked after placing them in a (virtual) &lt;div&gt; section.</property>
+                <property name="use_action_appearance">False</property>
                 <property name="is_important">True</property>
                 <property name="label" translatable="yes" comments="toolbar templates, menu">Validate</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-execute</property>
-                <signal name="clicked" handler="on_toolbutton-wintemplates-check_clicked"/>
+                <signal name="clicked" handler="on_toolbutton-wintemplates-check_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -87,12 +103,14 @@ Note that contents will be checked after placing them in a (virtual) &lt;div&gt;
             <child>
               <object class="GtkToolButton" id="toolbutton-wintemplates-save">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Save the document in the template file</property>
+                <property name="use_action_appearance">False</property>
                 <property name="is_important">True</property>
                 <property name="label" translatable="yes" comments="toolbar templates, menu">Save</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-save</property>
-                <signal name="clicked" handler="on_toolbutton-wintemplates-save_clicked"/>
+                <signal name="clicked" handler="on_toolbutton-wintemplates-save_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -102,6 +120,7 @@ Note that contents will be checked after placing them in a (virtual) &lt;div&gt;
             <child>
               <object class="GtkSeparatorToolItem" id="toolbutton-wintemplates-sep3">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="draw">False</property>
               </object>
               <packing>
@@ -112,11 +131,13 @@ Note that contents will be checked after placing them in a (virtual) &lt;div&gt;
             <child>
               <object class="GtkToolButton" id="toolbutton-wintemplates-exit">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Close this window</property>
+                <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes" comments="toolbar templates, menu">Exit</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-quit</property>
-                <signal name="clicked" handler="on_toolbutton-wintemplates-exit_clicked"/>
+                <signal name="clicked" handler="on_toolbutton-wintemplates-exit_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -126,6 +147,7 @@ Note that contents will be checked after placing them in a (virtual) &lt;div&gt;
             <child>
               <object class="GtkSeparatorToolItem" id="toolbutton-wintemplates-sep2">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="draw">False</property>
               </object>
               <packing>
@@ -136,6 +158,7 @@ Note that contents will be checked after placing them in a (virtual) &lt;div&gt;
           </object>
           <packing>
             <property name="expand">False</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -150,29 +173,29 @@ Note that contents will be checked after placing them in a (virtual) &lt;div&gt;
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="buffer">textbuffer</property>
-                <signal name="key_press_event" handler="on_textview_key_press_event"/>
+                <signal name="key-press-event" handler="on_textview_key_press_event" swapped="no"/>
               </object>
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
         <child>
           <object class="GtkStatusbar" id="statusbar">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="spacing">2</property>
           </object>
           <packing>
             <property name="expand">False</property>
+            <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkTextBuffer" id="textbuffer">
-    <signal name="changed" handler="on_textbuffer_changed"/>
-    <signal name="mark_set" handler="on_textbuffer_mark_set"/>
   </object>
 </interface>

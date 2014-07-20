@@ -1,1132 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.16"/>
+  <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkListStore" id="liststore-exifmodes">
-    <columns>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-      <!-- column-name mode -->
-      <column type="gint"/>
-    </columns>
-  </object>
-  <object class="GtkListStore" id="treestore-geophotos">
-    <columns>
-      <!-- column-name status -->
-      <column type="gint"/>
-      <!-- column-name name -->
-      <column type="gchararray"/>
-      <!-- column-name path -->
-      <column type="gchararray"/>
-      <!-- column-name date -->
-      <column type="gchararray"/>
-      <!-- column-name active -->
-      <column type="gboolean"/>
-      <!-- column-name pixbuf -->
-      <column type="GdkPixbuf"/>
-      <!-- column-name gettext_main_info -->
-      <column type="gchararray"/>
-      <!-- column-name data_name -->
-      <column type="gchararray"/>
-      <!-- column-name data_value -->
-      <column type="gchararray"/>
-      <!-- column-name bgcolor -->
-      <column type="gchararray"/>
-      <!-- column-name parent -->
-      <column type="gboolean"/>
-      <!-- column-name dataedit -->
-      <column type="gboolean"/>
-      <!-- column-name gettext_info -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
-  <object class="GtkWindow" id="window">
-    <property name="width_request">850</property>
-    <property name="height_request">566</property>
-    <property name="title">PhotoPlace</property>
-    <property name="icon">photoplace.png</property>
-    <signal name="destroy" handler="on_window_destroy"/>
-    <child>
-      <object class="GtkVBox" id="vbox">
-        <property name="visible">True</property>
-        <child>
-          <object class="GtkMenuBar" id="menubar">
-            <property name="visible">True</property>
-            <child>
-              <object class="GtkMenuItem" id="menuitem-file">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes" comments="menuitem.">_File</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="menu-file">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem-opendir">
-                        <property name="label" translatable="yes">Open _Directory</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Directory with photos for geotagging. All photos will be geotagged if &lt;geotagged&gt; mode is selected.</property>
-                        <property name="use_underline">True</property>
-                        <property name="image">image-opendir</property>
-                        <property name="use_stock">False</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="activate" handler="on_imagemenuitem-opendir_activate"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem-opengpx">
-                        <property name="label" translatable="yes">Open _GPX</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Open an eXchange Format (GPX) in order to match the date of each photo with the position.</property>
-                        <property name="use_underline">True</property>
-                        <property name="image">image-opengpx</property>
-                        <property name="use_stock">False</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="activate" handler="on_imagemenuitem-opengpx_activate"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem-save">
-                        <property name="label" translatable="yes">_Save as</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Output file to save the KML data.</property>
-                        <property name="use_underline">True</property>
-                        <property name="image">image-save</property>
-                        <property name="use_stock">False</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="activate" handler="on_imagemenuitem-save_activate" object="imagemenuitem-save"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="separatormenuitem-sep1">
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem-new">
-                        <property name="label" translatable="yes">_Reset</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Remove all loaded files/directories to start again.</property>
-                        <property name="use_underline">True</property>
-                        <property name="image">image-clear</property>
-                        <property name="use_stock">False</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="activate" handler="on_imagemenuitem-new_activate"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="separatormenuitem-sep2">
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem-exit">
-                        <property name="label" context="PhotoPlaceGUI">gtk-quit</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Exit the program. I hope see you soon :-)</property>
-                        <property name="right_justified">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="activate" handler="on_imagemenuitem-exit_activate"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="menuitem-prefs">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes" comments="menuitem.">_Preferences</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="menu-prefs">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem-saveconf">
-                        <property name="label">gtk-save</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">Save the current preferences.</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="activate" handler="on_imagemenuitem-saveconf_activate"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem-recoverconf">
-                        <property name="label">gtk-undelete</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">Recover default configuration.</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="activate" handler="on_imagemenuitem-recoverconf_activate"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="separatormenuitem-sep3">
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem-editvariables">
-                        <property name="label" translatable="yes">Manage _Variables</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">Edit global KML variables.</property>
-                        <property name="use_underline">True</property>
-                        <property name="image">image1</property>
-                        <property name="use_stock">False</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="activate" handler="on_imagemenuitem-editvariables_activate"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem-templates">
-                        <property name="label" translatable="yes">Edit _Templates</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">Edit Templates</property>
-                        <property name="use_underline">True</property>
-                        <property name="image">image2</property>
-                        <property name="use_stock">False</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="separatormenuitem-sep4">
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem-plugins">
-                        <property name="label" translatable="yes">_Addons</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">List of available extensions. To see information about each add-on, put the mouse over its name.</property>
-                        <property name="use_underline">True</property>
-                        <property name="image">image3</property>
-                        <property name="use_stock">False</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkMenuItem" id="menuitem-help">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes" comments="menuitem.">_Help</property>
-                <property name="use_underline">True</property>
-                <child type="submenu">
-                  <object class="GtkMenu" id="menu-help">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem-onlinehelp">
-                        <property name="label">gtk-help</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">Open a web browser with online help</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="activate" handler="on_imagemenuitem-onlinehelp_activate"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem-about">
-                        <property name="label">gtk-about</property>
-                        <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">Additional info</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                        <property name="always_show_image">True</property>
-                        <signal name="activate" handler="on_imagemenuitem-about_activate" object="dialog-about"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkToolbar" id="toolbar">
-            <property name="visible">True</property>
-            <property name="icon_size_set">True</property>
-            <child>
-              <object class="GtkToolItem" id="toolbutton-openphotos">
-                <property name="visible">True</property>
-                <property name="is_important">True</property>
-                <child>
-                  <object class="GtkButton" id="button-openphotos">
-                    <property name="label" translatable="yes">Select input photo directory</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="has_tooltip">True</property>
-                    <property name="tooltip_text" translatable="yes">Select a directory with photos for geotagging. All photos will be geotagged if &lt;geotagged&gt; mode is selected.</property>
-                    <property name="image">image-photodir</property>
-                    <property name="use_underline">True</property>
-                    <signal name="clicked" handler="on_button-openphotos_clicked" object="button-openphotos"/>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolItem" id="toolbutton-opengpx">
-                <property name="visible">True</property>
-                <property name="is_important">True</property>
-                <child>
-                  <object class="GtkButton" id="button-opengpx">
-                    <property name="label" translatable="yes">Input GPX file</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="has_tooltip">True</property>
-                    <property name="tooltip_text" translatable="yes">Select an eXchange Format (GPX) in order to match the date of each photo with the position.</property>
-                    <property name="image">image-gpx</property>
-                    <property name="use_underline">True</property>
-                    <signal name="clicked" handler="on_button-opengpx_clicked" object="button-opengpx"/>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparatorToolItem" id="toolbutton-sep1">
-                <property name="visible">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToggleToolButton" id="toggletoolbutton-plugins">
-                <property name="visible">True</property>
-                <property name="has_tooltip">True</property>
-                <property name="tooltip_text" translatable="yes">If is selected, all the plugins will be activated.</property>
-                <property name="label" translatable="yes">Plugins</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-convert</property>
-                <property name="active">True</property>
-                <signal name="toggled" handler="on_toggletoolbutton-plugins_toggled"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparatorToolItem" id="toolbutton-sep2">
-                <property name="visible">True</property>
-                <property name="visible_vertical">False</property>
-                <property name="draw">False</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkToolButton" id="toolbutton-exit">
-                <property name="visible">True</property>
-                <property name="has_tooltip">True</property>
-                <property name="tooltip_text" translatable="yes">Exit the program. I hope see you soon :-)</property>
-                <property name="label" translatable="yes" comments="toolbar">_Exit</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-quit</property>
-                <signal name="clicked" handler="on_toolbutton-exit_clicked"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="padding">5</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkVPaned" id="vpaned">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <child>
-              <object class="GtkVBox" id="vbox1-vpaned">
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkNotebook" id="notebook">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="scrollable">True</property>
-                    <property name="tab_border">6</property>
-                    <property name="tab_hborder">20</property>
-                    <property name="tab_vborder">6</property>
-                    <property name="homogeneous">True</property>
-                    <signal name="create_window" handler="on_notebook_create_window"/>
-                    <child>
-                      <object class="GtkFrame" id="frame-options">
-                        <property name="visible">True</property>
-                        <property name="label_xalign">0</property>
-                        <child>
-                          <object class="GtkVBox" id="vbox-options">
-                            <property name="visible">True</property>
-                            <property name="border_width">10</property>
-                            <property name="spacing">8</property>
-                            <child>
-                              <object class="GtkHBox" id="hbox-out">
-                                <property name="visible">True</property>
-                                <child>
-                                  <object class="GtkCheckButton" id="checkbutton-outgeo">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes" comments="geomode.">If active, the exif data of pictures will be updated. With "write" mode each photo will be updated only if photo is not geotagged, by other hand "overwrite" will update each photo with the values calculated by PhotoPlace.</property>
-                                    <property name="image">image-geo</property>
-                                    <property name="focus_on_click">False</property>
-                                    <property name="xalign">1</property>
-                                    <property name="active">True</property>
-                                    <property name="draw_indicator">False</property>
-                                    <signal name="toggled" handler="on_checkbutton-outgeo_toggled" object="checkbutton-outgeo"/>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkComboBox" id="combobox-exif">
-                                    <property name="visible">True</property>
-                                    <property name="model">liststore-exifmodes</property>
-                                    <property name="active">0</property>
-                                    <signal name="changed" handler="on_combobox-exif_changed"/>
-                                    <child>
-                                      <object class="GtkCellRendererText" id="cellrenderertext-exif_name"/>
-                                      <attributes>
-                                        <attribute name="text">0</attribute>
-                                      </attributes>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="label-and">
-                                    <property name="visible">True</property>
-                                    <property name="label" translatable="yes" comments="label separator between buttons in first page of notebook.">and</property>
-                                    <property name="use_markup">True</property>
-                                    <property name="justify">center</property>
-                                    <property name="single_line_mode">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="padding">10</property>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkToggleButton" id="togglebutton-outfile">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">True</property>
-                                    <property name="tooltip_text" translatable="yes">If it is active, this will be the output file. It can be a KMZ (all in one, compressed Google Earth Layer) or KML and a directory with the processed photos.
-Not active for geottaging purposes, no output file will be generated.</property>
-                                    <property name="image">image-outfile</property>
-                                    <property name="xalign">0</property>
-                                    <signal name="toggled" handler="on_togglebutton-outfile_toggled" object="togglebutton-outfile"/>
-                                  </object>
-                                  <packing>
-                                    <property name="position">3</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="padding">10</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkHBox" id="hbox-time">
-                                <property name="visible">True</property>
-                                <child>
-                                  <object class="GtkHBox" id="hbox-utc">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">5</property>
-                                    <child>
-                                      <object class="GtkLabel" id="label-utc">
-                                        <property name="visible">True</property>
-                                        <property name="has_tooltip">True</property>
-                                        <property name="tooltip_text" translatable="yes" comments="label.">The time zone of the photos. It depends on the settings of time/date of the camera and the GPS (UTC time), it is the difference in hours between both.</property>
-                                        <property name="xalign">1</property>
-                                        <property name="label" translatable="yes" comments="label.">Time zone of photos:</property>
-                                        <property name="use_markup">True</property>
-                                        <property name="single_line_mode">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkSpinButton" id="spinbutton-utc">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="has_tooltip">True</property>
-                                        <property name="tooltip_text" translatable="yes" comments="entry.">The time zone of the photos. It depends on the settings of time/date of the camera and the GPS (UTC time), it is the difference in hours between both.</property>
-                                        <property name="max_length">6</property>
-                                        <property name="invisible_char">●</property>
-                                        <property name="width_chars">8</property>
-                                        <property name="secondary_icon_stock">gtk-home</property>
-                                        <property name="adjustment">adjustment-utc</property>
-                                        <property name="digits">2</property>
-                                        <property name="numeric">True</property>
-                                        <property name="update_policy">if-valid</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="fill">False</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkHBox" id="hbox-toffset">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">5</property>
-                                    <child>
-                                      <object class="GtkLabel" id="label-toffset">
-                                        <property name="visible">True</property>
-                                        <property name="tooltip_text" translatable="yes" comments="label.">Seconds (positive or negative) to add to the photos time in order to match them with GPS data.</property>
-                                        <property name="xalign">1</property>
-                                        <property name="label" translatable="yes" comments="label.">Time offset:</property>
-                                        <property name="use_markup">True</property>
-                                        <property name="single_line_mode">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkSpinButton" id="spinbutton-toffset">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="tooltip_text" translatable="yes" comments="entry.">Seconds (positive or negative) to add to the photos time in order to match them with GPS data.</property>
-                                        <property name="max_length">6</property>
-                                        <property name="invisible_char">●</property>
-                                        <property name="width_chars">8</property>
-                                        <property name="secondary_icon_stock">gtk-zoom-fit</property>
-                                        <property name="adjustment">adjustment-toffset</property>
-                                        <property name="climb_rate">10</property>
-                                        <property name="numeric">True</property>
-                                        <property name="update_policy">if-valid</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="fill">False</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkHBox" id="hbox-tdelta">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">5</property>
-                                    <child>
-                                      <object class="GtkLabel" id="label-tdelta">
-                                        <property name="visible">True</property>
-                                        <property name="tooltip_text" translatable="yes" comments="label.">The maximum time gap allowed between the time of a photo and the nearest point of GPS data.</property>
-                                        <property name="xalign">1</property>
-                                        <property name="label" translatable="yes">Delta seconds for geotagging:</property>
-                                        <property name="use_markup">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkSpinButton" id="spinbutton-tdelta">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="has_tooltip">True</property>
-                                        <property name="tooltip_text" translatable="yes" comments="entry.">The maximum time gap allowed between the time of a photo and the nearest point of GPS data.</property>
-                                        <property name="max_length">5</property>
-                                        <property name="invisible_char">●</property>
-                                        <property name="width_chars">7</property>
-                                        <property name="caps_lock_warning">False</property>
-                                        <property name="secondary_icon_stock">gtk-execute</property>
-                                        <property name="adjustment">adjustment-tdelta</property>
-                                        <property name="snap_to_ticks">True</property>
-                                        <property name="numeric">True</property>
-                                        <property name="update_policy">if-valid</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="fill">False</property>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkExpander" id="expander-advanced">
-                                <property name="can_focus">True</property>
-                                <property name="use_markup">True</property>
-                                <child>
-                                  <object class="GtkVBox" id="vbox-advanced">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">10</property>
-                                    <property name="homogeneous">True</property>
-                                    <child>
-                                      <object class="GtkHBox" id="hbox-photouri">
-                                        <property name="visible">True</property>
-                                        <property name="spacing">5</property>
-                                        <property name="homogeneous">True</property>
-                                        <child>
-                                          <object class="GtkLabel" id="label-photouri">
-                                            <property name="visible">True</property>
-                                            <property name="tooltip_text" translatable="yes" comments="URI label.">This entry defines the Uniform Resource Identifier for each geolocated photo. It is useful to generate a independent KML file where the photos will be linked into it.</property>
-                                            <property name="xalign">1</property>
-                                            <property name="label" translatable="yes">URI for geotagging photos:</property>
-                                            <property name="selectable">True</property>
-                                          </object>
-                                          <packing>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkEntry" id="entry-photouri">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">True</property>
-                                            <property name="tooltip_text" translatable="yes" comments="entry URI.">This entry defines the Uniform Resource Identifier for each geotagged photo. It is useful to generate a independent KML file where the photos will be linked into it.</property>
-                                            <property name="max_length">256</property>
-                                            <property name="invisible_char">●</property>
-                                          </object>
-                                          <packing>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkHBox" id="hbox-jpg">
-                                        <property name="visible">True</property>
-                                        <property name="spacing">5</property>
-                                        <property name="homogeneous">True</property>
-                                        <child>
-                                          <object class="GtkHBox" id="hbox-quality">
-                                            <property name="visible">True</property>
-                                            <property name="border_width">5</property>
-                                            <child>
-                                              <object class="GtkLabel" id="label-morequality">
-                                                <property name="visible">True</property>
-                                                <property name="xalign">1</property>
-                                                <property name="label" translatable="yes">Quality</property>
-                                                <property name="use_markup">True</property>
-                                                <property name="justify">right</property>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">False</property>
-                                                <property name="position">0</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkHScale" id="hscale-quality">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">True</property>
-                                                <property name="tooltip_text" translatable="yes">JPEG/ZIP Quality vs. Compression. The best quality will make big KMZ files with best JPEG quality and poor compression. This settings are also applicable to zip KMZ compression ratio.</property>
-                                                <property name="update_policy">delayed</property>
-                                                <property name="adjustment">adjustment-quality</property>
-                                                <property name="inverted">True</property>
-                                                <property name="show_fill_level">True</property>
-                                                <property name="fill_level">3</property>
-                                                <property name="digits">0</property>
-                                                <property name="draw_value">False</property>
-                                              </object>
-                                              <packing>
-                                                <property name="padding">5</property>
-                                                <property name="position">1</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel" id="label-morecompress">
-                                                <property name="visible">True</property>
-                                                <property name="xalign">1</property>
-                                                <property name="label" translatable="yes">Compression</property>
-                                                <property name="use_markup">True</property>
-                                                <property name="single_line_mode">True</property>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">False</property>
-                                                <property name="position">2</property>
-                                              </packing>
-                                            </child>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkHBox" id="hbox-zoom">
-                                            <property name="visible">True</property>
-                                            <property name="border_width">5</property>
-                                            <property name="spacing">10</property>
-                                            <child>
-                                              <object class="GtkLabel" id="label-zoom">
-                                                <property name="visible">True</property>
-                                                <property name="tooltip_text" translatable="yes">Output photo zoom percentage. 1.00 means original size, 0.50 means half size and so on ...</property>
-                                                <property name="xalign">1</property>
-                                                <property name="label" translatable="yes">Photo size:</property>
-                                                <property name="justify">right</property>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">False</property>
-                                                <property name="position">0</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkHScale" id="hscale-zoom">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">True</property>
-                                                <property name="tooltip_text" translatable="yes">Zoom percentaje. 1 means original size, 0.5 means half size and so on ...</property>
-                                                <property name="update_policy">delayed</property>
-                                                <property name="adjustment">adjustment-jpgzoom</property>
-                                                <property name="inverted">True</property>
-                                                <property name="show_fill_level">True</property>
-                                                <property name="fill_level">1</property>
-                                                <property name="digits">2</property>
-                                                <property name="value_pos">left</property>
-                                              </object>
-                                              <packing>
-                                                <property name="position">1</property>
-                                              </packing>
-                                            </child>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                </child>
-                                <child type="label">
-                                  <object class="GtkLabel" id="label-expander-advanced">
-                                    <property name="visible">True</property>
-                                    <property name="tooltip_text" translatable="yes" comments="expander advanced.">Advanced options. Default settings are safe and good for most of the users.</property>
-                                    <property name="label" translatable="yes" comments="advanced options in main page of notebook.">&lt;b&gt;Advanced&lt;/b&gt;</property>
-                                    <property name="use_markup">True</property>
-                                    <property name="single_line_mode">True</property>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="padding">10</property>
-                                <property name="position">2</property>
-                              </packing>
-                            </child>
-                          </object>
-                        </child>
-                        <child type="label">
-                          <object class="GtkLabel" id="label-options">
-                            <property name="visible">True</property>
-                            <property name="xpad">2</property>
-                            <property name="ypad">8</property>
-                            <property name="label" translatable="yes" comments="options label inside first notebook.">&lt;b&gt;Parameters&lt;/b&gt;</property>
-                            <property name="use_markup">True</property>
-                            <property name="single_line_mode">True</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="tab_expand">True</property>
-                        <property name="reorderable">True</property>
-                        <property name="detachable">True</property>
-                      </packing>
-                    </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="notebook-label-main">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes" comments="main label of notebook.">Main</property>
-                        <property name="use_markup">True</property>
-                        <property name="single_line_mode">True</property>
-                      </object>
-                      <packing>
-                        <property name="tab_expand">True</property>
-                        <property name="tab_fill">False</property>
-                        <property name="reorderable">True</property>
-                        <property name="detachable">True</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkFrame" id="frame-photos">
-                        <property name="visible">True</property>
-                        <property name="label_xalign">0</property>
-                        <child>
-                          <object class="GtkAlignment" id="alignment-photos">
-                            <property name="visible">True</property>
-                            <child>
-                              <object class="GtkVBox" id="vbox-photos">
-                                <property name="visible">True</property>
-                                <child>
-                                  <object class="GtkScrolledWindow" id="scrolledwindow-photos">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="hscrollbar_policy">automatic</property>
-                                    <property name="vscrollbar_policy">automatic</property>
-                                    <child>
-                                      <object class="GtkTreeView" id="treeview-geophotos">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="model">treestore-geophotos</property>
-                                        <property name="expander_column">treeviewcolumn-geophotos-data</property>
-                                        <property name="reorderable">True</property>
-                                        <property name="rules_hint">True</property>
-                                        <property name="search_column">1</property>
-                                        <property name="tooltip_column">12</property>
-                                        <signal name="button_press_event" handler="on_treeview-geophotos_button_press_event"/>
-                                        <signal name="row_activated" handler="on_treeview-geophotos_row_activated"/>
-                                        <child>
-                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-active">
-                                            <child>
-                                              <object class="GtkCellRendererToggle" id="cellrenderertoggle-geophotos-active">
-                                                <property name="radio">True</property>
-                                                <signal name="toggled" handler="on_cellgeophotos_toggled"/>
-                                              </object>
-                                              <attributes>
-                                                <attribute name="visible">10</attribute>
-                                                <attribute name="active">4</attribute>
-                                              </attributes>
-                                            </child>
-                                          </object>
-                                        </child>
-                                        <child>
-                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-picture">
-                                            <property name="title">Picture</property>
-                                            <property name="reorderable">True</property>
-                                            <property name="sort_indicator">True</property>
-                                            <property name="sort_column_id">1</property>
-                                            <child>
-                                              <object class="GtkCellRendererPixbuf" id="cellrendererpixbuf-geophotos-picture"/>
-                                              <attributes>
-                                                <attribute name="sensitive">4</attribute>
-                                                <attribute name="pixbuf">5</attribute>
-                                              </attributes>
-                                            </child>
-                                          </object>
-                                        </child>
-                                        <child>
-                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-info">
-                                            <property name="resizable">True</property>
-                                            <property name="title">Information</property>
-                                            <property name="expand">True</property>
-                                            <property name="clickable">True</property>
-                                            <property name="reorderable">True</property>
-                                            <property name="sort_indicator">True</property>
-                                            <property name="sort_column_id">2</property>
-                                            <child>
-                                              <object class="GtkCellRendererText" id="cellrenderertext-geophotos-info">
-                                                <property name="wrap_mode">word</property>
-                                              </object>
-                                              <attributes>
-                                                <attribute name="sensitive">4</attribute>
-                                                <attribute name="markup">6</attribute>
-                                              </attributes>
-                                            </child>
-                                          </object>
-                                        </child>
-                                        <child>
-                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-data">
-                                            <property name="resizable">True</property>
-                                            <property name="title">Data</property>
-                                            <child>
-                                              <object class="GtkCellRendererText" id="cellrenderertext-geophotos-data">
-                                                <property name="xalign">1</property>
-                                                <property name="alignment">right</property>
-                                                <property name="wrap_mode">word</property>
-                                              </object>
-                                              <attributes>
-                                                <attribute name="sensitive">4</attribute>
-                                                <attribute name="markup">7</attribute>
-                                              </attributes>
-                                            </child>
-                                          </object>
-                                        </child>
-                                        <child>
-                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-value">
-                                            <property name="resizable">True</property>
-                                            <property name="title">Value</property>
-                                            <property name="expand">True</property>
-                                            <child>
-                                              <object class="GtkCellRendererText" id="cellrenderertext-geophotos-value">
-                                                <property name="wrap_mode">word</property>
-                                                <signal name="edited" handler="on_cellrenderertext-geophotos-value_edited"/>
-                                              </object>
-                                              <attributes>
-                                                <attribute name="sensitive">4</attribute>
-                                                <attribute name="background">9</attribute>
-                                                <attribute name="editable">11</attribute>
-                                                <attribute name="text">8</attribute>
-                                              </attributes>
-                                            </child>
-                                          </object>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkAlignment" id="alignment-geolocate">
-                                    <property name="visible">True</property>
-                                    <property name="xalign">1</property>
-                                    <property name="xscale">0</property>
-                                    <property name="yscale">0</property>
-                                    <property name="right_padding">17</property>
-                                    <child>
-                                      <object class="GtkButton" id="button-geolocate">
-                                        <property name="label" translatable="yes">Simulate geotagging</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
-                                        <property name="tooltip_text" translatable="yes">It simulates the geottaging process with the current GPX data and time values.</property>
-                                        <property name="image">image-simulategeolocate</property>
-                                        <signal name="clicked" handler="on_button-geolocate_clicked"/>
-                                      </object>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="padding">3</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child type="label">
-                          <object class="GtkLabel" id="label-loadedphotos">
-                            <property name="visible">True</property>
-                            <property name="xpad">2</property>
-                            <property name="ypad">8</property>
-                            <property name="label" translatable="yes">&lt;b&gt;Loaded photos&lt;/b&gt;</property>
-                            <property name="use_markup">True</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                        <property name="tab_expand">True</property>
-                        <property name="reorderable">True</property>
-                        <property name="detachable">True</property>
-                      </packing>
-                    </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="notebook-label-photos">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes" comments="picture label of notebook.">Photos</property>
-                        <property name="use_markup">True</property>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                        <property name="tab_fill">False</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkNotebook" id="notebook-plugins">
-                        <property name="visible">True</property>
-                        <property name="tab_pos">right</property>
-                        <property name="scrollable">True</property>
-                        <property name="homogeneous">True</property>
-                      </object>
-                      <packing>
-                        <property name="position">2</property>
-                        <property name="tab_expand">True</property>
-                        <property name="reorderable">True</property>
-                        <property name="detachable">True</property>
-                      </packing>
-                    </child>
-                    <child type="tab">
-                      <object class="GtkLabel" id="notebook-label-plugins">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Addons</property>
-                        <property name="use_markup">True</property>
-                      </object>
-                      <packing>
-                        <property name="position">2</property>
-                        <property name="tab_fill">False</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="padding">5</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="button-go">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <signal name="clicked" handler="on_button-go_clicked" object="button-go"/>
-                    <child>
-                      <object class="GtkProgressBar" id="progressbar-go">
-                        <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">Press this to start! The show must go on!</property>
-                        <property name="show_text">True</property>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="padding">5</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="resize">True</property>
-                <property name="shrink">False</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkVBox" id="vbox2-vpaned">
-                <property name="visible">True</property>
-                <child>
-                  <object class="GtkExpander" id="expander-output">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkScrolledWindow" id="scrolledwindow-output">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="hscrollbar_policy">automatic</property>
-                        <property name="shadow_type">in</property>
-                        <child>
-                          <object class="GtkTextView" id="textview-output">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="pixels_above_lines">2</property>
-                            <property name="pixels_below_lines">2</property>
-                            <property name="editable">False</property>
-                            <property name="accepts_tab">False</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child type="label">
-                      <object class="GtkLabel" id="label-output">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes" comments="label of expansor for textview">&lt;b&gt;Output Log&lt;/b&gt;</property>
-                        <property name="use_markup">True</property>
-                        <property name="single_line_mode">True</property>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="resize">True</property>
-                <property name="shrink">False</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkStatusbar" id="statusbar">
-            <property name="visible">True</property>
-            <property name="sensitive">False</property>
-            <property name="spacing">5</property>
-            <property name="homogeneous">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="padding">2</property>
-            <property name="position">3</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkAdjustment" id="adjustment-jpgzoom">
-    <property name="value">0.5</property>
-    <property name="lower">0.0099999997764825821</property>
+    <property name="lower">0.000000000</property>
     <property name="upper">1</property>
+    <property name="value">0.5</property>
     <property name="step_increment">0.050000000000000003</property>
     <property name="page_increment">0.10000000000000001</property>
-    <signal name="value_changed" handler="on_adjustment-jpgzoom_value_changed"/>
+    <signal name="value-changed" handler="on_adjustment-jpgzoom_value_changed" swapped="no"/>
+  </object>
+  <object class="GtkAdjustment" id="adjustment-quality">
+    <property name="upper">3</property>
+    <property name="value">1</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">1</property>
+    <signal name="value-changed" handler="on_adjustment-quality_value_changed" swapped="no"/>
   </object>
   <object class="GtkAdjustment" id="adjustment-tdelta">
-    <property name="value">5</property>
     <property name="lower">0.01</property>
     <property name="upper">1440</property>
+    <property name="value">5</property>
     <property name="step_increment">1</property>
     <property name="page_increment">5</property>
-    <signal name="value_changed" handler="on_adjustment-tdelta_value_changed"/>
+    <signal name="value-changed" handler="on_adjustment-tdelta_value_changed" swapped="no"/>
+  </object>
+  <object class="GtkAdjustment" id="adjustment-toffset">
+    <property name="lower">-3600</property>
+    <property name="upper">3600</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">60</property>
+    <signal name="value-changed" handler="on_adjustment-toffset_value_changed" swapped="no"/>
   </object>
   <object class="GtkAdjustment" id="adjustment-utc">
     <property name="lower">-12</property>
     <property name="upper">12</property>
     <property name="step_increment">1</property>
     <property name="page_increment">2</property>
-    <signal name="value_changed" handler="on_adjustment-utc_value_changed"/>
+    <signal name="value-changed" handler="on_adjustment-utc_value_changed" swapped="no"/>
   </object>
   <object class="GtkAboutDialog" id="dialog-about">
+    <property name="can_focus">False</property>
     <property name="border_width">5</property>
     <property name="title" translatable="yes" comments="window title">About ...</property>
     <property name="window_position">center-on-parent</property>
@@ -1136,8 +50,8 @@ Not active for geottaging purposes, no output file will be generated.</property>
     <property name="icon">photoplace.png</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">PhotoPlace</property>
-    <property name="version">0.5.0</property>
-    <property name="copyright">Copyright © 2011-2013  José Riguera </property>
+    <property name="version">0.6.0</property>
+    <property name="copyright">Copyright © 2011-2014  José Riguera </property>
     <property name="comments" translatable="yes">A program for geotagging photos and generate a Google Earth layer</property>
     <property name="website">http://code.google.com/p/photoplace/</property>
     <property name="license" translatable="yes" comments="GPL License.">		    GNU GENERAL PUBLIC LICENSE
@@ -1233,23 +147,39 @@ Each version is given a distinguishing version number.  If the Program specifies
 This General Public License does not permit incorporating your program into proprietary programs.  If your program is a subroutine library, you may consider it more useful to permit linking proprietary applications with the library.  If this is what you want to do, use the GNU Lesser General Public License instead of this License.
 </property>
     <property name="authors">José Riguera López &lt;jriguera@gmail.com&gt;</property>
-    <property name="documenters"></property>
+    <property name="documenters">Noela Sánchez Carnero &lt;noelas@gmail.com&gt;</property>
     <property name="translator_credits" translatable="yes">José Riguera López &lt;jriguera@gmail.com&gt;</property>
     <property name="logo">photoplace.png</property>
     <property name="wrap_license">True</property>
-    <signal name="close" handler="on_aboutdialog_close" object="dialog-about"/>
-    <signal name="response" handler="on_aboutdialog_response" object="dialog-about"/>
-    <signal name="delete_event" handler="on_aboutdialog_delete_event" object="dialog-about"/>
+    <signal name="close" handler="on_aboutdialog_close" object="dialog-about" swapped="yes"/>
+    <signal name="delete-event" handler="on_aboutdialog_delete_event" object="dialog-about" swapped="yes"/>
+    <signal name="response" handler="on_aboutdialog_response" object="dialog-about" swapped="yes"/>
     <child internal-child="vbox">
       <object class="GtkVBox" id="aboutdialog-vbox">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="aboutdialog-actionarea">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
         <child>
           <object class="GtkVBox" id="vbox-donate">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <child>
               <object class="GtkLabel" id="label-donate">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">I have a dream ... well I have a lot of dreams, but this is one of them ...</property>
                 <property name="xpad">10</property>
                 <property name="label" translatable="yes" comments="I have a dream ... well I have a lot of dreams, but this is one of them ...">The authors and developers hope you like this program. We would really appreciate it if you would consider making a small donation: half of the money will be donated to a local NGO Ecodesarrollo Gaia (http://gaiadiaadia.blogspot.com) that helps people in Senegal (Africa), with the other half, I would like to visit Australia and,  in connection with a geotagging  program, my antipodes in New Zeland, and your coins can help me to achieve this goals.</property>
@@ -1259,6 +189,8 @@ This General Public License does not permit incorporating your program into prop
                 <property name="selectable">True</property>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -1270,26 +202,33 @@ This General Public License does not permit incorporating your program into prop
                 <property name="receives_default">True</property>
                 <property name="has_tooltip">True</property>
                 <property name="tooltip_text" translatable="yes">I have a dream ... well I have a lot of dreams, but this is one of them ...</property>
+                <property name="use_action_appearance">False</property>
                 <property name="relief">none</property>
                 <property name="uri">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=N6XRW9DLPFSRN</property>
-                <signal name="clicked" handler="on_linkbutton-donate_clicked"/>
+                <signal name="clicked" handler="on_linkbutton-donate_clicked" swapped="no"/>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
               <object class="GtkVBox" id="vbox-suggestion">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="border_width">10</property>
                 <child>
                   <object class="GtkLabel" id="label-suggestion">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes"> As well, you can write suggestions or impressions to :</property>
                     <property name="use_markup">True</property>
                     <property name="selectable">True</property>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -1299,114 +238,1362 @@ This General Public License does not permit incorporating your program into prop
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
                     <property name="relief">none</property>
                     <property name="uri">mailto:photoplace-project@googlegroups.com</property>
-                    <signal name="clicked" handler="on_linkbutton-suggestion_clicked"/>
+                    <signal name="clicked" handler="on_linkbutton-suggestion_clicked" swapped="no"/>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
               </object>
               <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">2</property>
               </packing>
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="padding">20</property>
             <property name="position">3</property>
-          </packing>
-        </child>
-        <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="aboutdialog-actionarea">
-            <property name="visible">True</property>
-            <property name="layout_style">end</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="pack_type">end</property>
-            <property name="position">0</property>
           </packing>
         </child>
       </object>
     </child>
   </object>
-  <object class="GtkAdjustment" id="adjustment-quality">
-    <property name="value">1</property>
-    <property name="upper">3</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">1</property>
-    <signal name="value_changed" handler="on_adjustment-quality_value_changed"/>
-  </object>
-  <object class="GtkImage" id="image-photodir">
+  <object class="GtkImage" id="image-clear">
     <property name="visible">True</property>
-    <property name="xpad">5</property>
-    <property name="stock">gtk-directory</property>
-    <property name="icon-size">5</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-new</property>
+    <property name="icon-size">1</property>
+  </object>
+  <object class="GtkImage" id="image-geo">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="xalign">0</property>
+    <property name="xpad">10</property>
+    <property name="stock">gtk-find-and-replace</property>
   </object>
   <object class="GtkImage" id="image-gpx">
     <property name="visible">True</property>
+    <property name="can_focus">False</property>
     <property name="xpad">5</property>
     <property name="stock">gtk-sort-ascending</property>
     <property name="icon-size">5</property>
   </object>
-  <object class="GtkImage" id="image-clear">
+  <object class="GtkImage" id="image-opendir">
     <property name="visible">True</property>
-    <property name="stock">gtk-new</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-open</property>
     <property name="icon-size">1</property>
   </object>
   <object class="GtkImage" id="image-opengpx">
     <property name="visible">True</property>
+    <property name="can_focus">False</property>
     <property name="stock">gtk-sort-ascending</property>
     <property name="icon-size">1</property>
   </object>
-  <object class="GtkImage" id="image-opendir">
+  <object class="GtkImage" id="image-outfile">
     <property name="visible">True</property>
-    <property name="stock">gtk-open</property>
-    <property name="icon-size">1</property>
+    <property name="can_focus">False</property>
+    <property name="xalign">0</property>
+    <property name="xpad">10</property>
+    <property name="stock">gtk-save-as</property>
+  </object>
+  <object class="GtkImage" id="image-photodir">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="xpad">5</property>
+    <property name="stock">gtk-directory</property>
+    <property name="icon-size">5</property>
   </object>
   <object class="GtkImage" id="image-save">
     <property name="visible">True</property>
+    <property name="can_focus">False</property>
     <property name="stock">gtk-save-as</property>
     <property name="icon-size">1</property>
   </object>
-  <object class="GtkAdjustment" id="adjustment-toffset">
-    <property name="lower">-3600</property>
-    <property name="upper">3600</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">60</property>
-    <signal name="value_changed" handler="on_adjustment-toffset_value_changed"/>
+  <object class="GtkImage" id="image-simulategeolocate">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="xpad">2</property>
+    <property name="ypad">2</property>
+    <property name="stock">gtk-execute</property>
   </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
+    <property name="can_focus">False</property>
     <property name="stock">gtk-page-setup</property>
     <property name="icon-size">1</property>
   </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
+    <property name="can_focus">False</property>
     <property name="stock">gtk-copy</property>
-  </object>
-  <object class="GtkImage" id="image-geo">
-    <property name="visible">True</property>
-    <property name="xalign">0</property>
-    <property name="xpad">10</property>
-    <property name="stock">gtk-find-and-replace</property>
-  </object>
-  <object class="GtkImage" id="image-outfile">
-    <property name="visible">True</property>
-    <property name="xalign">0</property>
-    <property name="xpad">10</property>
-    <property name="stock">gtk-save-as</property>
-  </object>
-  <object class="GtkImage" id="image-simulategeolocate">
-    <property name="visible">True</property>
-    <property name="xpad">2</property>
-    <property name="ypad">2</property>
-    <property name="stock">gtk-execute</property>
   </object>
   <object class="GtkImage" id="image3">
     <property name="visible">True</property>
+    <property name="can_focus">False</property>
     <property name="stock">gtk-convert</property>
+  </object>
+  <object class="GtkListStore" id="liststore-exifmodes">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name mode -->
+      <column type="gint"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="treestore-geophotos">
+    <columns>
+      <!-- column-name status -->
+      <column type="gint"/>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name path -->
+      <column type="gchararray"/>
+      <!-- column-name date -->
+      <column type="gchararray"/>
+      <!-- column-name active -->
+      <column type="gboolean"/>
+      <!-- column-name pixbuf -->
+      <column type="GdkPixbuf"/>
+      <!-- column-name gettext_main_info -->
+      <column type="gchararray"/>
+      <!-- column-name data_name -->
+      <column type="gchararray"/>
+      <!-- column-name data_value -->
+      <column type="gchararray"/>
+      <!-- column-name bgcolor -->
+      <column type="gchararray"/>
+      <!-- column-name parent -->
+      <column type="gboolean"/>
+      <!-- column-name dataedit -->
+      <column type="gboolean"/>
+      <!-- column-name gettext_info -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkWindow" id="window">
+    <property name="width_request">850</property>
+    <property name="height_request">566</property>
+    <property name="can_focus">False</property>
+    <property name="title">PhotoPlace</property>
+    <property name="icon">photoplace.png</property>
+    <signal name="destroy" handler="on_window_destroy" swapped="no"/>
+    <child>
+      <object class="GtkVBox" id="vbox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkMenuBar" id="menubar">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <child>
+              <object class="GtkMenuItem" id="menuitem-file">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="label" translatable="yes" comments="menuitem.">_File</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu-file">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-opendir">
+                        <property name="label" translatable="yes">Open _Directory</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Directory with photos for geotagging. All photos will be geotagged if &lt;geotagged&gt; mode is selected.</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image-opendir</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-opendir_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-opengpx">
+                        <property name="label" translatable="yes">Open _GPX</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Open an eXchange Format (GPX) in order to match the date of each photo with the position.</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image-opengpx</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-opengpx_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-save">
+                        <property name="label" translatable="yes">_Save as</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Output file to save the KML data.</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image-save</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-save_activate" object="imagemenuitem-save" swapped="yes"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem-sep1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-new">
+                        <property name="label" translatable="yes">_Reset</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Remove all loaded files/directories to start again.</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image-clear</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-new_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem-sep2">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-exit">
+                        <property name="label" context="PhotoPlaceGUI">gtk-quit</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes" comments="menuitem.">Exit the program. I hope see you soon :-)</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="right_justified">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-exit_activate" swapped="no"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="menuitem-prefs">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="label" translatable="yes" comments="menuitem.">_Preferences</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu-prefs">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-saveconf">
+                        <property name="label">gtk-save</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Save the current preferences.</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-saveconf_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-recoverconf">
+                        <property name="label">gtk-undelete</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Recover default configuration.</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-recoverconf_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem-sep3">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-editvariables">
+                        <property name="label" translatable="yes">Manage _Variables</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Edit global KML variables.</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image1</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-editvariables_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-templates">
+                        <property name="label" translatable="yes">Edit _Templates</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Edit Templates</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image2</property>
+                        <property name="use_stock">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem-sep4">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-plugins">
+                        <property name="label" translatable="yes">_Addons</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">List of available extensions. To see information about each add-on, put the mouse over its name.</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image3</property>
+                        <property name="use_stock">False</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="menuitem-help">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="label" translatable="yes" comments="menuitem.">_Help</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="menu-help">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-onlinehelp">
+                        <property name="label">gtk-help</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Open a web browser with online help</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-onlinehelp_activate" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="imagemenuitem-about">
+                        <property name="label">gtk-about</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Additional info</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="on_imagemenuitem-about_activate" object="dialog-about" swapped="yes"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolbar" id="toolbar">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="icon_size_set">True</property>
+            <child>
+              <object class="GtkToolItem" id="toolbutton-openphotos">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="is_important">True</property>
+                <child>
+                  <object class="GtkButton" id="button-openphotos">
+                    <property name="label" translatable="yes">Select input photo directory</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_text" translatable="yes">Select a directory with photos for geotagging. All photos will be geotagged if &lt;geotagged&gt; mode is selected.</property>
+                    <property name="use_action_appearance">False</property>
+                    <property name="image">image-photodir</property>
+                    <property name="use_underline">True</property>
+                    <signal name="clicked" handler="on_button-openphotos_clicked" object="button-openphotos" swapped="yes"/>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolItem" id="toolbutton-opengpx">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="is_important">True</property>
+                <child>
+                  <object class="GtkButton" id="button-opengpx">
+                    <property name="label" translatable="yes">Input GPX file</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="tooltip_text" translatable="yes">Select an eXchange Format (GPX) in order to match the date of each photo with the position.</property>
+                    <property name="use_action_appearance">False</property>
+                    <property name="image">image-gpx</property>
+                    <property name="use_underline">True</property>
+                    <signal name="clicked" handler="on_button-opengpx_clicked" object="button-opengpx" swapped="yes"/>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="toolbutton-sep1">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToggleToolButton" id="toggletoolbutton-plugins">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip_text" translatable="yes">If is selected, all the plugins will be activated.</property>
+                <property name="use_action_appearance">False</property>
+                <property name="label" translatable="yes">Plugins</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-convert</property>
+                <property name="active">True</property>
+                <signal name="toggled" handler="on_toggletoolbutton-plugins_toggled" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="toolbutton-sep2">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="visible_vertical">False</property>
+                <property name="draw">False</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton-exit">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip_text" translatable="yes">Exit the program. I hope see you soon :-)</property>
+                <property name="use_action_appearance">False</property>
+                <property name="label" translatable="yes" comments="toolbar">_Exit</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-quit</property>
+                <signal name="clicked" handler="on_toolbutton-exit_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="padding">5</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkVPaned" id="vpaned">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <child>
+              <object class="GtkVBox" id="vbox1-vpaned">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkNotebook" id="notebook">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="scrollable">True</property>
+                    <property name="tab_border">6</property>
+                    <property name="tab_hborder">20</property>
+                    <property name="tab_vborder">6</property>
+                    <property name="homogeneous">True</property>
+                    <signal name="create-window" handler="on_notebook_create_window" swapped="no"/>
+                    <child>
+                      <object class="GtkFrame" id="frame-options">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label_xalign">0</property>
+                        <child>
+                          <object class="GtkVBox" id="vbox-options">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="border_width">10</property>
+                            <property name="spacing">8</property>
+                            <child>
+                              <object class="GtkHBox" id="hbox-out">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <object class="GtkCheckButton" id="checkbutton-outgeo">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="tooltip_text" translatable="yes" comments="geomode.">If active, the exif data of pictures will be updated. With "write" mode each photo will be updated only if photo is not geotagged, by other hand "overwrite" will update each photo with the values calculated by PhotoPlace.</property>
+                                    <property name="use_action_appearance">False</property>
+                                    <property name="image">image-geo</property>
+                                    <property name="focus_on_click">False</property>
+                                    <property name="xalign">1</property>
+                                    <property name="active">True</property>
+                                    <property name="draw_indicator">False</property>
+                                    <signal name="toggled" handler="on_checkbutton-outgeo_toggled" object="checkbutton-outgeo" swapped="yes"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBox" id="combobox-exif">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="model">liststore-exifmodes</property>
+                                    <property name="active">0</property>
+                                    <signal name="changed" handler="on_combobox-exif_changed" swapped="no"/>
+                                    <child>
+                                      <object class="GtkCellRendererText" id="cellrenderertext-exif_name"/>
+                                      <attributes>
+                                        <attribute name="text">0</attribute>
+                                      </attributes>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="label-and">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="label" translatable="yes" comments="label separator between buttons in first page of notebook.">and</property>
+                                    <property name="use_markup">True</property>
+                                    <property name="justify">center</property>
+                                    <property name="single_line_mode">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="padding">10</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkToggleButton" id="togglebutton-outfile">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="tooltip_text" translatable="yes">If it is active, this will be the output file. It can be a KMZ (all in one, compressed Google Earth Layer) or KML and a directory with the processed photos.
+Not active for geottaging purposes, no output file will be generated.</property>
+                                    <property name="use_action_appearance">False</property>
+                                    <property name="image">image-outfile</property>
+                                    <property name="xalign">0</property>
+                                    <signal name="toggled" handler="on_togglebutton-outfile_toggled" object="togglebutton-outfile" swapped="yes"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">3</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="padding">10</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkHBox" id="hbox-time">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <object class="GtkHBox" id="hbox-utc">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="spacing">5</property>
+                                    <child>
+                                      <object class="GtkLabel" id="label-utc">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="has_tooltip">True</property>
+                                        <property name="tooltip_text" translatable="yes" comments="label.">The time zone of the photos. It depends on the settings of time/date of the camera and the GPS (UTC time), it is the difference in hours between both.</property>
+                                        <property name="xalign">1</property>
+                                        <property name="label" translatable="yes" comments="label.">Time zone of photos:</property>
+                                        <property name="use_markup">True</property>
+                                        <property name="single_line_mode">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkSpinButton" id="spinbutton-utc">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="has_tooltip">True</property>
+                                        <property name="tooltip_text" translatable="yes" comments="entry.">The time zone of the photos. It depends on the settings of time/date of the camera and the GPS (UTC time), it is the difference in hours between both.</property>
+                                        <property name="max_length">6</property>
+                                        <property name="invisible_char">●</property>
+                                        <property name="width_chars">8</property>
+                                        <property name="secondary_icon_stock">gtk-home</property>
+                                        <property name="primary_icon_activatable">False</property>
+                                        <property name="secondary_icon_activatable">False</property>
+                                        <property name="primary_icon_sensitive">True</property>
+                                        <property name="secondary_icon_sensitive">True</property>
+                                        <property name="adjustment">adjustment-utc</property>
+                                        <property name="digits">2</property>
+                                        <property name="numeric">True</property>
+                                        <property name="update_policy">if-valid</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkHBox" id="hbox-toffset">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="spacing">5</property>
+                                    <child>
+                                      <object class="GtkLabel" id="label-toffset">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="tooltip_text" translatable="yes" comments="label.">Seconds (positive or negative) to add to the photos time in order to match them with GPS data.</property>
+                                        <property name="xalign">1</property>
+                                        <property name="label" translatable="yes" comments="label.">Time offset:</property>
+                                        <property name="use_markup">True</property>
+                                        <property name="single_line_mode">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkSpinButton" id="spinbutton-toffset">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes" comments="entry.">Seconds (positive or negative) to add to the photos time in order to match them with GPS data.</property>
+                                        <property name="max_length">6</property>
+                                        <property name="invisible_char">●</property>
+                                        <property name="width_chars">8</property>
+                                        <property name="secondary_icon_stock">gtk-zoom-fit</property>
+                                        <property name="primary_icon_activatable">False</property>
+                                        <property name="secondary_icon_activatable">False</property>
+                                        <property name="primary_icon_sensitive">True</property>
+                                        <property name="secondary_icon_sensitive">True</property>
+                                        <property name="adjustment">adjustment-toffset</property>
+                                        <property name="climb_rate">10</property>
+                                        <property name="numeric">True</property>
+                                        <property name="update_policy">if-valid</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkHBox" id="hbox-tdelta">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="spacing">5</property>
+                                    <child>
+                                      <object class="GtkLabel" id="label-tdelta">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="tooltip_text" translatable="yes" comments="label.">The maximum time gap allowed between the time of a photo and the nearest point of GPS data.</property>
+                                        <property name="xalign">1</property>
+                                        <property name="label" translatable="yes">Delta seconds for geotagging:</property>
+                                        <property name="use_markup">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkSpinButton" id="spinbutton-tdelta">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="has_tooltip">True</property>
+                                        <property name="tooltip_text" translatable="yes" comments="entry.">The maximum time gap allowed between the time of a photo and the nearest point of GPS data.</property>
+                                        <property name="max_length">5</property>
+                                        <property name="invisible_char">●</property>
+                                        <property name="width_chars">7</property>
+                                        <property name="caps_lock_warning">False</property>
+                                        <property name="secondary_icon_stock">gtk-execute</property>
+                                        <property name="primary_icon_activatable">False</property>
+                                        <property name="secondary_icon_activatable">False</property>
+                                        <property name="primary_icon_sensitive">True</property>
+                                        <property name="secondary_icon_sensitive">True</property>
+                                        <property name="adjustment">adjustment-tdelta</property>
+                                        <property name="snap_to_ticks">True</property>
+                                        <property name="numeric">True</property>
+                                        <property name="update_policy">if-valid</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkExpander" id="expander-advanced">
+                                <property name="can_focus">True</property>
+                                <property name="use_markup">True</property>
+                                <child>
+                                  <object class="GtkVBox" id="vbox-advanced">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="spacing">10</property>
+                                    <property name="homogeneous">True</property>
+                                    <child>
+                                      <object class="GtkHBox" id="hbox-photouri">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="spacing">5</property>
+                                        <property name="homogeneous">True</property>
+                                        <child>
+                                          <object class="GtkLabel" id="label-photouri">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="tooltip_text" translatable="yes" comments="URI label.">This entry defines the Uniform Resource Identifier for each geolocated photo. It is useful to generate a independent KML file where the photos will be linked into it.</property>
+                                            <property name="xalign">1</property>
+                                            <property name="label" translatable="yes">URI for geotagging photos:</property>
+                                            <property name="selectable">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">True</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkEntry" id="entry-photouri">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="tooltip_text" translatable="yes" comments="entry URI.">This entry defines the Uniform Resource Identifier for each geotagged photo. It is useful to generate a independent KML file where the photos will be linked into it.</property>
+                                            <property name="max_length">256</property>
+                                            <property name="invisible_char">●</property>
+                                            <property name="primary_icon_activatable">False</property>
+                                            <property name="secondary_icon_activatable">False</property>
+                                            <property name="primary_icon_sensitive">True</property>
+                                            <property name="secondary_icon_sensitive">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">True</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkHBox" id="hbox-jpg">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="spacing">5</property>
+                                        <property name="homogeneous">True</property>
+                                        <child>
+                                          <object class="GtkHBox" id="hbox-quality">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="border_width">5</property>
+                                            <child>
+                                              <object class="GtkLabel" id="label-morequality">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">Quality</property>
+                                                <property name="use_markup">True</property>
+                                                <property name="justify">right</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">False</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkHScale" id="hscale-quality">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="tooltip_text" translatable="yes">JPEG/ZIP Quality vs. Compression. The best quality will make big KMZ files with best JPEG quality and poor compression. This settings are also applicable to zip KMZ compression ratio.</property>
+                                                <property name="update_policy">delayed</property>
+                                                <property name="adjustment">adjustment-quality</property>
+                                                <property name="inverted">True</property>
+                                                <property name="show_fill_level">True</property>
+                                                <property name="fill_level">3</property>
+                                                <property name="digits">0</property>
+                                                <property name="draw_value">False</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">True</property>
+                                                <property name="fill">True</property>
+                                                <property name="padding">5</property>
+                                                <property name="position">1</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="label-morecompress">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">Compression</property>
+                                                <property name="use_markup">True</property>
+                                                <property name="single_line_mode">True</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">False</property>
+                                                <property name="position">2</property>
+                                              </packing>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkHBox" id="hbox-zoom">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="border_width">5</property>
+                                            <property name="spacing">10</property>
+                                            <child>
+                                              <object class="GtkLabel" id="label-zoom">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="tooltip_text" translatable="yes">Output photo zoom percentage. 1.00 means original size, 0.50 means half size and so on ...</property>
+                                                <property name="xalign">1</property>
+                                                <property name="label" translatable="yes">Photo size:</property>
+                                                <property name="justify">right</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkHScale" id="hscale-zoom">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="tooltip_text" translatable="yes">Zoom percentaje. 1 means original size, 0.5 means half size and so on ...</property>
+                                                <property name="update_policy">delayed</property>
+                                                <property name="adjustment">adjustment-jpgzoom</property>
+                                                <property name="inverted">True</property>
+                                                <property name="show_fill_level">True</property>
+                                                <property name="fill_level">1</property>
+                                                <property name="digits">2</property>
+                                                <property name="value_pos">left</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">True</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">1</property>
+                                              </packing>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child type="label">
+                                  <object class="GtkLabel" id="label-expander-advanced">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="tooltip_text" translatable="yes" comments="expander advanced.">Advanced options. Default settings are safe and good for most of the users.</property>
+                                    <property name="label" translatable="yes" comments="advanced options in main page of notebook.">&lt;b&gt;Advanced&lt;/b&gt;</property>
+                                    <property name="use_markup">True</property>
+                                    <property name="single_line_mode">True</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="padding">10</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="label-options">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="xpad">2</property>
+                            <property name="ypad">8</property>
+                            <property name="label" translatable="yes" comments="options label inside first notebook.">&lt;b&gt;Parameters&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                            <property name="single_line_mode">True</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="reorderable">True</property>
+                        <property name="detachable">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="notebook-label-main">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes" comments="main label of notebook.">Main</property>
+                        <property name="use_markup">True</property>
+                        <property name="single_line_mode">True</property>
+                      </object>
+                      <packing>
+                        <property name="tab_expand">True</property>
+                        <property name="tab_fill">False</property>
+                        <property name="reorderable">True</property>
+                        <property name="detachable">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkFrame" id="frame-photos">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label_xalign">0</property>
+                        <child>
+                          <object class="GtkAlignment" id="alignment-photos">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkVBox" id="vbox-photos">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <object class="GtkScrolledWindow" id="scrolledwindow-photos">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="hscrollbar_policy">automatic</property>
+                                    <property name="vscrollbar_policy">automatic</property>
+                                    <child>
+                                      <object class="GtkTreeView" id="treeview-geophotos">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="model">treestore-geophotos</property>
+                                        <property name="expander_column">treeviewcolumn-geophotos-data</property>
+                                        <property name="reorderable">True</property>
+                                        <property name="rules_hint">True</property>
+                                        <property name="search_column">1</property>
+                                        <property name="tooltip_column">12</property>
+                                        <signal name="button-press-event" handler="on_treeview-geophotos_button_press_event" swapped="no"/>
+                                        <signal name="row-activated" handler="on_treeview-geophotos_row_activated" swapped="no"/>
+                                        <child>
+                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-active">
+                                            <child>
+                                              <object class="GtkCellRendererToggle" id="cellrenderertoggle-geophotos-active">
+                                                <property name="radio">True</property>
+                                                <signal name="toggled" handler="on_cellgeophotos_toggled" swapped="no"/>
+                                              </object>
+                                              <attributes>
+                                                <attribute name="visible">10</attribute>
+                                                <attribute name="active">4</attribute>
+                                              </attributes>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-picture">
+                                            <property name="title">Picture</property>
+                                            <property name="reorderable">True</property>
+                                            <property name="sort_indicator">True</property>
+                                            <property name="sort_column_id">1</property>
+                                            <child>
+                                              <object class="GtkCellRendererPixbuf" id="cellrendererpixbuf-geophotos-picture"/>
+                                              <attributes>
+                                                <attribute name="sensitive">4</attribute>
+                                                <attribute name="pixbuf">5</attribute>
+                                              </attributes>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-info">
+                                            <property name="resizable">True</property>
+                                            <property name="title">Information</property>
+                                            <property name="expand">True</property>
+                                            <property name="clickable">True</property>
+                                            <property name="reorderable">True</property>
+                                            <property name="sort_indicator">True</property>
+                                            <property name="sort_column_id">2</property>
+                                            <child>
+                                              <object class="GtkCellRendererText" id="cellrenderertext-geophotos-info">
+                                                <property name="wrap_mode">word</property>
+                                              </object>
+                                              <attributes>
+                                                <attribute name="sensitive">4</attribute>
+                                                <attribute name="markup">6</attribute>
+                                              </attributes>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-data">
+                                            <property name="resizable">True</property>
+                                            <property name="title">Data</property>
+                                            <child>
+                                              <object class="GtkCellRendererText" id="cellrenderertext-geophotos-data">
+                                                <property name="xalign">1</property>
+                                                <property name="alignment">right</property>
+                                                <property name="wrap_mode">word</property>
+                                              </object>
+                                              <attributes>
+                                                <attribute name="sensitive">4</attribute>
+                                                <attribute name="markup">7</attribute>
+                                              </attributes>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkTreeViewColumn" id="treeviewcolumn-geophotos-value">
+                                            <property name="resizable">True</property>
+                                            <property name="title">Value</property>
+                                            <property name="expand">True</property>
+                                            <child>
+                                              <object class="GtkCellRendererText" id="cellrenderertext-geophotos-value">
+                                                <property name="wrap_mode">word</property>
+                                                <signal name="edited" handler="on_cellrenderertext-geophotos-value_edited" swapped="no"/>
+                                              </object>
+                                              <attributes>
+                                                <attribute name="sensitive">4</attribute>
+                                                <attribute name="background">9</attribute>
+                                                <attribute name="editable">11</attribute>
+                                                <attribute name="text">8</attribute>
+                                              </attributes>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkAlignment" id="alignment-geolocate">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="xalign">1</property>
+                                    <property name="xscale">0</property>
+                                    <property name="yscale">0</property>
+                                    <property name="right_padding">17</property>
+                                    <child>
+                                      <object class="GtkButton" id="button-geolocate">
+                                        <property name="label" translatable="yes">Simulate geotagging</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">True</property>
+                                        <property name="tooltip_text" translatable="yes">It simulates the geottaging process with the current GPX data and time values.</property>
+                                        <property name="use_action_appearance">False</property>
+                                        <property name="image">image-simulategeolocate</property>
+                                        <signal name="clicked" handler="on_button-geolocate_clicked" swapped="no"/>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="padding">3</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="label-loadedphotos">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="xpad">2</property>
+                            <property name="ypad">8</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Loaded photos&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                        <property name="tab_expand">True</property>
+                        <property name="reorderable">True</property>
+                        <property name="detachable">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="notebook-label-photos">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes" comments="picture label of notebook.">Photos</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                        <property name="tab_fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkNotebook" id="notebook-plugins">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tab_pos">right</property>
+                        <property name="scrollable">True</property>
+                        <property name="homogeneous">True</property>
+                      </object>
+                      <packing>
+                        <property name="position">2</property>
+                        <property name="tab_expand">True</property>
+                        <property name="reorderable">True</property>
+                        <property name="detachable">True</property>
+                      </packing>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="notebook-label-plugins">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Addons</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                      <packing>
+                        <property name="position">2</property>
+                        <property name="tab_fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="padding">5</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button-go">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
+                    <signal name="clicked" handler="on_button-go_clicked" object="button-go" swapped="yes"/>
+                    <child>
+                      <object class="GtkProgressBar" id="progressbar-go">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Press this to start! The show must go on!</property>
+                        <property name="show_text">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="padding">5</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVBox" id="vbox2-vpaned">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkExpander" id="expander-output">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="spacing">5</property>
+                    <child>
+                      <object class="GtkScrolledWindow" id="scrolledwindow-output">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">automatic</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkTextView" id="textview-output">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="pixels_above_lines">2</property>
+                            <property name="pixels_below_lines">2</property>
+                            <property name="editable">False</property>
+                            <property name="accepts_tab">False</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="label-output">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes" comments="label of expansor for textview">&lt;b&gt;Output Log&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                        <property name="single_line_mode">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">False</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkStatusbar" id="statusbar">
+            <property name="visible">True</property>
+            <property name="sensitive">False</property>
+            <property name="can_focus">False</property>
+            <property name="spacing">5</property>
+            <property name="homogeneous">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="padding">2</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+      </object>
+    </child>
   </object>
 </interface>

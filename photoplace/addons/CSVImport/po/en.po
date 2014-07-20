@@ -113,8 +113,8 @@ msgstr ""
 "Headers"
 
 #: GTKcsvimport.py:124
-msgid "Geolocate photos using CSV headers:"
-msgstr "Geolocate photos using CSV headers:"
+msgid "Geolocate photos using CSV headers"
+msgstr "Geolocate photos using CSV headers"
 
 #: GTKcsvimport.py:125
 msgid ""
