@@ -130,29 +130,29 @@ SectionEnd
 ; IMPORTANT: Online references for how to detect the presence of the VS2008 redists LIE.
 ; None of the methods are reliable, because the registry keys placed by the MSI installer
 ; vary depending on operating system *and* MSI installer version (youch).
-;
-Section -VC++2008Runtime SEC02
-  SetOutPath $INSTDIR
-  ; Check if VC++ 2008 runtimes are already installed:
-  ReadRegStr $0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}" "DisplayName"
-  ; If VC++ 2008 runtimes are not installed execute in Quiet mode
-  StrCmp $0 "Microsoft Visual C++ 2008 Redistributable - x86 9.0.21022" done
-  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "You don't have the 'Microsoft Visual C++ 2008 Redistributable' library installed and it is necessary to run this program.$\n$\nDo you want to download it now?" IDNO end
-  DetailPrint "Downloading Visual C++ 2008 Redistributable Setup..."
-  NSISdl::download /TIMEOUT=15000 "${MSVC2008}" "vcredist_x86.exe"
-  Pop $R0 ;Get the return value
-  StrCmp $R0 "success" install
-  MessageBox MB_OK "Could not download Visual Studio 2008 Redist; none of the mirrors appear to be functional."
-  Goto end
-  install:
-    DetailPrint "Running Visual C++ 2008 Redistributable Setup..."
-    ExecWait '"$INSTDIR\vcredist_x86.exe /qb'
-    DetailPrint "Finished Visual C++ 2008 Redistributable Setup"
-    Delete "$INSTDIR\vcredist_x86.exe"
-  done:
-    DetailPrint "Runtime MSVC++ 2008 OK."
-  end:
-SectionEnd
+
+;Section -VC++2008Runtime SEC02
+;  SetOutPath $INSTDIR
+;  ; Check if VC++ 2008 runtimes are already installed:
+;  ReadRegStr $0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}" "DisplayName"
+;  ; If VC++ 2008 runtimes are not installed execute in Quiet mode
+;  StrCmp $0 "Microsoft Visual C++ 2008 Redistributable - x86 9.0.21022" done
+;  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "You don't have the 'Microsoft Visual C++ 2008 Redistributable' library installed and it is necessary to run this program.$\n$\nDo you want to download it now?" IDNO end
+;  DetailPrint "Downloading Visual C++ 2008 Redistributable Setup..."
+;  NSISdl::download /TIMEOUT=15000 "${MSVC2008}" "vcredist_x86.exe"
+;  Pop $R0 ;Get the return value
+;  StrCmp $R0 "success" install
+;  MessageBox MB_OK "Could not download Visual Studio 2008 Redist; none of the mirrors appear to be functional."
+;  Goto end
+;  install:
+;    DetailPrint "Running Visual C++ 2008 Redistributable Setup..."
+;    ExecWait '"$INSTDIR\vcredist_x86.exe /qb'
+;    DetailPrint "Finished Visual C++ 2008 Redistributable Setup"
+;    Delete "$INSTDIR\vcredist_x86.exe"
+;  done:
+;    DetailPrint "Runtime MSVC++ 2008 OK."
+;  end:
+;SectionEnd
 
 Section -AdditionalIcons
   SetOutPath $INSTDIR
