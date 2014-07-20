@@ -131,7 +131,7 @@ PhotoPlace_Cfg_default_heading =  0.0
 # Interal Configuration. Do not touch !!!
 # #######################################
 
-PhotoPlace_Cfg_version = 5005
+PhotoPlace_Cfg_version = 6000
 Photoplace_Cfg_mode_command = 0
 Photoplace_Cfg_mode_gui = 1
 PhotoPlace_Cfg_dir = os.path.join(
