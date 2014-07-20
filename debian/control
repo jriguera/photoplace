@@ -11,7 +11,7 @@ Package: photoplace
 Architecture: all
 XB-Python-Version: ${python:Versions}
 Depends: python (>= 2.6), ${python:Depends}, python-pyexiv2 (>= 0.2), python-imaging (>= 1.1.7)
-Recommends: python-gtk2 (>= 2.18)
+Recommends: python-gtk2 (>= 2.24)
 Description: A tool for geotagging your photos and ... much more!
  It is a multiplatform program to easily geotag your photos as well as 
  generating a Google Earth/Maps layer with your photos and a track log 
