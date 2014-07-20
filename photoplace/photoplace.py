@@ -144,7 +144,6 @@ try:
     if not sys.platform.startswith('win'):
         locale.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
         locale.bind_textdomain_codeset(__GETTEXT_DOMAIN__, 'UTF-8')
-        locale.textdomain(__GETTEXT_DOMAIN__)
     gettext.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_PATH__)
     gettext.bind_textdomain_codeset(__GETTEXT_DOMAIN__, 'UTF-8')
     gettext.textdomain(__GETTEXT_DOMAIN__)
