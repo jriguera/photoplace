@@ -35,7 +35,7 @@ __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
 __version__ = "0.6.0"
 __date__ = "July 2014"
 __license__ = "GPL (v2 or later)"
-__copyright__ ="(c) Jose Riguera, September 2010"
+__copyright__ ="(c) Jose Riguera, 2010-2014"
 
 import os
 import shutil
