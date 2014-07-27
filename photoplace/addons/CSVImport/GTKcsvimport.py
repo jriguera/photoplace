@@ -24,7 +24,7 @@ Parse a CSV to add variables or geolocate photos. GTK User Interface.
 """
 __program__ = "photoplace.csvimport"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __date__ = "July 2014"
 __license__ = "GPL v3"
 __copyright__ ="(c) Jose Riguera"
@@ -185,6 +185,7 @@ class GTKCSVImport(object):
         self.rootplugin = plugin
         self.rootgui = gui
         self.window = gui.builder.get_object("window")
+        self.events = True
 
 
     def _load_csv(self, widget):
@@ -271,7 +272,11 @@ class GTKCSVImport(object):
                 self.rootgui.show_dialog(_("Warning"), msg, tip, gtk.MESSAGE_WARNING)
             else:
                 self.entry_headers.set_text(', '.join(headers))
-                self._set_combo(self.cb_headerid, headers, CSVImport_CONFKEY_HEADER_ID, 0)
+                try:
+                    index = headers.index(self.options[CSVImport_CONFKEY_HEADER_ID])
+                except:
+                    index = 0
+                self._set_combo(self.cb_headerid, headers, CSVImport_CONFKEY_HEADER_ID, index)
                 self.rootplugin.update_headers(headers)
             fd.close()
 
@@ -287,6 +292,7 @@ class GTKCSVImport(object):
 
 
     def _geolocate(self, widget=None):
+        self.events = False
         value = self.checkbutton_geolocate.get_active()
         self.cb_date.set_sensitive(value)
         self.cb_ele.set_sensitive(value)
@@ -315,7 +321,15 @@ class GTKCSVImport(object):
             counter = 0
             for i in headers:
                 item = i.lower()
-                if 'lat' in item:
+                if i == self.options[CSVImport_CONFKEY_HEADER_LAT]:
+                    self.cb_lat.set_active(counter)
+                elif i == self.options[CSVImport_CONFKEY_HEADER_LON]:
+                    self.cb_lon.set_active(counter)
+                elif i == self.options[CSVImport_CONFKEY_HEADER_ELE]:
+                    self.cb_ele.set_active(counter)
+                elif i == self.options[CSVImport_CONFKEY_HEADER_DATE]:
+                    self.cb_date.set_active(counter)
+                elif 'lat' in item:
                     self.cb_lat.set_active(counter)
                     self.options[CSVImport_CONFKEY_HEADER_LAT] = i
                 elif 'lon' in item:
@@ -328,6 +342,7 @@ class GTKCSVImport(object):
                     self.cb_date.set_active(counter)
                     self.options[CSVImport_CONFKEY_HEADER_DATE] = i
                 counter += 1
+        self.events = True
 
 
     def _out_entry(self, widget, e):
@@ -355,16 +370,24 @@ class GTKCSVImport(object):
             tip = _("Please, define the name of the headers to be used as variables.")
             self.rootgui.show_dialog(_("Error"), msg, tip)
         else:
+            try:
+                index = items.index(self.options[CSVImport_CONFKEY_HEADER_ID])
+            except:
+                index = 0
+            self._set_combo(self.cb_headerid, items, CSVImport_CONFKEY_HEADER_ID, index)
             self.rootplugin.update_headers(items)
+            self._geolocate()
 
 
     def _set_combo(self, cb, items=[], key=None, active=None):
+        self.events = False
         cb.get_model().clear()
         for item in items:
             cb.append_text(item)
         if active != None:
-            cb.set_active(active)
             self.options[key] = items[active]
+            cb.set_active(active)
+        self.events = True
 
 
     def _empty_combo(self, cb):
@@ -372,11 +395,12 @@ class GTKCSVImport(object):
 
 
     def _combo_geolocate(self, widget, key):
-        header = widget.get_active_text()
-        if header in self.options[CSVImport_CONFKEY_HEADERS]:
-            self.options[key] = header
-        else:
-            self.options[key] = ''
+        if self.events:
+            header = widget.get_active_text()
+            if header in self.options[CSVImport_CONFKEY_HEADERS]:
+                self.options[key] = header
+            else:
+                self.options[key] = ''
 
 
     def _activate_combo(self, cb, key, value, no):
@@ -394,17 +418,18 @@ class GTKCSVImport(object):
 
 
     def _combo_id(self, widget):
-        header = widget.get_active_text()
-        self.options[CSVImport_CONFKEY_HEADER_ID] = header
-        header_lat = self.cb_lat.get_active_text()
-        header_lon = self.cb_lon.get_active_text()
-        header_ele = self.cb_ele.get_active_text()
-        header_date = self.cb_date.get_active_text()
-        self._geolocate()
-        self._activate_combo(self.cb_lat, CSVImport_CONFKEY_HEADER_LAT, header_lat, header)
-        self._activate_combo(self.cb_lon, CSVImport_CONFKEY_HEADER_LON, header_lon, header)
-        self._activate_combo(self.cb_ele, CSVImport_CONFKEY_HEADER_ELE, header_ele, header)
-        self._activate_combo(self.cb_date, CSVImport_CONFKEY_HEADER_DATE, header_date, header)
+        if self.events:
+            header = widget.get_active_text()
+            self.options[CSVImport_CONFKEY_HEADER_ID] = header
+            header_lat = self.cb_lat.get_active_text()
+            header_lon = self.cb_lon.get_active_text()
+            header_ele = self.cb_ele.get_active_text()
+            header_date = self.cb_date.get_active_text()
+            self._geolocate()
+            self._activate_combo(self.cb_lat, CSVImport_CONFKEY_HEADER_LAT, header_lat, header)
+            self._activate_combo(self.cb_lon, CSVImport_CONFKEY_HEADER_LON, header_lon, header)
+            self._activate_combo(self.cb_ele, CSVImport_CONFKEY_HEADER_ELE, header_ele, header)
+            self._activate_combo(self.cb_date, CSVImport_CONFKEY_HEADER_DATE, header_date, header)
 
 
     def show(self, widget=None, options=None):
@@ -422,49 +447,36 @@ class GTKCSVImport(object):
 
 
     def reset(self):
-        header = ''
         self.button_process.set_sensitive(False)
         self.checkbutton_geolocate.set_sensitive(False)
         self.frame.set_sensitive(False)
         self._empty_combo(self.cb_headerid)
         self.cb_headerid.set_sensitive(False)
-        self.options[CSVImport_CONFKEY_HEADER_ID] = header
+        self.options[CSVImport_CONFKEY_HEADER_ID] = ''
         self.entry_headers.set_sensitive(False)
-        self.entry_headers.set_text(header)
+        self.entry_headers.set_text('')
         image = self.button_addfile.get_image()
         image.set_from_stock(gtk.STOCK_ADD, gtk.ICON_SIZE_BUTTON)
         self.button_addfile.set_image(image)
         self.button_addfile.set_label(_("Select file"))
         self.checkbutton_geolocate.set_active(False)
-        self.options[CSVImport_CONFKEY_FILENAME] = header
+        self.options[CSVImport_CONFKEY_FILENAME] = ''
         self.rootplugin.update_headers()
         self.userfacade.state.photovariables = self.rootplugin.photovariables_old
         self._geolocate()
         self.rootgui.reload_treeviewgeophotos()
+        self.events = True
 
 
     def setup(self, options):
         self.options = options
         self.cb_date.set_tooltip_text(_("Date header name. Format should be: ") + self.options[CSVImport_CONFKEY_DATE_PARSE])
+        if options[CSVImport_CONFKEY_GEOLOCATE]:
+            self.checkbutton_geolocate.set_active(True)
         filename = options[CSVImport_CONFKEY_FILENAME]
         if filename:
             self._set_csv(filename)
-            self.entry_headers.set_text(', '.join(options[CSVImport_CONFKEY_HEADERS]))
-            self._set_combo(self.cb_headerid, options[CSVImport_CONFKEY_HEADERS], CSVImport_CONFKEY_HEADER_ID, 0)
-            self.rootplugin.update_headers(options[CSVImport_CONFKEY_HEADERS])
-        if options[CSVImport_CONFKEY_GEOLOCATE]:
-            self.checkbutton_geolocate.set_active(True)
-            counter = 1
-            for item in options[CSVImport_CONFKEY_HEADERS]:
-                if self.options[CSVImport_CONFKEY_HEADER_LAT] == item:
-                    self.cb_lat.set_active(counter)
-                elif self.options[CSVImport_CONFKEY_HEADER_LON] == item:
-                    self.cb_lon.set_active(counter)
-                elif self.options[CSVImport_CONFKEY_HEADER_ELE] == item:
-                    self.cb_ele.set_active(counter)
-                elif self.options[CSVImport_CONFKEY_HEADER_DATE] == item:
-                    self.cb_date.set_active(counter)
-                counter += 1
+            #self.entry_headers.set_text(', '.join(options[CSVImport_CONFKEY_HEADERS]))
 
 
 #EOF
