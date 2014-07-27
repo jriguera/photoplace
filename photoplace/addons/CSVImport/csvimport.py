@@ -24,7 +24,7 @@ Parse a CSV to add variables or geolocate photos.
 """
 __program__ = "photoplace.csvimport"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __date__ = "July 2014"
 __license__ = "GPL v3"
 __copyright__ ="(c) Jose Riguera"
