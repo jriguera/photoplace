@@ -25,7 +25,7 @@ thanks to pyexiv2 0.2 module.
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.5.0"
+__version__ = "0.6.1"
 __date__ = "May 2010"
 __license__ = "GPL (v3 or later)"
 __copyright__ ="(c) Jose Riguera, May 2010"
@@ -120,7 +120,7 @@ class GeoPhoto(object):
         self.attr = {}
         self.loadexif = False
         self.ptime = None
-        self.time = time.ctime(os.path.getctime(path))
+        self.time = datetime.datetime.fromtimestamp(os.path.getmtime(path))
         self.lat = _GeoPhoto_DEFAULT_LAT
         self.lon = _GeoPhoto_DEFAULT_LON
         self.ele = _GeoPhoto_DEFAULT_ELE
