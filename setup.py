@@ -52,7 +52,7 @@ PhotoPlace Setup Script
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.6.0"
+__version__ = "0.6.1"
 __date__ = "July 2014"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera, 2010-2014"
@@ -95,7 +95,7 @@ except ImportError:
 PLATFORM = os.sys.platform
 SRC_DIR = 'photoplace'
 PROGRAM = 'photoplace/photoplace.py'
-VERSION = '0.6.0'
+VERSION = '0.6.1'
 DATE = datetime.datetime.now().strftime("%B %Y")
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',

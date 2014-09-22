@@ -23,7 +23,7 @@
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.6.0"
+__version__ = "0.6.1"
 __date__ = "July 2014"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera"
@@ -41,7 +41,7 @@ from PIL import Image
 PLATFORMENCODING = locale.getpreferredencoding()
 
 PhotoPlace_name = "PhotoPlace"
-PhotoPlace_version = "0.6.0"
+PhotoPlace_version = "0.6.1"
 PhotoPlace_url = "http://code.google.com/p/photoplace"
 PhotoPlace_date = "Jul 2014"
 PhotoPlace_onlinehelp = "http://code.google.com/p/photoplace/wiki/OnlineHelp"

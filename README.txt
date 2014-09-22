@@ -39,8 +39,7 @@ Development
 On a Linux box, you have to do those things in order to get a development 
 environment to test or contrib to PhotoPlace:
 
-1. Install pyexiv2 (formed python-pyexiv2) version 0.2 (recommended 
-   version is 0.2.2) but the latest available version is 0.3 is ok.
+1. Install pyexiv2 (formed python-pyexiv2) version >= 0.2.
    Since pyexiv2 0.2/0.3 is not in the official repositories of Ubuntu/Debian 
    you must download it from https://launchpad.net/~pyexiv2-developers/+archive/ppa/+packages
    and type (for example)::
@@ -48,7 +47,7 @@ environment to test or contrib to PhotoPlace:
     $dpkg -i python-pyexiv2_0.3.0-0ubuntu1ppa1~maverick1_i386.deb
 
 
-2. Install PIL (Python Image Library) version 1.1.7 or superior.
+2. Install PIL (Python Image Library) version >= 1.1.7
    Since it is in ubuntu repositories, just type::
 
     $ sudo apt-get install python-imaging
@@ -69,7 +68,3 @@ Thanks to
 * Vivake Gupta (vivakeATlab49.com) for MP3Info.py (in plugin <tour>)
 * Juan Amores, jamores (at) hotmail (dot) com for the suggestions and 
   tests on Windows.
-
-
-
-
