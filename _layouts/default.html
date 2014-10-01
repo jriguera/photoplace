@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+  {% include head.html %}
+
+<!--
+    {% for page in site.pages %}
+        {% if page.title %}<a class="page-link" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>{% endif %}
+    {% endfor %}
+ -->
+
+    <body id="page-top" class="index">
+
+    {% include header.html %}
+    {% include about.html %}
+    {% include portfolio_grid.html %}
+    {% include guide.html %}
+    {% include project.html %}
+
+    {% include footer.html %}
+    {% include modals.html %}
+    {% include js.html %}
+
+    </body>
+</html>
