@@ -1,8 +1,5 @@
-url: http://jriguera.github.io/photoplace
-safe: true
-lsi: false
-source: .
-baseurl: 
+url: http://jriguera.github.io
+baseurl: photoplace
 
 # Site settings
 title: PhotoPlace
