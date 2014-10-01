@@ -1,4 +1,7 @@
-url: https://y7kim.github.io
+url: http://jriguera.github.io/photoplace
+safe: true
+lsi: false
+source: .
 baseurl: 
 
 # Site settings
@@ -30,3 +33,4 @@ social:
 # Build settings
 markdown: kramdown
 permalink: pretty
+highlighter: pygments
