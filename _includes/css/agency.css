@@ -323,7 +323,7 @@ header {
     text-align: center;
     color: #fff;
     background-attachment: scroll;
-    background-image: url({{ site.headerbg | prepend: site.baseurl }});
+    background-image: url({{ site.headerbg }});
     background-position: top center;
     background-repeat: none;
     -webkit-background-size: cover;
@@ -730,7 +730,7 @@ aside.clients img {
 
 section#contact {
     background-color: #222;
-    background-image: url(../img/map-image.png);
+    background-image: url(img/map-image.png);
     background-position: center;
     background-repeat: no-repeat;
 }
