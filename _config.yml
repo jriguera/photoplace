@@ -1,10 +1,10 @@
-url: http://jriguera.github.io
+url: http://jriguera.github.io/
 baseurl: photoplace
 
 # Site settings
 title: PhotoPlace
-minilogo: "/img/photoplace00.png"
-headerbg: "/img/header-bg.png"
+minilogo: "img/photoplace00.png"
+headerbg: "img/header-bg.png"
 email: your-email@domain.com
 description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
 
