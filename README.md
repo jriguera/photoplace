@@ -1,5 +1,3 @@
-
-===================
 What is PhotoPlace?
 ===================
 
@@ -16,7 +14,7 @@ to present your photo collection.
 Contact
 =======
 
-For more details, visit http://code.google.com/p/photoplace/
+For more details, visit https://github.com/jriguera/photoplace
 As well, you can write suggestions or impressions to 
 photoplace-project@googlegroups.com
 
@@ -39,23 +37,19 @@ Development
 On a Linux box, you have to do those things in order to get a development 
 environment to test or contrib to PhotoPlace:
 
-1. Install pyexiv2 (formed python-pyexiv2) version >= 0.2.
-   Since pyexiv2 0.2/0.3 is not in the official repositories of Ubuntu/Debian 
-   you must download it from https://launchpad.net/~pyexiv2-developers/+archive/ppa/+packages
-   and type (for example)::
+1. Install python-pyexiv2
 
-    $dpkg -i python-pyexiv2_0.3.0-0ubuntu1ppa1~maverick1_i386.deb
+   $ sudo apt-get install python-pyexiv2
 
 
-2. Install PIL (Python Image Library) version >= 1.1.7
-   Since it is in ubuntu repositories, just type::
+2. Install PIL (Python Image Library, version >= 1.1.7) or Pillow:
 
-    $ sudo apt-get install python-imaging
+   $ sudo apt-get install python-imaging
 
 
-3) Install pyGTK::
+3. Install pyGTK
 
-    $ sudo apt-get install python-gtk2
+   $ sudo apt-get install python-gtk2
 
 
 Happy coding!
@@ -66,5 +60,4 @@ Thanks to
 
 * Noela Sanchez for the idea of this program and translations.
 * Vivake Gupta (vivakeATlab49.com) for MP3Info.py (in plugin <tour>)
-* Juan Amores, jamores (at) hotmail (dot) com for the suggestions and 
-  tests on Windows.
+* Juan Amores, jamores (at) hotmail (dot) com for the suggestions and tests on Windows.
