@@ -1,3 +1,6 @@
+[Project Page](http://jriguera.github.io/photoplace)
+====================================================
+
 What is PhotoPlace?
 ===================
 
@@ -14,9 +17,8 @@ to present your photo collection.
 Contact
 =======
 
-For more details, visit https://github.com/jriguera/photoplace
-As well, you can write suggestions or impressions to 
-photoplace-project@googlegroups.com
+For more details, visit http://jriguera.github.io/photoplace . As well, 
+you can write suggestions or impressions to photoplace-project@googlegroups.com
 
 
 Donations
