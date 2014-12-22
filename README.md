@@ -1,5 +1,7 @@
 [Project Page](http://jriguera.github.io/photoplace)
 ====================================================
+http://jriguera.github.io/photoplace
+
 
 What is PhotoPlace?
 ===================
