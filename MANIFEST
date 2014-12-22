@@ -1,10 +1,10 @@
-README.txt
+README.md
 msgfmt.py
 setup.nsi
 setup.py
 setup.txt
-photoplace/LICENSE.txt
-photoplace/README.txt
+photoplace/LICENSE
+photoplace/README.md
 photoplace/photoplace.py
 photoplace/addons/__init__.py
 photoplace/addons/Files/GTKfiles.py

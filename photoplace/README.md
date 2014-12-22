@@ -1,5 +1,3 @@
-
-===================
 What is PhotoPlace?
 ===================
 
@@ -16,9 +14,8 @@ to present your photo collection.
 Contact
 =======
 
-For more details, visit http://code.google.com/p/photoplace/
-As well, you can write suggestions or impressions to 
-photoplace-project@googlegroups.com
+For more details, visit https://github.com/jriguera/photoplace
+As well, you can write suggestions to photoplace-project@googlegroups.com
 
 
 Donations
@@ -30,12 +27,4 @@ money will be donated to a local NGO *Ecodesarrollo Gaia*
 (http://gaiadiaadia.blogspot.com) that helps people in Senegal (Africa), 
 with the other half, I would like to visit Australia and,  in connection 
 with a geotagging  program, my antipodes in New Zeland, and your coins 
-can help me to achieve this goals.
-
-
-Changes of this version: 0.6.0 (Q2 2014)
-========================================
-* New add-on for CSV import
-* Small improvements and bug fixes
-
-
+can help us to achieve this goals.

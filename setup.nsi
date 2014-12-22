@@ -52,7 +52,7 @@ var CURRENT_LANG
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
 ; License page
-!insertmacro MUI_PAGE_LICENSE "${INPUT_DIR}\LICENSE.txt"
+!insertmacro MUI_PAGE_LICENSE "${INPUT_DIR}\LICENSE"
 ; Directory page
 !insertmacro MUI_PAGE_DIRECTORY
 ; Start menu page
@@ -67,7 +67,7 @@ var ICONS_GROUP
 !insertmacro MUI_PAGE_INSTFILES
 ; Finish page
 !define MUI_FINISHPAGE_RUN "$INSTDIR\photoplace.exe"
-!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\README.txt"
+!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\README.md"
 !insertmacro MUI_PAGE_FINISH
 
 ; Uninstaller pages

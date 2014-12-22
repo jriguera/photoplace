@@ -31,30 +31,6 @@ with a geotagging  program, my antipodes in New Zeland, and your coins
 can help me to achieve this goals.
 
 
-Development
-===========
-
-On a Linux box, you have to do those things in order to get a development 
-environment to test or contrib to PhotoPlace:
-
-1. Install python-pyexiv2
-
-   $ sudo apt-get install python-pyexiv2
-
-
-2. Install PIL (Python Image Library, version >= 1.1.7) or Pillow:
-
-   $ sudo apt-get install python-imaging
-
-
-3. Install pyGTK
-
-   $ sudo apt-get install python-gtk2
-
-
-Happy coding!
-
-
 Thanks to
 =========
 
