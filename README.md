@@ -1,10 +1,5 @@
-[Project Page](http://jriguera.github.io/photoplace)
-====================================================
-http://jriguera.github.io/photoplace
-
-
-What is PhotoPlace?
-===================
+What is [PhotoPlace](http://jriguera.github.io/photoplace)?
+===========================================================
 
 It is a multiplatform program (tested on Linux and Windows platforms) 
 developed with python 2.x (>= 2.6) to easily geotag your photos. 
@@ -19,8 +14,8 @@ to present your photo collection.
 Contact
 =======
 
-For more details, visit http://jriguera.github.io/photoplace . As well, 
-you can write suggestions or impressions to photoplace-project@googlegroups.com
+For more details, visit the project web: http://jriguera.github.io/photoplace . 
+As well, you can write suggestions or impressions to photoplace-project@googlegroups.com
 
 
 Donations
