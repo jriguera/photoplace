@@ -1,0 +1,50 @@
+    <section id="portfolio" class="bg-light-gray">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
+                    <h2 class="section-heading text-center">Screen Shots</h2>
+                    <h3 class="section-subheading text-muted">When the program is executed, it tries to launch a GTK user interface, but it can operate in command line mode like a batch process, then all needed options are taken from the configuration file or from command line as arguments.
+                    </h3>
+                </div>
+            </div>
+            <div class="row portfolio-content">
+{% assign counter=1 %}
+{% for shot in site.screenshots %}
+                <div class="col-md-4 col-sm-6 col-xs-6  portfolio-item">
+                    <a href="#portfolioModal{{ counter }}" class="portfolio-link" data-toggle="modal">
+                        <div class="portfolio-hover">
+                            <div class="portfolio-hover-content">
+                                <i class="fa fa-plus fa-3x"></i>
+                            </div>
+                        </div>
+                        <img src="img/portfolio/{{ shot.img }}" class="img-responsive" alt="{{ shot.title }}">
+                    </a>
+                    <div class="portfolio-caption">
+                        <h4>{{ shot.title }}</h4>
+                        <p>{{ shot.alt }}</p>
+                    </div>
+                </div>
+{% assign counter=counter | plus:1 %}
+{% endfor %}
+            </div>
+        </div>
+{% assign counter=1 %}
+{% for shot in site.screenshots %}
+    <div class="portfolio-modal modal fade" id="portfolioModal{{ counter }}" tabindex="-1" role="dialog" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<h4 class="modal-title" id="myModalLabel">{{ shot.title }}</h4>
+	      </div>
+	      <div class="modal-body">
+                 <img src="img/portfolio/{{ shot.img }}" class="img-responsive img-centered" alt="{{ shot.alt }}">
+                 <p>{{ shot.desc }}</p>
+	      </div>
+	    </div>
+	  </div>
+    </div>
+{% assign counter=counter | plus:1 %}
+{% endfor %}
+    </section>
+

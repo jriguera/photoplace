@@ -1,12 +1,13 @@
 url: http://jriguera.github.io/
-baseurl: photoplace
+#baseurl: photoplace
 
 # Site settings
 title: PhotoPlace
+year: 2015
 minilogo: "img/photoplace00.png"
 headerbg: "img/header-bg.png"
-email: your-email@domain.com
-description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
+email: jriguera@gmail.com
+description: "A tool for geotagging your photos and ... much more!"
 
 # Color settings (hex-codes without the leading hash-tag)
 color:
@@ -14,16 +15,29 @@ color:
   secondary: 644a8c
   selection: 97C3E9
 
+# Screen shots
+screenshots:
+  - img: PhotoPlace_001.png
+    title: Main Screen
+    desc: Main screen of the program when it is launched. By passing a folder with geotagged photos and clicking on <b><i>Let's Go</i></b> everything will be done.
+  - img: PhotoPlace_004.png
+    title: Photo List
+    desc: Tab with a list of the loaded photos with the coordinates and variables for each one. Click over the variable for editing.
+  - img: PhotoPlace_007.png
+    title: Plugins' Section
+    desc: On the right, list of loaded plugins. On the left, settings for the plugin <i>Tour</i>.
+  - img: PhotoPlace_005.png
+    title: Photo Viewer
+    desc: Per photo coordinates, exif and variables viewer, in this case running on Windows.
+  - img: PhotoPlace_009.png
+    title: Template Editor
+    desc: XML editor for templates used on the program. In this case, it will be applied to visualize each photo
+  - img: PhotoPlace_011.png
+    title: Generated Layer
+    desc: KMZ Layer loaded on Google Earth with a virtual <i>Tour</i> flying from one to another list of photos.
+
 # Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
 social:
-  - title: twitter
-    url: http://twitter.com/jekyllrb
-  - title: facebook
-    url:
-  - title: stack-overflow
-    url: http://stackoverflow.com/questions/tagged/jekyll
-  - title: bitbucket 
-    url: http://bitbucket.org/jekyll
   - title: github
     url: http://github.com/jekyll
 
