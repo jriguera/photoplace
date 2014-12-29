@@ -56,7 +56,7 @@ class Plugin(object):
     version = "0.1.0"
     author = "Unknown developer"
     email = "<user@earth.milk>"
-    url = "https://github.com/jriguera/photoplace"
+    url = "http://www.photoplace.io"
     copyright = "(c) Unknown"
     date = "-"
     license = "GPLv3"

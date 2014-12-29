@@ -92,7 +92,7 @@ class CSVImport(Plugin):
     )
     author = "Jose Riguera Lopez"
     email = "<jriguera@gmail.com>"
-    url = "https://github.com/jriguera/photoplace"
+    url = "http://www.photoplace.io"
     version = __version__
     copyright = __copyright__
     date = __date__
