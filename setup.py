@@ -623,7 +623,7 @@ if __name__ == '__main__':
         version=VERSION,
         license='GNU General Public License v3',
         description='A tool for geotagging your photos and ... much more!',
-        long_description=open(os.path.join(SRC_DIR, 'README.txt')).read(),
+        long_description=open(os.path.join(SRC_DIR, 'README.md')).read(),
         author='Jose Riguera Lopez',
         author_email='jriguera@gmail.com',
         classifiers=CLASSIFIERS,
