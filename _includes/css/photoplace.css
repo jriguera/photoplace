@@ -105,7 +105,7 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 3px;
     text-transform: uppercase;
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 18px;
+    font-size: 1.2em;
     font-weight: 700;
 }
 
@@ -151,9 +151,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .navbar-default {
     border-color: transparent;
+    background-color: transparent;
+    -webkit-transition: padding .3s;
+    -moz-transition: padding .3s;
+    transition: padding .3s;
 }
 
-.navbar-default .navbar-brand {
+.navbar-default .navbar-brand,
+.navbar-default.navbar-shrink .navbar-brand {
     font-family: "Kaushan Script","Helvetica Neue",Helvetica,Arial,cursive;
     font-weight: bold;
     font-size: 2em;
@@ -161,9 +166,11 @@ h1, h2, h3, h4, h5, h6 {
     -moz-transition: all .3s;
     transition: all .3s;
     color: #{{ site.color.primary }};
-    text-shadow: 5px 5px 10px #222;
+    text-shadow: 2px 5px 3px #222;
     position: absolute;
-    padding-top: 8px;
+    padding-top: 3px;
+    padding-left: 15px;
+    text-shadow: 2px 5px 3px #222;
 }
 
 .navbar-brand .navbar-brand-logo {
@@ -226,15 +233,18 @@ h1, h2, h3, h4, h5, h6 {
     background-color: #{{ site.color.primary }};
 }
 
+.navbar-default .navbar-collapse {
+    background-color: #{{ site.color.secondary }};
+}
+
+.navbar-default.navbar-shrink {
+    background-color: #{{ site.color.secondary }};
+    -moz-box-shadow: 0px 3px 5px #ad7fa8;
+    -webkit-box-shadow: 0px 3px 5px #ad7fa8;
+    box-shadow: 0px 3px 5px #ad7fa8;
+}
+
 @media(min-width:768px) {
-    .navbar-default {
-        height: 45px; 
-        border: 0;
-        background-color: transparent;
-        -webkit-transition: padding .3s;
-        -moz-transition: padding .3s;
-        transition: padding .3s;
-    }
 
     .navbar-default .navbar-brand {
         color: #{{ site.color.secondary }};
@@ -251,29 +261,13 @@ h1, h2, h3, h4, h5, h6 {
         border-radius: 3px;
     }
 
-    .navbar-default.navbar-shrink .navbar-brand {
-        padding-top: 15px;
-        padding-left: 0px;
-        font-size: 2em;
-        color: #{{ site.color.primary }};
-        text-shadow: 2px 5px 3px #222;
-    }
-
     .navbar-default.navbar-shrink .navbar-brand .navbar-brand-logo {
         width: 35px;
     }
 
-    .navbar-default.navbar-shrink {
-        background-color: #{{ site.color.secondary }};
-        padding: 2px 0;
-        -moz-box-shadow: 0px 3px 5px #ad7fa8;
-        -webkit-box-shadow: 0px 3px 5px #ad7fa8;
-        box-shadow: 0px 3px 5px #ad7fa8;
-    }
-
-    .navbar-default.navbar-shrink .navbar-brand {
-        padding-top: 5px;
-    }
+    .navbar-default .navbar-collapse {
+        background-color: transparent;
+     }
 }
 
 
@@ -288,6 +282,7 @@ header {
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
+    padding-bottom: 40px;
 }
 
 header .intro-text {
@@ -363,11 +358,12 @@ section h3.section-subheading {
     text-align: justify; 
 }
 
-
 #portfolio .portfolio-content {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
+    float: none;
+    margin: 0 auto;
 }
 
 #portfolio .portfolio-item {
@@ -419,6 +415,7 @@ section h3.section-subheading {
     padding: 25px;
     text-align: center;
     background-color: #fff;
+    color: #{{ site.color.secondary }};
 }
 
 #portfolio .portfolio-item .portfolio-caption h4 {
@@ -469,7 +466,7 @@ section h3.section-subheading {
     content: "";
     position: absolute;
     top: 0;
-    bottom: 10%;
+    bottom: 12%;
     left: 40px;
     width: 2px;
     margin-left: -1.5px;
@@ -664,6 +661,11 @@ section h3.section-subheading {
 
 footer {
     padding: 25px 0;
+}
+
+footer .photoplace-logo {
+    width: 40px;
+    height: 40px;
 }
 
 footer span.copyright {
