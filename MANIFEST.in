@@ -1,10 +1,10 @@
-include *.txt *.py *.nsi
-include photoplace/*.txt photoplace/*.py
+include *.txt *.py *.nsi *.md
+include photoplace/*.txt photoplace/*.md photoplace/*.py
 recursive-include photoplace/share *
 recursive-include photoplace/locale *.mo
 recursive-include photoplace/po *
 recursive-include photoplace/lib *
-recursive-include photoplace/addons *.py *.mo *.ui *.txt
+recursive-include photoplace/addons *.py *.mo *.ui *.txt *.md
 global-exclude *~ *.pot *.pyc *.pyo
 prune photoplace/lib/*/*/test 
 prune photoplace/lib/*/*/doc

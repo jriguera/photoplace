@@ -5,7 +5,7 @@ Maintainer: José Riguera López <jriguera@gmail.com>
 Build-Depends: debhelper (>= 7), python (>= 2.6), python-support
 XS-Python-Version: >= 2.6
 Standards-Version: 3.8.4
-Homepage: http://code.google.com/p/photoplace/
+Homepage: http://www.photoplace.io
 
 Package: photoplace
 Architecture: all
