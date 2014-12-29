@@ -30,7 +30,7 @@ Making packages
   * `python setup.py py2exe [--full]`
 
 * Windows installable package (on windows environment):
-  * `python setup.py bdist_wininst`
+  * `python setup.py nsis`
 
 * Installation from setup (Warning, there is no unistaller!)
 ```
