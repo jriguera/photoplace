@@ -1,5 +1,5 @@
-url: http://www.photoplace.io/
-#baseurl: photoplace
+url: http://www.photoplace.io
+baseurl: /
 
 # Site settings
 title: PhotoPlace
@@ -38,6 +38,8 @@ screenshots:
 
 # Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
 social:
+  - title: envelope
+    url: mailto:info@photoplace.io
   - title: github
     url: https://github.com/jriguera/photoplace
 
