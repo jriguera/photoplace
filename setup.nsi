@@ -67,7 +67,7 @@ var ICONS_GROUP
 !insertmacro MUI_PAGE_INSTFILES
 ; Finish page
 !define MUI_FINISHPAGE_RUN "$INSTDIR\photoplace.exe"
-!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\README.md"
+!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\README.txt"
 !insertmacro MUI_PAGE_FINISH
 
 ; Uninstaller pages
