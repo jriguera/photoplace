@@ -621,7 +621,7 @@ if __name__ == '__main__':
     }
     setup(name='photoplace',
         version=VERSION,
-        license='GNU General Public License v3',
+        license='Apache 2.0',
         description='A tool for geotagging your photos and ... much more!',
         long_description=open(os.path.join(SRC_DIR, 'README.md')).read(),
         author='Jose Riguera Lopez',
