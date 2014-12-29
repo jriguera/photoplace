@@ -1,5 +1,5 @@
 include *.txt *.py *.nsi *.md
-include photoplace/*.txt photoplace/*.md photoplace/*.py
+include photoplace/*.txt photoplace/LICENSE photoplace/*.md photoplace/*.py
 recursive-include photoplace/share *
 recursive-include photoplace/locale *.mo
 recursive-include photoplace/po *
