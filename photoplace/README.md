@@ -14,17 +14,19 @@ to present your photo collection.
 Contact
 =======
 
-For more details, visit https://github.com/jriguera/photoplace
+For more details, visit http://www.photoplace.io .
 As well, you can write suggestions to photoplace-project@googlegroups.com
 
 
 Donations
 =========
 
+Donations via PayPal: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=N6XRW9DLPFSRN
+
 The authors and developers hope you like this program. We would really 
 appreciate it if you would consider making a small donation: half of the 
 money will be donated to a local NGO *Ecodesarrollo Gaia* 
 (http://gaiadiaadia.blogspot.com) that helps people in Senegal (Africa), 
-with the other half, I would like to visit Australia and,  in connection 
+with the other half, we would like to visit Australia and,  in connection 
 with a geotagging  program, my antipodes in New Zeland, and your coins 
 can help us to achieve this goals.

@@ -3,22 +3,20 @@
 #
 #   photoplace.py
 #
-#       Copyright 2014 Jose Riguera Lopez <jriguera@gmail.com>
+#   Copyright 2011-2015 Jose Riguera Lopez <jriguera@gmail.com>
 #
-#       This program is free software; you can redistribute it and/or modify
-#       it under the terms of the GNU General Public License as published by
-#       the Free Software Foundation; either version 2 of the License, or
-#       (at your option) any later version.
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
 #
-#       This program is distributed in the hope that it will be useful,
-#       but WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#       GNU General Public License for more details.
+#       http://www.apache.org/licenses/LICENSE-2.0
 #
-#       You should have received a copy of the GNU General Public License
-#       along with this program; if not, write to the Free Software
-#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-#       MA 02110-1301, USA.
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
 """
 It is a multiplatform program (tested on Linux and Windows platforms)
 developed with python 2.x (>= 2.6) to easily geotag your photos.
@@ -29,13 +27,13 @@ by editing templates and its functionality can be complemented with add-ons,
 for example there is a add-on to generate a music tour that can be used
 to present your photo collection.
 """
-
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.6.0"
-__date__ = "July 2014"
+__version__ = "0.6.1"
+__date__ = "Jan 2015"
 __license__ = "GPL (v2 or later)"
-__copyright__ ="(c) Jose Riguera, 2010-2014"
+__copyright__ ="(c) Jose Riguera, 2010-2015"
+
 
 import os
 import shutil
@@ -54,8 +52,8 @@ if not sys.platform.startswith('win'):
 try:
     from PIL import Image
 except ImportError:
-    print("Sorry, you don't have the Image (PIL) module installed, and this")
-    print("program relies on it. Please install Image (PIL) module to continue.")
+    print("Sorry, you don't have the Image (Pillow) module installed, and this")
+    print("program relies on it. Please install Image module to continue.")
     sys.exit(1)
 try:
     import pyexiv2

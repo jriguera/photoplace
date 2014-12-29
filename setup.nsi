@@ -22,7 +22,7 @@
 !define PRODUCT_VERSION "0.6.1"
 !define PRODUCT_PUBLISHER "Jose Riguera"
 !define PRODUCT_AUTHOR "Jose Riguera"
-!define PRODUCT_WEB_SITE "http://code.google.com/p/photoplace/"
+!define PRODUCT_WEB_SITE "http://www.photoplace.io"
 !define PRODUCT_DONATIONS "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=N6XRW9DLPFSRN"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\photoplace.exe"
 !define PRODUCT_CFG_REGKEY "Software\PhotoPlace"
