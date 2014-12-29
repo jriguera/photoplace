@@ -5,7 +5,7 @@ baseurl: /
 title: PhotoPlace
 year: 2015
 minilogo: "img/photoplace00.png"
-headerbg: "img/header-bg.png"
+headerbg: "img/header-bg.jpg"
 email: jriguera@gmail.com
 description: "A tool for geotagging your photos and ... much more!"
 
@@ -26,13 +26,13 @@ screenshots:
   - img: PhotoPlace_007.png
     title: Plugins' Section
     desc: On the right, list of loaded plugins. On the left, settings for the plugin <i>Tour</i>.
-  - img: PhotoPlace_005.png
+  - img: PhotoPlace_005.jpg
     title: Photo Viewer
     desc: Per photo coordinates, exif and variables viewer, in this case running on Windows.
   - img: PhotoPlace_009.png
     title: Template Editor
     desc: XML editor for templates used on the program. In this case, it will be applied to visualize each photo
-  - img: PhotoPlace_011.png
+  - img: PhotoPlace_011.jpg
     title: Generated Layer
     desc: KMZ Layer loaded on Google Earth with a virtual <i>Tour</i> flying from one to another list of photos.
 
