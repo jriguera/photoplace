@@ -597,7 +597,7 @@ if __name__ == '__main__':
         }
         kwargs['zipfile'] = os.path.join('lib', 'shared.zip')
         kwargs['cmdclass']['py2exe'] = py2exe
-        data_files += [('.', glob.glob(os.path.join(SRC_DIR, "*.txt")))]
+        data_files += [('.', glob.glob(os.path.join(SRC_DIR, "*.md")))]
         data_files += get_files(SRC_DIR, 'locale', 'locale')
         kwargs['cmdclass']['nsis'] = bdist_win
         kwargs['cmdclass']['bdist_wininst'] = bdist_win
@@ -606,7 +606,7 @@ if __name__ == '__main__':
         sys.exit()
     else:
         data_files += get_files(SRC_DIR, 'locale', os.path.join('share', 'locale'), goodfiles=['*.mo'])
-        data_files += [(os.path.join('share','doc','photoplace'), glob.glob(os.path.join(SRC_DIR, "*.txt")))]
+        data_files += [(os.path.join('share','doc','photoplace'), glob.glob(os.path.join(SRC_DIR, "*.md")))]
         kwargs['cmdclass']['bdist_deb'] = bdist_deb
     kwargs.update(get_program_libs(SRC_DIR))
     kwargs['cmdclass']['build'] = build
