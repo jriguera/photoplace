@@ -2,7 +2,8 @@
 	<div class="container">
 	    <div class="row">
 		<div class="col-md-6 col-xs-6">
-		    <span class="copyright"><span class="photoplace">PhotoPlace</span> {{ site.year }}</span>
+                    {% if site.minilogo %}<img class="photoplace-logo" src="{{ site.minilogo }}" alt="{{ site.title }}">{% endif %}
+		    <span class="photoplace">PhotoPlace</span> {{ site.year }}
 		</div>
 		<div class="col-md-6 col-xs-6">
 		    <ul class="list-inline social-buttons">
