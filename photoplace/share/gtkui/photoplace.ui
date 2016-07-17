@@ -50,8 +50,8 @@
     <property name="icon">photoplace.png</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">PhotoPlace</property>
-    <property name="version">0.6.1</property>
-    <property name="copyright">Copyright © 2011-2015  José Riguera </property>
+    <property name="version">0.6.2</property>
+    <property name="copyright">Copyright © 2011-2016  José Riguera </property>
     <property name="comments" translatable="yes">A program for geotagging photos and generate a Google Earth layer</property>
     <property name="website">http://www.photoplace.io</property>
     <property name="license" translatable="yes" comments="Apache License 2.0">Apache License

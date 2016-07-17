@@ -1,3 +1,9 @@
+photoplace (0.6.2-1) unstable; urgency=low
+
+  * v0.6.2 from upstream source
+
+ -- Jose Riguera López <jriguera@gmail.com>  Mon, 17 Jul 2014 20:10:39 +0200
+
 photoplace (0.6.1-1) unstable; urgency=low
 
   * v0.6.1 from upstream source

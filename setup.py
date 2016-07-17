@@ -3,7 +3,7 @@
 #
 #       setup.py
 #
-#   Copyright 2011-2015 Jose Riguera Lopez <jriguera@gmail.com>
+#   Copyright 2011-2016 Jose Riguera Lopez <jriguera@gmail.com>
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 PhotoPlace Setup Script
 
  USAGE:
- 
+
  * To see all available commands:
     - python setup.py --help-commands
 
@@ -36,7 +36,7 @@ PhotoPlace Setup Script
 
  * Make for windows (on windows):
     - python setup.py py2exe [--full]
-   
+
  * Create an installer (for windows)
     - python setup.py bdist_wininst
 
@@ -49,10 +49,10 @@ PhotoPlace Setup Script
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.6.1"
-__date__ = "Dec 2014"
-__license__ = "Apache 2.0"
-__copyright__ ="(c) Jose Riguera, 2010-2015"
+__version__ = "0.6.2"
+__date__ = "Jul 2016"
+__license__ = "GPL (v2 or later)"
+__copyright__ ="(c) Jose Riguera, 2010-2016"
 
 import os
 import sys
@@ -82,7 +82,7 @@ from distutils.command.clean import clean as _clean
 __WIN_PLATFORM__ = False
 try:
     import py2exe
-    from py2exe.build_exe import py2exe as _py2exe 
+    from py2exe.build_exe import py2exe as _py2exe
     __WIN_PLATFORM__ = True
 except ImportError:
     if sys.platform.startswith('win'):
@@ -92,7 +92,7 @@ except ImportError:
 PLATFORM = os.sys.platform
 SRC_DIR = 'photoplace'
 PROGRAM = 'photoplace/photoplace.py'
-VERSION = '0.6.1'
+VERSION = '0.6.2'
 DATE = datetime.datetime.now().strftime("%B %Y")
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',
@@ -112,7 +112,7 @@ CLASSIFIERS = [
     'Topic :: Scientific/Engineering :: GIS',
     'Topic :: Utilities',
 ]
-ICON = { 
+ICON = {
     'win32' : os.path.join("logos", "photoplace.ico"),
     'other' : os.path.join("logos", "photoplace.png"),
 }
@@ -177,7 +177,7 @@ def get_files(base, dir, dst, baddirs=['.*'], goodfiles=['*.*'], badfiles=['*.*~
 
 def get_addons(base, directory):
     lib_dir = os.path.join(base, directory)
-    packages = [f for f in os.listdir(lib_dir) 
+    packages = [f for f in os.listdir(lib_dir)
         if os.path.isdir(os.path.join(lib_dir, f)) and not f.startswith('.')]
     addons = dict()
     for package in packages:
@@ -190,7 +190,7 @@ def get_addons(base, directory):
 
 def get_packages(base, directory):
     lib_dir = os.path.join(base, directory)
-    packages = [f for f in os.listdir(lib_dir) 
+    packages = [f for f in os.listdir(lib_dir)
         if os.path.isdir(os.path.join(lib_dir, f)) and not f.startswith('.')]
     package_dir = dict()
     package_data = dict()
@@ -201,7 +201,7 @@ def get_packages(base, directory):
         # No data files allowed at this level dir
         for f in os.listdir(data_dir):
             if os.path.isdir(os.path.join(data_dir, f)):
-                pkg_data += find_files(data_dir, f, 
+                pkg_data += find_files(data_dir, f,
                     ['*.*~', '*.py*', '*.po*'], ['.*', 'test'])
         package_data[package] = pkg_data
     kwargs = dict(packages=packages, package_dir=package_dir, package_data=package_data)
@@ -227,7 +227,7 @@ class build_trans(cmd.Command):
         self.trans_dist = None
         self.trans_domain = None
         self.trans_dir = None
-    
+
     def finalize_options(self):
         if self.trans_base == None:
             self.trans_base = ''
@@ -237,7 +237,7 @@ class build_trans(cmd.Command):
             self.trans_domain = 'domain.mo'
         if self.trans_dir == None:
             self.trans_dir = 'po'
-    
+
     def run(self):
         po_dir = os.path.join(self.trans_base, self.trans_dir)
         for path, names, filenames in os.walk(po_dir):
@@ -277,7 +277,7 @@ class build(_build):
 
 class install(_install):
     #sub_commands = _install.sub_commands + [('install_addons', None)]
-    
+
     def initialize_options(self):
         _install.initialize_options(self)
 
@@ -299,7 +299,7 @@ class install_addons(cmd.Command):
     def initialize_options(self):
         self.addons_dist = None
         self.addons_dir = None
-    
+
     def finalize_options(self):
         if self.addons_dist == None:
             install = self.get_finalized_command('install')
@@ -307,7 +307,7 @@ class install_addons(cmd.Command):
         if self.addons_dir == None:
             install = self.get_finalized_command('install')
             self.addons_dir = os.path.join(install.install_lib, 'PhotoPlace', PLUGINSDIR)
-    
+
     def run(self):
         destination = os.path.join(self.addons_dist, 'addons')
         try:
@@ -335,7 +335,7 @@ if __WIN_PLATFORM__:
     # Extend the py2exe command, to also include data files required by gtk+ and
     # enable the "MS-Windows" theme. In order to make gtk+ find the data files
     # we also ensure that the gtk+ libraries are not bundled.
-    
+
     class py2exe(_py2exe):
         description = "make a windows executable"
         keyfile = 'libgtk-win32-2.0-0.dll'
@@ -346,10 +346,10 @@ if __WIN_PLATFORM__:
         addons = None
         addondir = ''
         languages = ['en', 'en_GB', 'es', 'gl']
-        
+
         def initialize_options(self):
             _py2exe.initialize_options(self)
-        
+
         def create_binaries(self, py_files, extensions, dlls):
             if self.gtkdir == None:
                 gtkdir = None
@@ -388,7 +388,7 @@ if __WIN_PLATFORM__:
                             if not os.path.exists(dest_dir):
                                 os.makedirs(dest_dir)
                             self.copy_file(f, dest_dir)
-                self.copy_file(os.path.join(gtkdir, 'share\\locale\\locale.alias'), 
+                self.copy_file(os.path.join(gtkdir, 'share\\locale\\locale.alias'),
                     os.path.join(self.exe_dir, 'share\\locale'), preserve_mode=0)
                 # GTK Themes
                 for f in find_files(gtkdir, 'share\\themes', ['*.*~']):
@@ -432,11 +432,11 @@ if __WIN_PLATFORM__:
         user_options =  py2exe.user_options +  [
             ('nsis=', 'n', "nsis script"),
         ]
-        
+
         def initialize_options(self):
             self.verbose = 3
             self.nsis = None
-        
+
         def finalize_options(self):
             self.verbose = 3
             if self.nsis == None:
@@ -445,7 +445,7 @@ if __WIN_PLATFORM__:
         def run(self):
             self.run_command('py2exe')
             self.make_nsis()
-        
+
         def make_nsis(self):
             try:
                 import _winreg
@@ -466,13 +466,13 @@ if __WIN_PLATFORM__:
                 print ("Execution failed: %s" % str(e))
 else:
     # Not a windows platform
-    
+
     class bdist_deb(_sdist):
         description = "make an instalable for debian/ubuntu platforms"
         user_options =  _sdist.user_options +  [
             ('debian=', None, "debian dir"),
         ]
-        
+
         def initialize_options(self):
             _sdist.initialize_options(self)
             self.debian = None
@@ -480,8 +480,8 @@ else:
             self.keep_temp = True
             self.format = None
             self.buildcmd = None
-            self.buildargs = [] 
-        
+            self.buildargs = []
+
         def finalize_options(self):
             _sdist.finalize_options(self)
             if self.debian == None:
@@ -490,18 +490,18 @@ else:
             self.keep_temp = True
             self.format = 'gztar'
             self.buildcmd = 'dpkg-buildpackage'
-            self.buildargs = ['-uc', '-us'] 
-        
+            self.buildargs = ['-uc', '-us']
+
         def get_file_list(self):
             _sdist.get_file_list(self)
             for f in find_files('.', self.debian):
                 self.filelist.append(f)
-        
+
         def make_release_tree(self, base_dir, files):
             if os.path.isdir(base_dir):
                 _remove_tree(base_dir, dry_run=self.dry_run)
             _sdist.make_release_tree(self, base_dir, files)
-        
+
         def make_distribution(self):
             full_name = self.distribution.get_fullname()
             base_dir = os.path.join(self.dist_dir, full_name)
@@ -517,7 +517,7 @@ else:
             self.archive_files = archive_files
             if not self.keep_temp:
                 _remove_tree(base_dir, dry_run=self.dry_run)
-        
+
         def make_debian(self, base_dir):
             cmd = [self.buildcmd] + self.buildargs
             try:
@@ -541,7 +541,7 @@ def get_program_libs(base, directory='lib', addon_dir=PLUGINSDIR):
     Generate the list of packages in lib directory
     """
     libs = get_packages(base, directory)
-    
+
     libs_photoplace = get_packages(os.path.join(base, directory), 'PhotoPlace')
     for lib in libs_photoplace['packages']:
         libs['packages'].append('PhotoPlace.' + lib)
@@ -549,7 +549,7 @@ def get_program_libs(base, directory='lib', addon_dir=PLUGINSDIR):
             libs['package_data']['PhotoPlace.' + key] = data
         for key, data in libs_photoplace['package_dir'].iteritems():
             libs['package_dir']['PhotoPlace.' + key] = data
-    
+
     addons_photoplace = get_packages(base, 'addons')
     for lib in addons_photoplace['packages']:
         libs['packages'].append('PhotoPlace.' + addon_dir + '.' + lib)
@@ -557,7 +557,6 @@ def get_program_libs(base, directory='lib', addon_dir=PLUGINSDIR):
             libs['package_data']['PhotoPlace.' + addon_dir + '.' + key] = data
         for key, data in addons_photoplace['package_dir'].iteritems():
             libs['package_dir']['PhotoPlace.' + addon_dir + '.' + key] = data
-    
     return libs
 
 
@@ -582,13 +581,13 @@ if __name__ == '__main__':
         py2exe.addons = os.path.join('lib', 'PhotoPlace', PLUGINSDIR)
         py2exe.addondir = os.path.join('share', 'photoplace', 'addons')
         kwargs['windows'] = [{
-            'script':PROGRAM, 
+            'script':PROGRAM,
             'icon_resources':[(1, ICON['win32'])]
         }]
         kwargs['options']['py2exe'] = {
             'includes': ['encodings', 'gobject', 'glib', 'gio', 'gtk', 'cairo', 'pango', 'pangocairo', 'atk'],
             'excludes': ['_ssl', '_scproxy', 'ICCProfile', 'bsddb', 'curses', 'tcl', 'Tkconstants', 'Tkinter'],
-            'dll_excludes': ['libglade-2.0-0.dll', 'w9xpopen.exe', 'tcl84.dll', 'tk84.dll'], 
+            'dll_excludes': ['libglade-2.0-0.dll', 'w9xpopen.exe', 'tcl84.dll', 'tk84.dll'],
             'bundle_files': 3,
             'optimize': 2,
             'compressed': 1,
@@ -618,8 +617,8 @@ if __name__ == '__main__':
     kwargs['cmdclass']['install'] = install
     kwargs['cmdclass']['install_addons'] = install_addons
     kwargs['cmdclass']['build_trans'] = build_trans
-    kwargs['options']['build_trans'] = { 
-        'trans_base': SRC_DIR, 
+    kwargs['options']['build_trans'] = {
+        'trans_base': SRC_DIR,
         'trans_dist': os.path.join(SRC_DIR, 'locale'),
         'trans_domain': "photoplace.mo",
     }

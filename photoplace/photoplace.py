@@ -3,7 +3,7 @@
 #
 #   photoplace.py
 #
-#   Copyright 2011-2015 Jose Riguera Lopez <jriguera@gmail.com>
+#   Copyright 2011-2016 Jose Riguera Lopez <jriguera@gmail.com>
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -29,9 +29,9 @@ to present your photo collection.
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.6.1"
-__date__ = "Jan 2015"
-__license__ = "GPL (v2 or later)"
+__version__ = "0.6.2"
+__date__ = "Jul 2016"
+__license__ = "Apache 2.0"
 __copyright__ ="(c) Jose Riguera, 2010-2015"
 
 
