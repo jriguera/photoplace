@@ -49,7 +49,7 @@ PhotoPlace Setup Script
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.6.2"
+__version__ = "0.6.3"
 __date__ = "Jul 2016"
 __license__ = "GPL (v2 or later)"
 __copyright__ ="(c) Jose Riguera, 2010-2016"
@@ -92,7 +92,7 @@ except ImportError:
 PLATFORM = os.sys.platform
 SRC_DIR = 'photoplace'
 PROGRAM = 'photoplace/photoplace.py'
-VERSION = '0.6.2'
+VERSION = '0.6.3'
 DATE = datetime.datetime.now().strftime("%B %Y")
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',
@@ -587,7 +587,7 @@ if __name__ == '__main__':
         kwargs['options']['py2exe'] = {
             'includes': ['encodings', 'gobject', 'glib', 'gio', 'gtk', 'cairo', 'pango', 'pangocairo', 'atk'],
             'excludes': ['_ssl', '_scproxy', 'ICCProfile', 'bsddb', 'curses', 'tcl', 'Tkconstants', 'Tkinter'],
-            'dll_excludes': ['libglade-2.0-0.dll', 'w9xpopen.exe', 'tcl84.dll', 'tk84.dll'],
+            'dll_excludes': ['libglade-2.0-0.dll', 'w9xpopen.exe', 'tcl84.dll', 'tk84.dll', 'api-ms-win-core-processthreads-l1-1-0.dll', 'api-ms-win-core-profile-l1-1-0.dll','api-ms-win-core-libraryloader-l1-2-0.dll','api-ms-win-core-errorhandling-l1-1-0.dll', 'api-ms-win-core-sysinfo-l1-1-0.dll' ],
             'bundle_files': 3,
             'optimize': 2,
             'compressed': 1,
