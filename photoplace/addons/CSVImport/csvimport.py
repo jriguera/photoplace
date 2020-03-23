@@ -206,7 +206,7 @@ class CSVImport(Plugin):
             delimiter = self.options[CSVImport_CONFKEY_DELIMITER]
             quotechar = self.options[CSVImport_CONFKEY_QUOTECHAR]
             if not delimiter or not quotechar:
-                dialect = csv.Sniffer().sniff(self.fd.read(1024))
+                dialect = csv.Sniffer().sniff(self.fd.read(10240))
                 delimiter = dialect.delimiter
                 quotechar = dialect.quotechar
                 self.fd.seek(0)
@@ -216,7 +216,7 @@ class CSVImport(Plugin):
                 dgettext['quotechar'] = quotechar
                 msg = _("Processing CSV '%(file)s' data (with delimiter='%(delimiter)s', quotechar='%(quotechar)s', headers='%(headers)s').")
             self.logger.info(msg % dgettext)
-            has_header = csv.Sniffer().has_header(self.fd.read(1024))
+            has_header = csv.Sniffer().has_header(self.fd.read(10240))
             self.fd.seek(0)
             if headers:
                 self.update_headers(headers)

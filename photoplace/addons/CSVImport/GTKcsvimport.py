@@ -245,14 +245,14 @@ class GTKCSVImport(object):
             delimiter = self.options[CSVImport_CONFKEY_DELIMITER]
             quotechar = self.options[CSVImport_CONFKEY_QUOTECHAR]
             if not delimiter or not quotechar:
-                dialect = csv.Sniffer().sniff(fd.read(1024))
+                dialect = csv.Sniffer().sniff(fd.read(10240))
                 delimiter = dialect.delimiter
                 quotechar = dialect.quotechar
                 fd.seek(0)
             else:
                 dgettext['delimiter'] = delimiter
                 dgettext['quotechar'] = quotechar
-            has_header = csv.Sniffer().has_header(fd.read(1024))
+            has_header = csv.Sniffer().has_header(fd.read(10240))
             fd.seek(0)
             headers_defined = False
             if headers:
