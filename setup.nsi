@@ -19,7 +19,7 @@
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "PhotoPlace"
 !define PRODUCT_EXEC "photoplace.exe"
-!define PRODUCT_VERSION "0.6.2"
+!define PRODUCT_VERSION "0.6.3"
 !define PRODUCT_PUBLISHER "Jose Riguera"
 !define PRODUCT_AUTHOR "Jose Riguera"
 !define PRODUCT_WEB_SITE "http://www.photoplace.io"
@@ -31,8 +31,8 @@
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_STARTMENU_REGVAL "NSIS:StartMenuDir"
 !define MSVC2008 "http://download.microsoft.com/download/1/1/1/1116b75a-9ec3-481a-a3c8-1777b5381140/vcredist_x86.exe"
-!define INPUT_DIR "bdist\photoplace-0.6.2"
-!define OUTPUT_FILE "bdist\photoplace-0.6.2.exe"
+!define INPUT_DIR "bdist\photoplace-0.6.3"
+!define OUTPUT_FILE "bdist\photoplace-0.6.3.exe"
 
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
