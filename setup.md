@@ -9,7 +9,7 @@ environment to test or contrib to PhotoPlace:
   * `sudo apt-get install python-pyexiv2`
 
 2. Install PIL (Python Image Library, version >= 1.1.7) or Pillow:
-  * `sudo apt-get install python-imaging`
+  * `sudo apt-get install python-pil`
 
 3. Install pyGTK
   * `sudo apt-get install python-gtk2`

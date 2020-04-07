@@ -3,7 +3,7 @@
 #
 #       setup.py
 #
-#   Copyright 2011-2016 Jose Riguera Lopez <jriguera@gmail.com>
+#   Copyright 2011-2020 Jose Riguera Lopez <jriguera@gmail.com>
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -50,9 +50,9 @@ PhotoPlace Setup Script
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
 __version__ = "0.6.3"
-__date__ = "Jul 2016"
+__date__ = "Apr 2020"
 __license__ = "GPL (v2 or later)"
-__copyright__ ="(c) Jose Riguera, 2010-2016"
+__copyright__ ="(c) Jose Riguera, 2010-2020"
 
 import os
 import sys
@@ -83,6 +83,8 @@ __WIN_PLATFORM__ = False
 try:
     import py2exe
     from py2exe.build_exe import py2exe as _py2exe
+    sys.path.append("C:\\Windows\\System32\\downlevel")
+    sys.path.append("C:\\Windows\\SysWOW64\\downlevel")
     __WIN_PLATFORM__ = True
 except ImportError:
     if sys.platform.startswith('win'):
@@ -584,6 +586,7 @@ if __name__ == '__main__':
             'script':PROGRAM,
             'icon_resources':[(1, ICON['win32'])]
         }]
+        # before windows 10  'dll_excludes': ['libglade-2.0-0.dll', 'w9xpopen.exe', 'tcl84.dll', 'tk84.dll'],
         kwargs['options']['py2exe'] = {
             'includes': ['encodings', 'gobject', 'glib', 'gio', 'gtk', 'cairo', 'pango', 'pangocairo', 'atk'],
             'excludes': ['_ssl', '_scproxy', 'ICCProfile', 'bsddb', 'curses', 'tcl', 'Tkconstants', 'Tkinter'],

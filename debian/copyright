@@ -1,6 +1,6 @@
 This work was packaged for Debian by:
 
-    José Riguera López <jriguera@gmail.com> on Wed, 09 Feb 2011 20:48:06 +0100
+    José Riguera López <jriguera@gmail.com> on Tue, 07 Apr 2020 20:48:06 +0100
 
 It was downloaded from:
 
@@ -12,7 +12,7 @@ Upstream Author(s):
 
 Copyright:
 
-    <Copyright (C) 2010-2015 José Riguera López>
+    <Copyright (C) 2010-2020 José Riguera López>
 
 License:
 
@@ -33,7 +33,7 @@ can be found in "/usr/share/common-licenses/Apache-2.0".
 
 The Debian packaging is:
 
-    Copyright (C) 2011-2015 José Riguera López <jriguera@gmail.com>
+    Copyright (C) 2011-2020 José Riguera López <jriguera@gmail.com>
 
 and is licensed under Apache 2.0, see above.
 
