@@ -19,8 +19,8 @@
 #
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.6.1"
-__date__ = "Dec 2014"
+__version__ = "0.6.3"
+__date__ = "Apr 2020"
 __license__ = "Apache 2.0"
 __copyright__ ="(c) Jose Riguera"
 
@@ -115,7 +115,7 @@ class MakeKML(Interface.Action, threading.Thread):
                         min_time = geophoto.time
                     else:
                         total_length += pyGPX.distanceCoord(
-                            prev_lat, prev_lon, 
+                            prev_lat, prev_lon,
                             geophoto.lat, geophoto.lon)
                     max_time = geophoto.time
                     if max_lat < geophoto.lat:
@@ -164,7 +164,8 @@ class MakeKML(Interface.Action, threading.Thread):
         self.dgettext['quality'] = self.quality
         self.dgettext['photouri'] = self.photouri  #.encode(PLATFORMENCODING)
         self.dgettext['exifmode'] = self.state['exifmode']
-        self.dgettext['outputdir'] = self.outputdir.encode(PLATFORMENCODING)
+        if self.outputdir != None:
+            self.dgettext['outputdir'] = self.outputdir.encode(PLATFORMENCODING)
         # Photo URI
         if '%(' in self.photouri:
             self.uri_mode = 1

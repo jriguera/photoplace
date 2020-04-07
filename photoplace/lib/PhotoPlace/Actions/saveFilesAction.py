@@ -19,8 +19,8 @@
 #
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.6.1"
-__date__ = "Dec 2014"
+__version__ = "0.6.3"
+__date__ = "Apr 2020"
 __license__ = "Apache 2.0"
 __copyright__ ="(c) Jose Riguera"
 
@@ -50,9 +50,7 @@ class SaveFiles(Interface.Action, threading.Thread):
         self.dgettext['outputkml'] = self.outputkml  #.encode(PLATFORMENCODING)
         self.photouri = state["photouri"]
         self.outputdir = state.outputdir
-        self.dgettext['outputdir'] = ''
-        if self.outputdir != None:
-            self.dgettext['outputdir'] = self.outputdir.encode(PLATFORMENCODING)
+        self.dgettext['outputdir'] = self.outputdir.encode(PLATFORMENCODING)
         self.tmpdir = state.tmpdir
         self.dgettext['tmpdir'] = ''
         if self.tmpdir != None:
@@ -87,7 +85,7 @@ class SaveFiles(Interface.Action, threading.Thread):
             self.logger.info(msg % self.dgettext)
         ####
         self.num_files = 0
-        self._notify_ini(self.fd, self.outputkml, self.outputkmz, 
+        self._notify_ini(self.fd, self.outputkml, self.outputkmz,
             self.photouri, self.outputdir, self.quality)
         try:
             kmldom = self.state.kmldata.getKml()
@@ -130,7 +128,7 @@ class SaveFiles(Interface.Action, threading.Thread):
                         self.logger.error(msg % self.dgettext)
                     else:
                         self._notify_run(new_file, 1)
-                        msg = _("Photo '%(photo)s' has been copied to '%(new_path)s'.") 
+                        msg = _("Photo '%(photo)s' has been copied to '%(new_path)s'.")
                         self.logger.debug(msg % self.dgettext)
                     self.num_photos += 1
                 else:
@@ -152,7 +150,7 @@ class SaveFiles(Interface.Action, threading.Thread):
         return kmz_out
 
 
-    def rzip(self, zipf, folder, base=u''): 
+    def rzip(self, zipf, folder, base=u''):
         for f in os.listdir(folder):
             full_path = os.path.join(folder, f)
             if os.path.isfile(full_path):
