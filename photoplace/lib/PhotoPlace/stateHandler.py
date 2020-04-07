@@ -459,7 +459,7 @@ class State(object):
                 deletedir = tempfile.mkdtemp(u"_tmp", PhotoPlace_name + u"-", self.outputdir)
                 shutil.rmtree(deletedir)
             except Exception as e:
-                self._outputfile = None
+                self._outputfile = u''
                 self.outputdir = None
                 dgettext['error'] = str(e)
                 msg = _("Cannot create temporary directory in '%(output_dir)s': %(error)s.")
@@ -476,7 +476,7 @@ class State(object):
                 # Write test
                 testfile = tempfile.NamedTemporaryFile(dir=self.outputdir, delete=True)
             except Exception as e:
-                self._outputfile = None
+                self._outputfile = u''
                 self.outputdir = None
                 dgettext['error'] = str(e)
                 msg = _("Cannot create files in '%(output_dir)s': %(error)s.") % dgettext
@@ -490,12 +490,13 @@ class State(object):
                     pass
             self.outputkml = self._outputfile
         else:
-            self._outputfile = None
+            self._outputfile = u''
             self.outputdir = None
-            msg = _("Unknown extension of output file '%s'.") % self._outputfile
-            tip = _("The extension of output file determines the program mode")
-            self.__logger.error(msg)
-            raise Error(msg, tip, "NameError")
+            if not (outpufileext == '' and outputfilebase == '.'):
+                msg = _("Unknown extension of output file '%s'.") % outpufileext
+                tip = _("The extension of output file determines the program mode")
+                self.__logger.error(msg)
+                raise Error(msg, tip, "NameError")
         self._set_photouri()
 
 
