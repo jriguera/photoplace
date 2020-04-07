@@ -68,7 +68,7 @@ class Error(Exception):
 def parse_str_datetime(time_str):
     """Return (<scope>, <datetime.datetime() instance>) for the given
     datetime string.
-    
+
     >>> _datetime_from_str("2009")
     ('year', datetime.datetime(2009, 1, 1, 0, 0))
     >>> _datetime_from_str("2009-12")
@@ -188,16 +188,16 @@ class Facade(object):
 
     def load_config(self, defaults):
         pass
-    
-    
+
+
     def save_config(self, nosections=PhotoPlace_CONFIG_NOCLONE):
         pass
-    
-    
+
+
     def recover_config(self, directory=PhotoPlace_Cfg_altdir):
         pass
-    
-    
+
+
     def init(self, defaults=False):
         if defaults:
             self.options = PhotoPlace_Cfg_default
@@ -595,9 +595,10 @@ class Facade(object):
             write = Actions.writeExifAction.WriteExif(self.state)
             self._setObservers(write)
             write.run()
-        save = Actions.saveFilesAction.SaveFiles(self.state)
-        self._setObservers(save)
-        save.run()
+        if self.state.outputdir:
+            save = Actions.saveFilesAction.SaveFiles(self.state)
+            self._setObservers(save)
+            save.run()
         self.finalize = False
         return True
 

@@ -22,8 +22,8 @@ A GTK+ implementation for a user interface.
 """
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.6.1"
-__date__ = "Dec 2014"
+__version__ = "0.6.3"
+__date__ = "Apr 2020"
 __license__ = "Apache 2.0"
 __copyright__ ="(c) Jose Riguera"
 
@@ -216,7 +216,7 @@ class PhotoPlaceGUI(InterfaceUI):
             self._update_progressbar_makegpx_observer, ["MakeGPX:run"], self)
         self.userfacade.addNotifier(
             self._set_progressbar_end_observer,
-            ["Geolocate:end", "MakeGPX:end", "SaveFiles:end",], self)
+            ["Geolocate:end", "MakeGPX:end", "SaveFiles:end", "WriteExif:run"], self)
         self.userfacade.addNotifier(
             self._set_loadphotos_end_observer, ["LoadPhotos:end"], self)
         # Make a new state
@@ -272,7 +272,8 @@ class PhotoPlaceGUI(InterfaceUI):
             self._toggle_geolocate_mode()
             if self.userfacade.state["outputfile"]:
                 self["togglebutton-outfile"].set_active(True)
-                self._choose_outfile()
+                self._choose_outfile(True)
+                self._set_photouri()
             if not selection:
                 dgettext = dict()
                 dgettext['program'] = PhotoPlace_name
@@ -701,9 +702,12 @@ class PhotoPlaceGUI(InterfaceUI):
         if filename != None:
             try:
                 self.userfacade.state['outputfile'] = unicode(filename, 'UTF-8')
+                self._set_photouri()
                 return True
             except Error as e:
                 self.show_dialog(e.type, e.msg, e.tip)
+        self.userfacade.state['outputfile'] = u''
+        self._set_photouri()
         return False
 
 
@@ -721,7 +725,7 @@ class PhotoPlaceGUI(InterfaceUI):
                 pass
             else:
                 if not self['togglebutton-outfile'].get_active():
-                    self._choose_outfile()
+                    self._choose_outfile(True)
                 self._set_photouri()
 
     def _clicked_gpx(self, widget=None, data=None):
@@ -742,7 +746,6 @@ class PhotoPlaceGUI(InterfaceUI):
             self['hscale-quality'].set_sensitive(True)
             self['hscale-zoom'].set_sensitive(True)
             self['entry-photouri'].set_sensitive(True)
-            self._set_photouri()
         else:
             self['togglebutton-outfile'].set_label(_(" Do not generate output file!"))
             self['hscale-quality'].set_sensitive(False)
@@ -751,15 +754,12 @@ class PhotoPlaceGUI(InterfaceUI):
             self['entry-photouri'].set_sensitive(False)
 
     def _toggle_outfile(self, widget=None, data=None):
-        if self['togglebutton-outfile'].get_active():
-            select_file = ''
-            if self.userfacade.state['photoinputdir']:
-                select_file = self.userfacade.state['photoinputdir'] + ".kmz"
-            if self.show_dialog_choose_outfile(select_file):
-                self._choose_outfile()
-                return
-        self['togglebutton-outfile'].set_active(False)
-        self._choose_outfile(False)
+        select_file = ''
+        if self.userfacade.state['photoinputdir']:
+            select_file = self.userfacade.state['photoinputdir'] + ".kmz"
+        done = self.show_dialog_choose_outfile(select_file)
+        self._choose_outfile(done)
+        self['togglebutton-outfile'].set_active(done)
 
     def _toggle_exifmode(self, widget=None, data=None):
         iter_mode = self['combobox-exif'].get_active_iter()
@@ -1250,7 +1250,7 @@ class PhotoPlaceGUI(InterfaceUI):
                 return False
         self.progressbar.set_fraction(0.0)
         self.progressbar_percent = 0.0
-        if self.userfacade.state.outputkmz != None:
+        if self.userfacade.state.outputdir != None:
             factor = self.num_photos_process * 7
         else:
             factor = self.num_photos_process * 6
