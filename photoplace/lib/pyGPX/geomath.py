@@ -95,9 +95,9 @@ def distanceCoord (lat0, lon0, lat1, lon1):
     dLon = math.radians(lon1 - lon0)
     a = math.sin(dLat/2.0) * math.sin(dLat/2.0) + math.cos(math.radians(lat0)) * \
         math.cos(math.radians(lat1)) * math.sin(dLon/2.0) * math.sin(dLon/2.0)
-    if a > 1.0: 
+    if a > 1.0:
         # error correction for rounding errors.
-        a = 1.0 
+        a = 1.0
     c = 2.0 * math.atan2(math.sqrt(a), math.sqrt(1.0 - a))
     return (EarthsRadius * c)
 
@@ -141,11 +141,15 @@ def bestViewAltitude(max_lat, max_lon, min_lat, min_lon, scale_range=1.5, aspect
     """
     center_lon = (max_lon + min_lon) / 2.0
     center_lat = (max_lat + min_lat) / 2.0
-    
+
     EW_distance = distanceCoord(center_lat, max_lon, center_lat, min_lon)
     NS_distance = distanceCoord(min_lat, center_lon, max_lat, center_lon)
-    aspect_ratio = min(max(aspect_ratio, EW_distance / NS_distance), 1.0)
-    
+    try:
+        current_aspect_ratio = EW_distance / NS_distance
+    except:
+        current_aspect_ratio = EW_distance
+    aspect_ratio = min(max(aspect_ratio, current_aspect_ratio), 1.0)
+
     # using the experimentally derived distance formula.
     alpha = math.radians(45.0 / (aspect_ratio + 0.4) - 2.0)
     expand_distance = max(NS_distance, EW_distance)
@@ -157,12 +161,12 @@ def bestViewAltitude(max_lat, max_lon, min_lat, min_lon, scale_range=1.5, aspect
 
 def simplDouglasPeucker(points, epsilon):
     """
-    The Ramer–Douglas–Peucker algorithm (RDP) is an algorithm for reducing the 
+    The Ramer–Douglas–Peucker algorithm (RDP) is an algorithm for reducing the
     number of points in a curve that is approximated by a series of points.
     """
     # epsilon depth in meters is the maximum allowed distance between the poin,
-    # and the paht. It is the height of the triangle abc where a-b and b-c are 
-    # two consecutive line segments 
+    # and the paht. It is the height of the triangle abc where a-b and b-c are
+    # two consecutive line segments
     len_points = len(points)
     # indexes of points to include in the simplification
     index = []
@@ -177,7 +181,7 @@ def simplDouglasPeucker(points, epsilon):
         start, end = stack.pop()
         if (end - start) > 1:
             # intermediate points, find most distant intermediate point
-            # with the line from start to end points 
+            # with the line from start to end points
             x12 = (points[end].lon - points[start].lon)
             y12 = (points[end].lat - points[start].lat)
             if math.fabs(x12) > 180.0:
@@ -211,7 +215,7 @@ def simplDouglasPeucker(points, epsilon):
                     sig = i;
                     max_dev_sqr = dev_sqr;
             if max_dev_sqr < band_sqr:
-                # no sig. intermediate point, transfer current start point 
+                # no sig. intermediate point, transfer current start point
                 index.append(start)
             else:
                 stack.append((sig, end))
