@@ -19,8 +19,8 @@
 #
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.6.2"
-__date__ = "Jul 2016"
+__version__ = "0.6.3"
+__date__ = "Apr 2020"
 __license__ = "Apache 2.0"
 __copyright__ ="(c) Jose Riguera"
 

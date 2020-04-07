@@ -3,7 +3,7 @@
 #
 #       definitions.py
 #
-#   Copyright 2010-2016 Jose Riguera Lopez <jriguera@gmail.com>
+#   Copyright 2010-2020 Jose Riguera Lopez <jriguera@gmail.com>
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@
 #
 __program__ = "photoplace"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.6.2"
-__date__ = "Jul 2014"
+__version__ = "0.6.3"
+__date__ = "Apr 2020"
 __license__ = "Apache 2.0"
 __copyright__ ="(c) Jose Riguera"
 
@@ -37,9 +37,9 @@ from PIL import Image
 PLATFORMENCODING = locale.getpreferredencoding()
 
 PhotoPlace_name = "PhotoPlace"
-PhotoPlace_version = "0.6.2"
+PhotoPlace_version = "0.6.3"
 PhotoPlace_url = "PhotoPlace/definitions.py"
-PhotoPlace_date = "Jul 2016"
+PhotoPlace_date = "Apr 2020"
 PhotoPlace_onlinehelp = "https://github.com/jriguera/photoplace/wiki"
 PhotoPlace_estimated = _("<estimated>")
 PhotoPlace_default = _("<default>")
@@ -126,7 +126,7 @@ PhotoPlace_Cfg_default_heading =  0.0
 # Interal Configuration. Do not touch !!!
 # #######################################
 
-PhotoPlace_Cfg_version = 6200
+PhotoPlace_Cfg_version = 6300
 Photoplace_Cfg_mode_command = 0
 Photoplace_Cfg_mode_gui = 1
 PhotoPlace_Cfg_dir = os.path.join(

@@ -61,7 +61,7 @@ class PluginManager(object):
 
     _instance = None
     events = {}
-    
+
     # Singleton
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
@@ -101,7 +101,7 @@ class PluginManager(object):
                 fd.close()
 
     def activate(self, plugin, *args, **kwargs):
-        dgettext = dict(module=plugin.__module__) 
+        dgettext = dict(module=plugin.__module__)
         if not plugin in self.instances:
             try:
                 logger = logging.getLogger(plugin.__module__)
@@ -178,7 +178,7 @@ class PluginManager(object):
 
     @DObserver
     def trigger(self, event, *args, **kwargs):
-        """ 
+        """
         Call this function to trigger an event. It will run any plugin that
         have registered themselves to the event. Any additional arguments or
         keyword arguments you pass in will be passed to the plugins.
