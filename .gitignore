@@ -5,12 +5,16 @@ __pycache__/
 # C extensions
 *.so
 
+# Vagrant
+.vagrant/
+
 # Distribution / packaging
 .Python
 env/
 build/
 develop-eggs/
 dist/
+bdist/
 eggs/
 lib64/
 parts/
