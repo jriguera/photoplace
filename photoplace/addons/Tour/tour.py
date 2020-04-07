@@ -22,8 +22,8 @@ This add-on makes a visual tour with all photos ....
 """
 __program__ = "photoplace.tour"
 __author__ = "Jose Riguera Lopez <jriguera@gmail.com>"
-__version__ = "0.5.1"
-__date__ = "Dec 2014"
+__version__ = "0.6.3"
+__date__ = "Apr 2020"
 __license__ = "Apache 2.0"
 __copyright__ ="(c) Jose Riguera"
 
@@ -52,14 +52,14 @@ __LOCALE_DIR__ = os.path.join(__PACKAGE_DIR__, u"locale")
 
 try:
     if not os.path.isdir(__LOCALE_DIR__):
-        print ("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
+        print("Error: Cannot locate default locale dir: '%s'." % (__LOCALE_DIR__))
         __LOCALE_DIR__ = None
     locale.setlocale(locale.LC_ALL,"")
     #gettext.bindtextdomain(__GETTEXT_DOMAIN__, __LOCALE_DIR__)
     t = gettext.translation(__GETTEXT_DOMAIN__, __LOCALE_DIR__, fallback=False)
     _ = t.ugettext
 except Exception as e:
-    print ("Error setting up the translations: %s" % (str(e)))
+    print("Error setting up the translations: %s" % (str(e)))
     _ = lambda s: unicode(s)
 
 
@@ -431,10 +431,10 @@ class KmlTour(Plugin):
         strtime = self.first_time.strftime("%Y-%m-%dT%H:%M:%S") + self.state.stzdiff
         begin_heading = self.options[KmlTour_CONFKEY_BEGIN_HEADING]
         if begin_heading == None \
-        or begin_heading == PhotoPlace_estimated \
-        or begin_heading == PhotoPlace_default:
-            begin_heading = pyGPX.bearingCoord(
-                self.first_lat, self.first_lon, self.center_lat, self.center_lon)
+            or begin_heading == PhotoPlace_estimated \
+            or begin_heading == PhotoPlace_default:
+                begin_heading = pyGPX.bearingCoord(
+                    self.first_lat, self.first_lon, self.center_lat, self.center_lon)
         begin_tilt = self.options[KmlTour_CONFKEY_BEGIN_TILT]
         if begin_tilt == None:
             begin_tilt = KmlTour_BEGIN_TILT
@@ -446,7 +446,11 @@ class KmlTour(Plugin):
         try:
             begin_range = float(begin_range)
         except:
-            begin_range = self._border_range(begin_tilt, self.first_lat, self.first_lon)
+            try:
+                begin_range = self._border_range(begin_tilt, self.first_lat, self.first_lon)
+            except:
+                # There are some photos with the same coords, range to 150
+                begin_range = float(150)
         if begin_style == None or len(begin_style) < 2:
             begin_icon = self.options[KmlTour_CONFKEY_BEGIN_ICON]
             begin_scale = self.options[KmlTour_CONFKEY_BEGIN_SCALE]
@@ -480,7 +484,11 @@ class KmlTour(Plugin):
         try:
             end_range = float(end_range)
         except:
-            end_range = self._border_range(end_tilt, self.last_lat, self.last_lon)
+            try:
+                end_range = self._border_range(end_tilt, self.last_lat, self.last_lon)
+            except:
+                # There are some photos with the same coords, range to 150
+                end_range = float(150)
         self.set_path(last_photo_id, end_flytime, end_tilt, end_range, end_heading)
         if end_style == None or len(end_style) < 2:
             end_icon = self.options[KmlTour_CONFKEY_END_ICON]
