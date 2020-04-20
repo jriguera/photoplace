@@ -27,7 +27,7 @@ __date__ = "Dec 2014"
 __license__ = "Apache 2.0"
 __copyright__ ="(c) Jose Riguera"
 
-
+import datetime
 import os.path
 import gettext
 import locale
@@ -73,7 +73,7 @@ CSVImport_CONFKEY_GEOLOCATE = 'geolocate'
 
 # Default values
 CSVImport_ENCODINGS = ['utf-8', 'windows-1252', 'latin1',  'windows-1250', 'iso-8859-1','iso-8859-2', 'us-ascii']
-CSVImport_DATE_PARSE = "%Y-%m-%dT%H:%M:%S"
+CSVImport_DATE_PARSE = "%Y-%m-%d %H:%M:%S"
 CSVImport_HEADER_ID = 'PHOTO'
 CSVImport_HEADER_LAT = ''
 CSVImport_HEADER_LON = ''
