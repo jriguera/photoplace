@@ -1,2 +1,2 @@
 usr/share/photoplace/conf/photoplace.cfg etc/photoplace/photoplace.cfg
-usr/share/pyshared/PhotoPlace/_addons_  usr/share/photoplace/addons
+usr/lib/python2.7/dist-packages/PhotoPlace/_addons_ usr/share/photoplace/addons
